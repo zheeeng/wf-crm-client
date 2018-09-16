@@ -1,5 +1,3 @@
-require('./env-check-script')
-
 const path = require('path')
 
 module.exports = function override (config, env) {
