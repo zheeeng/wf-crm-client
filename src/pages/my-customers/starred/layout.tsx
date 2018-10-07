@@ -1,12 +1,7 @@
 import * as React from 'react'
 
-export default class StarredLayout extends React.Component {
+export default class AllLayout extends React.Component {
   render () {
-    return (
-      <div>
-        StarredLayout
-        {this.props.children}
-      </div>
-    )
+    return this.props.children
   }
 }
