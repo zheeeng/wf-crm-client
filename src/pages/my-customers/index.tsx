@@ -1,18 +1,22 @@
 import * as React from 'react'
+import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 
-export default class MyCustomersIndex extends React.Component {
-  handleClick = () => {
-    console.log('.', (this.props as any).commands.list('.'))
-    console.log('..', (this.props as any).commands.list('..'))
-    console.log('/', (this.props as any).commands.list('/'))
-    console.log('-', (this.props as any).commands.list('-'))
-  }
+const styles = (theme: Theme) => createStyles({
+})
+
+export interface Props extends WithStyles<typeof styles> {
+}
+
+export interface State {
+}
+
+class MyCustomersIndex extends React.Component<Props, State> {
 
   render () {
     return (
-      <div onClick={this.handleClick}>
-        My Customers Index
-      </div>
+      null
     )
   }
 }
+
+export default withStyles(styles)(MyCustomersIndex)
