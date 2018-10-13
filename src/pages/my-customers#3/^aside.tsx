@@ -63,13 +63,12 @@ class Aside extends React.Component<Props> {
   render () {
     const { classes, locationInfo } = this.props
     const subPageNavs = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
-    console.log(locationInfo.list())
 
     const allCounts = this.props.contactContext!.contacts.length
     const starredCounts = this.props.contactContext!.contacts.filter(contact => contact.info.starred).length
 
     return (
-      <Portal container={this.$mountEl as any}>
+      <Portal container={this.$mountEl}>
         <Drawer
           variant="permanent"
           classes={{

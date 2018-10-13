@@ -72,7 +72,7 @@ class Header extends React.Component<Props> {
     const open = !!anchorEl
 
     return (
-      <Portal container={this.$mountEl as any}>
+      <Portal container={this.$mountEl}>
         <AppBar position="absolute" className={classes.appBar}>
           <Toolbar>
             <Typography variant="title" color="inherit">
@@ -83,7 +83,7 @@ class Header extends React.Component<Props> {
             </IconButton>
             <div className={classes.navList}>
               {headers.map(({ name, routePath }) => (
-                <Typography key={name} variant="subheading" color="inherit">
+                <Typography key={name} variant="subtitle1" color="inherit">
                   <Link to={routePath} className={classes.link}>{name}</Link>
                 </Typography>
               ))}

@@ -188,7 +188,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
             className={classes.search}
             classes={{ notchedOutline: classes.button }}
             labelWidth={300}
-            notched={false as any}
+            notched={false}
             placeholder="Type a name or email"
             startAdornment={(
               <InputAdornment position="start">
