@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link } from 'roundation'
+import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
@@ -10,7 +10,7 @@ import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 
-import { ComponentProps } from 'roundation/dist/types'
+import { ComponentProps } from '@roundation/roundation/dist/types'
 
 const styles = (theme: Theme) => createStyles({
   appBar: {

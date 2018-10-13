@@ -1,5 +1,5 @@
 import { Contact } from '~src/types/Contact'
-import createStore from '~src/utils/reactStore'
+import createStore from '@roundation/store'
 
 const store = createStore(setState => ({
   contacts: [] as Contact[],

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link } from 'roundation'
+import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Portal from '@material-ui/core/Portal'
 import Drawer from '@material-ui/core/Drawer'
@@ -10,10 +10,10 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import BeachAccessIcon from '@material-ui/icons/BeachAccess'
 import StarIcon from '@material-ui/icons/Star'
-import { WithContext, ExtractContext } from '~src/utils/reactStore'
+import { WithContext, ExtractContext } from '@roundation/store'
 import store from '~src/services/contacts'
 
-import { ComponentProps } from 'roundation/dist/types'
+import { ComponentProps } from '@roundation/roundation/dist/types'
 
 const styles = (theme: Theme) => createStyles({
   root: {

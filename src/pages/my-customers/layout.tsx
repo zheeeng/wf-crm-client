@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
-import { WithContext, ExtractContext } from '~src/utils/reactStore'
+import { WithContext, ExtractContext } from '@roundation/store'
 import store from '~src/services/contacts'
 
 // const { Provider } = store
