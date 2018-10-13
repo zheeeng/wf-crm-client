@@ -94,6 +94,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@roundation/roundation@^0.0.9":
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.9.tgz#fa5f02a6a1aa29848138c8394fe7d419fef9514f"
@@ -107,6 +108,11 @@
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.7.tgz#2962edd6e4b41e81b418472f74bd12dfa0c1e8ab"
 >>>>>>> Update @roundation/roundation
+=======
+"@roundation/roundation@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.8.tgz#0aa2c975d1129607a726512c85b9e5a903e95691"
+>>>>>>> Update @roundation/store
   dependencies:
     "@reach/router" "^1.1.1"
     react-loadable "^5.5.0"
