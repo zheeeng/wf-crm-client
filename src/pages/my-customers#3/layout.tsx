@@ -19,7 +19,7 @@ export interface Props extends
 
 class MyCustomersLayout extends React.Component<Props> {
   componentDidMount () {
-    this.props.contactContext!.fetchContacts()
+    this.props.contactContext.fetchContacts()
   }
 
   render () {

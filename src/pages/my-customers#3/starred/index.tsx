@@ -19,7 +19,7 @@ export interface State {
 }
 
 class StarredMyCustomersIndex extends React.Component<Props, State> {
-  private get contactContext () { return this.props.contactContext! }
+  private get contactContext () { return this.props.contactContext }
 
   componentDidMount () {
     this.contactContext.fetchContacts()

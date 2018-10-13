@@ -19,7 +19,7 @@ export interface State {
 }
 
 class AllMyCustomersIndex extends React.Component<Props, State> {
-  private get contactContext () { return this.props.contactContext! }
+  private get contactContext () { return this.props.contactContext }
 
   render () {
     const contacts = this.contactContext.contacts

@@ -13,7 +13,7 @@ import StarIcon from '@material-ui/icons/Star'
 import { WithContext, ExtractContext } from '@roundation/store'
 import store from '~src/services/contacts'
 
-import { ComponentProps } from '@roundation/roundation/dist/types'
+import { ComponentProps } from '@roundation/roundation/lib/types'
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -51,7 +51,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends
   WithStyles<typeof styles>,
-  ComponentProps<any>,
+  ComponentProps,
   WithContext<
     ExtractContext<typeof store>,
     'contactContext'
@@ -64,8 +64,8 @@ class Aside extends React.Component<Props> {
     const { classes, locationInfo } = this.props
     const subPageNavs = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
 
-    const allCounts = this.props.contactContext!.contacts.length
-    const starredCounts = this.props.contactContext!.contacts.filter(contact => contact.info.starred).length
+    const allCounts = this.props.contactContext.contacts.length
+    const starredCounts = this.props.contactContext.contacts.filter(contact => contact.info.starred).length
 
     return (
       <Portal container={this.$mountEl}>
@@ -110,6 +110,6 @@ class Aside extends React.Component<Props> {
 }
 
 export default store.connect(
-  withStyles(styles)(Aside) as any,
+  withStyles(styles)(Aside),
   'contactContext',
 )
