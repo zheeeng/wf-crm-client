@@ -93,6 +93,18 @@ class MyCustomersIndex extends React.Component<Props, State> {
     })
   }
 
+  handleToggleAllChecked = () => {
+    if (this.state.checked.length) {
+      this.setState({
+        checked: [],
+      })
+    } else {
+      this.setState({
+        checked: this.props.contacts.map(contact => contact.id),
+      })
+    }
+  }
+
   handleStarClick = (id: string) => () => {
     //
   }
@@ -157,7 +169,10 @@ class MyCustomersIndex extends React.Component<Props, State> {
               }}
             />
             <div style={{ textAlign: 'right' }}>
-              <a style={{ marginRight: 24 }}>Cancel</a>
+              <a
+                style={{ marginRight: 24 }}
+                onClick={this.changeCreateModalOpened(false)}
+              >Cancel</a>
               <a>Create</a>
             </div>
           </div>
@@ -187,7 +202,10 @@ class MyCustomersIndex extends React.Component<Props, State> {
           <TableBody>
             <TableRow>
               <TableCell padding="dense">
-                <Checkbox />
+                <Checkbox
+                  checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
+                  onClick={this.handleToggleAllChecked}
+                />
               </TableCell>
               <TableCell colSpan={6}>
                 <IconButton>
