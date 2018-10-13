@@ -93,6 +93,7 @@
     warning "^3.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@roundation/roundation@^0.0.9":
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.9.tgz#fa5f02a6a1aa29848138c8394fe7d419fef9514f"
@@ -100,6 +101,11 @@
 "@roundation/roundation@^0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.6.tgz#7b66dafa54d235feac2642e122c435441fc35a78"
+>>>>>>> Update @roundation/roundation
+=======
+"@roundation/roundation@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.7.tgz#2962edd6e4b41e81b418472f74bd12dfa0c1e8ab"
 >>>>>>> Update @roundation/roundation
   dependencies:
     "@reach/router" "^1.1.1"
