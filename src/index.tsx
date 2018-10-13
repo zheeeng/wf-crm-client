@@ -13,12 +13,17 @@ const theme = createMuiTheme({
   },
 })
 
-ReactDOM.render(
-  <CssBaseline>
-    <MuiThemeProvider theme={theme}>
-      <Roundation />
-    </MuiThemeProvider>
-  </CssBaseline>,
-  document.querySelector('#content') as HTMLElement,
-)
+const $mountEl = document.querySelector('#content')
+
+if ($mountEl) {
+  ReactDOM.render(
+    <CssBaseline>
+      <MuiThemeProvider theme={theme}>
+        <Roundation />
+      </MuiThemeProvider>
+    </CssBaseline>,
+    document.querySelector('#content'),
+  )
+}
+
 registerServiceWorker()
