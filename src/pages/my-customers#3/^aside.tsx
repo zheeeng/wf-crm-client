@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import BeachAccessIcon from '@material-ui/icons/BeachAccess'
 import StarIcon from '@material-ui/icons/Star'
-import { WithContext, ExtractContext } from '@roundation/store'
+import { WithContext } from '@roundation/store'
 import store from '~src/services/contacts'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
@@ -49,13 +49,8 @@ const styles = (theme: Theme) => createStyles({
   toolbar: theme.mixins.toolbar,
 })
 
-export interface Props extends
-  WithStyles<typeof styles>,
-  ComponentProps,
-  WithContext<
-    ExtractContext<typeof store>,
-    'contactContext'
-  > {}
+export interface Props extends WithStyles<typeof styles>, ComponentProps, WithContext<typeof store, 'contactContext'> {
+}
 
 class Aside extends React.Component<Props> {
   $mountEl = document.querySelector('#sidebar')

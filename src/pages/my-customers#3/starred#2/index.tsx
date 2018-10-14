@@ -1,19 +1,14 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
-import { WithContext, ExtractContext } from '@roundation/store'
+import { WithContext } from '@roundation/store'
 import store from '~src/services/contacts'
 import PeopleList from '~src/components/PeopleList'
 
 const styles = (theme: Theme) => createStyles({
 })
 
-export interface Props extends
-  WithStyles<typeof styles>,
-  WithContext<
-    ExtractContext<typeof store>,
-    'contactContext'
-  > {
-  }
+export interface Props extends WithStyles<typeof styles>, WithContext<typeof store, 'contactContext'> {
+}
 
 export interface State {
 }
