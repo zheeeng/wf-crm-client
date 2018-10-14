@@ -49,12 +49,20 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
   checked: string[]
   createFormOpened: boolean
+  searchText: string
 }
 
 class MyCustomersIndex extends React.Component<Props, State> {
   state: State = {
     checked: [],
     createFormOpened: false,
+    searchText: '',
+  }
+
+  handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      searchText: e.target.value,
+    })
   }
 
   handleItemClick = (id: string) => () => {
@@ -117,6 +125,8 @@ class MyCustomersIndex extends React.Component<Props, State> {
             classes={{ notchedOutline: classes.button }}
             labelWidth={300}
             notched={false}
+            value={this.state.searchText}
+            onChange={this.handleSearchTextChange}
             placeholder="Type a name or email"
             startAdornment={(
               <InputAdornment position="start">
@@ -150,7 +160,11 @@ class MyCustomersIndex extends React.Component<Props, State> {
                 </IconButton>
               </TableCell>
             </TableRow>
-            {this.props.contacts.map(contact => (
+            {this.props.contacts
+              .filter(
+                contact => [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
+              )
+              .map(contact => (
               <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
                 <TableCell padding="checkbox">
                   <Checkbox
