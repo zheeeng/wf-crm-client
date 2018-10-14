@@ -5,6 +5,9 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Roundation from '@roundation/roundation'
 import registerServiceWorker from '~src/registerServiceWorker'
 
+import notificationStore from '~src/services/notification'
+import Notification from '~src/components/Notification'
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -19,7 +22,10 @@ if ($mountEl) {
   ReactDOM.render(
     <CssBaseline>
       <MuiThemeProvider theme={theme}>
-        <Roundation />
+        <notificationStore.Provider>
+          <Notification />
+          <Roundation />
+        </notificationStore.Provider>
       </MuiThemeProvider>
     </CssBaseline>,
     document.querySelector('#content'),

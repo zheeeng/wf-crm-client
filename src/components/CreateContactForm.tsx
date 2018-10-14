@@ -2,8 +2,12 @@ import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
+
+import { WithContext } from '@roundation/store'
+import store from '~src/services/notification'
 
 const styles = (theme: Theme) => createStyles({
   paper: {
@@ -23,12 +27,9 @@ const styles = (theme: Theme) => createStyles({
     marginTop: theme.spacing.unit * 4,
     ...cssTips(theme).horizontallySpaced,
   },
-  createButton: {
-    color: theme.palette.primary.main,
-  },
 })
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props extends WithStyles<typeof styles>, WithContext<typeof store, 'notificationContext'> {
   fields: string[],
   open: boolean,
   onClose?: React.ReactEventHandler<{}>,
@@ -41,6 +42,10 @@ class CreateContactForm extends React.PureComponent<Props> {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       this.fieldValues[field] = e.target.value
     }
+
+  handleSubmit = () => {
+    this.props.notificationContext.handleOpen('Success create a new Contact!')
+  }
 
   render () {
     const { fields, open, onClose, classes } = this.props
@@ -62,8 +67,8 @@ class CreateContactForm extends React.PureComponent<Props> {
             />
           ))}
           <div className={classes.buttonZone}>
-            <a onClick={onClose}>Cancel</a>
-            <a className={classes.createButton}>Create</a>
+            <Button onClick={onClose}>Cancel</Button>
+            <Button color="primary" onClick={this.handleSubmit}>Create</Button>
           </div>
         </div>
       </Modal>
@@ -71,4 +76,4 @@ class CreateContactForm extends React.PureComponent<Props> {
   }
 }
 
-export default withStyles(styles)(CreateContactForm)
+export default store.connect(withStyles(styles)(CreateContactForm), 'notificationContext')
