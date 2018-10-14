@@ -117,9 +117,9 @@
     "@reach/router" "^1.1.1"
     react-loadable "^5.5.0"
 
-"@roundation/store@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@roundation/store/-/store-0.0.5.tgz#c656c8a41fcee8a3c52abeb0bba0583596eb81a3"
+"@roundation/store@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@roundation/store/-/store-0.0.6.tgz#62a692e572a4561a126d2dac0510167c6ee17e4d"
 
 "@types/history@*":
   version "4.7.0"
