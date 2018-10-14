@@ -75,7 +75,7 @@ class Header extends React.Component<Props> {
       <Portal container={this.$mountEl}>
         <AppBar position="absolute" className={classes.appBar}>
           <Toolbar>
-            <Typography variant="title" color="inherit">
+            <Typography variant="subtitle1" color="inherit">
               WaiverForever
             </Typography>
             <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
