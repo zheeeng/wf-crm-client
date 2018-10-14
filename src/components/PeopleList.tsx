@@ -10,7 +10,6 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 import Checkbox from '@material-ui/core/Checkbox'
-import TextField from '@material-ui/core/TextField'
 import Avatar from '@material-ui/core/Avatar'
 import Star from '@material-ui/icons/Star'
 import cssTips from '~src/utils/cssTips'
@@ -21,8 +20,7 @@ import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import Delete from '@material-ui/icons/Delete'
 
-import Modal from '@material-ui/core/Modal'
-import Typography from '@material-ui/core/Typography'
+import CreateContactForm from '~src/components/CreateContactForm'
 
 const styles = (theme: Theme) => createStyles({
   head: {
@@ -42,16 +40,6 @@ const styles = (theme: Theme) => createStyles({
     height: 32,
     width: 32,
   },
-  paper: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: theme.spacing.unit * 50,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-  },
 })
 
 export interface Props extends WithStyles<typeof styles> {
@@ -60,21 +48,13 @@ export interface Props extends WithStyles<typeof styles> {
 
 export interface State {
   checked: string[]
-  createModalOpened: boolean
-  name: string,
-  email: string,
-  address: string,
-  telephone: string
+  createFormOpened: boolean
 }
 
 class MyCustomersIndex extends React.Component<Props, State> {
   state: State = {
     checked: [],
-    createModalOpened: false,
-    name: '',
-    email: '',
-    address: '',
-    telephone: '',
+    createFormOpened: false,
   }
 
   handleItemClick = (id: string) => () => {
@@ -109,9 +89,9 @@ class MyCustomersIndex extends React.Component<Props, State> {
     //
   }
 
-  changeCreateModalOpened = (opened: boolean) => () => {
+  changeCreateFormOpened = (opened: boolean) => () => {
     this.setState({
-      createModalOpened: opened,
+      createFormOpened: opened,
     })
   }
 
@@ -120,69 +100,17 @@ class MyCustomersIndex extends React.Component<Props, State> {
 
     return (
       <>
-        <Modal
-          open={this.state.createModalOpened}
-          onClose={this.changeCreateModalOpened(false)}
-        >
-          <div className={classes.paper}>
-            <Typography variant="title" align="center">
-              New Contact
-            </Typography>
-            <TextField
-              label="name"
-              value={this.state.name}
-              margin="normal"
-              fullWidth
-              // variant="outlined"
-              InputProps={{
-                disableUnderline: true,
-              }}
-            />
-            <TextField
-              label="email"
-              value={this.state.email}
-              margin="normal"
-              fullWidth
-              // variant="outlined"
-              InputProps={{
-                disableUnderline: true,
-              }}
-            />
-            <TextField
-              label="address"
-              value={this.state.address}
-              margin="normal"
-              fullWidth
-              // variant="outlined"
-              InputProps={{
-                disableUnderline: true,
-              }}
-            />
-            <TextField
-              label="telephone"
-              value={this.state.telephone}
-              margin="normal"
-              fullWidth
-              // variant="outlined"
-              InputProps={{
-                disableUnderline: true,
-              }}
-            />
-            <div style={{ textAlign: 'right' }}>
-              <a
-                style={{ marginRight: 24 }}
-                onClick={this.changeCreateModalOpened(false)}
-              >Cancel</a>
-              <a>Create</a>
-            </div>
-          </div>
-        </Modal>
+        <CreateContactForm
+          fields={['First name', 'Last name', 'Email', 'Phone']}
+          open={this.state.createFormOpened}
+          onClose={this.changeCreateFormOpened(false)}
+        />
         <div className={classes.head}>
           <Button
             className={classes.button}
             variant="outlined"
             color="primary"
-            onClick={this.changeCreateModalOpened(true)}
+            onClick={this.changeCreateFormOpened(true)}
           >New contact</Button>
           <OutlinedInput
             className={classes.search}
@@ -201,13 +129,13 @@ class MyCustomersIndex extends React.Component<Props, State> {
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell padding="dense">
+              <TableCell padding="checkbox">
                 <Checkbox
                   checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
                   onClick={this.handleToggleAllChecked}
                 />
               </TableCell>
-              <TableCell colSpan={6}>
+              <TableCell colSpan={6} padding="checkbox">
                 <IconButton>
                   <ScreenShare />
                 </IconButton>
@@ -215,7 +143,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
                   <CallMerge />
                 </IconButton>
                 <IconButton>
-                  <PersonAdd onClick={this.changeCreateModalOpened(true)} />
+                  <PersonAdd onClick={this.changeCreateFormOpened(true)} />
                 </IconButton>
                 <IconButton>
                   <Delete />
@@ -224,13 +152,13 @@ class MyCustomersIndex extends React.Component<Props, State> {
             </TableRow>
             {this.props.contacts.map(contact => (
               <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
-                <TableCell padding="dense">
+                <TableCell padding="checkbox">
                   <Checkbox
                     checked={this.state.checked.includes(contact.id)}
                     tabIndex={-1}
                   />
                 </TableCell>
-                <TableCell padding="dense">
+                <TableCell padding="checkbox">
                   <IconButton>
                     <Star
                       color={contact.info.starred ? 'secondary' : 'primary'}
@@ -238,7 +166,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
                     />
                   </IconButton>
                 </TableCell>
-                <TableCell padding="dense">
+                <TableCell padding="checkbox">
                   <Avatar
                     alt="Remy Sharp"
                     className={classes.avatar}

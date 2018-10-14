@@ -72,7 +72,7 @@ class App extends React.Component<Props, State> {
       <div className={classes.root}>
         <AppBar position="absolute" className={classes.appBar}>
           <Toolbar>
-            <Typography variant="title" color="inherit" className={classes.appBar}>
+            <Typography variant="subtitle1" color="inherit" className={classes.appBar}>
               WaiverForever
             </Typography>
             {this.props.header}
