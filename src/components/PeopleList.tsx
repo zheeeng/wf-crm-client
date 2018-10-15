@@ -30,6 +30,10 @@ const styles = (theme: Theme) => createStyles({
     marginBottom: theme.spacing.unit * 2,
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
   },
+  table: {
+    flexGrow: 1,
+    overflowY: 'auto',
+  },
   search: {
     flex: 1,
   },
@@ -136,65 +140,67 @@ class MyCustomersIndex extends React.Component<Props, State> {
           />
           <div>Download Plugin</div>
         </div>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
-                  onClick={this.handleToggleAllChecked}
-                />
-              </TableCell>
-              <TableCell colSpan={6} padding="checkbox">
-                <IconButton>
-                  <ScreenShare />
-                </IconButton>
-                <IconButton>
-                  <CallMerge />
-                </IconButton>
-                <IconButton>
-                  <PersonAdd onClick={this.changeCreateFormOpened(true)} />
-                </IconButton>
-                <IconButton>
-                  <Delete />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-            {this.props.contacts
-              .filter(
-                contact => [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
-              )
-              .map(contact => (
-              <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
+        <div className={classes.table}>
+          <Table>
+            <TableBody>
+              <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={this.state.checked.includes(contact.id)}
-                    tabIndex={-1}
+                    checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
+                    onClick={this.handleToggleAllChecked}
                   />
                 </TableCell>
-                <TableCell padding="checkbox">
+                <TableCell colSpan={6} padding="checkbox">
                   <IconButton>
-                    <Star
-                      color={contact.info.starred ? 'secondary' : 'primary'}
-                      onClick={this.handleStarClick(contact.id)}
-                    />
+                    <ScreenShare />
+                  </IconButton>
+                  <IconButton>
+                    <CallMerge />
+                  </IconButton>
+                  <IconButton>
+                    <PersonAdd onClick={this.changeCreateFormOpened(true)} />
+                  </IconButton>
+                  <IconButton>
+                    <Delete />
                   </IconButton>
                 </TableCell>
-                <TableCell padding="checkbox">
-                  <Avatar
-                    alt="Remy Sharp"
-                    className={classes.avatar}
-                    src={contact.info.avatar}
-                  />
-                </TableCell>
-                <TableCell>{contact.info.name}</TableCell>
-                <TableCell>{contact.info.email}</TableCell>
-                <TableCell>{contact.info.address}</TableCell>
-                <TableCell numeric>{contact.info.telephone}</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+              {this.props.contacts
+                .filter(
+                  contact => [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
+                )
+                .map(contact => (
+                <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={this.state.checked.includes(contact.id)}
+                      tabIndex={-1}
+                    />
+                  </TableCell>
+                  <TableCell padding="checkbox">
+                    <IconButton>
+                      <Star
+                        color={contact.info.starred ? 'secondary' : 'primary'}
+                        onClick={this.handleStarClick(contact.id)}
+                      />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell padding="checkbox">
+                    <Avatar
+                      alt="Remy Sharp"
+                      className={classes.avatar}
+                      src={contact.info.avatar}
+                    />
+                  </TableCell>
+                  <TableCell>{contact.info.name}</TableCell>
+                  <TableCell>{contact.info.email}</TableCell>
+                  <TableCell>{contact.info.address}</TableCell>
+                  <TableCell numeric>{contact.info.telephone}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </>
     )
   }

@@ -22,6 +22,8 @@ const styles = (theme: Theme) => createStyles({
     flexDirection: 'column',
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
     padding: theme.spacing.unit * 4,
     backgroundColor: theme.palette.background.paper,
     boxShadow: '0 0 5px 1px lightgrey',
