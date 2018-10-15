@@ -167,7 +167,8 @@ class MyCustomersIndex extends React.Component<Props, State> {
               </TableRow>
               {this.props.contacts
                 .filter(
-                  contact => [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
+                  contact => [contact.info.name, contact.info.email]
+                    .some(field => field.includes(this.state.searchText)),
                 )
                 .map(contact => (
                 <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
