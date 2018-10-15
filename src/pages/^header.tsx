@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
+import cssTips from '~src/utils/cssTips'
 
 const styles = (theme: Theme) => createStyles({
   appBar: {
@@ -23,8 +24,10 @@ const styles = (theme: Theme) => createStyles({
   navList: {
     flex: 1,
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingLeft: theme.spacing.unit * 8,
+    ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
   },
   link: {
     color: 'inherit',
