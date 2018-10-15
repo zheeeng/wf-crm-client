@@ -14,6 +14,11 @@ const theme = createMuiTheme({
       main: '#5d8df8',
     },
   },
+  props: {
+    MuiButtonBase: {
+      disableRipple: true,
+    },
+  },
 })
 
 const $mountEl = document.querySelector('#content')
