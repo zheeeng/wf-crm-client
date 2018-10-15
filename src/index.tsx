@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { MuiThemeProvider, createMuiTheme, withStyles, createStyles } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Roundation from '@roundation/roundation'
 import registerServiceWorker from '~src/registerServiceWorker'
@@ -21,18 +21,28 @@ const theme = createMuiTheme({
   },
 })
 
+const InjectIntoGlobalStyles = withStyles(createStyles({
+  '@global': {
+    'div[role="group"][tabindex]': {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+    },
+  },
+}))((() => null) as React.SFC)
+
 const $mountEl = document.querySelector('#content')
 
 if ($mountEl) {
   ReactDOM.render(
-    <CssBaseline>
-      <MuiThemeProvider theme={theme}>
-        <notificationStore.Provider>
-          <Notification />
-          <Roundation />
-        </notificationStore.Provider>
-      </MuiThemeProvider>
-    </CssBaseline>,
+    <MuiThemeProvider theme={theme}>
+      <CssBaseline/>
+      <InjectIntoGlobalStyles />
+      <notificationStore.Provider>
+        <Notification />
+        <Roundation />
+      </notificationStore.Provider>
+    </MuiThemeProvider>,
     document.querySelector('#content'),
   )
 }
