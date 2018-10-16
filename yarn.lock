@@ -28,9 +28,9 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@material-ui/core@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.2.0.tgz#81e1a4dc66ea666d58da784a4e0addfbef1c3d80"
+"@material-ui/core@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.2.2.tgz#5c622eeda8851a37a46d27583f0d6624e8ec4732"
   dependencies:
     "@babel/runtime" "7.1.2"
     "@types/jss" "^9.5.6"
@@ -83,9 +83,9 @@
     "@reach/router" "^1.1.1"
     react-loadable "^5.5.0"
 
-"@roundation/store@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@roundation/store/-/store-0.0.8.tgz#96891e62e1578dcd4258609489d345e20312e900"
+"@roundation/store@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@roundation/store/-/store-0.0.11.tgz#cd4c933da40a2d4216c153c59e8d1b32f9f1c823"
 
 "@types/body-parser@*":
   version "1.17.0"
