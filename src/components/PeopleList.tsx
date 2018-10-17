@@ -145,7 +145,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell padding="checkbox" className={classes.minCell}>
                   <Checkbox
                     checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
                     onClick={this.handleToggleAllChecked}
