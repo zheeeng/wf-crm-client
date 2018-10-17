@@ -7,8 +7,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import IconButton from '@material-ui/core/IconButton'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
+import TableHead from '@material-ui/core/TableHead'
+import TableCell from '@material-ui/core/TableCell'
 import Checkbox from '@material-ui/core/Checkbox'
 import Avatar from '@material-ui/core/Avatar'
 import Star from '@material-ui/icons/Star'
@@ -43,6 +44,9 @@ const styles = (theme: Theme) => createStyles({
   avatar: {
     height: 32,
     width: 32,
+  },
+  minCell: {
+    width: '1%',
   },
 })
 
@@ -142,7 +146,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
         </div>
         <div className={classes.table}>
           <Table>
-            <TableBody>
+            <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
@@ -165,6 +169,8 @@ class MyCustomersIndex extends React.Component<Props, State> {
                   </IconButton>
                 </TableCell>
               </TableRow>
+            </TableHead>
+            <TableBody>
               {this.props.contacts
                 .filter(
                   contact => [contact.info.name, contact.info.email]
@@ -172,13 +178,13 @@ class MyCustomersIndex extends React.Component<Props, State> {
                 )
                 .map(contact => (
                 <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.minCell}>
                     <Checkbox
                       checked={this.state.checked.includes(contact.id)}
                       tabIndex={-1}
                     />
                   </TableCell>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.minCell}>
                     <IconButton>
                       <Star
                         color={contact.info.starred ? 'secondary' : 'primary'}
@@ -186,7 +192,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
                       />
                     </IconButton>
                   </TableCell>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.minCell}>
                     <Avatar
                       alt="Remy Sharp"
                       className={classes.avatar}
