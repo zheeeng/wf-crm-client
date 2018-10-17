@@ -4,14 +4,14 @@ import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/s
 import Portal from '@material-ui/core/Portal'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
+import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
-import BeachAccessIcon from '@material-ui/icons/BeachAccess'
-import StarIcon from '@material-ui/icons/Star'
 import { WithContext } from '@roundation/store'
+import MaterialIcon from '~src/units/MaterialIcon'
 import store from '~src/services/contacts'
+import { SiderBarThemeProvider } from '~src/components/ThemeProviders'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
@@ -47,6 +47,10 @@ const styles = (theme: Theme) => createStyles({
     flexGrow: 1,
   },
   toolbar: theme.mixins.toolbar,
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+  },
 })
 
 export interface Props extends WithStyles<typeof styles>, ComponentProps, WithContext<typeof store, 'contactContext'> {
@@ -55,9 +59,13 @@ export interface Props extends WithStyles<typeof styles>, ComponentProps, WithCo
 class Aside extends React.Component<Props> {
   $mountEl = document.querySelector('#sidebar')
 
+  renderLink = (routePath: string) => (props: ListItemProps) => (
+    <Link to={routePath} {...props} />
+  )
+
   render () {
     const { classes, locationInfo } = this.props
-    const subPageNavs = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
+    const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
 
     const allCounts = this.props.contactContext.contacts.length
     const starredCounts = this.props.contactContext.contacts.filter(contact => contact.info.starred).length
@@ -71,33 +79,41 @@ class Aside extends React.Component<Props> {
           }}
         >
           <div className={classes.toolbar} />
-          <List>
-            <ListItem>
-              <ListItemIcon>
-                <BeachAccessIcon />
-              </ListItemIcon>
-              <ListItemText inset>
-                Contacts
-              </ListItemText>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>{subPageNavs.map(({ routePath, name }) => (
-            <ListItem key={routePath}>
-              <ListItemIcon>
-                <StarIcon />
-              </ListItemIcon>
-              <ListItemText inset>
-                <Link to={routePath}>{
-                  name === 'All'
-                    ? `${name}(${allCounts})`
-                    : name === 'Starred'
-                      ? `${name}(${starredCounts})`
-                      : name
-                }</Link>
-              </ListItemText>
-            </ListItem>
-          ))}</List>
+          <SiderBarThemeProvider>
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <MaterialIcon icon={'PermContactCalendar'} />
+                </ListItemIcon>
+                <ListItemText>
+                  Contacts
+                </ListItemText>
+              </ListItem>
+            </List>
+            <Divider />
+            <List component="nav">
+              {subPageNavs.map(({ routePath, name, icon }) => (
+                <ListItem
+                  key={routePath}
+                  component={this.renderLink(routePath)}
+                  button
+                >
+                  <ListItemIcon>
+                    <MaterialIcon icon={icon} />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {
+                      name === 'All'
+                        ? `${name}(${allCounts})`
+                        : name === 'Starred'
+                          ? `${name}(${starredCounts})`
+                          : name
+                    }
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          </SiderBarThemeProvider>
         </Drawer>
       </Portal>
     )
