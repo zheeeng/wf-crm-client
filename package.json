@@ -23,6 +23,7 @@
     "serve": "json-server -p 3080 --watch db/data.json"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.6",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.11.3",
     "@types/reach__router": "^1.0.1",
