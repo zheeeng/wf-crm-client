@@ -24,6 +24,8 @@ export const GlobalThemeProvider: React.SFC = (props) => (
   </MuiThemeProvider>
 )
 
+const defaultTheme = createMuiTheme()
+
 const siderBarTheme = createMuiTheme({
   overrides: {
     MuiListItemIcon: {
@@ -35,6 +37,12 @@ const siderBarTheme = createMuiTheme({
     MuiListItemText: {
       primary: {
         color: Colors.blue,
+      },
+    },
+    MuiListItemSecondaryAction: {
+      root: {
+        color: Colors.blue,
+        paddingRight: defaultTheme.spacing.unit * 2,
       },
     },
   },

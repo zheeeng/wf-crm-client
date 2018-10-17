@@ -1,14 +1,17 @@
 import * as React from 'react'
 import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { WithContext } from '@roundation/store'
 import Portal from '@material-ui/core/Portal'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
-import { WithContext } from '@roundation/store'
+import Add from '@material-ui/icons/Add'
+import ChevronRight from '@material-ui/icons/ChevronRight'
 import MaterialIcon from '~src/units/MaterialIcon'
 import store from '~src/services/contacts'
 import { SiderBarThemeProvider } from '~src/components/ThemeProviders'
@@ -59,16 +62,57 @@ export interface Props extends WithStyles<typeof styles>, ComponentProps, WithCo
 class Aside extends React.Component<Props> {
   $mountEl = document.querySelector('#sidebar')
 
-  renderLink = (routePath: string) => (props: ListItemProps) => (
+  renderLinkLabel = (name: string) => {
+    switch (name) {
+      case 'All': {
+        const allCounts = this.props.contactContext.contacts.length
+
+        return <ListItemText>{name}({allCounts})</ListItemText>
+      }
+      case 'Starred': {
+        const starredCounts = this.props.contactContext.contacts.filter(contact => contact.info.starred).length
+
+        return <ListItemText>{name}({starredCounts})</ListItemText>
+      }
+      case 'Groups': {
+        return (
+          <>
+            <ListItemText>
+              {name}
+            </ListItemText>
+            <ListItemSecondaryAction>
+              <ChevronRight />
+              <Add />
+            </ListItemSecondaryAction>
+          </>
+        )
+      }
+      default: {
+        return <ListItemText>{name}</ListItemText>
+      }
+    }
+  }
+
+  private renderLinkWrapper = (routePath: string) => (props: ListItemProps) => (
     <Link to={routePath} {...props} />
+  )
+
+  private renderLink = ({ routePath, name, icon }: { routePath: string, name: string, icon: string }) => (
+    <ListItem
+      key={routePath}
+      component={this.renderLinkWrapper(routePath)}
+      button
+    >
+      <ListItemIcon>
+        <MaterialIcon icon={icon} />
+      </ListItemIcon>
+      {this.renderLinkLabel(name)}
+    </ListItem>
   )
 
   render () {
     const { classes, locationInfo } = this.props
     const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
-
-    const allCounts = this.props.contactContext.contacts.length
-    const starredCounts = this.props.contactContext.contacts.filter(contact => contact.info.starred).length
 
     return (
       <Portal container={this.$mountEl}>
@@ -92,26 +136,7 @@ class Aside extends React.Component<Props> {
             </List>
             <Divider />
             <List component="nav">
-              {subPageNavs.map(({ routePath, name, icon }) => (
-                <ListItem
-                  key={routePath}
-                  component={this.renderLink(routePath)}
-                  button
-                >
-                  <ListItemIcon>
-                    <MaterialIcon icon={icon} />
-                  </ListItemIcon>
-                  <ListItemText>
-                    {
-                      name === 'All'
-                        ? `${name}(${allCounts})`
-                        : name === 'Starred'
-                          ? `${name}(${starredCounts})`
-                          : name
-                    }
-                  </ListItemText>
-                </ListItem>
-              ))}
+              {subPageNavs.map(this.renderLink)}
             </List>
           </SiderBarThemeProvider>
         </Drawer>
