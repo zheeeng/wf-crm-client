@@ -1,14 +1,19 @@
 import * as React from 'react'
+import { SvgIconProps } from '@material-ui/core/SvgIcon'
 import * as Icons from '@material-ui/icons'
 
-const MaterialIcon: React.SFC<{ icon: string }> = ({ icon }) => {
+export interface Props extends SvgIconProps {
+  icon: string
+}
+
+const MaterialIcon: React.SFC<Props> = ({ icon, ...props }) => {
   const Icon = Icons[icon]
 
   if (!Icon) {
       throw Error(`Could not find @material-ui/icons/${icon}`)
   }
 
-  return React.createElement(Icon)
+  return React.createElement(Icon, props)
 }
 
 export default MaterialIcon

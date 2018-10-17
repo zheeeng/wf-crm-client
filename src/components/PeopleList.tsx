@@ -1,9 +1,6 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import AccountCircle from '@material-ui/icons/AccountCircle'
 import IconButton from '@material-ui/core/IconButton'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -22,6 +19,8 @@ import PersonAdd from '@material-ui/icons/PersonAdd'
 import Delete from '@material-ui/icons/Delete'
 
 import CreateContactForm from '~src/components/CreateContactForm'
+import Searcher from '~src/units/Searcher'
+import MaterialIcon from '~src/units/MaterialIcon'
 
 const styles = (theme: Theme) => createStyles({
   head: {
@@ -37,6 +36,9 @@ const styles = (theme: Theme) => createStyles({
   },
   search: {
     flex: 1,
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
   },
   button: {
     borderRadius: theme.spacing.unit * 2,
@@ -67,13 +69,13 @@ class MyCustomersIndex extends React.Component<Props, State> {
     searchText: '',
   }
 
-  handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
     })
   }
 
-  handleItemClick = (id: string) => () => {
+  private handleItemClick = (id: string) => () => {
     const { checked } = this.state
     const currentIndex = checked.indexOf(id)
     const newChecked = [...checked]
@@ -89,7 +91,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
     })
   }
 
-  handleToggleAllChecked = () => {
+  private handleToggleAllChecked = () => {
     if (this.state.checked.length) {
       this.setState({
         checked: [],
@@ -101,11 +103,11 @@ class MyCustomersIndex extends React.Component<Props, State> {
     }
   }
 
-  handleStarClick = (id: string) => () => {
+  private handleStarClick = (id: string) => () => {
     //
   }
 
-  changeCreateFormOpened = (opened: boolean) => () => {
+  private changeCreateFormOpened = (opened: boolean) => () => {
     this.setState({
       createFormOpened: opened,
     })
@@ -128,21 +130,16 @@ class MyCustomersIndex extends React.Component<Props, State> {
             color="primary"
             onClick={this.changeCreateFormOpened(true)}
           >New contact</Button>
-          <OutlinedInput
+          <Searcher
             className={classes.search}
-            classes={{ notchedOutline: classes.button }}
-            labelWidth={300}
-            notched={false}
             value={this.state.searchText}
             onChange={this.handleSearchTextChange}
             placeholder="Type a name or email"
-            startAdornment={(
-              <InputAdornment position="start">
-                <AccountCircle />
-              </InputAdornment>
-            )}
           />
-          <div>Download Plugin</div>
+          <Button color="primary">
+            <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
+            Download Plugin
+          </Button>
         </div>
         <div className={classes.table}>
           <Table>
