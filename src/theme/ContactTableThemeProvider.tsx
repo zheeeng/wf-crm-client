@@ -3,6 +3,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { globalTheme } from './GlobalThemeProvider'
 
 export const contactTableTheme = createMuiTheme({
+  ...globalTheme,
   overrides: {
     MuiAvatar: {
       root: {
