@@ -8,7 +8,7 @@ import appStore from '~src/services/app'
 import notificationStore from '~src/services/notification'
 import Notification from '~src/components/Notification'
 import InjectIntoGlobalStyles from '~src/components/InjectIntoGlobalStyles'
-import { GlobalThemeProvider } from '~src/components/ThemeProviders'
+import GlobalThemeProvider from '~src/theme/GlobalThemeProvider'
 
 const $mountEl = document.querySelector('#content')
 

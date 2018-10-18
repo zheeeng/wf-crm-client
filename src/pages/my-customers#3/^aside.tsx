@@ -15,7 +15,7 @@ import ChevronRight from '@material-ui/icons/ChevronRight'
 import MaterialIcon from '~src/units/MaterialIcon'
 import appStore from '~src/services/app'
 import contactsStore from '~src/services/contacts'
-import { SiderBarThemeProvider } from '~src/components/ThemeProviders'
+import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import Hidden from '@material-ui/core/Hidden'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
@@ -138,7 +138,6 @@ class Aside extends React.Component<Props> {
       >
         <div className={classes.toolbar} />
         <SiderBarThemeProvider>
-          <Divider inset />
           <List>
             <ListItem>
               <ListItemIcon>
@@ -149,7 +148,7 @@ class Aside extends React.Component<Props> {
               </ListItemText>
             </ListItem>
           </List>
-          <Divider inset />
+          <Divider />
           <List component="nav">
             {subPageNavs.map(this.renderLink)}
           </List>
