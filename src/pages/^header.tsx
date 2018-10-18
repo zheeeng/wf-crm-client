@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Hidden from '@material-ui/core/Hidden'
+import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
@@ -62,14 +63,13 @@ export interface State {
 
 class Header extends React.Component<Props> {
   state = {
-    auth: true,
     anchorEl: null,
   }
 
   private $mountEl = document.querySelector('#header')
 
-  private handleClose = () => {
-    this.setState({ anchorEl: null })
+  private handleMenuOpenedChange = (forOpen: boolean) => (e: React.MouseEvent<HTMLDivElement>) => {
+    this.setState({ anchorEl: forOpen ? e.currentTarget : null })
   }
 
   private closeDrawer = () => {
@@ -79,7 +79,7 @@ class Header extends React.Component<Props> {
   render () {
     const { classes, locationInfo } = this.props
     const headers = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
-    const { auth, anchorEl } = this.state
+    const { anchorEl } = this.state
     const open = !!anchorEl
 
     return (
@@ -108,8 +108,11 @@ class Header extends React.Component<Props> {
                 </Typography>
               ))}
             </div>
-            {auth && (
+            {this.props.appStore.auth && (
               <div>
+                <Button onClick={this.handleMenuOpenedChange(true)}>
+                  <Typography>Open</Typography>
+                </Button>
                 <Menu
                   anchorEl={anchorEl}
                   anchorOrigin={{
@@ -121,10 +124,10 @@ class Header extends React.Component<Props> {
                     horizontal: 'right',
                   }}
                   open={open}
-                  onClose={this.handleClose}
+                  onClose={this.handleMenuOpenedChange(false)}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem onClick={this.handleMenuOpenedChange(false)}>Profile</MenuItem>
+                  <MenuItem onClick={this.handleMenuOpenedChange(false)}>My account</MenuItem>
                 </Menu>
               </div>
             )}
