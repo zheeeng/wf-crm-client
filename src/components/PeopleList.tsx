@@ -30,8 +30,14 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.unit * 2,
-    ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+    marginBottom: theme.spacing.unit * 4,
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.between('sm', 'md')]: {
+      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced,
+    },
+    [theme.breakpoints.up('md')]: {
+      ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+    },
   },
   table: {
     flexGrow: 1,
@@ -179,6 +185,15 @@ class MyCustomersIndex extends React.Component<Props, State> {
     )
   }
 
+  private renderSearcher = () => (
+    <Searcher
+      className={this.props.classes.search}
+      value={this.state.searchText}
+      onChange={this.handleSearchTextChange}
+      placeholder="Type a name or email"
+    />
+  )
+
   render () {
     const { classes, contacts } = this.props
     const displayContacts = contacts.filter(contact =>
@@ -199,17 +214,19 @@ class MyCustomersIndex extends React.Component<Props, State> {
             color="primary"
             onClick={this.changeCreateFormOpened(true)}
           >New contact</Button>
-          <Searcher
-            className={classes.search}
-            value={this.state.searchText}
-            onChange={this.handleSearchTextChange}
-            placeholder="Type a name or email"
-          />
+          <Hidden xsDown>
+            {this.renderSearcher()}
+          </Hidden>
           <Button color="primary">
             <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
             Download Plugin
           </Button>
         </div>
+        <Hidden smUp>
+          <div className={classes.head}>
+          {this.renderSearcher()}
+          </div>
+        </Hidden>
         <div className={classes.table}>
           <Table>
             <TableHead>
