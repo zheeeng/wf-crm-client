@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Roundation from '@roundation/roundation'
 import registerServiceWorker from '~src/registerServiceWorker'
 
+import appStore from '~src/services/app'
 import notificationStore from '~src/services/notification'
 import Notification from '~src/components/Notification'
 import InjectIntoGlobalStyles from '~src/components/InjectIntoGlobalStyles'
@@ -16,10 +17,12 @@ if ($mountEl) {
     <GlobalThemeProvider>
       <CssBaseline/>
       <InjectIntoGlobalStyles />
+      <appStore.Provider>
       <notificationStore.Provider>
         <Notification />
         <Roundation />
       </notificationStore.Provider>
+      </appStore.Provider>
     </GlobalThemeProvider>,
     document.querySelector('#content'),
   )

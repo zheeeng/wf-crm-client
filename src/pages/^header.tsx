@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { WithContext } from '@roundation/store'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -12,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 import cssTips from '~src/utils/cssTips'
+import appStore from '~src/services/app'
 
 const styles = (theme: Theme) => createStyles({
   appBar: {
@@ -20,6 +22,10 @@ const styles = (theme: Theme) => createStyles({
   menuButton: {
     marginLeft: 12,
     marginRight: 20,
+    [theme.breakpoints.up('lg')]: {
+      visibility: 'hidden',
+      pointerEvents: 'none',
+    },
   },
   navList: {
     flex: 1,
@@ -45,7 +51,7 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles>, ComponentProps {}
+export interface Props extends WithStyles<typeof styles>, ComponentProps, WithContext<typeof appStore, 'appStore'> {}
 
 export interface State {
   auth: boolean
@@ -58,14 +64,14 @@ class Header extends React.Component<Props> {
     anchorEl: null,
   }
 
-  $mountEl = document.querySelector('#header')
+  private $mountEl = document.querySelector('#header')
 
-  handleMenu = (event: React.MouseEvent<HTMLDivElement>) => {
-    this.setState({ anchorEl: event.currentTarget })
+  private handleClose = () => {
+    this.setState({ anchorEl: null })
   }
 
-  handleClose = () => {
-    this.setState({ anchorEl: null })
+  private closeDrawer = () => {
+    this.props.appStore.toggleDrawerExpanded()
   }
 
   render () {
@@ -81,7 +87,12 @@ class Header extends React.Component<Props> {
             <Typography variant="subtitle1" color="inherit">
               WaiverForever
             </Typography>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+              onClick={this.closeDrawer}
+            >
               <MenuIcon />
             </IconButton>
             <div className={classes.navList}>
@@ -118,4 +129,4 @@ class Header extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles)(Header)
+export default appStore.connect(withStyles(styles)(Header), 'appStore')

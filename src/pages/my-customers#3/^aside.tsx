@@ -13,8 +13,10 @@ import Divider from '@material-ui/core/Divider'
 import Add from '@material-ui/icons/Add'
 import ChevronRight from '@material-ui/icons/ChevronRight'
 import MaterialIcon from '~src/units/MaterialIcon'
-import store from '~src/services/contacts'
+import appStore from '~src/services/app'
+import contactStore from '~src/services/contacts'
 import { SiderBarThemeProvider } from '~src/components/ThemeProviders'
+import Hidden from '@material-ui/core/Hidden'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
@@ -56,13 +58,17 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles>, ComponentProps, WithContext<typeof store, 'contactContext'> {
+export interface Props extends
+  WithStyles<typeof styles>,
+  ComponentProps,
+  WithContext<typeof appStore, 'appContext'>,
+  WithContext<typeof contactStore, 'contactContext'> {
 }
 
 class Aside extends React.Component<Props> {
-  $mountEl = document.querySelector('#sidebar')
+  private $mountEl = document.querySelector('#sidebar')
 
-  renderLinkLabel = (name: string) => {
+  private renderLinkLabel = (name: string) => {
     switch (name) {
       case 'All': {
         const allCounts = this.props.contactContext.contacts.length
@@ -110,42 +116,65 @@ class Aside extends React.Component<Props> {
     </ListItem>
   )
 
-  render () {
+  private closeDrawer = () => {
+    this.props.appContext.toggleDrawerExpanded(false)
+  }
+
+  private renderDrawer = (isTemporary: boolean) => {
     const { classes, locationInfo } = this.props
     const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
 
     return (
-      <Portal container={this.$mountEl}>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <div className={classes.toolbar} />
-          <SiderBarThemeProvider>
-            <List>
-              <ListItem>
-                <ListItemIcon>
-                  <MaterialIcon icon={'PermContactCalendar'} />
-                </ListItemIcon>
-                <ListItemText>
-                  Contacts
-                </ListItemText>
-              </ListItem>
-            </List>
-            <Divider />
-            <List component="nav">
-              {subPageNavs.map(this.renderLink)}
-            </List>
-          </SiderBarThemeProvider>
-        </Drawer>
-      </Portal>
+      <Drawer
+        variant={isTemporary ? 'temporary' : 'permanent'}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        open={this.props.appContext.drawerExpanded}
+        onClose={this.closeDrawer}
+      >
+        <div className={classes.toolbar} />
+        <SiderBarThemeProvider>
+          <Divider />
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <MaterialIcon icon={'PermContactCalendar'} />
+              </ListItemIcon>
+              <ListItemText>
+                Contacts
+              </ListItemText>
+            </ListItem>
+          </List>
+          <Divider />
+          <List component="nav">
+            {subPageNavs.map(this.renderLink)}
+          </List>
+        </SiderBarThemeProvider>
+      </Drawer>
+    )
+  }
+
+  render () {
+    return (
+      <>
+        <Hidden mdDown>
+            <Portal container={this.$mountEl}>
+            {this.renderDrawer(false)}
+          </Portal>
+        </Hidden>
+        <Hidden lgUp>
+          {this.renderDrawer(true)}
+        </Hidden>
+      </>
     )
   }
 }
 
-export default store.connect(
-  withStyles(styles)(Aside),
-  'contactContext',
+export default appStore.connect(
+  contactStore.connect(
+    withStyles(styles)(Aside),
+    'contactContext',
+  ),
+  'appContext',
 )
