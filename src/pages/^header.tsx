@@ -32,10 +32,15 @@ const styles = (theme: Theme) => createStyles({
     alignItems: 'center',
     paddingLeft: theme.spacing.unit * 8,
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       justifyContent: 'space-around',
-      paddingRight: theme.spacing.unit * 16,
-      paddingLeft: theme.spacing.unit * 16,
+      paddingRight: theme.spacing.unit * 4,
+      paddingLeft: theme.spacing.unit * 4,
+    },
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'space-around',
+      paddingRight: 0,
+      paddingLeft: 0,
     },
   },
   link: {
