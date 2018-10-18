@@ -15,7 +15,7 @@ const $mountEl = document.querySelector('#content')
 if ($mountEl) {
   ReactDOM.render(
     <GlobalThemeProvider>
-      <CssBaseline/>
+      <CssBaseline />
       <InjectIntoGlobalStyles />
       <appStore.Provider>
       <notificationStore.Provider>
