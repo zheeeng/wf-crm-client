@@ -6,6 +6,7 @@ import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import Hidden from '@material-ui/core/Hidden'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
@@ -22,10 +23,6 @@ const styles = (theme: Theme) => createStyles({
   menuButton: {
     marginLeft: 12,
     marginRight: 20,
-    [theme.breakpoints.up('lg')]: {
-      visibility: 'hidden',
-      pointerEvents: 'none',
-    },
   },
   navList: {
     flex: 1,
@@ -34,6 +31,11 @@ const styles = (theme: Theme) => createStyles({
     alignItems: 'center',
     paddingLeft: theme.spacing.unit * 8,
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+    [theme.breakpoints.down('lg')]: {
+      justifyContent: 'space-around',
+      paddingRight: theme.spacing.unit * 16,
+      paddingLeft: theme.spacing.unit * 16,
+    },
   },
   link: {
     color: 'inherit',
@@ -84,17 +86,21 @@ class Header extends React.Component<Props> {
       <Portal container={this.$mountEl}>
         <AppBar position="absolute" className={classes.appBar}>
           <Toolbar>
-            <Typography variant="subtitle1" color="inherit">
-              WaiverForever
-            </Typography>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-              onClick={this.closeDrawer}
-            >
-              <MenuIcon />
-            </IconButton>
+            <Hidden mdDown>
+              <Typography variant="subtitle1" color="inherit">
+                WaiverForever
+              </Typography>
+            </Hidden>
+            <Hidden lgUp>
+              <IconButton
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="Menu"
+                onClick={this.closeDrawer}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
             <div className={classes.navList}>
               {headers.map(({ name, routePath }) => (
                 <Typography key={name} variant="subtitle1" color="inherit">
