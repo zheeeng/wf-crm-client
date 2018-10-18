@@ -9,15 +9,18 @@ import TableHead from '@material-ui/core/TableHead'
 import TableCell from '@material-ui/core/TableCell'
 import Checkbox from '@material-ui/core/Checkbox'
 import Avatar from '@material-ui/core/Avatar'
-import Star from '@material-ui/icons/Star'
+import Hidden from '@material-ui/core/Hidden'
+import Typography from '@material-ui/core/Typography'
 import cssTips from '~src/utils/cssTips'
 import { Contact } from '~src/types/Contact'
 
+import StarBorder from '@material-ui/icons/StarBorder'
 import CallMerge from '@material-ui/icons/CallMerge'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import Delete from '@material-ui/icons/Delete'
 
+import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateContactForm from '~src/components/CreateContactForm'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
@@ -42,10 +45,6 @@ const styles = (theme: Theme) => createStyles({
   },
   button: {
     borderRadius: theme.spacing.unit * 2,
-  },
-  avatar: {
-    height: 32,
-    width: 32,
   },
   minCell: {
     width: '1%',
@@ -113,11 +112,81 @@ class MyCustomersIndex extends React.Component<Props, State> {
     })
   }
 
-  render () {
+  private renderPCLayoutTableRows = (contact: Contact) => (
+    <>
+      <TableCell><Typography component="strong">{contact.info.name}</Typography></TableCell>
+      <TableCell>{contact.info.email}</TableCell>
+      <TableCell>{contact.info.address}</TableCell>
+      <TableCell numeric>{contact.info.telephone}</TableCell>
+    </>
+  )
+
+  private renderTabletLayoutTableRows = (contact: Contact) => (
+    <>
+      <TableCell><Typography component="strong">{contact.info.name}</Typography></TableCell>
+      <TableCell>
+        <Typography>{contact.info.email}</Typography>
+        <Typography>{contact.info.address}</Typography>
+        <Typography>{contact.info.telephone}</Typography>
+      </TableCell>
+    </>
+  )
+
+  private renderMobileLayoutTableRows = (contact: Contact) => (
+    <TableCell>
+      <Typography component="strong">{contact.info.name}</Typography>
+      <Typography>{contact.info.email}</Typography>
+      <Typography>{contact.info.address}</Typography>
+      <Typography>{contact.info.telephone}</Typography>
+    </TableCell>
+  )
+
+  private renderTableRows = (contact: Contact) => {
     const { classes } = this.props
 
     return (
-      <>
+      <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
+        <TableCell padding="none" className={classes.minCell}>
+          <Checkbox
+            checked={this.state.checked.includes(contact.id)}
+            tabIndex={-1}
+          />
+        </TableCell>
+        <TableCell padding="none" className={classes.minCell}>
+          <IconButton>
+            <StarBorder
+              color={contact.info.starred ? 'secondary' : 'primary'}
+              onClick={this.handleStarClick(contact.id)}
+            />
+          </IconButton>
+        </TableCell>
+        <TableCell padding="none" className={classes.minCell}>
+          <Avatar
+            alt="Remy Sharp"
+            src={contact.info.avatar}
+          />
+        </TableCell>
+        <Hidden mdDown>
+          {this.renderPCLayoutTableRows(contact)}
+        </Hidden>
+        <Hidden lgUp xsDown>
+          {this.renderTabletLayoutTableRows(contact)}
+        </Hidden>
+        <Hidden smUp>
+          {this.renderMobileLayoutTableRows(contact)}
+        </Hidden>
+      </TableRow>
+    )
+  }
+
+  render () {
+    const { classes, contacts } = this.props
+    const displayContacts = contacts.filter(contact =>
+      [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
+    )
+
+    return (
+      <ContactTableThemeProvider>
         <CreateContactForm
           fields={['First name', 'Last name', 'Email', 'Phone']}
           open={this.state.createFormOpened}
@@ -145,13 +214,13 @@ class MyCustomersIndex extends React.Component<Props, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox" className={classes.minCell}>
+                <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
                     checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
                     onClick={this.handleToggleAllChecked}
                   />
                 </TableCell>
-                <TableCell colSpan={6} padding="checkbox">
+                <TableCell colSpan={6} padding="none">
                   <IconButton>
                     <ScreenShare />
                   </IconButton>
@@ -168,44 +237,11 @@ class MyCustomersIndex extends React.Component<Props, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.props.contacts
-                .filter(
-                  contact => [contact.info.name, contact.info.email]
-                    .some(field => field.includes(this.state.searchText)),
-                )
-                .map(contact => (
-                <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
-                  <TableCell padding="checkbox" className={classes.minCell}>
-                    <Checkbox
-                      checked={this.state.checked.includes(contact.id)}
-                      tabIndex={-1}
-                    />
-                  </TableCell>
-                  <TableCell padding="checkbox" className={classes.minCell}>
-                    <IconButton>
-                      <Star
-                        color={contact.info.starred ? 'secondary' : 'primary'}
-                        onClick={this.handleStarClick(contact.id)}
-                      />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell padding="checkbox" className={classes.minCell}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      className={classes.avatar}
-                      src={contact.info.avatar}
-                    />
-                  </TableCell>
-                  <TableCell>{contact.info.name}</TableCell>
-                  <TableCell>{contact.info.email}</TableCell>
-                  <TableCell>{contact.info.address}</TableCell>
-                  <TableCell numeric>{contact.info.telephone}</TableCell>
-                </TableRow>
-              ))}
+                {displayContacts.map(this.renderTableRows)}
             </TableBody>
           </Table>
         </div>
-      </>
+      </ContactTableThemeProvider>
     )
   }
 }
