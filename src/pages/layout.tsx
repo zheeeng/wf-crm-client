@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import Toolbar from '@material-ui/core/Toolbar'
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -32,7 +33,6 @@ const styles = (theme: Theme) => createStyles({
     boxShadow: '0 0 5px 1px lightgrey',
     flexGrow: 1,
   },
-  toolbar: theme.mixins.toolbar,
 })
 
 export interface Props extends WithStyles<typeof styles> {
@@ -48,7 +48,7 @@ class App extends React.Component<Props> {
       <div className={classes.root}>
         {this.props.header}
         <main className={classes.main}>
-          <div className={classes.toolbar} />
+          <Toolbar />
           <div className={classes.content}>
             {this.props.children}
           </div>

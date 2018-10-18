@@ -37,7 +37,6 @@ const styles = (theme: Theme) => createStyles({
     padding: theme.spacing.unit * 3,
     minWidth: 0,
   },
-  toolbar: theme.mixins.toolbar,
 })
 
 export interface Props extends WithStyles<typeof styles> {
@@ -104,13 +103,13 @@ class App extends React.Component<Props, State> {
             paper: classes.drawerPaper,
           }}
         >
-          <div className={classes.toolbar} />
+          <Toolbar />
           <List>{mailFolderListItems}</List>
           <Divider />
           <List>{otherMailFolderListItems}</List>
         </Drawer>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
+          <Toolbar />
           {this.props.children}
         </main>
       </div>

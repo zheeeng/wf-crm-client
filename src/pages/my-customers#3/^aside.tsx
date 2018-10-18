@@ -3,6 +3,7 @@ import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import { WithContext } from '@roundation/store'
 import Portal from '@material-ui/core/Portal'
+import ToolBar from '@material-ui/core/Toolbar'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
@@ -51,7 +52,6 @@ const styles = (theme: Theme) => createStyles({
     boxShadow: '0 0 5px 1px lightgrey',
     flexGrow: 1,
   },
-  toolbar: theme.mixins.toolbar,
   link: {
     color: theme.palette.primary.main,
     textDecoration: 'none',
@@ -136,7 +136,7 @@ class Aside extends React.Component<Props> {
           invisible: true,
         }}
       >
-        <div className={classes.toolbar} />
+        <ToolBar />
         <SiderBarThemeProvider>
           <List>
             <ListItem>
