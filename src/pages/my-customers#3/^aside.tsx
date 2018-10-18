@@ -132,10 +132,13 @@ class Aside extends React.Component<Props> {
         }}
         open={this.props.appStore.drawerExpanded}
         onClose={this.closeDrawer}
+        BackdropProps={{
+          invisible: true,
+        }}
       >
         <div className={classes.toolbar} />
         <SiderBarThemeProvider>
-          <Divider />
+          <Divider inset />
           <List>
             <ListItem>
               <ListItemIcon>
@@ -146,7 +149,7 @@ class Aside extends React.Component<Props> {
               </ListItemText>
             </ListItem>
           </List>
-          <Divider />
+          <Divider inset />
           <List component="nav">
             {subPageNavs.map(this.renderLink)}
           </List>

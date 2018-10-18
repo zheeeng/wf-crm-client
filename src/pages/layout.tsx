@@ -13,6 +13,9 @@ const styles = (theme: Theme) => createStyles({
   main: {
     flexGrow: 1,
     marginLeft: theme.spacing.unit * 30,
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 0,
+    },
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
     minWidth: 0,
