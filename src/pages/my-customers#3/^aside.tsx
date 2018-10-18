@@ -14,7 +14,7 @@ import Add from '@material-ui/icons/Add'
 import ChevronRight from '@material-ui/icons/ChevronRight'
 import MaterialIcon from '~src/units/MaterialIcon'
 import appStore from '~src/services/app'
-import contactStore from '~src/services/contacts'
+import contactsStore from '~src/services/contacts'
 import { SiderBarThemeProvider } from '~src/components/ThemeProviders'
 import Hidden from '@material-ui/core/Hidden'
 
@@ -61,8 +61,8 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends
   WithStyles<typeof styles>,
   ComponentProps,
-  WithContext<typeof appStore, 'appContext'>,
-  WithContext<typeof contactStore, 'contactContext'> {
+  WithContext<typeof appStore, 'appStore'>,
+  WithContext<typeof contactsStore, 'contactStore'> {
 }
 
 class Aside extends React.Component<Props> {
@@ -71,12 +71,12 @@ class Aside extends React.Component<Props> {
   private renderLinkLabel = (name: string) => {
     switch (name) {
       case 'All': {
-        const allCounts = this.props.contactContext.contacts.length
+        const allCounts = this.props.contactStore.contacts.length
 
         return <ListItemText>{name}({allCounts})</ListItemText>
       }
       case 'Starred': {
-        const starredCounts = this.props.contactContext.contacts.filter(contact => contact.info.starred).length
+        const starredCounts = this.props.contactStore.contacts.filter(contact => contact.info.starred).length
 
         return <ListItemText>{name}({starredCounts})</ListItemText>
       }
@@ -117,7 +117,7 @@ class Aside extends React.Component<Props> {
   )
 
   private closeDrawer = () => {
-    this.props.appContext.toggleDrawerExpanded(false)
+    this.props.appStore.toggleDrawerExpanded(false)
   }
 
   private renderDrawer = (isTemporary: boolean) => {
@@ -130,7 +130,7 @@ class Aside extends React.Component<Props> {
         classes={{
           paper: classes.drawerPaper,
         }}
-        open={this.props.appContext.drawerExpanded}
+        open={this.props.appStore.drawerExpanded}
         onClose={this.closeDrawer}
       >
         <div className={classes.toolbar} />
@@ -172,9 +172,9 @@ class Aside extends React.Component<Props> {
 }
 
 export default appStore.connect(
-  contactStore.connect(
+  contactsStore.connect(
     withStyles(styles)(Aside),
-    'contactContext',
+    'contactStore',
   ),
-  'appContext',
+  'appStore',
 )

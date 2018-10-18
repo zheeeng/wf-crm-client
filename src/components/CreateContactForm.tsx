@@ -7,7 +7,7 @@ import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 
 import { WithContext } from '@roundation/store'
-import store from '~src/services/notification'
+import notificationStore from '~src/services/notification'
 
 const styles = (theme: Theme) => createStyles({
   paper: {
@@ -29,7 +29,7 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles>, WithContext<typeof store, 'notificationContext'> {
+export interface Props extends WithStyles<typeof styles>, WithContext<typeof notificationStore, 'notificationStore'> {
   fields: string[],
   open: boolean,
   onClose?: React.ReactEventHandler<{}>,
@@ -44,7 +44,7 @@ class CreateContactForm extends React.PureComponent<Props> {
     }
 
   handleSubmit = () => {
-    this.props.notificationContext.handleOpen('Success create a new Contact!')
+    this.props.notificationStore.handleOpen('Success create a new Contact!')
   }
 
   render () {
@@ -76,4 +76,4 @@ class CreateContactForm extends React.PureComponent<Props> {
   }
 }
 
-export default store.connect(withStyles(styles)(CreateContactForm), 'notificationContext')
+export default notificationStore.connect(withStyles(styles)(CreateContactForm), 'notificationStore')

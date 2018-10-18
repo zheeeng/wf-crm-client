@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import store from '~src/services/notification'
 
-export interface Props extends WithContext<typeof store, 'notificationContext'> {
+export interface Props extends WithContext<typeof store, 'notificationStore'> {
 }
 
 export class Notification extends React.PureComponent<Props> {
@@ -20,7 +20,7 @@ export class Notification extends React.PureComponent<Props> {
       return
     }
 
-    this.props.notificationContext.handleClose()
+    this.props.notificationStore.handleClose()
   }
 
   closeIconNode = (
@@ -35,7 +35,7 @@ export class Notification extends React.PureComponent<Props> {
   )
 
   render () {
-    const { message } = this.props.notificationContext
+    const { message } = this.props.notificationStore
 
     return (
       <Snackbar
@@ -50,4 +50,4 @@ export class Notification extends React.PureComponent<Props> {
   }
 }
 
-export default store.connect(Notification, 'notificationContext')
+export default store.connect(Notification, 'notificationStore')
