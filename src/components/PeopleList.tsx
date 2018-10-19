@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import classNames from 'classnames'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import Table from '@material-ui/core/Table'
@@ -7,6 +8,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableHead from '@material-ui/core/TableHead'
 import TableCell from '@material-ui/core/TableCell'
+import TablePagination from '@material-ui/core/TablePagination'
 import Checkbox from '@material-ui/core/Checkbox'
 import Avatar from '@material-ui/core/Avatar'
 import Hidden from '@material-ui/core/Hidden'
@@ -30,13 +32,34 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 3,
     whiteSpace: 'nowrap',
     [theme.breakpoints.between('sm', 'md')]: {
       ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced,
     },
     [theme.breakpoints.up('md')]: {
       ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+    },
+  },
+  alignRight: {
+    '$head&': {
+      justifyContent: 'flex-end',
+    },
+  },
+  paginationIconButton: {
+    color: theme.palette.text.secondary,
+    backgroundColor: theme.palette.action.active,
+    padding: 0,
+    margin: theme.spacing.unit * 1.5,
+    borderRadius: '50%',
+    ['&:hover']: {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+  disabled: {
+    '$paginationIconButton&': {
+      color: theme.palette.text.secondary,
+      backgroundColor: theme.palette.action.disabled,
     },
   },
   table: {
@@ -62,6 +85,7 @@ export interface State {
   checked: string[]
   createFormOpened: boolean
   searchText: string
+  page: number
 }
 
 class MyCustomersIndex extends React.Component<Props, State> {
@@ -69,12 +93,21 @@ class MyCustomersIndex extends React.Component<Props, State> {
     checked: [],
     createFormOpened: false,
     searchText: '',
+    page: 1,
+  }
+
+  private get rowsPerPage () {
+    return 10
   }
 
   private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
     })
+  }
+
+  private handleChangePage = (_: any, page: number) => {
+    this.setState({ page })
   }
 
   private handleItemClick = (id: string) => () => {
@@ -191,11 +224,53 @@ class MyCustomersIndex extends React.Component<Props, State> {
     />
   )
 
+  private get filteredContacts () {
+    return this.props.contacts
+      .filter(contact =>
+        [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
+      )
+  }
+
+  private get displayContacts () {
+    const startIndex = this.state.page * this.rowsPerPage
+    const endIndex = startIndex + this.rowsPerPage
+
+    return this.filteredContacts.slice(startIndex, endIndex)
+  }
+
+  private renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
+    `${from}-${to} of ${count}`
+
+  private renderPagination = (inTable: boolean = false) => (
+    <TablePagination
+      component={inTable ? undefined : 'div'}
+      count={this.displayContacts.length}
+      rowsPerPage={this.rowsPerPage}
+      page={this.state.page}
+      backIconButtonProps={{
+        className: classNames([
+          this.props.classes.paginationIconButton,
+          this.state.page === 0 && this.props.classes.disabled,
+        ]),
+        ['aria-label']: 'Previous Page',
+      }}
+      nextIconButtonProps={{
+        className: classNames([
+          this.props.classes.paginationIconButton,
+          this.state.page === ~~(this.filteredContacts.length / this.rowsPerPage) && this.props.classes.disabled,
+        ]),
+        ['aria-label']: 'Next Page',
+      }}
+      onChangePage={this.handleChangePage}
+      labelDisplayedRows={this.renderLabelDisplayedRows}
+      rowsPerPageOptions={[]}
+    />
+  )
+
   render () {
-    const { classes, contacts } = this.props
-    const displayContacts = contacts.filter(contact =>
-      [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
-    )
+    const { classes } = this.props
+    const displayContacts = this.displayContacts
+    const { checked: checkedContacts } = this.state
 
     return (
       <ContactTableThemeProvider>
@@ -223,17 +298,22 @@ class MyCustomersIndex extends React.Component<Props, State> {
           {this.renderSearcher()}
           </div>
         </Hidden>
+        <Hidden mdUp>
+          <div className={classNames([classes.head, classes.alignRight])}>
+            {this.renderPagination()}
+          </div>
+        </Hidden>
         <div className={classes.table}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
-                    checked={this.props.contacts.every(contact => this.state.checked.includes(contact.id))}
+                    checked={this.props.contacts.every(contact => checkedContacts.includes(contact.id))}
                     onClick={this.handleToggleAllChecked}
                   />
                 </TableCell>
-                <TableCell colSpan={6} padding="none">
+                <TableCell colSpan={3} padding="none">
                   <IconButton>
                     <ScreenShare />
                   </IconButton>
@@ -247,6 +327,9 @@ class MyCustomersIndex extends React.Component<Props, State> {
                     <Delete />
                   </IconButton>
                 </TableCell>
+                <Hidden smDown>
+                  {this.renderPagination(true)}
+                </Hidden>
               </TableRow>
             </TableHead>
             <TableBody>
