@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 
 export const defaultTheme = createMuiTheme({})
 
-export const globalTheme = createMuiTheme({
+export const themeOptions: ThemeOptions = {
   palette: {
     primary: {
       main: '#5d8df8',
@@ -71,7 +72,9 @@ export const globalTheme = createMuiTheme({
       },
     },
   },
-})
+}
+
+export const globalTheme = createMuiTheme(themeOptions)
 
 const GlobalThemeProvider: React.SFC = (props) => (
   <MuiThemeProvider theme={globalTheme}>
