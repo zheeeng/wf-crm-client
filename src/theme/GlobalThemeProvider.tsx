@@ -19,12 +19,12 @@ export const themeOptions: ThemeOptions = {
       paper: '#fff',
       default: '#f2f4f7',
     },
-    error: {
-      main: '#e53214',
-    },
-    action: {
-      active: '#ebedf5',
-    },
+    // error: {
+    //   main: '#e53214',
+    // },
+    // action: {
+    //   active: '#ebedf5',
+    // },
   },
   typography: {
     useNextVariants: true,
