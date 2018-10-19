@@ -75,6 +75,18 @@ const styles = (theme: Theme) => createStyles({
   minCell: {
     width: '1%',
   },
+  w10Cell: {
+    width: '10%',
+  },
+  w15Cell: {
+    width: '15%',
+  },
+  w20Cell: {
+    width: '20%',
+  },
+  w25Cell: {
+    width: '25%',
+  },
 })
 
 export interface Props extends WithStyles<typeof styles> {
@@ -150,16 +162,20 @@ class MyCustomersIndex extends React.Component<Props, State> {
 
   private renderPCLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell><Typography component="strong" variant="subtitle1">{contact.info.name}</Typography></TableCell>
-      <TableCell>{contact.info.email}</TableCell>
-      <TableCell>{contact.info.address}</TableCell>
+      <TableCell className={this.props.classes.w15Cell}>
+        <Typography component="strong" variant="subtitle1">{contact.info.name}</Typography>
+      </TableCell>
+      <TableCell className={this.props.classes.w20Cell}>{contact.info.email}</TableCell>
+      <TableCell className={this.props.classes.w25Cell}>{contact.info.address}</TableCell>
       <TableCell numeric>{contact.info.telephone}</TableCell>
     </>
   )
 
   private renderTabletLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell><Typography component="strong" variant="subtitle1">{contact.info.name}</Typography></TableCell>
+      <TableCell className={this.props.classes.w25Cell}>
+        <Typography component="strong" variant="subtitle1">{contact.info.name}</Typography>
+      </TableCell>
       <TableCell>
         <Typography>{contact.info.email}</Typography>
         <Typography>{contact.info.address}</Typography>

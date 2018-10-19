@@ -14,8 +14,7 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
     },
     MuiTableCell: {
       root: {
-        paddingTop: 12,
-        paddingBottom: 12,
+        padding: 12,
       },
     },
     MuiTableRow: {
