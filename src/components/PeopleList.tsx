@@ -214,7 +214,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
             color="primary"
             onClick={this.changeCreateFormOpened(true)}
           >New contact</Button>
-          <Hidden xsDown>
+          <Hidden smDown>
             {this.renderSearcher()}
           </Hidden>
           <Button color="primary">
@@ -222,7 +222,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
             Download Plugin
           </Button>
         </div>
-        <Hidden smUp>
+        <Hidden mdUp>
           <div className={classes.head}>
           {this.renderSearcher()}
           </div>
