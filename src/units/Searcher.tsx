@@ -9,9 +9,6 @@ const styles = (theme: Theme) => createStyles({
   searchBar: {
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
   },
-  outlined: {
-    borderRadius: theme.spacing.unit * 2,
-  },
   input: {
     padding: 0,
   },
@@ -40,9 +37,6 @@ class Searcher extends React.PureComponent<Props> {
         )}
         inputProps={{
           className: classes.input,
-        }}
-        classes={{
-          notchedOutline: classes.outlined,
         }}
         value={value}
         onChange={onChange}

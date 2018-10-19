@@ -1,10 +1,18 @@
 import * as React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
+export const defaultTheme = createMuiTheme({})
+
 export const globalTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#5d8df8',
+    },
+    text: {
+      primary: '#3a5b8e',
+      secondary: '#637694',
+      disabled: '#8693a7',
+      hint: '#afbebb',
     },
     background: {
       paper: '#fff',
@@ -49,6 +57,18 @@ export const globalTheme = createMuiTheme({
   props: {
     MuiButtonBase: {
       disableRipple: true,
+    },
+  },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: defaultTheme.spacing.unit * 2,
+      },
+    },
+    MuiOutlinedInput: {
+      notchedOutline: {
+        borderRadius: defaultTheme.spacing.unit * 2,
+      },
     },
   },
 })

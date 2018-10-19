@@ -49,9 +49,6 @@ const styles = (theme: Theme) => createStyles({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
-  button: {
-    borderRadius: theme.spacing.unit * 2,
-  },
   minCell: {
     width: '1%',
   },
@@ -209,7 +206,6 @@ class MyCustomersIndex extends React.Component<Props, State> {
         />
         <div className={classes.head}>
           <Button
-            className={classes.button}
             variant="outlined"
             color="primary"
             onClick={this.changeCreateFormOpened(true)}

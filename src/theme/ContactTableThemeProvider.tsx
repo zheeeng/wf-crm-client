@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { globalTheme } from './GlobalThemeProvider'
+import mergeOptions from '~src/utils/mergeOptions'
 
-export const contactTableTheme = createMuiTheme({
-  ...globalTheme,
+export const contactTableTheme = mergeOptions(globalTheme, createMuiTheme({
   overrides: {
     MuiAvatar: {
       root: {
@@ -26,7 +26,7 @@ export const contactTableTheme = createMuiTheme({
       },
     },
   },
-})
+}))
 
 const ContactTableThemeProvider: React.SFC = (props) => (
   <MuiThemeProvider theme={contactTableTheme}>

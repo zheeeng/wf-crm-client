@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { globalTheme } from './GlobalThemeProvider'
+import mergeOptions from '~src/utils/mergeOptions'
 
-export const siderBarTheme = createMuiTheme({
-  ...globalTheme,
+export const siderBarTheme = mergeOptions(globalTheme, createMuiTheme({
   overrides: {
     MuiListItemIcon: {
       root: {
@@ -32,7 +32,7 @@ export const siderBarTheme = createMuiTheme({
       },
     },
   },
-})
+}))
 
 const SiderBarThemeProvider: React.SFC = (props) => (
   <MuiThemeProvider theme={siderBarTheme}>
