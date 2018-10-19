@@ -314,18 +314,22 @@ class MyCustomersIndex extends React.Component<Props, State> {
                   />
                 </TableCell>
                 <TableCell colSpan={3} padding="none">
-                  <IconButton>
-                    <ScreenShare />
-                  </IconButton>
-                  <IconButton>
-                    <CallMerge />
-                  </IconButton>
-                  <IconButton>
-                    <PersonAdd onClick={this.changeCreateFormOpened(true)} />
-                  </IconButton>
-                  <IconButton>
-                    <Delete />
-                  </IconButton>
+                  {checkedContacts.length > 0 && (
+                    <>
+                      <IconButton>
+                        <ScreenShare />
+                      </IconButton>
+                      <IconButton>
+                        <CallMerge />
+                      </IconButton>
+                      <IconButton>
+                        <PersonAdd onClick={this.changeCreateFormOpened(true)} />
+                      </IconButton>
+                      <IconButton>
+                        <Delete />
+                      </IconButton>
+                    </>
+                  )}
                 </TableCell>
                 <Hidden smDown>
                   {this.renderPagination(true)}
