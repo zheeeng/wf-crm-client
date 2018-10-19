@@ -120,7 +120,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
 
   private renderPCLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell><Typography component="strong">{contact.info.name}</Typography></TableCell>
+      <TableCell><Typography component="strong" variant="subtitle1">{contact.info.name}</Typography></TableCell>
       <TableCell>{contact.info.email}</TableCell>
       <TableCell>{contact.info.address}</TableCell>
       <TableCell numeric>{contact.info.telephone}</TableCell>
@@ -129,7 +129,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
 
   private renderTabletLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell><Typography component="strong">{contact.info.name}</Typography></TableCell>
+      <TableCell><Typography component="strong" variant="subtitle1">{contact.info.name}</Typography></TableCell>
       <TableCell>
         <Typography>{contact.info.email}</Typography>
         <Typography>{contact.info.address}</Typography>
@@ -140,7 +140,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
 
   private renderMobileLayoutTableRows = (contact: Contact) => (
     <TableCell>
-      <Typography component="strong">{contact.info.name}</Typography>
+      <Typography component="strong" variant="subtitle1">{contact.info.name}</Typography>
       <Typography>{contact.info.email}</Typography>
       <Typography>{contact.info.address}</Typography>
       <Typography>{contact.info.telephone}</Typography>
