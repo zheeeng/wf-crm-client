@@ -255,7 +255,7 @@ class MyCustomersIndex extends React.Component<Props, State> {
   }
 
   private renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
-    `${from}-${to} of ${count}`
+    `${from.toLocaleString('en-IN')}-${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
 
   private renderPagination = (inTable: boolean = false) => (
     <TablePagination
