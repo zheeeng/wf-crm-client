@@ -29,6 +29,7 @@ import MaterialIcon from '~src/units/MaterialIcon'
 
 const styles = (theme: Theme) => createStyles({
   head: {
+    flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -255,7 +256,7 @@ class PeopleList extends React.Component<Props, State> {
   }
 
   private renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
-    `${from.toLocaleString('en-IN')}-${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
+    `${from.toLocaleString('en-IN')} - ${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
 
   private renderPagination = (inTable: boolean = false) => (
     <TablePagination
