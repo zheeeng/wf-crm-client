@@ -12,6 +12,9 @@ const styles = (theme: Theme) => createStyles({
   input: {
     padding: 0,
   },
+  inputAdornment: {
+    fontSize: '0.87rem',
+  },
 })
 
 export interface Props extends WithStyles<typeof styles> {
@@ -31,7 +34,7 @@ class Searcher extends React.PureComponent<Props> {
         notched
         className={classNames([className, classes.searchBar])}
         startAdornment={(
-          <InputAdornment position="start">
+          <InputAdornment position="start" className={classes.inputAdornment}>
             <Search />
           </InputAdornment>
         )}
