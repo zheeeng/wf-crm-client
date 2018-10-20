@@ -92,6 +92,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   contacts: Contact[]
+  navigateToProfile: (id: string) => void
 }
 
 export interface State {
@@ -125,7 +126,12 @@ class PeopleList extends React.Component<Props, State> {
     this.setState({ page })
   }
 
-  private handleItemClick = (id: string) => () => {
+  private handleShowProfile = (id: string) => () => {
+    this.props.navigateToProfile(`contacts/${id}`)
+  }
+
+  private handleItemCheckedToggle = (id: string) => (e: React.SyntheticEvent) => {
+    e.stopPropagation()
     const { checked } = this.state
     const currentIndex = checked.indexOf(id)
     const newChecked = [...checked]
@@ -198,12 +204,14 @@ class PeopleList extends React.Component<Props, State> {
 
   private renderTableRows = (contact: Contact) => {
     const { classes } = this.props
+    const { id } = contact
 
     return (
-      <TableRow key={contact.id} onClick={this.handleItemClick(contact.id)}>
+      <TableRow key={id} onClick={this.handleShowProfile(id)}>
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checked={this.state.checked.includes(contact.id)}
+            onChange={this.handleItemCheckedToggle(id)}
+            checked={this.state.checked.includes(id)}
             tabIndex={-1}
           />
         </TableCell>
@@ -211,7 +219,7 @@ class PeopleList extends React.Component<Props, State> {
           <IconButton>
             <StarBorder
               color={contact.info.starred ? 'secondary' : 'primary'}
-              onClick={this.handleStarClick(contact.id)}
+              onClick={this.handleStarClick(id)}
             />
           </IconButton>
         </TableCell>

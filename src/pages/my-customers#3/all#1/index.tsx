@@ -4,22 +4,40 @@ import { WithContext } from '@roundation/store'
 import contactsStore from '~src/services/contacts'
 import PeopleList from '~src/components/PeopleList'
 
+import { ComponentProps } from '@roundation/roundation/lib/types'
+
 const styles = (theme: Theme) => createStyles({
 })
 
-export interface Props extends WithStyles<typeof styles>, WithContext<typeof contactsStore, 'contactsStore'> {
-}
+export interface Props extends
+  ComponentProps,
+  WithStyles<typeof styles>,
+  WithContext<typeof contactsStore, 'contactsStore'> {
+  }
 
 export interface State {
 }
 
 class AllMyCustomersIndex extends React.Component<Props, State> {
+  private get contactsStore () { return this.props.contactsStore }
+
+  private navigateToProfile = (page: string) => {
+    this.props.navigate && this.props.navigate(page)
+  }
+
   render () {
-    const contacts = this.props.contactsStore.contacts
+    const { contacts } = this.contactsStore
 
     return (
-      <PeopleList contacts={contacts} />
+      <PeopleList
+        contacts={contacts}
+        navigateToProfile={this.navigateToProfile}
+      />
     )
+  }
+
+  componentDidMount () {
+    this.contactsStore.fetchContacts()
   }
 }
 
