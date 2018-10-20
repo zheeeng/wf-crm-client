@@ -24,7 +24,7 @@ import PersonAdd from '@material-ui/icons/PersonAdd'
 import Delete from '@material-ui/icons/Delete'
 
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
-import CreateContactForm from '~src/components/CreateContactForm'
+import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
 
@@ -105,7 +105,8 @@ export interface Props extends WithStyles<typeof styles> {
 
 export interface State {
   checked: string[]
-  createFormOpened: boolean
+  createFormOpened: boolean,
+  createFormOption: CreateFormOption,
   searchText: string
   page: number,
   popoverAnchorEl: HTMLElement | null
@@ -116,6 +117,7 @@ class PeopleList extends React.Component<Props, State> {
   state: State = {
     checked: [],
     createFormOpened: false,
+    createFormOption: {},
     searchText: '',
     page: 1,
     popoverAnchorEl: null,
@@ -123,15 +125,15 @@ class PeopleList extends React.Component<Props, State> {
   }
 
   private handlePopoverToggle: {
-    (open: true, text: string): (event: React.MouseEvent<HTMLDivElement>) => void;
-    (open: false): (event: React.MouseEvent<HTMLDivElement>) => void;
-  } = (open: boolean, text?: string) =>
+    (opened: true, text: string): (event: React.MouseEvent<HTMLDivElement>) => void;
+    (opened: false): (event: React.MouseEvent<HTMLDivElement>) => void;
+  } = (opened: boolean, text?: string) =>
     (event: React.MouseEvent<HTMLDivElement>) => {
       const currentTarget = event.currentTarget
       requestAnimationFrame(() => {
         this.setState({
-          popoverAnchorEl: open ? currentTarget : null,
-          popoverText: open ? text as string : '',
+          popoverAnchorEl: opened ? currentTarget : null,
+          popoverText: opened ? text as string : '',
         })
       })
     }
@@ -189,9 +191,13 @@ class PeopleList extends React.Component<Props, State> {
     //
   }
 
-  private changeCreateFormOpened = (opened: boolean) => () => {
+  private changeCreateFormOpened: {
+    (opened: true, option: CreateFormOption): () => void;
+    (opened: false): () => void;
+  } = (opened: boolean, option?: CreateFormOption) => () => {
     this.setState({
       createFormOpened: opened,
+      createFormOption: opened ? option as CreateFormOption : {},
     })
   }
 
@@ -342,7 +348,13 @@ class PeopleList extends React.Component<Props, State> {
         onMouseEnter={this.handlePopoverToggle(true, 'add')}
         onMouseLeave={this.handlePopoverToggle(false)}
       >
-        <PersonAdd onClick={this.changeCreateFormOpened(true)} />
+        <PersonAdd onClick={this.changeCreateFormOpened(
+          true,
+          {
+            title: 'New Group',
+            fields: ['Group Name'],
+          },
+        )} />
       </IconButton>
       <IconButton
         onMouseEnter={this.handlePopoverToggle(true, 'delete')}
@@ -376,20 +388,26 @@ class PeopleList extends React.Component<Props, State> {
   render () {
     const { classes, contacts } = this.props
     const displayContacts = this.displayContacts
-    const { checked: checkedContacts } = this.state
+    const { checked: checkedContacts, createFormOpened, createFormOption } = this.state
+
+    const newContactFormOption: CreateFormOption = {
+      title: 'New Contact',
+      fields: ['First name', 'Last name', 'Email', 'Phone'],
+      okText: 'Create',
+    }
 
     return (
       <ContactTableThemeProvider>
-        <CreateContactForm
-          fields={['First name', 'Last name', 'Email', 'Phone']}
-          open={this.state.createFormOpened}
+        <CreateForm
+          option={createFormOption}
+          open={createFormOpened}
           onClose={this.changeCreateFormOpened(false)}
         />
         <div className={classes.head}>
           <Button
             variant="outlined"
             color="primary"
-            onClick={this.changeCreateFormOpened(true)}
+            onClick={this.changeCreateFormOpened(true, newContactFormOption)}
           >New contact</Button>
           <Hidden smDown>
             {this.renderSearcher()}

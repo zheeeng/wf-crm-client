@@ -29,13 +29,20 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles>, WithContext<typeof notificationStore, 'notificationStore'> {
-  fields: string[],
-  open: boolean,
-  onClose?: React.ReactEventHandler<{}>,
+export interface CreateFormOption {
+  title?: string,
+  fields?: string[],
+  okText?: string,
+  cancelText?: string
 }
 
-class CreateContactForm extends React.PureComponent<Props> {
+export interface Props extends WithStyles<typeof styles>, WithContext<typeof notificationStore, 'notificationStore'> {
+  open: boolean,
+  onClose?: React.ReactEventHandler<{}>,
+  option?: CreateFormOption
+}
+
+class CreateForm extends React.PureComponent<Props> {
   fieldValues = {}
 
   handleCreateInfoChange = (field: string) =>
@@ -43,12 +50,14 @@ class CreateContactForm extends React.PureComponent<Props> {
       this.fieldValues[field] = e.target.value
     }
 
-  handleSubmit = () => {
+  onOk = () => {
     this.props.notificationStore.handleOpen('Success create a new Contact!')
   }
 
   render () {
-    const { fields, open, onClose, classes } = this.props
+    const { option, open, onClose, classes } = this.props
+
+    const { title = 'title', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
 
     return (
       <Modal
@@ -57,7 +66,7 @@ class CreateContactForm extends React.PureComponent<Props> {
       >
         <div className={classes.paper}>
           <Typography variant="subtitle1" align="center">
-            New Contact
+            {title}
           </Typography>
           {fields.map(field => (
             <BasicFormInput
@@ -67,8 +76,8 @@ class CreateContactForm extends React.PureComponent<Props> {
             />
           ))}
           <div className={classes.buttonZone}>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button color="primary" onClick={this.handleSubmit}>Create</Button>
+            <Button onClick={onClose}>{cancelText}</Button>
+            <Button color="primary" onClick={this.onOk}>{okText}</Button>
           </div>
         </div>
       </Modal>
@@ -76,4 +85,4 @@ class CreateContactForm extends React.PureComponent<Props> {
   }
 }
 
-export default notificationStore.connect(withStyles(styles)(CreateContactForm), 'notificationStore')
+export default notificationStore.connect(withStyles(styles)(CreateForm), 'notificationStore')
