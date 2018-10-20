@@ -100,7 +100,7 @@ export interface State {
   page: number
 }
 
-class MyCustomersIndex extends React.Component<Props, State> {
+class PeopleList extends React.Component<Props, State> {
   state: State = {
     checked: [],
     createFormOpened: false,
@@ -362,4 +362,4 @@ class MyCustomersIndex extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(MyCustomersIndex)
+export default withStyles(styles)(PeopleList)
