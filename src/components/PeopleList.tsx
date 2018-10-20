@@ -116,6 +116,8 @@ class PeopleList extends React.Component<Props, State> {
   private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
+      page: 0,
+      checked: [],
     })
   }
 
@@ -242,9 +244,13 @@ class PeopleList extends React.Component<Props, State> {
   )
 
   private get filteredContacts () {
+    const { searchText } = this.state
+
+    if (!searchText) return this.props.contacts
+
     return this.props.contacts
       .filter(contact =>
-        [contact.info.name, contact.info.email].some(field => field.includes(this.state.searchText)),
+        [contact.info.name, contact.info.email].some(field => field.includes(searchText)),
       )
   }
 
@@ -261,7 +267,7 @@ class PeopleList extends React.Component<Props, State> {
   private renderPagination = (inTable: boolean = false) => (
     <TablePagination
       component={inTable ? undefined : 'div'}
-      count={this.displayContacts.length}
+      count={this.filteredContacts.length}
       rowsPerPage={this.rowsPerPage}
       page={this.state.page}
       backIconButtonProps={{
@@ -285,7 +291,7 @@ class PeopleList extends React.Component<Props, State> {
   )
 
   render () {
-    const { classes } = this.props
+    const { classes, contacts } = this.props
     const displayContacts = this.displayContacts
     const { checked: checkedContacts } = this.state
 
@@ -326,7 +332,7 @@ class PeopleList extends React.Component<Props, State> {
               <TableRow>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
-                    checked={this.props.contacts.every(contact => checkedContacts.includes(contact.id))}
+                    checked={contacts.every(contact => checkedContacts.includes(contact.id))}
                     onClick={this.handleToggleAllChecked}
                   />
                 </TableCell>
