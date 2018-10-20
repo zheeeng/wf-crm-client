@@ -18,7 +18,7 @@ const styles = (theme: Theme) => createStyles({
 })
 
 export interface Props extends WithStyles<typeof styles> {
-  className: string,
+  className?: string,
   value?: string,
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   placeholder?: string
