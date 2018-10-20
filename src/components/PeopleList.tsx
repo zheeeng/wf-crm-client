@@ -13,6 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Avatar from '@material-ui/core/Avatar'
 import Hidden from '@material-ui/core/Hidden'
 import Typography from '@material-ui/core/Typography'
+import Popover from '@material-ui/core/Popover'
 import cssTips from '~src/utils/cssTips'
 import { Contact } from '~src/types/Contact'
 
@@ -46,6 +47,13 @@ const styles = (theme: Theme) => createStyles({
     '$head&': {
       justifyContent: 'flex-end',
     },
+  },
+  popover: {
+    pointerEvents: 'none',
+  },
+  popoverPaper: {
+    padding: theme.spacing.unit,
+    backgroundColor: theme.palette.background.paper,
   },
   paginationIconButton: {
     color: theme.palette.text.secondary,
@@ -99,7 +107,9 @@ export interface State {
   checked: string[]
   createFormOpened: boolean
   searchText: string
-  page: number
+  page: number,
+  popoverAnchorEl: HTMLElement | null
+  popoverText: string
 }
 
 class PeopleList extends React.Component<Props, State> {
@@ -108,7 +118,23 @@ class PeopleList extends React.Component<Props, State> {
     createFormOpened: false,
     searchText: '',
     page: 1,
+    popoverAnchorEl: null,
+    popoverText: '',
   }
+
+  private handlePopoverToggle: {
+    (open: true, text: string): (event: React.MouseEvent<HTMLDivElement>) => void;
+    (open: false): (event: React.MouseEvent<HTMLDivElement>) => void;
+  } = (open: boolean, text?: string) =>
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const currentTarget = event.currentTarget
+      requestAnimationFrame(() => {
+        this.setState({
+          popoverAnchorEl: open ? currentTarget : null,
+          popoverText: open ? text as string : '',
+        })
+      })
+    }
 
   private get rowsPerPage () {
     return 10
@@ -298,6 +324,55 @@ class PeopleList extends React.Component<Props, State> {
     />
   )
 
+  private renderControls = () => (
+    <>
+      <IconButton
+        onMouseEnter={this.handlePopoverToggle(true, 'copy')}
+        onMouseLeave={this.handlePopoverToggle(false)}
+      >
+        <ScreenShare />
+      </IconButton>
+      <IconButton
+        onMouseEnter={this.handlePopoverToggle(true, 'share')}
+        onMouseLeave={this.handlePopoverToggle(false)}
+      >
+        <CallMerge />
+      </IconButton>
+      <IconButton
+        onMouseEnter={this.handlePopoverToggle(true, 'add')}
+        onMouseLeave={this.handlePopoverToggle(false)}
+      >
+        <PersonAdd onClick={this.changeCreateFormOpened(true)} />
+      </IconButton>
+      <IconButton
+        onMouseEnter={this.handlePopoverToggle(true, 'delete')}
+        onMouseLeave={this.handlePopoverToggle(false)}
+      >
+        <Delete />
+      </IconButton>
+      <Popover
+        className={this.props.classes.popover}
+        classes={{
+          paper: this.props.classes.popoverPaper,
+        }}
+        open={!!this.state.popoverAnchorEl}
+        anchorEl={this.state.popoverAnchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={this.handlePopoverToggle(false)}
+        disableRestoreFocus
+      >
+        <Typography>{this.state.popoverText}</Typography>
+      </Popover>
+    </>
+  )
+
   render () {
     const { classes, contacts } = this.props
     const displayContacts = this.displayContacts
@@ -345,22 +420,7 @@ class PeopleList extends React.Component<Props, State> {
                   />
                 </TableCell>
                 <TableCell colSpan={3} padding="none">
-                  {checkedContacts.length > 0 && (
-                    <>
-                      <IconButton>
-                        <ScreenShare />
-                      </IconButton>
-                      <IconButton>
-                        <CallMerge />
-                      </IconButton>
-                      <IconButton>
-                        <PersonAdd onClick={this.changeCreateFormOpened(true)} />
-                      </IconButton>
-                      <IconButton>
-                        <Delete />
-                      </IconButton>
-                    </>
-                  )}
+                  {checkedContacts.length > 0 && this.renderControls()}
                 </TableCell>
                 <Hidden smDown>
                   {this.renderPagination(true)}

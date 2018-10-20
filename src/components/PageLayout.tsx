@@ -45,27 +45,23 @@ export interface Props extends WithStyles<typeof styles> {
 
 export interface State {
   auth: boolean
-  anchorEl: any
+  anchorEl: HTMLElement | null
 }
 
 class App extends React.Component<Props, State> {
-  state = {
+  state: State = {
     auth: true,
     anchorEl: null,
   }
 
-  handleMenu = (event: React.MouseEvent<HTMLDivElement>) => {
-    this.setState({ anchorEl: event.currentTarget })
-  }
-
-  handleClose = () => {
-    this.setState({ anchorEl: null })
-  }
+  private handleMenuToggle = (open: boolean) =>
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      this.setState({ anchorEl: open ? event.currentTarget : null })
+    }
 
   render () {
     const { classes } = this.props
     const { auth, anchorEl } = this.state
-    const open = Boolean(anchorEl)
 
     return (
       <div className={classes.root}>
@@ -87,11 +83,19 @@ class App extends React.Component<Props, State> {
                     vertical: 'top',
                     horizontal: 'right',
                   }}
-                  open={open}
-                  onClose={this.handleClose}
+                  open={!!anchorEl}
+                  onClose={this.handleMenuToggle(false)}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem
+                    onClick={this.handleMenuToggle(false)}
+                  >
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={this.handleMenuToggle(false)}
+                  >
+                    My account
+                  </MenuItem>
                 </Menu>
               </div>
             )}

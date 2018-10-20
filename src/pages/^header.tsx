@@ -63,11 +63,12 @@ export interface Props extends WithStyles<typeof styles>, ComponentProps, WithCo
 
 export interface State {
   auth: boolean
-  anchorEl: any
+  anchorEl: HTMLElement | null
 }
 
 class Header extends React.Component<Props> {
-  state = {
+  state: State = {
+    auth: false,
     anchorEl: null,
   }
 
