@@ -210,7 +210,7 @@ class PeopleList extends React.Component<Props, State> {
       <TableRow key={id} onClick={this.handleShowProfile(id)}>
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            onChange={this.handleItemCheckedToggle(id)}
+            onClick={this.handleItemCheckedToggle(id)}
             checked={this.state.checked.includes(id)}
             tabIndex={-1}
           />
