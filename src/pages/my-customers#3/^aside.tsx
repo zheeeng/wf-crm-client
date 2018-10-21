@@ -95,10 +95,14 @@ class Aside extends React.Component<Props, State> {
       .filter(group => group.info.name.toLowerCase().includes(searchText.toLowerCase()))
   }
 
-  handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
     })
+  }
+
+  private navigateToGroup = (id: string) => () => {
+    this.props.navigate && this.props.navigate(`${id}`)
   }
 
   private handleGroupsOpenedToggled = (opened?: boolean) => () => {
@@ -174,7 +178,12 @@ class Aside extends React.Component<Props, State> {
           />
         </ListItem>
         {this.filteredGroups.map(group => (
-          <ListItem key={group.id} button className={this.props.classes.nestedItem}>
+          <ListItem
+            key={group.id}
+            button
+            className={this.props.classes.nestedItem}
+            onClick={this.navigateToGroup(group.id)}
+          >
             <ListItemText>
               {group.info.name}
             </ListItemText>
