@@ -17,3 +17,11 @@ export interface ContactFullInfo extends Arrify<{
   info: Arrify<Contact['info']>,
 }> {
 }
+
+export interface Group {
+  id: string,
+  info: {
+    name: string,
+    contacts: Contact[],
+  }
+}
