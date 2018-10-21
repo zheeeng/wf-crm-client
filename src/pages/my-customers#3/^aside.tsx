@@ -89,10 +89,10 @@ class Aside extends React.Component<Props, State> {
   get filteredGroups () {
     const { searchText } = this.state
 
-    if (searchText) return this.props.groupsStore.groups
+    if (!searchText) return this.props.groupsStore.groups
 
     return this.props.groupsStore.groups
-      .filter(group => group.info.name.includes(searchText))
+      .filter(group => group.info.name.toLowerCase().includes(searchText.toLowerCase()))
   }
 
   handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +164,7 @@ class Aside extends React.Component<Props, State> {
   )
 
   private renderGroups = () => (
-    <Collapse key="@groups@" in={this.state.groupsOpened} timeout="auto" unmountOnExit>
+    <Collapse in={this.state.groupsOpened} timeout="auto" unmountOnExit>
       <List component="div" disablePadding>
         <ListItem button>
           <Searcher
