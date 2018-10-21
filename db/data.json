@@ -165,5 +165,55 @@
                 "telephone": "(212)323-9323"
             }
         }
+    ],
+    "groups": [
+        {
+            "id": "g1",
+            "info": {
+                "name": "Bridge Tours"
+            }
+        },
+        {
+            "id": "g2",
+            "info": {
+                "name": "Alaska Tours"
+            }
+        },
+        {
+            "id": "g3",
+            "info": {
+                "name": "Ben Jack Tours"
+            }
+        },
+        {
+            "id": "g4",
+            "info": {
+                "name": "Bridge Ski"
+            }
+        },
+        {
+            "id": "g5",
+            "info": {
+                "name": "Golden Tours"
+            }
+        },
+        {
+            "id": "g6",
+            "info": {
+                "name": "Hiking Club"
+            }
+        },
+        {
+            "id": "g7",
+            "info": {
+                "name": "Optima Sports"
+            }
+        },
+        {
+            "id": "g8",
+            "info": {
+                "name": "Goup Tours"
+            }
+        }
     ]
 }
