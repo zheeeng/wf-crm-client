@@ -35,10 +35,6 @@ class StarredMyCustomersIndex extends React.Component<Props, State> {
       />
     )
   }
-
-  componentDidMount () {
-    this.contactsStore.fetchContacts()
-  }
 }
 
 export default contactsStore.connect(
