@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import { WithContext } from '@roundation/store'
+import classNames from 'classnames'
 import Portal from '@material-ui/core/Portal'
 import ToolBar from '@material-ui/core/Toolbar'
 import Drawer from '@material-ui/core/Drawer'
@@ -17,6 +18,9 @@ import Hidden from '@material-ui/core/Hidden'
 import Add from '@material-ui/icons/Add'
 import ChevronRight from '@material-ui/icons/ChevronRight'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import BorderColor from '@material-ui/icons/BorderColor'
+import ScreenShare from '@material-ui/icons/ScreenShare'
+import Delete from '@material-ui/icons/Delete'
 
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
@@ -24,18 +28,11 @@ import appStore from '~src/services/app'
 import contactsStore from '~src/services/contacts'
 import groupsStore from '~src/services/groups'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
+import cssTips from '~src/utils/cssTips'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
 const styles = (theme: Theme) => createStyles({
-  root: {
-    flexGrow: 1,
-    height: '100%',
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-  },
   drawerPaper: {
     position: 'fixed',
     width: theme.spacing.unit * 30,
@@ -44,26 +41,15 @@ const styles = (theme: Theme) => createStyles({
   nestedItem: {
     paddingLeft: theme.spacing.unit * 6,
   },
-  main: {
-    flexGrow: 1,
-    marginLeft: theme.spacing.unit * 30,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
-    minWidth: 0,
-    // TODO:: Change to 100%
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
+  flexHeight: {
+    flex: 1,
   },
-  content: {
-    padding: theme.spacing.unit,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: '0 0 5px 1px lightgrey',
-    flexGrow: 1,
+  groupActions: {
+    ...cssTips(theme, { sizeFactor: 1 }).horizontallySpaced,
   },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
+  invisible: {
+    visibility: 'hidden',
+    pointerEvents: 'none',
   },
 })
 
@@ -102,7 +88,7 @@ class Aside extends React.Component<Props, State> {
   }
 
   private navigateToGroup = (id: string) => () => {
-    this.props.navigate && this.props.navigate(`${id}`)
+    this.props.navigate && this.props.navigate(`groups/${id}`)
   }
 
   private handleGroupsOpenedToggled = (opened?: boolean) => () => {
@@ -134,9 +120,11 @@ class Aside extends React.Component<Props, State> {
               {name}({groupsCount})
             </ListItemText>
             <ListItemSecondaryAction>
-              {this.state.groupsOpened
-                ? <ExpandMore onClick={this.handleGroupsOpenedToggled(false)} />
-                : <ChevronRight onClick={this.handleGroupsOpenedToggled(true)} />}
+              {
+                this.state.groupsOpened
+                  ? <ExpandMore onClick={this.handleGroupsOpenedToggled(false)} />
+                  : <ChevronRight onClick={this.handleGroupsOpenedToggled(true)} />
+              }
               <Add />
             </ListItemSecondaryAction>
           </>
@@ -199,6 +187,7 @@ class Aside extends React.Component<Props, State> {
 
   private renderDrawer = (isTemporary: boolean) => {
     const { classes, locationInfo } = this.props
+    const { groupsOpened } = this.state
     const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
 
     return (
@@ -215,7 +204,7 @@ class Aside extends React.Component<Props, State> {
       >
         <ToolBar />
         <SiderBarThemeProvider>
-          <List>
+          <List component="div">
             <ListItem>
               <ListItemIcon>
                 <MaterialIcon icon={'PermContactCalendar'} />
@@ -226,8 +215,17 @@ class Aside extends React.Component<Props, State> {
             </ListItem>
           </List>
           <Divider />
-          <List component="nav">
+          <List component="nav" className={this.props.classes.flexHeight}>
             {subPageNavs.map(this.renderLink)}
+          </List>
+          <List component="div" className={classNames(!groupsOpened && this.props.classes.invisible)}>
+            <ListItem>
+              <ListItemSecondaryAction className={this.props.classes.groupActions}>
+                <BorderColor />
+                <ScreenShare />
+                <Delete />
+              </ListItemSecondaryAction>
+            </ListItem>
           </List>
         </SiderBarThemeProvider>
       </Drawer>
