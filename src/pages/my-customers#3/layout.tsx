@@ -4,6 +4,8 @@ import { WithContext } from '@roundation/store'
 import groupsStore from '~src/services/groups'
 import contactsStore from '~src/services/contacts'
 
+import { ComponentProps } from '@roundation/roundation/lib/types'
+
 // const { Provider } = store
 
 const styles = (theme: Theme) => createStyles({
@@ -12,15 +14,15 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends
   WithStyles<typeof styles>,
   WithContext<typeof contactsStore, 'contactsStore'>,
-  WithContext<typeof groupsStore, 'groupsStore'> {
-    aside?: JSX.Element | JSX.Element[]
-  }
+  WithContext<typeof groupsStore, 'groupsStore'>,
+  ComponentProps<'aside'> {
+}
 
 class MyCustomersLayout extends React.Component<Props> {
   render () {
     return (
       <>
-        {this.props.aside}
+        {this.props.slots.aside}
         {this.props.children}
       </>
     )

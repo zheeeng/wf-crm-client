@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
+import { ComponentProps } from '@roundation/roundation/lib/types'
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -35,8 +36,7 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles> {
-  header?: JSX.Element | JSX.Element[]
+export interface Props extends WithStyles<typeof styles>, ComponentProps<'header'> {
 }
 
 class App extends React.Component<Props> {
@@ -46,7 +46,7 @@ class App extends React.Component<Props> {
 
     return (
       <div className={classes.root}>
-        {this.props.header}
+        {this.props.slots.header}
         <main className={classes.main}>
           <Toolbar />
           <div className={classes.content}>

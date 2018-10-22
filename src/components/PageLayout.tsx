@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 
+import { ComponentProps } from '@roundation/roundation/lib/types'
+
 const drawerWidth = 240
 
 const mailFolderListItems = '123'
@@ -39,8 +41,7 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles> {
-  header: JSX.Element | JSX.Element[]
+export interface Props extends WithStyles<typeof styles>, ComponentProps<'header'> {
 }
 
 export interface State {
@@ -70,7 +71,7 @@ class App extends React.Component<Props, State> {
             <Typography variant="subtitle1" color="inherit" className={classes.appBar}>
               WaiverForever
             </Typography>
-            {this.props.header}
+            {this.props.slots.header}
             {auth && (
               <div>
                 <Menu
