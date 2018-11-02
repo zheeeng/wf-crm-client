@@ -21,18 +21,9 @@ const styles = (theme: Theme) => createStyles({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
     minWidth: 0,
-    // TODO:: Change to 100%
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing.unit * 4,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: '0 0 5px 1px lightgrey',
-    flexGrow: 1,
   },
 })
 
@@ -47,12 +38,10 @@ class App extends React.Component<Props> {
     return (
       <div className={classes.root}>
         {this.props.slots.header}
-        <main className={classes.main}>
+        <div className={classes.main}>
           <Toolbar />
-          <div className={classes.content}>
-            {this.props.children}
-          </div>
-        </main>
+          {this.props.children}
+        </div>
       </div>
     )
   }

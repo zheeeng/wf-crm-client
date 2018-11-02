@@ -113,10 +113,10 @@ class App extends React.Component<Props, State> {
           <Divider />
           <List>{otherMailFolderListItems}</List>
         </Drawer>
-        <main className={classes.content}>
+        <div className={classes.content}>
           <Toolbar />
           {this.props.children}
-        </main>
+        </div>
       </div>
     )
   }
