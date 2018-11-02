@@ -76,16 +76,16 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@roundation/roundation@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.18.tgz#9a5e8ee1f7ffe1473e924c2e2dc72eb25f58b85d"
+"@roundation/roundation@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.20.tgz#5d51cc7bb3e64f68cb280239bb183c539887744d"
   dependencies:
     "@reach/router" "^1.1.1"
     react-loadable "^5.5.0"
 
-"@roundation/store@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@roundation/store/-/store-0.0.12.tgz#2b36dfe645ebf541ecb56f12c593d71b996a5eb4"
+"@roundation/store@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@roundation/store/-/store-0.0.13.tgz#45480e1bf9051925a8e49c9c7f602b8a6b728d28"
 
 "@types/body-parser@*":
   version "1.17.0"
