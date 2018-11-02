@@ -25,6 +25,7 @@ import Delete from '@material-ui/icons/Delete'
 
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
+import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
 
@@ -155,7 +156,7 @@ class PeopleList extends React.Component<Props, State> {
   }
 
   private handleShowProfile = (id: string) => () => {
-    this.props.navigateToProfile(`contacts/${id}`)
+    this.props.navigateToProfile(id)
   }
 
   private handleItemCheckedToggle = (id: string) => (e: React.SyntheticEvent) => {
@@ -397,60 +398,62 @@ class PeopleList extends React.Component<Props, State> {
     }
 
     return (
-      <ContactTableThemeProvider>
-        <CreateForm
-          option={createFormOption}
-          open={createFormOpened}
-          onClose={this.changeCreateFormOpened(false)}
-        />
-        <div className={classes.head}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={this.changeCreateFormOpened(true, newContactFormOption)}
-          >New contact</Button>
-          <Hidden smDown>
-            {this.renderSearcher()}
-          </Hidden>
-          <Button color="primary">
-            <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
-            Download Plugin
-          </Button>
-        </div>
-        <Hidden mdUp>
+      <DisplayPaper>
+        <ContactTableThemeProvider>
+          <CreateForm
+            option={createFormOption}
+            open={createFormOpened}
+            onClose={this.changeCreateFormOpened(false)}
+          />
           <div className={classes.head}>
-          {this.renderSearcher()}
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={this.changeCreateFormOpened(true, newContactFormOption)}
+            >New contact</Button>
+            <Hidden smDown>
+              {this.renderSearcher()}
+            </Hidden>
+            <Button color="primary">
+              <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
+              Download Plugin
+            </Button>
           </div>
-        </Hidden>
-        <Hidden mdUp>
-          <div className={classNames([classes.head, classes.alignRight])}>
-            {this.renderPagination()}
+          <Hidden mdUp>
+            <div className={classes.head}>
+            {this.renderSearcher()}
+            </div>
+          </Hidden>
+          <Hidden mdUp>
+            <div className={classNames([classes.head, classes.alignRight])}>
+              {this.renderPagination()}
+            </div>
+          </Hidden>
+          <div className={classes.table}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="none" className={classes.minCell}>
+                    <Checkbox
+                      checked={contacts.every(contact => checkedContacts.includes(contact.id))}
+                      onClick={this.handleToggleAllChecked}
+                    />
+                  </TableCell>
+                  <TableCell colSpan={3} padding="none">
+                    {checkedContacts.length > 0 && this.renderControls()}
+                  </TableCell>
+                  <Hidden smDown>
+                    {this.renderPagination(true)}
+                  </Hidden>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                  {displayContacts.map(this.renderTableRows)}
+              </TableBody>
+            </Table>
           </div>
-        </Hidden>
-        <div className={classes.table}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="none" className={classes.minCell}>
-                  <Checkbox
-                    checked={contacts.every(contact => checkedContacts.includes(contact.id))}
-                    onClick={this.handleToggleAllChecked}
-                  />
-                </TableCell>
-                <TableCell colSpan={3} padding="none">
-                  {checkedContacts.length > 0 && this.renderControls()}
-                </TableCell>
-                <Hidden smDown>
-                  {this.renderPagination(true)}
-                </Hidden>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-                {displayContacts.map(this.renderTableRows)}
-            </TableBody>
-          </Table>
-        </div>
-      </ContactTableThemeProvider>
+        </ContactTableThemeProvider>
+      </DisplayPaper>
     )
   }
 }
