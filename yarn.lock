@@ -66,7 +66,7 @@
     "@babel/runtime" "7.0.0"
     recompose "^0.29.0"
 
-"@reach/router@^1.1.1":
+"@reach/router@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@reach/router/-/router-1.2.1.tgz#34ae3541a5ac44fa7796e5506a5d7274a162be4e"
   dependencies:
@@ -76,12 +76,13 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@roundation/roundation@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.24.tgz#fc71616c56d4a9bcf8f8ecad978436abc86ddd3c"
+"@roundation/roundation@^0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.27.tgz#002f7fa9bda462b491d290d27cec29bafca18808"
   dependencies:
-    "@reach/router" "^1.1.1"
+    "@reach/router" "^1.2.1"
     "@types/reach__router" "^1.2.1"
+    "@types/react-loadable" "^5.4.1"
     react-loadable "^5.5.0"
 
 "@roundation/store@^0.0.13":
