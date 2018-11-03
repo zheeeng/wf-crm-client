@@ -86,8 +86,8 @@ const ContactPageHeader: React.SFC<Props> = React.memo(props => {
     <>
       <div className={classes.profileBar}>
         <Typography variant="h6">Profile</Typography>
-        <IconButton>
-          <Edit onClick={handleToggleEditable} />
+        <IconButton onClick={handleToggleEditable}>
+          <Edit />
         </IconButton>
       </div>
       <div>
@@ -137,7 +137,7 @@ const ContactPageHeader: React.SFC<Props> = React.memo(props => {
         <ContactFieldInput
           key="name" name="name" placeholder="name" editable={editable}
           Icon={CreditCard}
-          valueAndNote={[{ value: contactContext.contact.info.name }]}
+          valueAndNote={{ value: contactContext.contact.info.name }}
         />
         <ContactFieldInput
           key="email" name="email" placeholder="email" editable={editable}
@@ -152,12 +152,12 @@ const ContactPageHeader: React.SFC<Props> = React.memo(props => {
         <ContactFieldInput
           key="birthDay" name="birthDay" placeholder="birthDay" editable={editable}
           Icon={Cake}
-          valueAndNote={[{ value: contactContext.contact.info.birthDay }]}
+          valueAndNote={{ value: contactContext.contact.info.birthDay }}
         />
         <ContactFieldInput
           key="gender" name="gender" placeholder="gender" editable={editable}
           Icon={People}
-          valueAndNote={[{ value: contactContext.contact.info.gender }]}
+          valueAndNote={{ value: contactContext.contact.info.gender }}
         />
         <ContactFieldInput
           key="address" name="address" placeholder="address" editable={editable}
