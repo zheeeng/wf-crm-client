@@ -40,19 +40,25 @@ export interface Props extends WithStyles<typeof styles> {
   option?: CreateFormOption
 }
 
-const CreateForm: React.SFC<Props> = React.memo((props: Props) => {
+const CreateForm: React.SFC<Props> = React.memo(props => {
 
   const notificationContext = React.useContext(notificationStore.Context)
 
   const fieldValues = React.useRef<{ [key: string]: string }>({})
 
-  const handleCreateInfoChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    fieldValues.current![field] = e.target.value
-  }
+  const handleCreateInfoChange = React.useCallback(
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      fieldValues.current![field] = e.target.value
+    },
+    [fieldValues],
+  )
 
-  const onOk = () => {
-    notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
-  }
+  const onOk = React.useCallback(
+    () => {
+      notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+    },
+    [],
+  )
 
   const { option, open, onClose, classes } = props
 
