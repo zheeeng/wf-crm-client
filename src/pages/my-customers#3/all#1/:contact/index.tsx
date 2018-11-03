@@ -4,6 +4,7 @@ import contactStore from '~src/services/contact'
 import DetailsPaper from '~src/units/DetailsPaper'
 import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
+import ContactAssets from '~src/components/ContactAssets'
 
 const styles = (theme: Theme) => createStyles({
 })
@@ -31,7 +32,7 @@ const ContactIndex: React.SFC<Props> = React.memo(props => {
   return (
     <DetailsPaper
       header={<ContactPageHeader />}
-      rightPart1="waivers"
+      rightPart1={<ContactAssets />}
       rightPart2="activities"
     >
       <ContactProfile />
