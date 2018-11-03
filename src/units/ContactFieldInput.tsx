@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
+import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
+import { FSA } from '~src/types/FSA'
 
 const styles = (theme: Theme) => createStyles({
   fieldBar: {
@@ -11,7 +13,7 @@ const styles = (theme: Theme) => createStyles({
   },
   fieldTextWrapper: {
     flexGrow: 1,
-    marginTop: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit * 2,
   },
   fieldTextBar: {
     display: 'flex',
@@ -29,12 +31,16 @@ const styles = (theme: Theme) => createStyles({
     width: theme.spacing.unit * 4,
     marginLeft: theme.spacing.unit * 4,
   },
+  fieldAddIcon: {
+    padding: theme.spacing.unit,
+  },
   fieldTypeText: {
     width: 128,
     padding: '6px 0 7px',
   },
   fieldInput: {
     flexGrow: 1,
+    padding: '6px 0 7px',
   },
   addTagIcon: {
     marginRight: theme.spacing.unit,
@@ -52,31 +58,74 @@ export interface Props extends WithStyles<typeof styles> {
   name: string,
   valueAndNote: ValueAndNote | ValueAndNote[],
   editable?: boolean,
-  onChange?: (name: string, valueAndNote: ValueAndNote[]) => void,
+  onDraftChange?: (name: string, valueAndNote: ValueAndNote | ValueAndNote[]) => void,
   placeholder?: string,
   notePlaceholder?: string,
 }
 
-const ContactFieldInput: React.SFC<Props> = React.memo((props) => {
+const reducer = (
+  state: ValueAndNote[],
+  action: FSA<'add'>
+    | FSA<'changeValue', { index: number, value: string }>
+    | FSA<'changeNote', { index: number, value: string }>,
+) => {
+  switch (action.type) {
+    case 'add': {
+      return state.concat({ value: '', note: state[0].note === undefined ? undefined : '' })
+    }
+    case 'changeValue': {
+      return state.map((pair, i) => i === action.payload.index ? { ...pair, value: action.payload.value } : pair)
+    }
+    case 'changeNote': {
+      return state.map((pair, i) => i === action.payload.index ? { ...pair, note: action.payload.value } : pair)
+    }
+    default: {
+      return state
+    }
+  }
+}
 
-  const { classes, Icon, name, valueAndNote, editable = false, onChange, placeholder, notePlaceholder } = props
+const ContactFieldInput: React.SFC<Props> = React.memo(props => {
+  const { classes, Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
 
-  const expandable = Array.isArray(valueAndNote)
+  const expandable = React.useMemo(() => Array.isArray(valueAndNote), [valueAndNote])
+  const valueAndNotes = React.useMemo(() => ([] as ValueAndNote[]).concat(valueAndNote), [valueAndNote])
 
-  const valueAndNotes = ([] as ValueAndNote[]).concat(valueAndNote)
+  const [ localValueAndNotes, dispatch ] = React.useReducer(reducer, valueAndNotes)
+
+  const handleAddEntry = React.useCallback(
+    () => dispatch({ type: 'add' }),
+    [valueAndNotes],
+  )
+
+  const handleEntryChange = React.useCallback(
+    (type: 'changeValue' | 'changeNote', index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (type === 'changeValue') return dispatch({ type, payload: { index, value: event.target.value } })
+
+      return dispatch({ type, payload: { index, value: event.target.value } })
+    },
+    [valueAndNotes],
+  )
+
+  React.useEffect(() => {
+    if (!onDraftChange) return
+
+    onDraftChange(name, expandable ? localValueAndNotes : localValueAndNotes[0])
+  })
 
   return (
     <div className={classes.fieldBar}>
       {Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
-        {valueAndNotes.map((pair, index) => (
+        {localValueAndNotes.map((pair, index) => (
           <div className={classes.fieldTextBar} key={index}>
             <Input
               disabled={!editable}
               disableUnderline={!editable}
               className={classes.fieldInput}
-              value={pair.value}
               placeholder={placeholder}
+              value={pair.value}
+              onChange={handleEntryChange('changeValue', index)}
               startAdornment={
                 (pair.note === undefined || editable)
                   ? undefined
@@ -87,12 +136,17 @@ const ContactFieldInput: React.SFC<Props> = React.memo((props) => {
               <Input
                 className={classes.fieldTypeText}
                 value={pair.note}
+                onChange={handleEntryChange('changeNote', index)}
                 placeholder={notePlaceholder}
               />
             ) : undefined}
             {editable && (
               <div className={classes.filedIconBox}>
-                {expandable && <AddCircle color="primary" />}
+                {expandable && (
+                  <IconButton className={classes.fieldAddIcon} onClick={handleAddEntry}>
+                    <AddCircle color="primary" />
+                  </IconButton>
+                )}
               </div>
             )}
           </div>
