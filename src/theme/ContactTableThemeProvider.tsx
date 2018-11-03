@@ -43,6 +43,11 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
         textTransform: 'capitalize',
       },
     },
+    MuiButton: {
+      root: {
+        textTransform: 'capitalize',
+      },
+    },
   },
 }))
 
