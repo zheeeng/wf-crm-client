@@ -226,7 +226,7 @@
 			"avoid-escape",
 			"avoid-template"
 		],
-		"return-undefined": true,
+		"return-undefined": false,
 		"semicolon": [
 			true,
 			"never"
