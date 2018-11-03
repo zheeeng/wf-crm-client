@@ -114,7 +114,7 @@ const ContactPageProfile: React.SFC<Props> = React.memo(props => {
           <div className={classes.tags}>
             {tags.map((tag, index) => (
               <Chip
-                key={tag + index}
+                key={`${tag}-${index}`}
                 clickable
                 className={classes.tag}
                 classes={{ label: classes.tagLabel }}

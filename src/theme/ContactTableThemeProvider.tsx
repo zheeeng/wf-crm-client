@@ -48,6 +48,23 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
         textTransform: 'capitalize',
       },
     },
+    MuiStepper: {
+      root: {
+        padding: 0,
+      },
+    },
+    MuiStepContent: {
+      root: {
+        paddingLeft: globalTheme.spacing.unit * 6,
+        fontSize: '0.75rem',
+      },
+    },
+    MuiStepConnector: {
+      line: {
+        borderLeftWidth: 3,
+        marginLeft: -1,
+      },
+    },
   },
 }))
 

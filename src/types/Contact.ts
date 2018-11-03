@@ -1,5 +1,11 @@
 import { Arrify } from './utils'
 
+export interface Activity {
+  id: string,
+  time: string,
+  content: string,
+}
+
 export interface Contact {
   id: string,
   info: {

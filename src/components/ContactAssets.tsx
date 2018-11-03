@@ -12,6 +12,7 @@ const styles = (theme: Theme) => createStyles({
   tabsWrapper: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: theme.spacing.unit * 2,
   },
   entry: {
