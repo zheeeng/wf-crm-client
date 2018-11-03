@@ -67,13 +67,9 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactPageHeader: React.SFC<Props> = React.memo(props => {
+const ContactPageProfile: React.SFC<Props> = React.memo(props => {
   const [editable, setEditable] = React.useState(false)
   const contactContext = React.useContext(contactStore.Context)
-
-  if (!contactContext.contact) return null
-
-  const { classes } = props
 
   const handleToggleEditable = React.useCallback(
     () => {
@@ -81,6 +77,10 @@ const ContactPageHeader: React.SFC<Props> = React.memo(props => {
     },
     [editable],
   )
+
+  if (!contactContext.contact) return null
+
+  const { classes } = props
 
   return (
     <>
@@ -173,4 +173,4 @@ const ContactPageHeader: React.SFC<Props> = React.memo(props => {
   )
 })
 
-export default withStyles(styles)(ContactPageHeader)
+export default withStyles(styles)(ContactPageProfile)
