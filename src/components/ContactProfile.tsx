@@ -69,6 +69,7 @@ export interface State {
 
 const ContactPageProfile: React.SFC<Props> = React.memo(props => {
   const [editable, setEditable] = React.useState(false)
+  const [tags, setTags] = React.useState(['Golden Tour', 'Member', 'Music', 'Education'])
   const contactContext = React.useContext(contactStore.Context)
 
   const handleToggleEditable = React.useCallback(
@@ -76,6 +77,16 @@ const ContactPageProfile: React.SFC<Props> = React.memo(props => {
       setEditable(!editable)
     },
     [editable],
+  )
+
+  const handleTagsAdd = React.useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.keyCode !== 13) return
+      const newTag = event.currentTarget.value.trim()
+      event.currentTarget.value = ''
+      if (newTag) setTags(tags.concat(newTag))
+    },
+    [tags],
   )
 
   if (!contactContext.contact) return null
@@ -97,33 +108,19 @@ const ContactPageProfile: React.SFC<Props> = React.memo(props => {
               placeholder="Click to add tag"
               disableUnderline
               startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+              onKeyDown={handleTagsAdd}
             />
           </div>
           <div className={classes.tags}>
-            <Chip
-              clickable
-              className={classes.tag}
-              classes={{ label: classes.tagLabel }}
-              label="Golden Tour"
-            />
-            <Chip
-              clickable
-              className={classes.tag}
-              classes={{ label: classes.tagLabel }}
-              label="Member"
-            />
-            <Chip
-              clickable
-              className={classes.tag}
-              classes={{ label: classes.tagLabel }}
-              label="Music"
-            />
-            <Chip
-              clickable
-              className={classes.tag}
-              classes={{ label: classes.tagLabel }}
-              label="Education"
-            />
+            {tags.map((tag, index) => (
+              <Chip
+                key={tag + index}
+                clickable
+                className={classes.tag}
+                classes={{ label: classes.tagLabel }}
+                label={tag}
+              />
+            ))}
           </div>
         </div>
         <div className={classes.avatarBar}>
