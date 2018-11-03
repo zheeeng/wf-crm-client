@@ -5,8 +5,6 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
-
-import { WithContext } from '@roundation/store'
 import notificationStore from '~src/services/notification'
 
 const styles = (theme: Theme) => createStyles({
@@ -36,53 +34,53 @@ export interface CreateFormOption {
   cancelText?: string
 }
 
-export interface Props extends WithStyles<typeof styles>, WithContext<typeof notificationStore, 'notificationStore'> {
+export interface Props extends WithStyles<typeof styles> {
   open: boolean,
   onClose?: React.ReactEventHandler<{}>,
   option?: CreateFormOption
 }
 
-class CreateForm extends React.PureComponent<Props> {
-  fieldValues = {}
+const CreateForm: React.SFC<Props> = React.memo((props: Props) => {
 
-  handleCreateInfoChange = (field: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      this.fieldValues[field] = e.target.value
-    }
+  const notificationContext = React.useContext(notificationStore.Context)
 
-  onOk = () => {
-    this.props.notificationStore.handleOpen('Success create a new Contact!')
+  const fieldValues = React.useRef<{ [key: string]: string }>({})
+
+  const handleCreateInfoChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    fieldValues.current![field] = e.target.value
   }
 
-  render () {
-    const { option, open, onClose, classes } = this.props
+  const onOk = () => {
+    notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+  }
 
-    const { title = 'title', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
+  const { option, open, onClose, classes } = props
 
-    return (
-      <Modal
-        open={open}
-        onClose={onClose}
-      >
-        <div className={classes.paper}>
-          <Typography variant="subtitle1" align="center">
-            {title}
-          </Typography>
-          {fields.map(field => (
-            <BasicFormInput
-              key={field}
-              placeholder={field}
-              onChange={this.handleCreateInfoChange(field)}
-            />
-          ))}
-          <div className={classes.buttonZone}>
-            <Button onClick={onClose}>{cancelText}</Button>
-            <Button color="primary" onClick={this.onOk}>{okText}</Button>
-          </div>
+  const { title = 'title', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+    >
+      <div className={classes.paper}>
+        <Typography variant="subtitle1" align="center">
+          {title}
+        </Typography>
+        {fields.map(field => (
+          <BasicFormInput
+            key={field}
+            placeholder={field}
+            onChange={handleCreateInfoChange(field)}
+          />
+        ))}
+        <div className={classes.buttonZone}>
+          <Button onClick={onClose}>{cancelText}</Button>
+          <Button color="primary" onClick={onOk}>{okText}</Button>
         </div>
-      </Modal>
-    )
-  }
-}
+      </div>
+    </Modal>
+  )
+})
 
-export default notificationStore.connect(withStyles(styles)(CreateForm), 'notificationStore')
+export default withStyles(styles)(CreateForm)
