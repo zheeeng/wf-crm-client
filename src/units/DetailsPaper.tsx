@@ -26,6 +26,7 @@ const styles = (theme: Theme) => createStyles({
     marginRight: theme.spacing.unit * 4,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
+    overflow: 'auto',
   },
   rightSider: {
     display: 'flex',
@@ -38,6 +39,7 @@ const styles = (theme: Theme) => createStyles({
     marginBottom: theme.spacing.unit * 4,
   },
   rightPart2: {
+    flexGrow: 1,
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
