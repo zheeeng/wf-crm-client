@@ -24,6 +24,25 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
         },
       },
     },
+    MuiTabs: {
+      root: {
+        marginRight: globalTheme.spacing.unit * 2,
+      },
+      indicator: {
+        transform: 'scale(0.3)',
+        transformOrigin: '15%',
+      },
+    },
+    MuiTab: {
+      root: {
+        minWidth: '100px !important',
+      },
+      labelContainer: {
+        textAlign: 'left',
+        padding: '0 !important',
+        textTransform: 'capitalize',
+      },
+    },
   },
 }))
 
