@@ -1,30 +1,42 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
-import { WithContext } from '@roundation/store'
-import contactsStore from '~src/services/contacts'
+import contactStore from '~src/services/contact'
 import DetailsPaper from '~src/units/DetailsPaper'
+import ContactPageHeader from '~src/components/ContactPageHeader'
+import ContactProfile from '~src/components/ContactProfile'
 
 const styles = (theme: Theme) => createStyles({
 })
 
-export interface Props extends WithStyles<typeof styles>, WithContext<typeof contactsStore, 'contactsStore'> {
+export interface Props extends WithStyles<typeof styles> {
+  contact: string
 }
 
 export interface State {
 }
 
-const Contact: React.SFC<Props> = React.memo((props: Props) => {
-  const contactsContext = React.useContext(contactsStore.Context)
+const ContactIndex: React.SFC<Props> = React.memo(props => {
+  const contactContext = React.useContext(contactStore.Context)
+
+  React.useEffect(
+    () => {
+      if (!props.contact) return
+      contactContext.fetchContact(props.contact)
+    },
+    [],
+  )
+
+  if (!contactContext.contact) return null
 
   return (
     <DetailsPaper
-      header="header"
+      header={<ContactPageHeader />}
       rightPart1="waivers"
       rightPart2="activities"
     >
-      Profile
+      <ContactProfile />
     </DetailsPaper>
   )
 })
 
-export default withStyles(styles)(Contact)
+export default contactStore.inject(withStyles(styles)(ContactIndex))
