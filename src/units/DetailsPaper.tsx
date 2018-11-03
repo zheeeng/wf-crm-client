@@ -37,12 +37,16 @@ const styles = (theme: Theme) => createStyles({
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing.unit * 4,
+    width: 408,
+    maxHeight: '50%',
   },
   rightPart2: {
     flexGrow: 1,
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
+    width: 408,
+    maxHeight: '50%',
   },
 })
 
