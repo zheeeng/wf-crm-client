@@ -6,7 +6,7 @@ declare module 'react' {
     propsAreEqual?:((
         prevProps: Readonly<P & { children?: ReactNode }>,
         nextProps: Readonly<P & { children?: ReactNode }>
-      )=>boolean
+      ) => boolean
     )):React.SFC<P>
 
   function lazy<T extends () => Promise<{ default: React.ComponentType<any> }>> (
