@@ -6,6 +6,8 @@ export interface Contact {
     avatar: string,
     starred: boolean,
     name: string,
+    gender: string,
+    birthDay: string,
     email: string,
     address: string,
     telephone: string,
