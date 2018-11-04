@@ -2,9 +2,9 @@
 
 ## Install
 
-  yarn
+    yarn
 
 ## Develop
 
-  yarn start
-  yarn serve  // startup the mock server
+    yarn start
+    yarn serve  // startup the mock server
