@@ -120,7 +120,7 @@ class PeopleList extends React.Component<Props, State> {
     createFormOpened: false,
     createFormOption: {},
     searchText: '',
-    page: 1,
+    page: 0,
     popoverAnchorEl: null,
     popoverText: '',
   }
