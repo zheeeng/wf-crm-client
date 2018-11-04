@@ -18,7 +18,8 @@
     "build": "react-app-rewired build --scripts-version react-scripts-ts",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "serve": "json-server -p 3080 --watch db/data.json"
+    "serve": "json-server -p 3080 --watch db/data.json",
+    "heroku-postbuild": "NODE_ENV=production yarn build"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",
