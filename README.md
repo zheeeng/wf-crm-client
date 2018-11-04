@@ -7,3 +7,4 @@
 ## Develop
 
   yarn start
+  yarn serve  // startup the mock server
