@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Link } from '@roundation/roundation'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
-import { WithContext } from '@roundation/store'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -59,89 +58,98 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles>, ComponentProps, WithContext<typeof appStore, 'appStore'> {}
+export interface Props extends WithStyles<typeof styles>, ComponentProps {}
 
 export interface State {
   auth: boolean
   anchorEl: HTMLElement | null
 }
 
-class Header extends React.Component<Props> {
-  state: State = {
-    auth: false,
-    anchorEl: null,
-  }
+const Header: React.FC<Props> = React.memo(({ classes, locationInfo }) => {
+  const mountElRef = React.useRef(document.querySelector('#header'))
+  const appContext = React.useContext(appStore.Context)
+  const { authored } = appContext
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const handleToggleDrawer = React.useCallback(
+    () => {
+      appContext.toggleDrawerExpanded()
+    },
+    [],
+  )
 
-  private $mountEl = document.querySelector('#header')
+  const handleMenuToggle = React.useCallback(
+    (forOpen: boolean) => (event: React.MouseEvent<HTMLDivElement>) => {
+      setAnchorEl(forOpen ? event.currentTarget : null)
+    },
+    [anchorEl],
+  )
+  const handleLogin = React.useCallback(
+    () => {
+      if (authored) {
+        appContext.logout()
+      } else {
+        appContext.login('a', '0cc175b9c0f1b6a831c399e269772661')
+      }
+      setAnchorEl(null)
+    },
+    [authored],
+  )
 
-  private handleMenuOpenedChange = (forOpen: boolean) => (e: React.MouseEvent<HTMLDivElement>) => {
-    this.setState({ anchorEl: forOpen ? e.currentTarget : null })
-  }
+  const headers = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
 
-  private closeDrawer = () => {
-    this.props.appStore.toggleDrawerExpanded()
-  }
-
-  render () {
-    const { classes, locationInfo } = this.props
-    const headers = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
-    const { anchorEl } = this.state
-    const open = !!anchorEl
-
-    return (
-      <Portal container={this.$mountEl}>
-        <AppBar position="absolute" className={classes.appBar}>
-          <Toolbar>
-            <Hidden mdDown>
-              <Typography variant="subtitle1" color="inherit">
-                WaiverForever
+  return (
+    <Portal container={mountElRef.current}>
+      <AppBar position="absolute" className={classes.appBar}>
+        <Toolbar>
+          <Hidden mdDown>
+            <Typography variant="subtitle1" color="inherit">
+              WaiverForever
+            </Typography>
+          </Hidden>
+          <Hidden lgUp>
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+              onClick={handleToggleDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
+          <div className={classes.navList}>
+            {headers.map(({ name, routePath }) => (
+              <Typography key={name} variant="subtitle1" color="inherit">
+                <Link to={routePath} className={classes.link}>{name}</Link>
               </Typography>
-            </Hidden>
-            <Hidden lgUp>
-              <IconButton
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-                onClick={this.closeDrawer}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Hidden>
-            <div className={classes.navList}>
-              {headers.map(({ name, routePath }) => (
-                <Typography key={name} variant="subtitle1" color="inherit">
-                  <Link to={routePath} className={classes.link}>{name}</Link>
-                </Typography>
-              ))}
-            </div>
-            {this.props.appStore.auth && (
-              <div>
-                <Button onClick={this.handleMenuOpenedChange(true)}>
-                  <Typography>Open</Typography>
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleMenuOpenedChange(false)}
-                >
-                  <MenuItem onClick={this.handleMenuOpenedChange(false)}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleMenuOpenedChange(false)}>My account</MenuItem>
-                </Menu>
-              </div>
-            )}
-          </Toolbar>
-        </AppBar>
-      </Portal>
-    )
-  }
-}
+            ))}
+          </div>
+          <div>
+            <Button onClick={handleMenuToggle(true)}>
+              <Typography>Open</Typography>
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={!!anchorEl}
+              onClose={handleMenuToggle(false)}
+            >
+              <MenuItem onClick={handleMenuToggle(false)}>Profile</MenuItem>
+              <MenuItem onClick={handleLogin}>
+                {authored ? 'My account' : 'Log in'}
+              </MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </Portal>
+  )
+})
 
-export default appStore.connect(withStyles(styles)(Header), 'appStore')
+export default withStyles(styles)(Header)
