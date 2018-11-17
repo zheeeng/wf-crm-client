@@ -12,7 +12,7 @@ export interface Contact {
     avatar: string,
     starred: boolean,
     name: string,
-    gender: string,
+    gender: 'Male' | 'Female' | '',
     birthDay: string,
     email: string,
     address: string,
@@ -36,11 +36,13 @@ export interface Group {
 
 export interface ApiPeople {
   id: string
+  // favourite: boolean
   account: string
   name: string | null
   first_name: string | null
+  middle_name: string | null
   last_name: string | null
-  gender: string | null
+  gender: 'Male' | 'Female' | null
   dob_day: string | null
   dob_month: string | null
   dob_year: string | null
@@ -60,7 +62,7 @@ export const inputAdapter = (input: ApiPeople): Contact => {
     avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
     starred: false,
     name: name || '',
-    gender: gender || 'male',
+    gender: gender || '' as 'Male' | 'Female' | '',
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
     email: email || 'hi@zheeeng.me',
     address: address || '330 Wyn Ave se Seattle, WA, 98121',
