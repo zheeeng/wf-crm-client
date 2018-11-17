@@ -41,7 +41,8 @@ const store = createStore(setState => ({
       email,
     })
   },
-  logout () {
+  async logout () {
+    await fetch('/api/auth/logout')
     setState({
       authored: false,
       username: '',
