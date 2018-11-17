@@ -40,3 +40,9 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
 
   return data
 }
+
+export const getQuery = (query: object): string => {
+  const search = Object.keys(query).map(key => `${key}=${encodeURIComponent(query[key])}`).join('&')
+
+  return search ? `?${search}` : search
+}
