@@ -2,6 +2,7 @@ import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import { ComponentProps } from '@roundation/roundation/lib/types'
+import appStore from '~src/services/app'
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -30,21 +31,24 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles>, ComponentProps<'header'> {
 }
 
-class App extends React.Component<Props> {
+const App: React.FC<Props> = React.memo(({ classes, slots, children }) => {
+  const appContext = React.useContext(appStore.Context)
+  React.useEffect(
+    () => {
+      appContext.auth()
+    },
+    [],
+  )
 
-  render () {
-    const { classes } = this.props
-
-    return (
-      <div className={classes.root}>
-        {this.props.slots.header}
-        <div className={classes.main}>
-          <Toolbar />
-          {this.props.children}
-        </div>
+  return (
+    <div className={classes.root}>
+      {slots.header}
+      <div className={classes.main}>
+        <Toolbar />
+        {children}
       </div>
-    )
-  }
-}
+    </div>
+  )
+})
 
 export default withStyles(styles)(App)
