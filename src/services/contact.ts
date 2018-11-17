@@ -4,10 +4,17 @@ import fetch from '~src/utils/fetch'
 
 const store = createStore(setState => ({
   contact: undefined as Contact | undefined,
+  activities: [] as string[],
   async fetchContact (id: string) {
     const result = await fetch<ApiPeople>(`/api/people/${id}`)
     setState({
       contact: inputAdapter(result),
+    })
+  },
+  async fetchContactActivities (id: string) {
+    const result = await fetch<string[]>(`/api/people/${id}/activities`)
+    setState({
+      activities: result,
     })
   },
 }))
