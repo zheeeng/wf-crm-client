@@ -1,16 +1,51 @@
 import createStore from '@roundation/store'
+import fetch from '~src/utils/fetch'
 
 const store = createStore(setState => ({
-  auth: true,
+  isLogging: false,
+  authored: false,
+  username: '',
+  email: '',
   drawerExpanded: false,
-  login () {
+  async auth () {
     setState({
-      auth: true,
+      isLogging: true,
+    })
+    try {
+      await fetch('/api/auth/invalidateToken', {
+        method: 'POST',
+      })
+
+      setState({
+        authored: true,
+      })
+    } catch {
+    } finally {
+      setState({
+        isLogging: false,
+      })
+    }
+  },
+  async login (email: string, password: string) {
+    const { username } = await fetch<{ username: string }>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+
+    setState({
+      authored: true,
+      username,
+      email,
     })
   },
   logout () {
     setState({
-      auth: false,
+      authored: false,
+      username: '',
+      email: '',
     })
   },
   toggleDrawerExpanded (expanded?: boolean) {
