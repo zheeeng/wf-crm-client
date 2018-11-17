@@ -101,6 +101,10 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   contacts: Contact[]
+  page: number
+  size: number
+  total: number
+  onSearch: (search: { page: number, size: number, name: string, email: string}) => void
   navigateToProfile: (id: string) => void
 }
 
@@ -109,7 +113,6 @@ export interface State {
   createFormOpened: boolean,
   createFormOption: CreateFormOption,
   searchText: string
-  page: number,
   popoverAnchorEl: HTMLElement | null
   popoverText: string
 }
@@ -120,9 +123,12 @@ class PeopleList extends React.Component<Props, State> {
     createFormOpened: false,
     createFormOption: {},
     searchText: '',
-    page: 0,
     popoverAnchorEl: null,
     popoverText: '',
+  }
+
+  private get pageNumber () {
+    return Math.ceil(this.props.total / this.props.size) - 1
   }
 
   private handlePopoverToggle: {
@@ -139,20 +145,33 @@ class PeopleList extends React.Component<Props, State> {
       })
     }
 
-  private get rowsPerPage () {
-    return 10
-  }
-
   private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
-      page: 0,
       checked: [],
     })
   }
 
+  private handleSearchText = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode !== 13) return
+
+    this.props.onSearch({
+      page: this.props.page,
+      size: this.props.size,
+      // TODO::
+      name: '',
+      email: this.state.searchText,
+    })
+  }
+
   private handleChangePage = (_: any, page: number) => {
-    this.setState({ page })
+    this.props.onSearch({
+      page,
+      size: this.props.size,
+      // TODO::
+      name: '',
+      email: this.state.searchText,
+    })
   }
 
   private handleShowProfile = (id: string) => () => {
@@ -280,27 +299,10 @@ class PeopleList extends React.Component<Props, State> {
       className={this.props.classes.search}
       value={this.state.searchText}
       onChange={this.handleSearchTextChange}
+      onKeyDown={this.handleSearchText}
       placeholder="Type a name or email"
     />
   )
-
-  private get filteredContacts () {
-    const { searchText } = this.state
-
-    if (!searchText) return this.props.contacts
-
-    return this.props.contacts
-      .filter(contact =>
-        [contact.info.name, contact.info.email].some(field => field.includes(searchText)),
-      )
-  }
-
-  private get displayContacts () {
-    const startIndex = this.state.page * this.rowsPerPage
-    const endIndex = startIndex + this.rowsPerPage
-
-    return this.filteredContacts.slice(startIndex, endIndex)
-  }
 
   private renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
     `${from.toLocaleString('en-IN')} - ${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
@@ -308,20 +310,20 @@ class PeopleList extends React.Component<Props, State> {
   private renderPagination = (inTable: boolean = false) => (
     <TablePagination
       component={inTable ? undefined : 'div'}
-      count={this.filteredContacts.length}
-      rowsPerPage={this.rowsPerPage}
-      page={this.state.page}
+      count={this.props.total}
+      rowsPerPage={this.props.size}
+      page={this.props.page}
       backIconButtonProps={{
         className: classNames([
           this.props.classes.paginationIconButton,
-          this.state.page === 0 && this.props.classes.disabled,
+          this.props.page === 0 && this.props.classes.disabled,
         ]),
         ['aria-label']: 'Previous Page',
       }}
       nextIconButtonProps={{
         className: classNames([
           this.props.classes.paginationIconButton,
-          this.state.page === ~~(this.filteredContacts.length / this.rowsPerPage) && this.props.classes.disabled,
+          this.props.page === this.pageNumber && this.props.classes.disabled,
         ]),
         ['aria-label']: 'Next Page',
       }}
@@ -388,7 +390,6 @@ class PeopleList extends React.Component<Props, State> {
 
   render () {
     const { classes, contacts } = this.props
-    const displayContacts = this.displayContacts
     const { checked: checkedContacts, createFormOpened, createFormOption } = this.state
 
     const newContactFormOption: CreateFormOption = {
@@ -448,7 +449,7 @@ class PeopleList extends React.Component<Props, State> {
                 </TableRow>
               </TableHead>
               <TableBody>
-                  {displayContacts.map(this.renderTableRows)}
+                  {contacts.map(this.renderTableRows)}
               </TableBody>
             </Table>
           </div>
