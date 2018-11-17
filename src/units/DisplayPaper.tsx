@@ -16,7 +16,7 @@ export interface Props extends WithStyles<typeof styles> {
   children: React.ReactNode
 }
 
-const DisplayWrapper: React.SFC<Props> = (props) => (
+const DisplayWrapper: React.FC<Props> = (props) => (
   <main className={props.classes.main}>
     {props.children}
   </main>

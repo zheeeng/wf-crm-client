@@ -55,7 +55,7 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactAssets: React.SFC<Props> = React.memo(props => {
+const ContactAssets: React.FC<Props> = React.memo(props => {
   const contactContext = React.useContext(contactStore.Context)
 
   if (!contactContext.contact) return null

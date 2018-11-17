@@ -40,7 +40,7 @@ export interface Props extends WithStyles<typeof styles> {
   option?: CreateFormOption
 }
 
-const CreateForm: React.SFC<Props> = React.memo(props => {
+const CreateForm: React.FC<Props> = React.memo(props => {
 
   const notificationContext = React.useContext(notificationStore.Context)
 

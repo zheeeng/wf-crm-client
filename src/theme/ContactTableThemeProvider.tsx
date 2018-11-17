@@ -68,7 +68,7 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
   },
 }))
 
-const ContactTableThemeProvider: React.SFC = (props) => (
+const ContactTableThemeProvider: React.FC = (props) => (
   <MuiThemeProvider theme={contactTableTheme}>
     {props.children}
   </MuiThemeProvider>

@@ -59,7 +59,7 @@ export interface Props extends WithStyles<typeof styles> {
   rightPart2: React.ReactNode
 }
 
-const DetailsWrapper: React.SFC<Props> = (props) => (
+const DetailsWrapper: React.FC<Props> = (props) => (
   <main className={props.classes.main}>
     <header className={props.classes.header}>
       {props.header}

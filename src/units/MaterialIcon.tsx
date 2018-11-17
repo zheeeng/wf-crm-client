@@ -6,7 +6,7 @@ export interface Props extends SvgIconProps {
   icon: string
 }
 
-const MaterialIcon: React.SFC<Props> = ({ icon, ...props }) => {
+const MaterialIcon: React.FC<Props> = ({ icon, ...props }) => {
   const Icon = Icons[icon]
 
   if (!Icon) {

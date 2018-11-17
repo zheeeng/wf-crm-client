@@ -34,7 +34,7 @@ export const siderBarTheme = createMuiTheme(mergeOptions(themeOptions, {
   },
 }))
 
-const SiderBarThemeProvider: React.SFC = (props) => (
+const SiderBarThemeProvider: React.FC = (props) => (
   <MuiThemeProvider theme={siderBarTheme}>
     {props.children}
   </MuiThemeProvider>

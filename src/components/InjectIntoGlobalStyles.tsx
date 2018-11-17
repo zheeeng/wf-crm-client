@@ -9,4 +9,4 @@ export default withStyles(createStyles({
       flexGrow: 1,
     },
   },
-}))((() => null) as React.SFC)
+}))((() => null) as React.FC)

@@ -18,7 +18,7 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactPageHeader: React.SFC<Props> = React.memo(props =>
+const ContactPageHeader: React.FC<Props> = React.memo(props =>
   (
     <>
       <div className={props.classes.left}>

@@ -67,7 +67,7 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactPageProfile: React.SFC<Props> = React.memo(props => {
+const ContactPageProfile: React.FC<Props> = React.memo(props => {
   const [editable, setEditable] = React.useState(false)
   const [tags, setTags] = React.useState(['Golden Tour', 'Member', 'Music', 'Education'])
   const contactContext = React.useContext(contactStore.Context)

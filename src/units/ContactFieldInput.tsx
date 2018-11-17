@@ -85,7 +85,7 @@ const reducer = (
   }
 }
 
-const ContactFieldInput: React.SFC<Props> = React.memo(props => {
+const ContactFieldInput: React.FC<Props> = React.memo(props => {
   const { classes, Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
 
   const expandable = React.useMemo(() => Array.isArray(valueAndNote), [valueAndNote])

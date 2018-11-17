@@ -76,7 +76,7 @@ export const themeOptions: ThemeOptions = {
 
 export const globalTheme = createMuiTheme(themeOptions)
 
-const GlobalThemeProvider: React.SFC = (props) => (
+const GlobalThemeProvider: React.FC = (props) => (
   <MuiThemeProvider theme={globalTheme}>
     {props.children}
   </MuiThemeProvider>

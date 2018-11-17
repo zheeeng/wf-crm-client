@@ -17,7 +17,7 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactIndex: React.SFC<Props> = React.memo(props => {
+const ContactIndex: React.FC<Props> = React.memo(props => {
   const contactContext = React.useContext(contactStore.Context)
 
   React.useEffect(
