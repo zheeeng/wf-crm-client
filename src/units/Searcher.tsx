@@ -22,31 +22,27 @@ export interface Props extends WithStyles<typeof styles> {
   value?: string,
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   placeholder?: string
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
-class Searcher extends React.PureComponent<Props> {
-  render () {
-    const { className, value, placeholder, onChange, classes } = this.props
-
-    return (
-      <OutlinedInput
-        labelWidth={0}
-        notched
-        className={classNames([className, classes.searchBar])}
-        startAdornment={(
-          <InputAdornment position="start" className={classes.inputAdornment}>
-            <Search />
-          </InputAdornment>
-        )}
-        inputProps={{
-          className: classes.input,
-        }}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-      />
-    )
-  }
-}
+const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, onChange, onKeyDown, classes }) => (
+  <OutlinedInput
+    labelWidth={0}
+    notched
+    className={classNames([className, classes.searchBar])}
+    startAdornment={(
+      <InputAdornment position="start" className={classes.inputAdornment}>
+        <Search />
+      </InputAdornment>
+    )}
+    inputProps={{
+      className: classes.input,
+    }}
+    value={value}
+    onChange={onChange}
+    onKeyDown={onKeyDown}
+    placeholder={placeholder}
+  />
+))
 
 export default withStyles(styles)(Searcher)
