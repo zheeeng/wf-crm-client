@@ -9,12 +9,14 @@ const store = createStore(setState => ({
   page: 0,
   size: 0,
   total: 0,
-  async fetchContacts (page = 1, size = 30) {
+  async fetchContacts (search: object = {}) {
     setState({ fetching: true })
+
+    const searchCondition = Object.assign({ page: 1, size: 30 }, search)
 
     try {
       const { pagination, result } = await fetch<{ pagination: Pagination, result: ApiPeople[] }>(
-        `/api/people${getQuery({ page, size })}`,
+        `/api/people${getQuery(searchCondition)}`,
       )
 
       setState({
