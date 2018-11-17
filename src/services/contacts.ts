@@ -1,13 +1,27 @@
-import { Contact } from '~src/types/Contact'
+import { Pagination } from '~src/types/Pagination'
+import { Contact, ApiPeople, inputAdapter } from '~src/types/Contact'
 import createStore from '@roundation/store'
+import fetch from '~src/utils/fetch'
 
 const store = createStore(setState => ({
+  fetching: false,
   contacts: [] as Contact[],
+  page: 0,
+  size: 0,
+  total: 0,
   async fetchContacts () {
-    const contactsRes = await fetch('http://localhost:3080/contacts')
-    setState({
-      contacts: await contactsRes.json() as Contact[],
-    })
+    setState({ fetching: true })
+    try {
+      const { pagination, result } = await fetch<{ pagination: Pagination, result: ApiPeople[] }>('/api/people')
+
+      setState({
+      ...pagination,
+      contacts: result.map(inputAdapter),
+      })
+    } catch {
+    } finally {
+      setState({ fetching: false })
+    }
   },
 }))
 
