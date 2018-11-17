@@ -4,6 +4,15 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
   const [first, second] = args
   const Authorization = window.localStorage.getItem('@token@') || ''
 
+  if (first === '/api/auth/logout') {
+    window.localStorage.removeItem('@account@')
+    window.localStorage.removeItem('@id@')
+    window.localStorage.removeItem('@token@')
+    window.localStorage.removeItem('@username@')
+
+    return {} as any
+  }
+
   const response = await fetch(
     first,
     {
@@ -15,9 +24,11 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
     },
   )
 
-  const data = response.json()
+  if (!response.ok) throw Error(response.statusText)
 
-  const { account, id, token, username } = data as any
+  const data = await response.json()
+
+  const { account, id, token, username } = data
   if (account) window.localStorage.setItem('@account@', account)
   if (id) window.localStorage.setItem('@id@', id)
   if (token) window.localStorage.setItem('@token@', token)
