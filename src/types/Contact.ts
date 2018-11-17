@@ -33,3 +33,39 @@ export interface Group {
     contacts: Contact[],
   }
 }
+
+export interface ApiPeople {
+  id: string
+  account: string
+  name: string | null
+  first_name: string | null
+  last_name: string | null
+  gender: string | null
+  dob_day: string | null
+  dob_month: string | null
+  dob_year: string | null
+  email: string | null
+  address: string | null
+  phone: string | null
+}
+
+export const inputAdapter = (input: ApiPeople): Contact => {
+  const {
+    id,
+    account, name, gender, dob_day, dob_month, dob_year,
+    email, address, phone,
+  } = input
+
+  const info = {
+    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+    starred: false,
+    name: name || '',
+    gender: gender || 'male',
+    birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
+    email: email || 'hi@zheeeng.me',
+    address: address || '330 Wyn Ave se Seattle, WA, 98121',
+    telephone: phone || '(212)323-9323',
+  }
+
+  return { id, info }
+}
