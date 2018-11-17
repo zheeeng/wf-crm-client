@@ -1,7 +1,7 @@
 import { Pagination } from '~src/types/Pagination'
 import { Contact, ApiPeople, inputAdapter } from '~src/types/Contact'
 import createStore from '@roundation/store'
-import fetch from '~src/utils/fetch'
+import fetch, { getQuery } from '~src/utils/fetch'
 
 const store = createStore(setState => ({
   fetching: false,
@@ -9,10 +9,13 @@ const store = createStore(setState => ({
   page: 0,
   size: 0,
   total: 0,
-  async fetchContacts () {
+  async fetchContacts (page = 1, size = 30) {
     setState({ fetching: true })
+
     try {
-      const { pagination, result } = await fetch<{ pagination: Pagination, result: ApiPeople[] }>('/api/people')
+      const { pagination, result } = await fetch<{ pagination: Pagination, result: ApiPeople[] }>(
+        `/api/people${getQuery({ page, size })}`,
+      )
 
       setState({
       ...pagination,
