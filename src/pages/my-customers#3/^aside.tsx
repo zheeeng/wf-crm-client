@@ -102,7 +102,7 @@ class Aside extends React.Component<Props, State> {
   private renderLinkLabel = (name: string) => {
     switch (name) {
       case 'All': {
-        const allCounts = this.props.contactsStore.contacts.length
+        const allCounts = this.props.contactsStore.total
 
         return <ListItemText>{name}({allCounts})</ListItemText>
       }

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
-import { WithContext } from '@roundation/store'
 import contactsStore from '~src/services/contacts'
 import PeopleList from '~src/components/PeopleList'
 
@@ -11,33 +10,50 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends
   ComponentProps,
-  WithStyles<typeof styles>,
-  WithContext<typeof contactsStore, 'contactsStore'> {
-  }
+  WithStyles<typeof styles> {
+}
 
 export interface State {
 }
 
-class AllMyCustomersIndex extends React.Component<Props, State> {
-  private get contactsStore () { return this.props.contactsStore }
+const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
+  const contactsContext = React.useContext(contactsStore.Context)
 
-  private navigateToProfile = (page: string) => {
-    this.props.navigate && this.props.navigate(page)
-  }
+  React.useEffect(
+    () => {
+      contactsContext.fetchContacts()
+    },
+    [],
+  )
 
-  render () {
-    const { contacts } = this.contactsStore
+  const searchContacts = React.useCallback(
+    ({page = 0, size = 30, name = '', email = ''}) => {
+      contactsContext.fetchContacts({
+        page: page + 1, size, name, email,
+      })
+    },
+    [contactsContext.contacts],
+  )
 
-    return (
-      <PeopleList
-        contacts={contacts}
-        navigateToProfile={this.navigateToProfile}
-      />
-    )
-  }
-}
+  const navigateToProfile = React.useCallback(
+    (page: string) => {
+      navigate && navigate(page)
+    },
+    [navigate],
+  )
 
-export default contactsStore.connect(
+  return (
+    <PeopleList
+      page={contactsContext.page - 1}
+      size={contactsContext.size}
+      total={contactsContext.total}
+      onSearch={searchContacts}
+      contacts={contactsContext.contacts}
+      navigateToProfile={navigateToProfile}
+    />
+  )
+})
+
+export default contactsStore.inject(
   withStyles(styles)(AllMyCustomersIndex),
-  'contactsStore',
 )
