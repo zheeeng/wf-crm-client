@@ -6,7 +6,6 @@ export default function mergeOptions<O> (...options: O[]) {
         if (!option.hasOwnProperty(key)) continue
 
         merged[key] = (
-          // tslint:disable-next-line:strict-type-predicates
           !merged[key] || typeof merged[key] !== 'object' || [merged[key], option[key]].some(Array.isArray)
         )
           ? option[key]
