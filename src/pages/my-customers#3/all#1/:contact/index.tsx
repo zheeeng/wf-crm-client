@@ -17,13 +17,13 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactIndex: React.FC<Props> = React.memo(props => {
+const ContactIndex: React.FC<Props> = React.memo(({ contact }) => {
   const contactContext = React.useContext(contactStore.Context)
 
   React.useEffect(
     () => {
-      if (!props.contact) return
-      contactContext.fetchContact(props.contact)
+      if (!contact) return
+      contactContext.fetchContact(contact)
     },
     [],
   )
@@ -34,7 +34,7 @@ const ContactIndex: React.FC<Props> = React.memo(props => {
     <DetailsPaper
       header={<ContactPageHeader />}
       rightPart1={<ContactAssets />}
-      rightPart2={<ContactActivities />}
+      rightPart2={<ContactActivities id={contact} />}
     >
       <ContactProfile />
     </DetailsPaper>

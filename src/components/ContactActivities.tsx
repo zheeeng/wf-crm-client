@@ -10,7 +10,6 @@ import StepContent from '@material-ui/core/StepContent'
 import AddCircle from '@material-ui/icons/AddCircle'
 import contactStore from '~src/services/contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
-import { Activity } from '~src/types/Contact'
 
 const styles = (theme: Theme) => createStyles({
   headWrapper: {
@@ -50,35 +49,20 @@ const styles = (theme: Theme) => createStyles({
 })
 
 export interface Props extends WithStyles<typeof styles> {
+  id: string
 }
 
-export interface State {
-}
-
-const ContactAssets: React.FC<Props> = React.memo(props => {
+const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
   const contactContext = React.useContext(contactStore.Context)
 
+  React.useEffect(
+    () => {
+      contactContext.fetchContactActivities(id)
+    },
+    [],
+  )
+
   if (!contactContext.contact) return null
-
-  const { classes } = props
-
-  const activitiesFake: Activity[] = [
-    {
-      id: 'foo',
-      time: 'March 15, 2017',
-      content: 'Checks out',
-    },
-    {
-      id: 'bar',
-      time: 'March 16, 2018',
-      content: 'Checks in',
-    },
-    {
-      id: 'baz',
-      time: 'March 18, 2018',
-      content: 'Checks in out',
-    },
-  ]
 
   return (
     <ContactTableThemeProvider>
@@ -90,7 +74,7 @@ const ContactAssets: React.FC<Props> = React.memo(props => {
         >Manage</Button>
       </div>
       <Stepper orientation="vertical">
-        {activitiesFake.map(activity => (
+        {contactContext.activities.map(activity => (
             <Step key={activity.id} active>
               <StepLabel icon={<div className={classes.dot} />}>{activity.time}</StepLabel>
               <StepContent>

@@ -8,6 +8,7 @@ import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+import appStore from '~src/services/app'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
@@ -44,82 +45,75 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles>, ComponentProps<'header'> {
 }
 
-export interface State {
-  auth: boolean
-  anchorEl: HTMLElement | null
-}
+const App: React.FC<Props> = React.memo(({ classes, slots, children }) => {
+  const appContext = React.useContext(appStore.Context)
+  const { authored } = appContext
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const handleMenuToggle = React.useCallback(
+    (open: boolean) => (event: React.MouseEvent<HTMLDivElement>) => {
+      setAnchorEl(open ? event.currentTarget : null)
+    },
+    [anchorEl],
+  )
+  const handleLogin = React.useCallback(
+    () => {
+      if (authored) {
+        appContext.logout()
+      } else {
+        appContext.login('a', '0cc175b9c0f1b6a831c399e269772661')
+      }
+      setAnchorEl(null)
+    },
+    [authored],
+  )
 
-class App extends React.Component<Props, State> {
-  state: State = {
-    auth: true,
-    anchorEl: null,
-  }
-
-  private handleMenuToggle = (open: boolean) =>
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      this.setState({ anchorEl: open ? event.currentTarget : null })
-    }
-
-  render () {
-    const { classes } = this.props
-    const { auth, anchorEl } = this.state
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="absolute" className={classes.appBar}>
-          <Toolbar>
-            <Typography variant="subtitle1" color="inherit" className={classes.appBar}>
-              WaiverForever
-            </Typography>
-            {this.props.slots.header}
-            {auth && (
-              <div>
-                <Menu
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={!!anchorEl}
-                  onClose={this.handleMenuToggle(false)}
-                >
-                  <MenuItem
-                    onClick={this.handleMenuToggle(false)}
-                  >
-                    Profile
-                  </MenuItem>
-                  <MenuItem
-                    onClick={this.handleMenuToggle(false)}
-                  >
-                    My account
-                  </MenuItem>
-                </Menu>
-              </div>
-            )}
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <Toolbar />
-          <List>{mailFolderListItems}</List>
-          <Divider />
-          <List>{otherMailFolderListItems}</List>
-        </Drawer>
-        <div className={classes.content}>
-          <Toolbar />
-          {this.props.children}
-        </div>
+  return (
+    <div className={classes.root}>
+      <AppBar position="absolute" className={classes.appBar}>
+        <Toolbar>
+          <Typography variant="subtitle1" color="inherit" className={classes.appBar}>
+            WaiverForever
+          </Typography>
+          {slots.header}
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={!!anchorEl}
+            onClose={handleMenuToggle(false)}
+          >
+            <MenuItem onClick={handleMenuToggle(false)}>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={handleLogin}>
+              {authored ? 'My account' : 'Log in'}
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <Toolbar />
+        <List>{mailFolderListItems}</List>
+        <Divider />
+        <List>{otherMailFolderListItems}</List>
+      </Drawer>
+      <div className={classes.content}>
+        <Toolbar />
+        {children}
       </div>
-    )
-  }
-}
+    </div>
+  )
+})
 
 export default withStyles(styles)(App)

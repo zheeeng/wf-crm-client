@@ -42,7 +42,7 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
 }
 
-const ContactAssets: React.FC<Props> = React.memo(props => {
+const ContactAssets: React.FC<Props> = React.memo(({ classes }) => {
   const contactContext = React.useContext(contactStore.Context)
 
   const [currentTab, setCurrentTab] = React.useState(0)
@@ -53,8 +53,6 @@ const ContactAssets: React.FC<Props> = React.memo(props => {
   )
 
   if (!contactContext.contact) return null
-
-  const { classes } = props
 
   return (
     <ContactTableThemeProvider>
