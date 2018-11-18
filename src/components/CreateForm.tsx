@@ -36,12 +36,14 @@ export interface CreateFormOption<F extends string> {
 }
 
 export interface Props extends WithStyles<typeof styles> {
-  open: boolean,
-  onClose?: React.ReactEventHandler<{}>,
+  open: boolean
+  onClose?: React.ReactEventHandler<{}>
+  onOk?: <O extends object>(o: O) => Promise<any>
   option?: CreateFormOption<keyof ApiContact>
 }
 
 const CreateForm: React.FC<Props> = React.memo(props => {
+  const { option, open, onClose, onOk, classes } = props
 
   const notificationContext = React.useContext(notificationStore.Context)
 
@@ -54,14 +56,14 @@ const CreateForm: React.FC<Props> = React.memo(props => {
     [fieldValues],
   )
 
-  const onOk = React.useCallback(
+  const handleOkClick = React.useCallback(
     () => {
-      notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+      (onOk ? onOk(fieldValues.current) : Promise.resolve()).then(() => {
+        notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+      })
     },
     [],
   )
-
-  const { option, open, onClose, classes } = props
 
   const { title = 'title', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
 
@@ -83,7 +85,7 @@ const CreateForm: React.FC<Props> = React.memo(props => {
         ))}
         <div className={classes.buttonZone}>
           <Button onClick={onClose}>{cancelText}</Button>
-          <Button color="primary" onClick={onOk}>{okText}</Button>
+          <Button color="primary" onClick={handleOkClick}>{okText}</Button>
         </div>
       </div>
     </Modal>
