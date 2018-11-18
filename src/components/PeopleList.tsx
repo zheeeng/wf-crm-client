@@ -106,6 +106,7 @@ export interface Props extends WithStyles<typeof styles> {
   total: number
   onSearch: (search: { page: number, size: number, name: string, email: string}) => void
   navigateToProfile: (id: string) => void
+  onSubmitContact?: (contact: ApiContact) => void
 }
 
 export interface State {
@@ -145,16 +146,14 @@ class PeopleList extends React.Component<Props, State> {
       })
     }
 
-  private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private handleSearchTextEnterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
       checked: [],
     })
   }
 
-  private handleSearchText = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode !== 13) return
-
+  private search = () => {
     this.props.onSearch({
       page: this.props.page,
       size: this.props.size,
@@ -162,6 +161,12 @@ class PeopleList extends React.Component<Props, State> {
       name: '',
       email: this.state.searchText,
     })
+  }
+
+  private handleSearchTextEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode !== 13) return
+
+    this.search()
   }
 
   private handleChangePage = (_: any, page: number) => {
@@ -298,8 +303,8 @@ class PeopleList extends React.Component<Props, State> {
     <Searcher
       className={this.props.classes.search}
       value={this.state.searchText}
-      onChange={this.handleSearchTextChange}
-      onKeyDown={this.handleSearchText}
+      onChange={this.handleSearchTextEnterChange}
+      onKeyDown={this.handleSearchTextEnter}
       placeholder="Type a name or email"
     />
   )
@@ -388,6 +393,14 @@ class PeopleList extends React.Component<Props, State> {
     </>
   )
 
+  private submitNewContact = async (contact: object) => {
+    if (this.props.onSubmitContact) {
+      await this.props.onSubmitContact(contact as ApiContact)
+      this.search()
+      this.changeCreateFormOpened(false)
+    }
+  }
+
   render () {
     const { classes, contacts } = this.props
     const { checked: checkedContacts, createFormOpened, createFormOption } = this.state
@@ -405,6 +418,7 @@ class PeopleList extends React.Component<Props, State> {
             option={createFormOption}
             open={createFormOpened}
             onClose={this.changeCreateFormOpened(false)}
+            onOk={this.submitNewContact}
           />
           <div className={classes.head}>
             <Button
