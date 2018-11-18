@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import notificationStore from '~src/services/notification'
+import { ApiContact } from '~src/types/Contact'
 
 const styles = (theme: Theme) => createStyles({
   paper: {
@@ -27,9 +28,9 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface CreateFormOption {
+export interface CreateFormOption<F extends string> {
   title?: string,
-  fields?: string[],
+  fields?: F[],
   okText?: string,
   cancelText?: string
 }
@@ -37,7 +38,7 @@ export interface CreateFormOption {
 export interface Props extends WithStyles<typeof styles> {
   open: boolean,
   onClose?: React.ReactEventHandler<{}>,
-  option?: CreateFormOption
+  option?: CreateFormOption<keyof ApiContact>
 }
 
 const CreateForm: React.FC<Props> = React.memo(props => {
