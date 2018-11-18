@@ -33,9 +33,6 @@ const store = createStore(setState => ({
       method: 'POST',
       body: JSON.stringify(outputAdapter(contact)),
     })
-    setState(state => ({
-      contacts: state.contacts.concat(inputAdapter(result)),
-    }))
   },
 }))
 
