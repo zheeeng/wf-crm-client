@@ -51,6 +51,13 @@ export interface ApiPeople {
   phone: string | null
 }
 
+export interface ApiContact {
+  'First name': string
+  'Last name': string
+  'Email': string
+  'Phone': string
+}
+
 export const inputAdapter = (input: ApiPeople): Contact => {
   const {
     id,
@@ -70,4 +77,15 @@ export const inputAdapter = (input: ApiPeople): Contact => {
   }
 
   return { id, info }
+}
+
+export const outputAdapter = (output: ApiContact): Partial<ApiPeople> => {
+  const params = {
+    email: output.Email || null,
+    phone: output.Phone || null,
+    first_name: output['First name'] || null,
+    last_name: output['Last name'] || null,
+  }
+
+  return params
 }
