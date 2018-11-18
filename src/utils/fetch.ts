@@ -11,7 +11,7 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
   }
 
   const response = await fetch(
-    first,
+    `https://crm-api-dev.waiverforeverk8s.com${first}`,
     {
       ...second,
       headers: {
