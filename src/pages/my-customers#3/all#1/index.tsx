@@ -50,6 +50,7 @@ const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
       onSearch={searchContacts}
       contacts={contactsContext.contacts}
       navigateToProfile={navigateToProfile}
+      onSubmitContact={contactsContext.addContact}
     />
   )
 })
