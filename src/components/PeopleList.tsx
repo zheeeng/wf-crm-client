@@ -15,7 +15,7 @@ import Hidden from '@material-ui/core/Hidden'
 import Typography from '@material-ui/core/Typography'
 import Popover from '@material-ui/core/Popover'
 import cssTips from '~src/utils/cssTips'
-import { Contact } from '~src/types/Contact'
+import { Contact, ApiContact } from '~src/types/Contact'
 
 import StarBorder from '@material-ui/icons/StarBorder'
 import CallMerge from '@material-ui/icons/CallMerge'
@@ -111,7 +111,7 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
   checked: string[]
   createFormOpened: boolean,
-  createFormOption: CreateFormOption,
+  createFormOption: CreateFormOption<any>,
   searchText: string
   popoverAnchorEl: HTMLElement | null
   popoverText: string
@@ -212,12 +212,12 @@ class PeopleList extends React.Component<Props, State> {
   }
 
   private changeCreateFormOpened: {
-    (opened: true, option: CreateFormOption): () => void;
+    <F extends string>(opened: true, option: CreateFormOption<F>): () => void;
     (opened: false): () => void;
-  } = (opened: boolean, option?: CreateFormOption) => () => {
+  } = <F extends string>(opened: boolean, option?: CreateFormOption<F>) => () => {
     this.setState({
       createFormOpened: opened,
-      createFormOption: opened ? option as CreateFormOption : {},
+      createFormOption: opened ? option as CreateFormOption<F> : {},
     })
   }
 
@@ -392,7 +392,7 @@ class PeopleList extends React.Component<Props, State> {
     const { classes, contacts } = this.props
     const { checked: checkedContacts, createFormOpened, createFormOption } = this.state
 
-    const newContactFormOption: CreateFormOption = {
+    const newContactFormOption: CreateFormOption<keyof ApiContact> = {
       title: 'New Contact',
       fields: ['First name', 'Last name', 'Email', 'Phone'],
       okText: 'Create',
