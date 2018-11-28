@@ -1,11 +1,9 @@
 import * as React from 'react'
 
-export default class Footer extends React.Component {
-  render () {
-    return (
-      <div>
-        Footer
-      </div>
-    )
-  }
-}
+const Footer: React.FC = React.memo(() => (
+  <div>
+    Footer
+  </div>
+))
+
+export default Footer
