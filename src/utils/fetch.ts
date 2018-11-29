@@ -5,7 +5,11 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
   const Authorization = window.localStorage.getItem('@token@') || ''
 
   if (first === '/api/auth/authToken') {
-    if (Authorization) return {} as any
+    if (Authorization) {
+      await fetchData('/api/auth/validateToken')
+
+      return {} as any
+    }
 
     throw Error('Auth failed.')
   }
