@@ -2,6 +2,7 @@ import * as React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { ClassNameMap } from '@material-ui/core/styles/withStyles'
 import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'
+import { TextFieldClassKey } from '@material-ui/core/TextField/TextField'
 import TextField from '@material-ui/core/TextField'
 
 const useStyles = makeStyles({
@@ -21,11 +22,12 @@ export interface Props {
   onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
   placeholder?: string,
   fullWidth?: boolean,
-  InputClasses?: ClassNameMap<FilledInputClassKey>
+  InputClasses?: Partial<ClassNameMap<FilledInputClassKey>>
+  TextFieldClasses?: Partial<ClassNameMap<TextFieldClassKey>>
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', value, onChange, onEnterPress, fullWidth = true, InputClasses,
+  placeholder = '', value, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
 }) => {
   const classes = useStyles({})
 
@@ -41,6 +43,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 
   return (
     <TextField
+      classes={TextFieldClasses}
       className={classes.input}
       label={null}
       placeholder={placeholder}
@@ -49,10 +52,10 @@ const BasicFormInput: React.FC<Props> = React.memo(({
       margin="normal"
       fullWidth={fullWidth}
       InputProps={{
+        onKeyDown: handleKeyDown,
         disableUnderline: true,
         classes: InputClasses,
       }}
-      onKeyDown={handleKeyDown}
     />
   )
 })
