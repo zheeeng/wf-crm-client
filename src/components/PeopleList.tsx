@@ -89,7 +89,7 @@ export interface Props extends WithStyles<typeof styles> {
   page: number
   size: number
   total: number
-  onSearch: (search: { page: number, size: number, name: string, email: string}) => void
+  onSearch: (search: { page: number, size: number, searchTerm: string}) => void
   navigateToProfile: (id: string) => void
   onSubmitContact?: (contact: ApiContact) => void
 }
@@ -98,7 +98,7 @@ export interface State {
   checked: string[]
   createFormOpened: boolean,
   createFormOption: CreateFormOption<any>,
-  searchText: string
+  searchTerm: string
   popoverAnchorEl: HTMLElement | null
   popoverText: string
 }
@@ -108,7 +108,7 @@ class PeopleList extends React.PureComponent<Props, State> {
     checked: [],
     createFormOpened: false,
     createFormOption: {},
-    searchText: '',
+    searchTerm: '',
     popoverAnchorEl: null,
     popoverText: '',
   }
@@ -131,9 +131,9 @@ class PeopleList extends React.PureComponent<Props, State> {
       })
     }
 
-  private handleSearchTextEnterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private handleSearchTermEnterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      searchText: e.target.value,
+      searchTerm: e.target.value,
     })
     if (this.state.checked.length !== 0) {
       this.setState({
@@ -146,13 +146,11 @@ class PeopleList extends React.PureComponent<Props, State> {
     this.props.onSearch({
       page: this.props.page,
       size: this.props.size,
-      // TODO::
-      name: '',
-      email: this.state.searchText,
+      searchTerm: this.state.searchTerm,
     })
   }
 
-  private handleSearchTextEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  private handleSearchTermEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode !== 13) return
 
     this.search()
@@ -162,9 +160,7 @@ class PeopleList extends React.PureComponent<Props, State> {
     this.props.onSearch({
       page,
       size: this.props.size,
-      // TODO::
-      name: '',
-      email: this.state.searchText,
+      searchTerm: this.state.searchTerm,
     })
   }
 
@@ -291,9 +287,9 @@ class PeopleList extends React.PureComponent<Props, State> {
   private renderSearcher = () => (
     <Searcher
       className={this.props.classes.search}
-      value={this.state.searchText}
-      onChange={this.handleSearchTextEnterChange}
-      onKeyDown={this.handleSearchTextEnter}
+      value={this.state.searchTerm}
+      onChange={this.handleSearchTermEnterChange}
+      onKeyDown={this.handleSearchTermEnter}
       placeholder="Type a name or email"
     />
   )
