@@ -154,7 +154,7 @@ const ContactPageProfile: React.FC<Props> = React.memo(props => {
         <ContactFieldInput
           key="gender" name="gender" placeholder="gender" editable={editable}
           Icon={People}
-          valueAndNote={{ value: contactContext.contact.info.gender }}
+          valueAndNote={{ value: contactContext.contact.info.gender || '' }}
         />
         <ContactFieldInput
           key="address" name="address" placeholder="address" editable={editable}

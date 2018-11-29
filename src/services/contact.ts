@@ -26,6 +26,15 @@ const store = createStore(setState => ({
       contact: inputAdapter(result),
     })
   },
+  async starContact (id: string, star: boolean) {
+    const result = await fetch<ApiPeople>(`/api/people/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ favourite: star }),
+    })
+    setState({
+      contact: inputAdapter(result),
+    })
+  },
 }))
 
 export default store

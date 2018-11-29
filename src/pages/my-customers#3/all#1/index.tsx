@@ -26,6 +26,13 @@ const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
     [],
   )
 
+  const starContact = React.useCallback(
+    (id: string, star: boolean) => {
+      contactsContext.starContact(id, star)
+    },
+    [contactsContext.contacts],
+  )
+
   const searchContacts = React.useCallback(
     ({page = 0, size = 30, searchTerm = ''}) => {
       contactsContext.fetchContacts({
@@ -47,6 +54,7 @@ const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
       page={contactsContext.page - 1}
       size={contactsContext.size}
       total={contactsContext.total}
+      onStar={starContact}
       onSearch={searchContacts}
       contacts={contactsContext.contacts}
       navigateToProfile={navigateToProfile}

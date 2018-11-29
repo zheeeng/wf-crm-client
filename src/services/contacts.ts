@@ -22,8 +22,8 @@ const store = createStore(setState => ({
       )
 
       setState({
-      ...pagination,
-      contacts: result.map(inputAdapter),
+        ...pagination,
+        contacts: result.map(inputAdapter),
       })
     } catch {
     } finally {
@@ -35,6 +35,16 @@ const store = createStore(setState => ({
       method: 'POST',
       body: JSON.stringify(fieldAdapter(contact)),
     })
+  },
+  async starContact (id: string, star: boolean) {
+    const result = await fetch<ApiPeople>(`/api/people/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ favourite: star }),
+    })
+    const contact = inputAdapter(result)
+    setState(state => ({
+      contacts: state.contacts.map(c => c.id === contact.id ? contact : c),
+    }))
   },
 }))
 

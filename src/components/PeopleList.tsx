@@ -89,6 +89,7 @@ export interface Props extends WithStyles<typeof styles> {
   page: number
   size: number
   total: number
+  onStar: (docid: string, star: boolean) => void
   onSearch: (search: { page: number, size: number, searchTerm: string}) => void
   navigateToProfile: (id: string) => void
   onSubmitContact?: (contact: ApiContact) => void
@@ -197,8 +198,9 @@ class PeopleList extends React.PureComponent<Props, State> {
     }
   }
 
-  private handleStarClick = (id: string) => () => {
-    //
+  private handleStarClick = (id: string, star: boolean) => (e: React.SyntheticEvent) => {
+    e.stopPropagation()
+    this.props.onStar(id, star)
   }
 
   private changeCreateFormOpened: {
@@ -261,7 +263,7 @@ class PeopleList extends React.PureComponent<Props, State> {
           <IconButton>
             <StarBorder
               color={contact.info.starred ? 'secondary' : 'primary'}
-              onClick={this.handleStarClick(id)}
+              onClick={this.handleStarClick(id, !contact.info.starred)}
             />
           </IconButton>
         </TableCell>
