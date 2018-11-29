@@ -25,6 +25,7 @@ import Delete from '@material-ui/icons/Delete'
 
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
+import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
@@ -55,22 +56,6 @@ const styles = (theme: Theme) => createStyles({
   popoverPaper: {
     padding: theme.spacing.unit,
     backgroundColor: theme.palette.background.paper,
-  },
-  paginationIconButton: {
-    color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.action.active,
-    padding: 0,
-    margin: theme.spacing.unit * 1.5,
-    borderRadius: '50%',
-    ['&:hover']: {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-  disabled: {
-    '$paginationIconButton&': {
-      color: theme.palette.text.secondary,
-      backgroundColor: theme.palette.action.disabled,
-    },
   },
   table: {
     flexGrow: 1,
@@ -318,20 +303,7 @@ class PeopleList extends React.Component<Props, State> {
       count={this.props.total}
       rowsPerPage={this.props.size}
       page={this.props.page}
-      backIconButtonProps={{
-        className: classNames([
-          this.props.classes.paginationIconButton,
-          this.props.page === 0 && this.props.classes.disabled,
-        ]),
-        ['aria-label']: 'Previous Page',
-      }}
-      nextIconButtonProps={{
-        className: classNames([
-          this.props.classes.paginationIconButton,
-          this.props.page === this.pageNumber && this.props.classes.disabled,
-        ]),
-        ['aria-label']: 'Next Page',
-      }}
+      ActionsComponent={TablePaginationActions}
       onChangePage={this.handleChangePage}
       labelDisplayedRows={this.renderLabelDisplayedRows}
       rowsPerPageOptions={[]}
