@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { makeStyles } from '@material-ui/styles'
+import { ClassNameMap } from '@material-ui/core/styles/withStyles'
+import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'
 import TextField from '@material-ui/core/TextField'
 
 const useStyles = makeStyles({
@@ -18,9 +20,13 @@ export interface Props {
   onChange?: React.ChangeEventHandler<HTMLInputElement>,
   onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
   placeholder?: string,
+  fullWidth?: boolean,
+  InputClasses?: ClassNameMap<FilledInputClassKey>
 }
 
-const BasicFormInput: React.FC<Props> = React.memo(({ placeholder = '', value, onChange, onEnterPress }) => {
+const BasicFormInput: React.FC<Props> = React.memo(({
+  placeholder = '', value, onChange, onEnterPress, fullWidth = true, InputClasses,
+}) => {
   const classes = useStyles({})
 
   const handleKeyDown = React.useCallback(
@@ -41,9 +47,10 @@ const BasicFormInput: React.FC<Props> = React.memo(({ placeholder = '', value, o
       value={value}
       onChange={onChange}
       margin="normal"
-      fullWidth
+      fullWidth={fullWidth}
       InputProps={{
         disableUnderline: true,
+        classes: InputClasses,
       }}
       onKeyDown={handleKeyDown}
     />
