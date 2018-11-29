@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import TextField from '@material-ui/core/TextField'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles({
   input: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
     height: 32,
@@ -13,31 +13,41 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   value?: string,
   onChange?: React.ChangeEventHandler<HTMLInputElement>,
+  onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
   placeholder?: string,
 }
 
-class BasicFormInput extends React.PureComponent<Props> {
-  render () {
-    const { placeholder = '', value, onChange, classes } = this.props
+const BasicFormInput: React.FC<Props> = React.memo(({ placeholder = '', value, onChange, onEnterPress }) => {
+  const classes = useStyles({})
 
-    return (
-      <TextField
-        className={classes.input}
-        label={null}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        margin="normal"
-        fullWidth
-        InputProps={{
-          disableUnderline: true,
-        }}
-      />
-    )
-  }
-}
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (!onEnterPress) return
 
-export default withStyles(styles)(BasicFormInput)
+      if (event.keyCode !== 13) return
+      onEnterPress(event)
+    },
+    [onEnterPress],
+  )
+
+  return (
+    <TextField
+      className={classes.input}
+      label={null}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      margin="normal"
+      fullWidth
+      InputProps={{
+        disableUnderline: true,
+      }}
+      onKeyDown={handleKeyDown}
+    />
+  )
+})
+
+export default BasicFormInput
