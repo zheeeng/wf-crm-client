@@ -103,7 +103,7 @@ export interface State {
   popoverText: string
 }
 
-class PeopleList extends React.Component<Props, State> {
+class PeopleList extends React.PureComponent<Props, State> {
   state: State = {
     checked: [],
     createFormOpened: false,
@@ -134,8 +134,12 @@ class PeopleList extends React.Component<Props, State> {
   private handleSearchTextEnterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchText: e.target.value,
-      checked: [],
     })
+    if (this.state.checked.length !== 0) {
+      this.setState({
+        checked: [],
+      })
+    }
   }
 
   private search = () => {
