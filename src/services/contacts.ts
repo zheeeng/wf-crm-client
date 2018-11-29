@@ -1,5 +1,5 @@
 import { Pagination } from '~src/types/Pagination'
-import { Contact, ApiPeople, ApiContact, inputAdapter, outputAdapter } from '~src/types/Contact'
+import { Contact, ApiPeople, ApiContact, inputAdapter, fieldAdapter } from '~src/types/Contact'
 import createStore from '@roundation/store'
 import fetch, { getQuery } from '~src/utils/fetch'
 
@@ -33,7 +33,7 @@ const store = createStore(setState => ({
   async addContact (contact: ApiContact) {
     const result = await fetch<ApiPeople>('/api/people', {
       method: 'POST',
-      body: JSON.stringify(outputAdapter(contact)),
+      body: JSON.stringify(fieldAdapter(contact)),
     })
   },
 }))

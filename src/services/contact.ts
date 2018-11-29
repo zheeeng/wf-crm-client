@@ -1,4 +1,4 @@
-import { Contact, Activity, ApiPeople, inputAdapter } from '~src/types/Contact'
+import { Contact, Activity, ApiPeople, inputAdapter, outputAdapter } from '~src/types/Contact'
 import createStore from '@roundation/store'
 import fetch from '~src/utils/fetch'
 
@@ -15,6 +15,15 @@ const store = createStore(setState => ({
     const result = await fetch<Activity[]>(`/api/people/${id}/activities`)
     setState({
       activities: result,
+    })
+  },
+  async updateContact (id: string, contact: Contact) {
+    const result = await fetch<ApiPeople>(`/api/people/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(outputAdapter(contact)),
+    })
+    setState({
+      contact: inputAdapter(result),
     })
   },
 }))
