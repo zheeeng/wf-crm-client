@@ -36,9 +36,10 @@ export interface Group {
 
 export interface ApiPeople {
   id: string
-  // favourite: boolean
+  favourite: boolean | null
   account: string
   name: string | null
+  picture_url: string | null
   first_name: string | null
   middle_name: string | null
   last_name: string | null
@@ -60,20 +61,20 @@ export interface ApiContact {
 
 export const inputAdapter = (input: ApiPeople): Contact => {
   const {
-    id,
-    account, name, gender, dob_day, dob_month, dob_year,
+    id, account, favourite,
+    picture_url, name, gender, dob_day, dob_month, dob_year,
     email, address, phone,
   } = input
 
   const info = {
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-    starred: false,
+    avatar: picture_url || '',
+    starred: favourite || false,
     name: name || '',
     gender: gender || '' as 'Male' | 'Female' | '',
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
-    email: email || 'hi@zheeeng.me',
-    address: address || '330 Wyn Ave se Seattle, WA, 98121',
-    telephone: phone || '(212)323-9323',
+    email: email || '',
+    address: address || '',
+    telephone: phone || '',
   }
 
   return { id, info }
