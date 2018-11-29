@@ -12,7 +12,7 @@ export interface Contact {
     avatar: string,
     starred: boolean,
     name: string,
-    gender: 'Male' | 'Female' | '',
+    gender: 'Male' | 'Female' | null,
     birthDay: string,
     email: string,
     address: string,
@@ -70,7 +70,7 @@ export const inputAdapter = (input: ApiPeople): Contact => {
     avatar: picture_url || '',
     starred: favourite || false,
     name: name || '',
-    gender: gender || '' as 'Male' | 'Female' | '',
+    gender: gender || null as 'Male' | 'Female' | null,
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
     email: email || '',
     address: address || '',
@@ -80,12 +80,32 @@ export const inputAdapter = (input: ApiPeople): Contact => {
   return { id, info }
 }
 
-export const outputAdapter = (output: ApiContact): Partial<ApiPeople> => {
+export const outputAdapter = (output: Contact): Partial<ApiPeople> => {
   const params = {
-    email: output.Email || null,
-    phone: output.Phone || null,
-    first_name: output['First name'] || null,
-    last_name: output['Last name'] || null,
+    email: output.info.email,
+    phone: output.info.telephone,
+    favourite: output.info.starred,
+    picture_url: output.info.avatar,
+    name: output.info.name,
+    gender: output.info.gender || null,
+    address: output.info.address,
+  }
+
+  for (const p in params) {
+    if (params.hasOwnProperty(p) && !params[p]) {
+      delete params[p]
+    }
+  }
+
+  return params
+}
+
+export const fieldAdapter = (field: ApiContact): Partial<ApiPeople> => {
+  const params = {
+    email: field.Email || null,
+    phone: field.Phone || null,
+    first_name: field['First name'] || null,
+    last_name: field['Last name'] || null,
   }
 
   return params
