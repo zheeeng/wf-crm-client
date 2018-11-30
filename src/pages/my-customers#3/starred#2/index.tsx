@@ -1,30 +1,16 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
 import contactsStore from '~src/services/contacts'
 import PeopleList from '~src/components/PeopleList'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
-const styles = (theme: Theme) => createStyles({
-})
-
-export interface Props extends
-  ComponentProps,
-  WithStyles<typeof styles> {
-}
+export interface Props extends ComponentProps {}
 
 export interface State {
 }
 
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const contactsContext = React.useContext(contactsStore.Context)
-
-  React.useEffect(
-    () => {
-      contactsContext.fetchContacts()
-    },
-    [],
-  )
 
   const starContact = React.useCallback(
     (id: string, star: boolean) => {
@@ -58,10 +44,9 @@ const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
       onSearch={searchContacts}
       contacts={contactsContext.contacts}
       navigateToProfile={navigateToProfile}
+      onSubmitContact={contactsContext.addContact}
     />
   )
 })
 
-export default contactsStore.inject(
-  withStyles(styles)(StarredMyCustomersIndex),
-)
+export default StarredMyCustomersIndex
