@@ -1,47 +1,35 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
-import { WithContext } from '@roundation/store'
 import groupsStore from '~src/services/groups'
 import contactsStore from '~src/services/contacts'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
-// const { Provider } = store
-
-const styles = (theme: Theme) => createStyles({
-})
-
 export interface Props extends
-  WithStyles<typeof styles>,
-  WithContext<typeof contactsStore, 'contactsStore'>,
-  WithContext<typeof groupsStore, 'groupsStore'>,
   ComponentProps<'aside'> {
 }
 
-class MyCustomersLayout extends React.Component<Props> {
-  render () {
-    return (
-      <>
-        {this.props.slots.aside}
-        {this.props.children}
-      </>
-    )
-  }
+const MyCustomersLayout: React.FC<Props> = React.memo(({ slots, children }) => {
+  const groupsContext = React.useContext(groupsStore.Context)
+  const contactsContext = React.useContext(contactsStore.Context)
 
-  componentDidMount () {
-    this.props.groupsStore.fetchGroups()
-    this.props.contactsStore.fetchContacts()
-  }
-}
+  React.useEffect(
+    () => {
+      groupsContext.fetchGroups()
+      contactsContext.fetchContacts()
+    },
+    [groupsContext.fetchGroups, contactsContext.fetchContacts],
+  )
+
+  return (
+    <>
+      {slots.aside}
+      {children}
+    </>
+  )
+})
 
 export default groupsStore.inject(
   contactsStore.inject(
-    groupsStore.connect(
-      contactsStore.connect(
-        withStyles(styles)(MyCustomersLayout),
-        'contactsStore',
-      ),
-      'groupsStore',
-    ),
+    MyCustomersLayout,
   ),
 )
