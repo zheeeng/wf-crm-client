@@ -17,6 +17,7 @@ export interface Contact {
     email: string,
     address: string,
     telephone: string,
+    tags: string[],
   }
 }
 
@@ -50,6 +51,7 @@ export interface ApiPeople {
   email: string | null
   address: string | null
   phone: string | null
+  tags: string[]
 }
 
 export interface ApiContact {
@@ -63,7 +65,7 @@ export const inputAdapter = (input: ApiPeople): Contact => {
   const {
     id, account, favourite,
     picture_url, name, gender, dob_day, dob_month, dob_year,
-    email, address, phone,
+    email, address, phone, tags,
   } = input
 
   const info = {
@@ -75,6 +77,7 @@ export const inputAdapter = (input: ApiPeople): Contact => {
     email: email || '',
     address: address || '',
     telephone: phone || '',
+    tags,
   }
 
   return { id, info }
@@ -92,7 +95,9 @@ export const outputAdapter = (output: Contact): Partial<ApiPeople> => {
   }
 
   for (const p in params) {
-    if (params.hasOwnProperty(p) && !params[p]) {
+    if (!params.hasOwnProperty(p)) continue
+
+    if (!params[p] || (Array.isArray(params[p]) && params[p].length === 0)) {
       delete params[p]
     }
   }

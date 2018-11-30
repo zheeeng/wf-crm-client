@@ -69,7 +69,6 @@ export interface State {
 
 const ContactPageProfile: React.FC<Props> = React.memo(props => {
   const [editable, setEditable] = React.useState(false)
-  const [tags, setTags] = React.useState(['Golden Tour', 'Member', 'Music', 'Education'])
   const contactContext = React.useContext(contactStore.Context)
 
   const handleToggleEditable = React.useCallback(
@@ -84,9 +83,9 @@ const ContactPageProfile: React.FC<Props> = React.memo(props => {
       if (event.keyCode !== 13) return
       const newTag = event.currentTarget.value.trim()
       event.currentTarget.value = ''
-      if (newTag) setTags(tags.concat(newTag))
+      if (newTag) contactContext.addTag(newTag)
     },
-    [tags],
+    [],
   )
 
   if (!contactContext.contact) return null
@@ -112,7 +111,7 @@ const ContactPageProfile: React.FC<Props> = React.memo(props => {
             />
           </div>
           <div className={classes.tags}>
-            {tags.map((tag, index) => (
+            {contactContext.contact.info.tags.map((tag, index) => (
               <Chip
                 key={`${tag}-${index}`}
                 clickable

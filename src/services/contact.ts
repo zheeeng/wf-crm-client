@@ -35,6 +35,16 @@ const store = createStore(setState => ({
       contact: inputAdapter(result),
     })
   },
+  async addTag (id: string, tag: string) {
+    const result = await fetch<ApiPeople>(`/api/people/${id}/tags`, {
+      method: 'POST',
+      body:  tag.toString(),
+    })
+    setState({
+      // TODO:: update tags field
+      contact: inputAdapter(result),
+    })
+  },
 }))
 
 export default store
