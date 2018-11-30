@@ -371,7 +371,7 @@ class PeopleList extends React.PureComponent<Props, State> {
     if (this.props.onSubmitContact) {
       await this.props.onSubmitContact(contact as ApiContact)
       this.search()
-      this.changeCreateFormOpened(false)
+      this.changeCreateFormOpened(false)()
     }
   }
 
