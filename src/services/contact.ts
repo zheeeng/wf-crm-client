@@ -59,7 +59,7 @@ const store = createStore(setState => ({
       )
   },
   async deleteTag (id: string, tag: string) {
-    const tags = await fetch<string[]>(`/api/people/${id}/tags/tag`, {
+    const tags = await fetch<string[]>(`/api/people/${id}/tags/${tag}`, {
       method: 'DELETE',
     })
     setState(state => (state.contact && state.contact.id === id)
