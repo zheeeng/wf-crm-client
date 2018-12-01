@@ -55,6 +55,25 @@ const store = createStore(setState => ({
         : state,
       )
   },
+  async deleteTag (id: string, tag: string) {
+    const tags = await fetch<string[]>(`/api/people/${id}/tags/tag`, {
+      method: 'DELETE',
+    })
+    setState(state => (state.contact && state.contact.id === id)
+        ? ({
+            // TODO:: update tags field
+            contact: {
+              ...state.contact,
+              info: ({
+                ...state.contact.info,
+                tags,
+              }),
+            },
+            activities: state.activities,
+        })
+        : state,
+      )
+  },
 }))
 
 export default store
