@@ -59,9 +59,18 @@ export interface ContactFullInfo extends Arrify<{
 export interface Group {
   id: string,
   info: {
+    account: string,
     name: string,
     contacts: Contact[],
+    updateTimestamp: number,
   }
+}
+
+export interface GroupAPI {
+  id: string,
+  account: string,
+  name: string,
+  last_update_timestamp: number,
 }
 
 export interface PeopleAPI {
@@ -102,7 +111,7 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
     pictures, waivers, activities, notes,
   } = input
 
-  const info = {
+  const info: Contact['info'] = {
     avatar: picture_url || '',
     starred: favourite || false,
     name: name || '',
@@ -200,3 +209,15 @@ const noteOutputAdapter = (output: Partial<Note>): Partial<NoteAPI> => {
 
   return note
 }
+
+export const groupInputAdapter = (input: GroupAPI): Group =>
+  ({
+    id: input.id,
+    info: {
+      account: input.account,
+      name: input.name,
+      updateTimestamp: input.last_update_timestamp,
+      contacts: [],
+
+    },
+  })

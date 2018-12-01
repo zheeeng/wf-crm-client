@@ -14,8 +14,7 @@ const MyCustomersLayout: React.FC<Props> = ({ slots, children }) => {
 
   React.useEffect(
     () => {
-      // groupsContext.fetchGroups()
-
+      groupsContext.fetchGroups()
       contactsContext.fetchContacts()
     },
     [],
