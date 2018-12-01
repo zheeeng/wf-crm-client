@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { withStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Edit from '@material-ui/icons/Edit'
 import Avatar from '@material-ui/core/Avatar'
@@ -16,7 +17,7 @@ import Chip from '@material-ui/core/Chip'
 import ContactFieldInput from '~src/units/ContactFieldInput'
 import contactStore from '~src/services/contact'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   profileBar: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -59,17 +60,12 @@ const styles = (theme: Theme) => createStyles({
   tagLabel: {
     padding: 0,
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
-}
-
-export interface State {
-}
-
-const ContactPageProfile: React.FC<Props> = React.memo(props => {
+const ContactPageProfile: React.FC = React.memo(props => {
   const [editable, setEditable] = React.useState(false)
   const contactContext = React.useContext(contactStore.Context)
+  const classes = useStyles({})
 
   const handleToggleEditable = React.useCallback(
     () => {
@@ -83,14 +79,13 @@ const ContactPageProfile: React.FC<Props> = React.memo(props => {
       if (event.keyCode !== 13) return
       const newTag = event.currentTarget.value.trim()
       event.currentTarget.value = ''
-      if (newTag) contactContext.addTag(newTag)
+      if (!contactContext.contact) return
+      if (newTag) contactContext.addTag(contactContext.contact.id, newTag)
     },
     [],
   )
 
   if (!contactContext.contact) return null
-
-  const { classes } = props
 
   return (
     <>
@@ -169,4 +164,4 @@ const ContactPageProfile: React.FC<Props> = React.memo(props => {
   )
 })
 
-export default withStyles(styles)(ContactPageProfile)
+export default ContactPageProfile

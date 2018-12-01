@@ -36,14 +36,24 @@ const store = createStore(setState => ({
     })
   },
   async addTag (id: string, tag: string) {
-    const result = await fetch<ApiPeople>(`/api/people/${id}/tags`, {
+    const tags = await fetch<string[]>(`/api/people/${id}/tags`, {
       method: 'POST',
-      body:  tag.toString(),
+      body:  JSON.stringify({ tag }),
     })
-    setState({
-      // TODO:: update tags field
-      contact: inputAdapter(result),
-    })
+    setState(state => (state.contact && state.contact.id === id)
+        ? ({
+            // TODO:: update tags field
+            contact: {
+              ...state.contact,
+              info: ({
+                ...state.contact.info,
+                tags,
+              }),
+            },
+            activities: state.activities,
+        })
+        : state,
+      )
   },
 }))
 
