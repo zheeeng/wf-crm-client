@@ -100,7 +100,7 @@ const ContactPageProfile: React.FC = React.memo(props => {
       if (!contactContext.contact) return
       contactContext.deleteTag(contactContext.contact.id, tag)
     },
-    [contactContext],
+    [contactContext.contact],
   )
 
   if (!contactContext.contact) return null

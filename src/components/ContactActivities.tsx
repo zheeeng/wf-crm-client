@@ -10,6 +10,7 @@ import StepContent from '@material-ui/core/StepContent'
 import AddCircle from '@material-ui/icons/AddCircle'
 import contactStore from '~src/services/contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
+import { Activity } from '~src/types/Contact'
 
 const styles = (theme: Theme) => createStyles({
   headWrapper: {
@@ -17,6 +18,10 @@ const styles = (theme: Theme) => createStyles({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: theme.spacing.unit * 2,
+  },
+  activityLabel: {
+    fontSize: 20,
+    fontWeight: 600,
   },
   dot: {
     width: theme.spacing.unit,
@@ -55,11 +60,27 @@ export interface Props extends WithStyles<typeof styles> {
 const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
   const contactContext = React.useContext(contactStore.Context)
 
-  React.useEffect(
+  const ActivityGroups = React.useMemo(
     () => {
-      contactContext.fetchContactActivities(id)
+      if (!contactContext.contact) return []
+      const activities = contactContext.contact.info.activities
+        .slice().sort((p, c) => p.timeStamp - c.timeStamp)
+      const groupMap: { [key: string]: Activity[] } = activities.reduce(
+        (m, act) => {
+          m[act.date] = m[act.date] ? [...m[act.date], act] : [act]
+
+          return m
+        },
+        {},
+      )
+      const activityGroups = Object.keys(groupMap).map(key => ({
+        date: key,
+        activities: groupMap[key],
+      }))
+
+      return activityGroups
     },
-    [],
+    [contactContext],
   )
 
   if (!contactContext.contact) return null
@@ -67,25 +88,30 @@ const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
-        <Typography variant="h6">Waivers</Typography>
+        <Typography variant="h5">Activities</Typography>
         <Button
           variant="outlined"
           color="primary"
         >Manage</Button>
       </div>
       <Stepper orientation="vertical">
-        {contactContext.activities.map(activity => (
-            <Step key={activity.id} active>
-              <StepLabel icon={<div className={classes.dot} />}>{activity.time}</StepLabel>
+        {ActivityGroups.map(group => (
+            <Step key={group.date} active>
+              <StepLabel
+                classes={{
+                  label: classes.activityLabel,
+                }}
+                icon={<div className={classes.dot} />}
+              >
+                {group.date}
+              </StepLabel>
               <StepContent>
-                <div className={classes.entry}>
-                  <Typography className={classes.entryContent}>{activity.content}</Typography>
-                  <time className={classes.entryTime}>{activity.time}</time>
-                </div>
-                <div className={classes.entry}>
-                  <Typography className={classes.entryContent}>{activity.content}</Typography>
-                  <time className={classes.entryTime}>{activity.time}</time>
-                </div>
+                {group.activities.map(activity => (
+                  <div className={classes.entry} key={activity.id}>
+                    <Typography className={classes.entryContent}>{activity.content}</Typography>
+                    <time className={classes.entryTime}>{activity.time}</time>
+                  </div>
+                ))}
               </StepContent>
             </Step>
           ))}

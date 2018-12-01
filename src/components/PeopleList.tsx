@@ -15,7 +15,7 @@ import Hidden from '@material-ui/core/Hidden'
 import Typography from '@material-ui/core/Typography'
 import Popover from '@material-ui/core/Popover'
 import cssTips from '~src/utils/cssTips'
-import { Contact, ApiContact } from '~src/types/Contact'
+import { Contact, ContactAPI } from '~src/types/Contact'
 
 import StarBorder from '@material-ui/icons/StarBorder'
 import CallMerge from '@material-ui/icons/CallMerge'
@@ -92,7 +92,7 @@ export interface Props extends WithStyles<typeof styles> {
   onStar: (docid: string, star: boolean) => void
   onSearch: (search: { page: number, size: number, searchTerm: string}) => void
   navigateToProfile: (id: string) => void
-  onSubmitContact?: (contact: ApiContact) => void
+  onSubmitContact?: (contact: ContactAPI) => void
 }
 
 export interface State {
@@ -369,7 +369,7 @@ class PeopleList extends React.PureComponent<Props, State> {
 
   private submitNewContact = async (contact: object) => {
     if (this.props.onSubmitContact) {
-      await this.props.onSubmitContact(contact as ApiContact)
+      await this.props.onSubmitContact(contact as ContactAPI)
       this.search()
       this.changeCreateFormOpened(false)()
     }
@@ -379,7 +379,7 @@ class PeopleList extends React.PureComponent<Props, State> {
     const { classes, contacts } = this.props
     const { checked: checkedContacts, createFormOpened, createFormOption } = this.state
 
-    const newContactFormOption: CreateFormOption<keyof ApiContact> = {
+    const newContactFormOption: CreateFormOption<keyof ContactAPI> = {
       title: 'New Contact',
       fields: ['First name', 'Last name', 'Email', 'Phone'],
       okText: 'Create',

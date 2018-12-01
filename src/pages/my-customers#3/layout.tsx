@@ -8,16 +8,17 @@ export interface Props extends
   ComponentProps<'aside'> {
 }
 
-const MyCustomersLayout: React.FC<Props> = React.memo(({ slots, children }) => {
+const MyCustomersLayout: React.FC<Props> = ({ slots, children }) => {
   const groupsContext = React.useContext(groupsStore.Context)
   const contactsContext = React.useContext(contactsStore.Context)
 
   React.useEffect(
     () => {
-      groupsContext.fetchGroups()
+      // groupsContext.fetchGroups()
+
       contactsContext.fetchContacts()
     },
-    [groupsContext.fetchGroups, contactsContext.fetchContacts],
+    [],
   )
 
   return (
@@ -26,7 +27,7 @@ const MyCustomersLayout: React.FC<Props> = React.memo(({ slots, children }) => {
       {children}
     </>
   )
-})
+}
 
 export default groupsStore.inject(
   contactsStore.inject(
