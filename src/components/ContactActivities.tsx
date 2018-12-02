@@ -65,13 +65,14 @@ const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
       if (!contactContext.contact) return []
       const activities = contactContext.contact.info.activities
         .slice().sort((p, c) => p.timeStamp - c.timeStamp)
-      const groupMap: { [key: string]: Activity[] } = activities.reduce(
+      const groupMap = activities.reduce(
         (m, act) => {
           m[act.date] = m[act.date] ? [...m[act.date], act] : [act]
 
           return m
         },
-        {},
+        // tslint:disable-next-line:no-object-literal-type-assertion
+        {} as { [key: string]: Activity[] },
       )
       const activityGroups = Object.keys(groupMap).map(key => ({
         date: key,

@@ -369,7 +369,7 @@ class PeopleList extends React.PureComponent<Props, State> {
 
   private submitNewContact = async (contact: object) => {
     if (this.props.onSubmitContact) {
-      await this.props.onSubmitContact(contact as ContactAPI)
+      this.props.onSubmitContact(contact as ContactAPI)
       this.search()
       this.changeCreateFormOpened(false)()
     }
