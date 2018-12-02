@@ -1,33 +1,38 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import NavigateBefore from '@material-ui/icons/NavigateBefore'
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
 import Delete from '@material-ui/icons/Delete'
 import cssTips from '~src/utils/cssTips'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   left: {
     ...cssTips(theme).horizontallySpaced,
   },
-})
+  delete: {
+    cursor: 'pointer',
+  },
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
+  onDelete: React.MouseEventHandler
 }
 
-export interface State {
-}
+const ContactPageHeader: React.FC<Props> = React.memo(({ onDelete }) => {
+  const classes = useStyles({})
 
-const ContactPageHeader: React.FC<Props> = React.memo(props =>
-  (
+  return (
     <>
-      <div className={props.classes.left}>
+      <div className={classes.left}>
         <NavigateBefore />
         <KeyboardArrowDown />
         <KeyboardArrowUp />
       </div>
-      <Delete />
+      <Delete className={classes.delete} onClick={onDelete} />
     </>
-  ))
+  )
+})
 
-export default withStyles(styles)(ContactPageHeader)
+export default ContactPageHeader

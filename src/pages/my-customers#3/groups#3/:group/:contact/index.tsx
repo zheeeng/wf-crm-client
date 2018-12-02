@@ -28,11 +28,19 @@ const ContactIndex: React.FC<Props> = React.memo(({ contact }) => {
     [],
   )
 
+  const deleteContact = React.useCallback(
+    () => {
+      if (!contact) return
+      contactContext.deleteContact(contact)
+    },
+    [contactContext.deleteContact, contact],
+  )
+
   if (!contactContext.contact) return null
 
   return (
     <DetailsPaper
-      header={<ContactPageHeader />}
+      header={<ContactPageHeader onDelete={deleteContact} />}
       rightPart1={<ContactAssets />}
       rightPart2={<ContactActivities id={contact} />}
     >

@@ -15,6 +15,18 @@ const store = createStore(setState => ({
       contact: contactInputAdapter(result),
     })
   },
+  async deleteContact (id: string) {
+    try {
+      const result = await fetch<PeopleAPI>(`/api/people/${id}`, {
+        method: 'DELETE',
+      })
+      setState({
+        contact: contactInputAdapter(result),
+      })
+    } catch {
+      // TODO::
+    }
+  },
   // async fetchContactActivities (id: string) {
   //   const result = await fetch<Activity[]>(`/api/people/${id}/activities`)
   //   setState({
