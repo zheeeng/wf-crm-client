@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { install } from '@material-ui/styles'
 import Roundation from '@roundation/roundation'
 import registerServiceWorker from '~src/registerServiceWorker'
 
@@ -9,6 +10,8 @@ import notificationStore from '~src/services/notification'
 import Notification from '~src/components/Notification'
 import InjectIntoGlobalStyles from '~src/components/InjectIntoGlobalStyles'
 import GlobalThemeProvider from '~src/theme/GlobalThemeProvider'
+
+install()
 
 const $mountEl = document.querySelector('#content')
 
