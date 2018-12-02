@@ -108,9 +108,9 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@roundation/roundation@^0.0.27":
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.27.tgz#002f7fa9bda462b491d290d27cec29bafca18808"
+"@roundation/roundation@^0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.28.tgz#f7fecb684a3f88aef2b694a4814a332a8acf496b"
   dependencies:
     "@reach/router" "^1.2.1"
     "@types/reach__router" "^1.2.1"
