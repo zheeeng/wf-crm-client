@@ -49,10 +49,12 @@ const store = createStore(setState => ({
   async fetchGroupContacts (groupId: string) {
     setState({ fetching: true })
     try {
-      const contacts = await fetch <PeopleAPI[]> (`/api/group/${groupId}/people`)
+      const contactsRes = await fetch <PeopleAPI[]> (`/api/group/${groupId}/people`)
+      const contacts = contactsRes.map(contactInputAdapter)
 
       setState({
-        contacts: contacts.map(contactInputAdapter),
+        contacts,
+        total: contacts.length,
       })
     } catch {
     } finally {

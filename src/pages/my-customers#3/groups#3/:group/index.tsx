@@ -50,4 +50,4 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate }) => {
   )
 })
 
-export default contactsStore.inject(GroupIndex)
+export default GroupIndex
