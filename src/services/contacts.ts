@@ -46,6 +46,19 @@ const store = createStore(setState => ({
       contacts: state.contacts.map(c => c.id === contact.id ? contact : c),
     }))
   },
+  async fetchGroupContacts (groupId: string) {
+    setState({ fetching: true })
+    try {
+      const contacts = await fetch <PeopleAPI[]> (`/api/group/${groupId}/people`)
+
+      setState({
+        contacts: contacts.map(contactInputAdapter),
+      })
+    } catch {
+    } finally {
+      setState({ fetching: false })
+    }
+  },
 }))
 
 export default store
