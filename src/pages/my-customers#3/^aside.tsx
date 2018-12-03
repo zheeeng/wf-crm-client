@@ -157,7 +157,7 @@ class Aside extends React.Component<Props, State> {
 
   private renderGroups = () => (
     <Collapse in={this.state.groupsOpened} timeout="auto" unmountOnExit>
-      <List component="div" disablePadding>
+      <List disablePadding>
         <ListItem button>
           <Searcher
             placeholder="Type a group name"
@@ -204,7 +204,7 @@ class Aside extends React.Component<Props, State> {
       >
         <ToolBar />
         <SiderBarThemeProvider>
-          <List component="div">
+          <List>
             <ListItem>
               <ListItemIcon>
                 <MaterialIcon icon={'PermContactCalendar'} />
@@ -218,7 +218,7 @@ class Aside extends React.Component<Props, State> {
           <List component="nav" className={this.props.classes.flexHeight}>
             {subPageNavs.map(this.renderLink)}
           </List>
-          <List component="div" className={classNames(!groupsOpened && this.props.classes.invisible)}>
+          <List className={classNames(!groupsOpened && this.props.classes.invisible)}>
             <ListItem>
               <ListItemSecondaryAction className={this.props.classes.groupActions}>
                 <BorderColor />
