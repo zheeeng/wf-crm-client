@@ -103,31 +103,6 @@ export interface ContactAPI {
   'Phone': string
 }
 
-export const contactInputAdapter = (input: PeopleAPI): Contact => {
-  const {
-    id, account, favourite,
-    picture_url, name, gender, dob_day, dob_month, dob_year,
-    email, address, phone, tags,
-    pictures, waivers, activities, notes,
-  } = input
-
-  const info: Contact['info'] = {
-    avatar: picture_url || '',
-    starred: favourite || false,
-    name: name || '',
-    gender: gender || null as 'Male' | 'Female' | null,
-    birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
-    email: email || '',
-    address: address || '',
-    telephone: phone || '',
-    tags, pictures, waivers,
-    activities: activities ? activities.map(activityInputAdapter) : [],
-    notes: notes ? notes.map(noteInputAdapter) : [],
-  }
-
-  return { id, info }
-}
-
 export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
   const params = {
     email: output.info.email,
@@ -202,7 +177,7 @@ export const noteInputAdapter = (input: NoteAPI): Note => {
   return activity
 }
 
-const noteOutputAdapter = (output: Partial<Note>): Partial<NoteAPI> => {
+export const noteOutputAdapter = (output: Partial<Note>): Partial<NoteAPI> => {
   const note = {
     content: output.content,
   }
@@ -221,3 +196,28 @@ export const groupInputAdapter = (input: GroupAPI): Group =>
 
     },
   })
+
+export const contactInputAdapter = (input: PeopleAPI): Contact => {
+  const {
+    id, account, favourite,
+    picture_url, name, gender, dob_day, dob_month, dob_year,
+    email, address, phone, tags,
+    pictures, waivers, activities, notes,
+  } = input
+
+  const info: Contact['info'] = {
+    avatar: picture_url || '',
+    starred: favourite || false,
+    name: name || '',
+    gender: gender || null as 'Male' | 'Female' | null,
+    birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
+    email: email || '',
+    address: address || '',
+    telephone: phone || '',
+    tags, pictures, waivers,
+    activities: activities ? activities.map(activityInputAdapter) : [],
+    notes: notes ? notes.map(noteInputAdapter) : [],
+  }
+
+  return { id, info }
+}
