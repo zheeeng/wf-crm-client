@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-export default class DashboardDefault extends React.Component {
-  render () {
-    return (
-      <div>DashboardDefault</div>
-    )
-  }
-}
+const DashboardDefault: React.FC = React.memo(({ children }) => (
+  <div>DashboardDefault</div>
+))
+
+export default DashboardDefault

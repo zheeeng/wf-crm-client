@@ -1,6 +1,7 @@
 import * as React from 'react'
+import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@material-ui/core/styles'
 import { WithContext } from '@roundation/store'
 import classNames from 'classnames'
 import Portal from '@material-ui/core/Portal'
@@ -32,7 +33,7 @@ import cssTips from '~src/utils/cssTips'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   drawerPaper: {
     position: 'fixed',
     width: theme.spacing.unit * 30,
@@ -51,10 +52,9 @@ const styles = (theme: Theme) => createStyles({
     visibility: 'hidden',
     pointerEvents: 'none',
   },
-})
+}))
 
 export interface Props extends
-  WithStyles<typeof styles>,
   ComponentProps,
   WithContext<typeof appStore, 'appStore'>,
   WithContext<typeof contactsStore, 'contactsStore'>,
@@ -63,56 +63,64 @@ export interface Props extends
 
 export interface State {
   groupsOpened: boolean
-  searchText: string
+  searchTerm: string
 }
 
-class Aside extends React.Component<Props, State> {
-  state: State = {
-    groupsOpened: false,
-    searchText: '',
-  }
+const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
+  const classes = useStyles({})
 
-  get filteredGroups () {
-    const { searchText } = this.state
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [groupsOpened, setGroupsOpened] = React.useState(false)
 
-    if (!searchText) return this.props.groupsStore.groups
+  const appContext = React.useContext(appStore.Context)
+  const groupsContext = React.useContext(groupsStore.Context)
+  const contactsContext = React.useContext(contactsStore.Context)
 
-    return this.props.groupsStore.groups
-      .filter(group => group.info.name.toLowerCase().includes(searchText.toLowerCase()))
-  }
+  const $mountElRef = React.useRef(document.querySelector('#sidebar'))
 
-  private handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      searchText: e.target.value,
-    })
-  }
+  const filteredGroups = React.useMemo(
+    () => !searchTerm
+      ? groupsContext.groups
+      : groupsContext.groups
+        .filter(group => group.info.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    [groupsContext.groups, searchTerm],
+  )
 
-  private navigateToGroup = (id: string) => () => {
-    this.props.navigate && this.props.navigate(`groups/${id}`)
-  }
+  const handleSearchTermChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(e.target.value)
+    },
+    [searchTerm],
+  )
 
-  private handleGroupsOpenedToggled = (opened?: boolean) => () => {
-    this.setState({
-      groupsOpened: opened !== undefined ? opened : !this.state.groupsOpened,
-    })
-  }
+  const navigateToGroup = React.useCallback(
+    (id: string) => () => {
+      navigate && navigate(`groups/${id}`)
+    },
+    [navigate],
+  )
 
-  private $mountEl = document.querySelector('#sidebar')
+  const handleGroupsOpenedToggled = React.useCallback(
+    (opened?: boolean) => () => {
+      setGroupsOpened(opened !== undefined ? opened : !groupsOpened)
+    },
+    [groupsOpened],
+  )
 
-  private renderLinkLabel = (name: string) => {
+  const renderLinkLabel = (name: string) => {
     switch (name) {
       case 'All': {
-        const allCounts = this.props.contactsStore.total
+        const allCounts = contactsContext.total
 
         return <ListItemText>{name}({allCounts})</ListItemText>
       }
       case 'Starred': {
-        const starredCounts = this.props.contactsStore.contacts.filter(contact => contact.info.starred).length
+        const starredCounts = contactsContext.contacts.filter(contact => contact.info.starred).length
 
         return <ListItemText>{name}({starredCounts})</ListItemText>
       }
       case 'Groups': {
-        const groupsCount = this.props.groupsStore.groups.length
+        const groupsCount = groupsContext.groups.length
 
         return (
           <>
@@ -121,9 +129,9 @@ class Aside extends React.Component<Props, State> {
             </ListItemText>
             <ListItemSecondaryAction>
               {
-                this.state.groupsOpened
-                  ? <ExpandMore onClick={this.handleGroupsOpenedToggled(false)} />
-                  : <ChevronRight onClick={this.handleGroupsOpenedToggled(true)} />
+                groupsOpened
+                  ? <ExpandMore onClick={handleGroupsOpenedToggled(false)} />
+                  : <ChevronRight onClick={handleGroupsOpenedToggled(true)} />
               }
               <Add />
             </ListItemSecondaryAction>
@@ -136,41 +144,22 @@ class Aside extends React.Component<Props, State> {
     }
   }
 
-  private renderLinkWrapper = (routePath: string) => (props: ListItemProps) => (
-    <Link to={routePath} {...props} />
-  )
-
-  private renderLink = ({ routePath, name, icon }: { routePath: string, name: string, icon: string }) => (
-    <React.Fragment key={routePath}>
-      <ListItem
-        component={this.renderLinkWrapper(routePath)}
-        button
-      >
-        <ListItemIcon>
-          <MaterialIcon icon={icon} />
-        </ListItemIcon>
-        {this.renderLinkLabel(name)}
-      </ListItem>
-      {name === 'Groups' && this.renderGroups()}
-    </React.Fragment>
-  )
-
-  private renderGroups = () => (
-    <Collapse in={this.state.groupsOpened} timeout="auto" unmountOnExit>
+  const renderGroups = () => (
+    <Collapse in={groupsOpened} timeout="auto" unmountOnExit>
       <List disablePadding>
         <ListItem button>
           <Searcher
             placeholder="Type a group name"
-            value={this.state.searchText}
-            onChange={this.handleSearchTextChange}
+            value={searchTerm}
+            onChange={handleSearchTermChange}
           />
         </ListItem>
-        {this.filteredGroups.map(group => (
+        {filteredGroups.map(group => (
           <ListItem
             key={group.id}
             button
-            className={this.props.classes.nestedItem}
-            onClick={this.navigateToGroup(group.id)}
+            className={classes.nestedItem}
+            onClick={navigateToGroup(group.id)}
           >
             <ListItemText>
               {group.info.name}
@@ -181,13 +170,30 @@ class Aside extends React.Component<Props, State> {
     </Collapse>
   )
 
-  private closeDrawer = () => {
-    this.props.appStore.toggleDrawerExpanded(false)
+  const renderLinkWrapper = (routePath: string) => (props: ListItemProps) => (
+    <Link to={routePath} {...props} />
+  )
+
+  const renderLink = ({ routePath, name, icon }: { routePath: string, name: string, icon: string }) => (
+    <React.Fragment key={routePath}>
+      <ListItem
+        component={renderLinkWrapper(routePath)}
+        button
+      >
+        <ListItemIcon>
+          <MaterialIcon icon={icon} />
+        </ListItemIcon>
+        {renderLinkLabel(name)}
+      </ListItem>
+      {name === 'Groups' && renderGroups()}
+    </React.Fragment>
+  )
+
+  const closeDrawer = () => {
+    appContext.toggleDrawerExpanded(false)
   }
 
-  private renderDrawer = (isTemporary: boolean) => {
-    const { classes, locationInfo } = this.props
-    const { groupsOpened } = this.state
+  const renderDrawer = (isTemporary: boolean) => {
     const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
 
     return (
@@ -196,8 +202,8 @@ class Aside extends React.Component<Props, State> {
         classes={{
           paper: classes.drawerPaper,
         }}
-        open={this.props.appStore.drawerExpanded}
-        onClose={this.closeDrawer}
+        open={appContext.drawerExpanded}
+        onClose={closeDrawer}
         BackdropProps={{
           invisible: true,
         }}
@@ -215,12 +221,12 @@ class Aside extends React.Component<Props, State> {
             </ListItem>
           </List>
           <Divider />
-          <List component="nav" className={this.props.classes.flexHeight}>
-            {subPageNavs.map(this.renderLink)}
+          <List component="nav" className={classes.flexHeight}>
+            {subPageNavs.map(renderLink)}
           </List>
-          <List className={classNames(!groupsOpened && this.props.classes.invisible)}>
+          <List className={classNames(!groupsOpened && classes.invisible)}>
             <ListItem>
-              <ListItemSecondaryAction className={this.props.classes.groupActions}>
+              <ListItemSecondaryAction className={classes.groupActions}>
                 <BorderColor />
                 <ScreenShare />
                 <Delete />
@@ -232,29 +238,18 @@ class Aside extends React.Component<Props, State> {
     )
   }
 
-  render () {
-    return (
-      <>
-        <Hidden mdDown>
-            <Portal container={this.$mountEl}>
-            {this.renderDrawer(false)}
-          </Portal>
-        </Hidden>
-        <Hidden lgUp>
-          {this.renderDrawer(true)}
-        </Hidden>
-      </>
-    )
-  }
-}
+  return (
+    <>
+      <Hidden mdDown>
+          <Portal container={$mountElRef.current}>
+          {renderDrawer(false)}
+        </Portal>
+      </Hidden>
+      <Hidden lgUp>
+        {renderDrawer(true)}
+      </Hidden>
+    </>
+  )
+})
 
-export default appStore.connect(
-  groupsStore.connect(
-    contactsStore.connect(
-      withStyles(styles)(Aside),
-      'contactsStore',
-    ),
-    'groupsStore',
-  ),
-  'appStore',
-)
+export default Aside

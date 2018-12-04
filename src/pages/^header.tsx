@@ -1,6 +1,7 @@
 import * as React from 'react'
+import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@material-ui/core/styles'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -16,7 +17,7 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 import cssTips from '~src/utils/cssTips'
 import appStore from '~src/services/app'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
@@ -56,16 +57,17 @@ const styles = (theme: Theme) => createStyles({
       },
     },
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles>, ComponentProps {}
+export interface Props extends ComponentProps {}
 
 export interface State {
   auth: boolean
   anchorEl: HTMLElement | null
 }
 
-const Header: React.FC<Props> = React.memo(({ classes, locationInfo }) => {
+const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
+  const classes = useStyles({})
   const mountElRef = React.useRef(document.querySelector('#header'))
   const appContext = React.useContext(appStore.Context)
   const { authored } = appContext
@@ -152,4 +154,4 @@ const Header: React.FC<Props> = React.memo(({ classes, locationInfo }) => {
   )
 })
 
-export default withStyles(styles)(Header)
+export default Header

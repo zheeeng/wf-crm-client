@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-export default class DashboardIndex extends React.Component {
-  render () {
-    return (
-      <div>DashboardIndexDashboardIndexDashboardIndex</div>
-    )
-  }
-}
+const DashboardIndex: React.FC = React.memo(({ children }) => (
+  <div>DashboardIndex</div>
+))
+
+export default DashboardIndex

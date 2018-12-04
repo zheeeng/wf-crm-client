@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-export default class WaiverIndex extends React.Component {
-  render () {
-    return (
-      <div>WaiverIndex</div>
-    )
-  }
-}
+const WaiverIndex: React.FC = React.memo(({ children }) => (
+  <div>WaiverIndex</div>
+))
+
+export default WaiverIndex
