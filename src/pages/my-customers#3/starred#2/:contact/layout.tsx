@@ -1,5 +1,5 @@
 import * as React from 'react'
 
-const ContactLayout: React.FC = React.memo(props => <>{props.children}</>)
+const ContactLayout: React.FC = React.memo(({ children }) => <>{children}</>)
 
 export default ContactLayout

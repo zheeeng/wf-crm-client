@@ -6,9 +6,6 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 
 export interface Props extends ComponentProps {}
 
-export interface State {
-}
-
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const contactsContext = React.useContext(contactsStore.Context)
 
