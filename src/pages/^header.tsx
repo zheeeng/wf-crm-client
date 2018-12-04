@@ -31,16 +31,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingLeft: theme.spacing.unit * 8,
+    overflow: 'hidden',
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
     [theme.breakpoints.down('md')]: {
       justifyContent: 'space-around',
       paddingRight: theme.spacing.unit * 4,
       paddingLeft: theme.spacing.unit * 4,
+      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced,
     },
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'space-around',
       paddingRight: 0,
       paddingLeft: 0,
+      ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced,
     },
   },
   link: {
