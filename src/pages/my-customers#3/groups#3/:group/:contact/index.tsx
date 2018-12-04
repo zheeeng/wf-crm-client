@@ -10,9 +10,6 @@ export interface Props {
   contact: string
 }
 
-export interface State {
-}
-
 const ContactIndex: React.FC<Props> = React.memo(({ contact }) => {
   const contactContext = React.useContext(contactStore.Context)
 

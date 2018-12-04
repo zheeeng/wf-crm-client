@@ -61,11 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends ComponentProps {}
 
-export interface State {
-  auth: boolean
-  anchorEl: HTMLElement | null
-}
-
 const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
   const classes = useStyles({})
   const mountElRef = React.useRef(document.querySelector('#header'))
