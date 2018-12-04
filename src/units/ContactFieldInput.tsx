@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
 import { FSA } from '~src/types/FSA'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   fieldBar: {
     display: 'flex',
     marginBottom: theme.spacing.unit * 2,
@@ -45,14 +46,14 @@ const styles = (theme: Theme) => createStyles({
   addTagIcon: {
     marginRight: theme.spacing.unit,
   },
-})
+}))
 
 export interface ValueAndNote {
   value: string
   note?: string
 }
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   Icon?: React.ComponentType<{ className?: string, color?: any }>,
   key: string | number,
   name: string,
@@ -86,7 +87,8 @@ const reducer = (
 }
 
 const ContactFieldInput: React.FC<Props> = React.memo(props => {
-  const { classes, Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
+  const classes = useStyles({})
+  const { Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
 
   const expandable = React.useMemo(() => Array.isArray(valueAndNote), [valueAndNote])
   const valueAndNotes = React.useMemo(() => ([] as ValueAndNote[]).concat(valueAndNote), [valueAndNote])
@@ -156,4 +158,4 @@ const ContactFieldInput: React.FC<Props> = React.memo(props => {
   )
 })
 
-export default withStyles(styles)(ContactFieldInput)
+export default ContactFieldInput

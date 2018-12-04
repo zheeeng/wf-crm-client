@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   main: {
     display: 'flex',
     flexDirection: 'column',
@@ -10,16 +11,20 @@ const styles = (theme: Theme) => createStyles({
     boxShadow: '0 0 5px 1px lightgrey',
     flexGrow: 1,
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   children: React.ReactNode
 }
 
-const DisplayWrapper: React.FC<Props> = (props) => (
-  <main className={props.classes.main}>
-    {props.children}
-  </main>
-)
+const DisplayWrapper: React.FC<Props> = ({ children }) => {
+  const classes = useStyles({})
 
-export default withStyles(styles)(DisplayWrapper)
+  return (
+    <main className={classes.main}>
+      {children}
+    </main>
+  )
+}
+
+export default DisplayWrapper

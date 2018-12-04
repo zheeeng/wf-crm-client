@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   main: {
     display: 'flex',
     flexDirection: 'column',
@@ -50,34 +51,38 @@ const styles = (theme: Theme) => createStyles({
     width: 408,
     maxHeight: '50%',
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   header: React.ReactNode
   children: React.ReactNode
   rightPart1: React.ReactNode
   rightPart2: React.ReactNode
 }
 
-const DetailsWrapper: React.FC<Props> = (props) => (
-  <main className={props.classes.main}>
-    <header className={props.classes.header}>
-      {props.header}
-    </header>
-    <div className={props.classes.content}>
-      <section className={props.classes.leftSider}>
-        {props.children}
-      </section>
-      <aside className={props.classes.rightSider}>
-        <section className={props.classes.rightPart1}>
-          {props.rightPart1}
-        </section>
-        <section className={props.classes.rightPart2}>
-          {props.rightPart2}
-        </section>
-      </aside>
-    </div>
-  </main>
-)
+const DetailsWrapper: React.FC<Props> = ({ header, children, rightPart1, rightPart2 }) => {
+  const classes = useStyles({})
 
-export default withStyles(styles)(DetailsWrapper)
+  return (
+    <main className={classes.main}>
+      <header className={classes.header}>
+        {header}
+      </header>
+      <div className={classes.content}>
+        <section className={classes.leftSider}>
+          {children}
+        </section>
+        <aside className={classes.rightSider}>
+          <section className={classes.rightPart1}>
+            {rightPart1}
+          </section>
+          <section className={classes.rightPart2}>
+            {rightPart2}
+          </section>
+        </aside>
+      </div>
+    </main>
+  )
+}
+
+export default DetailsWrapper
