@@ -9,45 +9,44 @@ import store from '~src/services/notification'
 export interface Props extends WithContext<typeof store, 'notificationStore'> {
 }
 
-export class Notification extends React.PureComponent<Props> {
-  private anchorOrigin = {
-    vertical: 'bottom' as 'bottom',
-    horizontal: 'left' as 'left',
-  }
+const Notification: React.FC = () => {
+  const notificationContext = React.useContext(store.Context)
 
-  private handleClose = (_: any, reason?: string) => {
-    if (reason === 'clickaway') {
-      return
-    }
+  const handleClose = React.useCallback(
+    (_: any, reason?: string) => {
+      if (reason === 'clickaway') {
+        return
+      }
 
-    this.props.notificationStore.handleClose()
-  }
-
-  closeIconNode = (
-    <IconButton
-      key="close"
-      aria-label="Close"
-      color="inherit"
-      onClick={this.handleClose}
-    >
-      <CloseIcon />
-    </IconButton>
+      notificationContext.handleClose()
+    },
+    [notificationContext.handleClose],
   )
 
-  render () {
-    const { message } = this.props.notificationStore
-
-    return (
-      <Snackbar
-        anchorOrigin={this.anchorOrigin}
-        open={!!message}
-        autoHideDuration={6000}
-        onClose={this.handleClose}
-        message={message}
-        action={[this.closeIconNode]}
-      />
-    )
-  }
+  return (
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      open={!!notificationContext.message}
+      autoHideDuration={6000}
+      onClose={handleClose}
+      message={notificationContext.message}
+      action={[
+        (
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ),
+      ]}
+    />
+  )
 }
 
-export default store.connect(Notification, 'notificationStore')
+export default Notification

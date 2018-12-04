@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -12,7 +13,7 @@ import contactStore from '~src/services/contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import { Activity } from '~src/types/Contact'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -51,13 +52,14 @@ const styles = (theme: Theme) => createStyles({
   buttonWrapper: {
     textAlign: 'right',
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   id: string
 }
 
-const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
+const ContactAssets: React.FC<Props> = React.memo(({ id }) => {
+  const classes = useStyles({})
   const contactContext = React.useContext(contactStore.Context)
 
   const ActivityGroups = React.useMemo(
@@ -65,14 +67,13 @@ const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
       if (!contactContext.contact) return []
       const activities = contactContext.contact.info.activities
         .slice().sort((p, c) => p.timeStamp - c.timeStamp)
-      const groupMap = activities.reduce(
+      const groupMap = activities.reduce<{ [key: string]: Activity[] }>(
         (m, act) => {
           m[act.date] = m[act.date] ? [...m[act.date], act] : [act]
 
           return m
         },
-        // tslint:disable-next-line:no-object-literal-type-assertion
-        {} as { [key: string]: Activity[] },
+        {},
       )
       const activityGroups = Object.keys(groupMap).map(key => ({
         date: key,
@@ -126,4 +127,4 @@ const ContactAssets: React.FC<Props> = React.memo(({ classes, id }) => {
   )
 })
 
-export default withStyles(styles)(ContactAssets)
+export default ContactAssets

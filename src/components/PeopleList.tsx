@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -30,7 +31,7 @@ import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   head: {
     flexShrink: 0,
     display: 'flex',
@@ -82,9 +83,9 @@ const styles = (theme: Theme) => createStyles({
   w25Cell: {
     width: '25%',
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   contacts: Contact[]
   page: number
   size: number
@@ -95,138 +96,158 @@ export interface Props extends WithStyles<typeof styles> {
   onSubmitContact?: (contact: ContactAPI) => void
 }
 
-export interface State {
-  checked: string[]
-  createFormOpened: boolean,
-  createFormOption: CreateFormOption<any>,
-  searchTerm: string
-  popoverAnchorEl: HTMLElement | null
-  popoverText: string
-}
+const PeopleList: React.FC<Props> = React.memo(({
+  contacts, total, page, size, onSearch, navigateToProfile, onStar, onSubmitContact,
+}) => {
+  const classes = useStyles({})
+  const [popover, setPopover] = React.useState({
+    anchorEl: null as HTMLElement | null,
+    text: '',
+  })
+  const [checked, setChecked] = React.useState<string[]>([])
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [createForm, setCreateForm] = React.useState({
+    opened: false,
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    option: {} as CreateFormOption<any>,
+  })
 
-class PeopleList extends React.PureComponent<Props, State> {
-  state: State = {
-    checked: [],
-    createFormOpened: false,
-    createFormOption: {},
-    searchTerm: '',
-    popoverAnchorEl: null,
-    popoverText: '',
-  }
+  const pageNumber = React.useMemo(
+    () => Math.ceil(total / size) - 1,
+    [total, size],
+  )
 
-  private get pageNumber () {
-    return Math.ceil(this.props.total / this.props.size) - 1
-  }
-
-  private handlePopoverToggle: {
+  const handlePopoverToggle = React.useCallback<{
     (opened: true, text: string): (event: React.MouseEvent<HTMLDivElement>) => void;
     (opened: false): (event: React.MouseEvent<HTMLDivElement>) => void;
-  } = (opened: boolean, text?: string) =>
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const currentTarget = event.currentTarget
-      requestAnimationFrame(() => {
-        this.setState({
-          popoverAnchorEl: opened ? currentTarget : null,
-          popoverText: opened ? text as string : '',
+  }> (
+    (opened: boolean, text?: string) =>
+      (event: React.MouseEvent<HTMLDivElement>) => {
+        const currentTarget = event.currentTarget
+        requestAnimationFrame(() => {
+          setPopover({
+            anchorEl: opened ? currentTarget : null,
+            text: opened ? text as string : '',
+          })
         })
-      })
-    }
+      },
+    [popover],
+  )
 
-  private handleSearchTermEnterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      searchTerm: e.target.value,
-    })
-    if (this.state.checked.length !== 0) {
-      this.setState({
-        checked: [],
-      })
-    }
-  }
+  const handleSearchTermEnterChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(e.target.value)
+      if (checked.length !== 0) {
+        setChecked([])
+      }
+    },
+    [searchTerm, checked],
+  )
 
-  private search = () => {
-    this.props.onSearch({
-      page: this.props.page,
-      size: this.props.size,
-      searchTerm: this.state.searchTerm,
-    })
-  }
+  const search = React.useCallback(
+    () => {
+      onSearch({ page, size, searchTerm })
+    },
+    [page, size, searchTerm],
+  )
 
-  private handleSearchTermEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode !== 13) return
+  const handleSearchTermEnter = React.useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.keyCode !== 13) return
 
-    this.search()
-  }
+      search()
+    },
+    [search],
+  )
 
-  private handleChangePage = (_: any, page: number) => {
-    this.props.onSearch({
-      page,
-      size: this.props.size,
-      searchTerm: this.state.searchTerm,
-    })
-  }
+  const handleChangePage = React.useCallback(
+    (_: any, newPage: number) => {
+      onSearch({ page: newPage, size, searchTerm })
+    },
+    [onSearch, size, searchTerm],
+  )
 
-  private handleShowProfile = (id: string) => () => {
-    this.props.navigateToProfile(id)
-  }
+  const handleShowProfile = React.useCallback(
+    (id: string) => () => {
+      navigateToProfile(id)
+    },
+    [navigateToProfile],
+  )
 
-  private handleItemCheckedToggle = (id: string) => (e: React.SyntheticEvent) => {
-    e.stopPropagation()
-    const { checked } = this.state
-    const currentIndex = checked.indexOf(id)
-    const newChecked = [...checked]
+  const handleItemCheckedToggle = React.useCallback(
+    (id: string) => (e: React.SyntheticEvent) => {
+      e.stopPropagation()
+      const currentIndex = checked.indexOf(id)
+      const newChecked = [...checked]
 
-    if (currentIndex === -1) {
-      newChecked.push(id)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
+      if (currentIndex === -1) {
+        newChecked.push(id)
+      } else {
+        newChecked.splice(currentIndex, 1)
+      }
 
-    this.setState({
-      checked: newChecked,
-    })
-  }
+      setChecked(newChecked)
+    },
+    [checked],
+  )
 
-  private handleToggleAllChecked = () => {
-    if (this.state.checked.length) {
-      this.setState({
-        checked: [],
-      })
-    } else {
-      this.setState({
-        checked: this.props.contacts.map(contact => contact.id),
-      })
-    }
-  }
+  const handleToggleAllChecked = React.useCallback(
+    () => {
+      if (checked.length) {
+        setChecked([])
+      } else {
+        setChecked(contacts.map(contact => contact.id))
+      }
+    },
+    [checked, contacts],
+  )
 
-  private handleStarClick = (id: string, star: boolean) => (e: React.SyntheticEvent) => {
-    e.stopPropagation()
-    this.props.onStar(id, star)
-  }
+  const handleStarClick = React.useCallback(
+    (id: string, star: boolean) => (e: React.SyntheticEvent) => {
+      e.stopPropagation()
+      onStar(id, star)
+    },
+    [onStar],
+  )
 
-  private changeCreateFormOpened: {
+  const changeCreateFormOpened = React.useCallback<{
     <F extends string>(opened: true, option: CreateFormOption<F>): () => void;
     (opened: false): () => void;
-  } = <F extends string>(opened: boolean, option?: CreateFormOption<F>) => () => {
-    this.setState({
-      createFormOpened: opened,
-      createFormOption: opened ? option as CreateFormOption<F> : {},
-    })
-  }
+  }>(
+    <F extends string>(opened: boolean, option?: CreateFormOption<F>) => () => {
+      setCreateForm({
+        opened,
+        option: opened ? option as CreateFormOption<F> : {},
+      })
+    },
+    [createForm],
+  )
 
-  private renderPCLayoutTableRows = (contact: Contact) => (
+  const submitNewContact = React.useCallback(
+    async (contact: object) => {
+      if (onSubmitContact) {
+        onSubmitContact(contact as ContactAPI)
+        search()
+        changeCreateFormOpened(false)()
+      }
+    },
+    [onSubmitContact, search, changeCreateFormOpened],
+  )
+
+  const renderPCLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell className={this.props.classes.w15Cell}>
+      <TableCell className={classes.w15Cell}>
         <Typography component="strong" variant="subtitle1">{contact.info.name}</Typography>
       </TableCell>
-      <TableCell className={this.props.classes.w20Cell}>{contact.info.email}</TableCell>
-      <TableCell className={this.props.classes.w25Cell}>{contact.info.address}</TableCell>
+      <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
+      <TableCell className={classes.w25Cell}>{contact.info.address}</TableCell>
       <TableCell numeric>{contact.info.telephone}</TableCell>
     </>
   )
 
-  private renderTabletLayoutTableRows = (contact: Contact) => (
+  const renderTabletLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell className={this.props.classes.w25Cell}>
+      <TableCell className={classes.w25Cell}>
         <Typography component="strong" variant="subtitle1">{contact.info.name}</Typography>
       </TableCell>
       <TableCell>
@@ -237,7 +258,7 @@ class PeopleList extends React.PureComponent<Props, State> {
     </>
   )
 
-  private renderMobileLayoutTableRows = (contact: Contact) => (
+  const renderMobileLayoutTableRows = (contact: Contact) => (
     <TableCell>
       <Typography component="strong" variant="subtitle1">{contact.info.name}</Typography>
       <Typography>{contact.info.email}</Typography>
@@ -246,16 +267,15 @@ class PeopleList extends React.PureComponent<Props, State> {
     </TableCell>
   )
 
-  private renderTableRows = (contact: Contact) => {
-    const { classes } = this.props
+  const renderTableRows = (contact: Contact) => {
     const { id } = contact
 
     return (
-      <TableRow key={id} onClick={this.handleShowProfile(id)}>
+      <TableRow key={id} onClick={handleShowProfile(id)}>
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            onClick={this.handleItemCheckedToggle(id)}
-            checked={this.state.checked.includes(id)}
+            onClick={handleItemCheckedToggle(id)}
+            checked={checked.includes(id)}
             tabIndex={-1}
           />
         </TableCell>
@@ -263,7 +283,7 @@ class PeopleList extends React.PureComponent<Props, State> {
           <IconButton>
             <StarBorder
               color={contact.info.starred ? 'secondary' : 'primary'}
-              onClick={this.handleStarClick(id, !contact.info.starred)}
+              onClick={handleStarClick(id, !contact.info.starred)}
             />
           </IconButton>
         </TableCell>
@@ -274,63 +294,63 @@ class PeopleList extends React.PureComponent<Props, State> {
           />
         </TableCell>
         <Hidden mdDown>
-          {this.renderPCLayoutTableRows(contact)}
+          {renderPCLayoutTableRows(contact)}
         </Hidden>
         <Hidden lgUp xsDown>
-          {this.renderTabletLayoutTableRows(contact)}
+          {renderTabletLayoutTableRows(contact)}
         </Hidden>
         <Hidden smUp>
-          {this.renderMobileLayoutTableRows(contact)}
+          {renderMobileLayoutTableRows(contact)}
         </Hidden>
       </TableRow>
     )
   }
 
-  private renderSearcher = () => (
+  const renderSearcher = () => (
     <Searcher
-      className={this.props.classes.search}
-      value={this.state.searchTerm}
-      onChange={this.handleSearchTermEnterChange}
-      onKeyDown={this.handleSearchTermEnter}
+      className={classes.search}
+      value={searchTerm}
+      onChange={handleSearchTermEnterChange}
+      onKeyDown={handleSearchTermEnter}
       placeholder="Type a name or email"
     />
   )
 
-  private renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
+  const renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
     `${from.toLocaleString('en-IN')} - ${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
 
-  private renderPagination = (inTable: boolean = false) => (
+  const renderPagination = (inTable: boolean = false) => (
     <TablePagination
       component={inTable ? undefined : 'div'}
-      count={this.props.total}
-      rowsPerPage={this.props.size}
-      page={this.props.page}
+      count={total}
+      rowsPerPage={size}
+      page={page}
       ActionsComponent={TablePaginationActions}
-      onChangePage={this.handleChangePage}
-      labelDisplayedRows={this.renderLabelDisplayedRows}
+      onChangePage={handleChangePage}
+      labelDisplayedRows={renderLabelDisplayedRows}
       rowsPerPageOptions={[]}
     />
   )
 
-  private renderControls = () => (
+  const renderControls = () => (
     <>
       <IconButton
-        onMouseEnter={this.handlePopoverToggle(true, 'copy')}
-        onMouseLeave={this.handlePopoverToggle(false)}
+        onMouseEnter={handlePopoverToggle(true, 'copy')}
+        onMouseLeave={handlePopoverToggle(false)}
       >
         <ScreenShare />
       </IconButton>
       <IconButton
-        onMouseEnter={this.handlePopoverToggle(true, 'share')}
-        onMouseLeave={this.handlePopoverToggle(false)}
+        onMouseEnter={handlePopoverToggle(true, 'share')}
+        onMouseLeave={handlePopoverToggle(false)}
       >
         <CallMerge />
       </IconButton>
       <IconButton
-        onMouseEnter={this.handlePopoverToggle(true, 'add')}
-        onMouseLeave={this.handlePopoverToggle(false)}
+        onMouseEnter={handlePopoverToggle(true, 'add')}
+        onMouseLeave={handlePopoverToggle(false)}
       >
-        <PersonAdd onClick={this.changeCreateFormOpened(
+        <PersonAdd onClick={changeCreateFormOpened(
           true,
           {
             title: 'New Group',
@@ -339,18 +359,18 @@ class PeopleList extends React.PureComponent<Props, State> {
         )} />
       </IconButton>
       <IconButton
-        onMouseEnter={this.handlePopoverToggle(true, 'delete')}
-        onMouseLeave={this.handlePopoverToggle(false)}
+        onMouseEnter={handlePopoverToggle(true, 'delete')}
+        onMouseLeave={handlePopoverToggle(false)}
       >
         <Delete />
       </IconButton>
       <Popover
-        className={this.props.classes.popover}
+        className={classes.popover}
         classes={{
-          paper: this.props.classes.popoverPaper,
+          paper: classes.popoverPaper,
         }}
-        open={!!this.state.popoverAnchorEl}
-        anchorEl={this.state.popoverAnchorEl}
+        open={!!popover.anchorEl}
+        anchorEl={popover.anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',
@@ -359,92 +379,79 @@ class PeopleList extends React.PureComponent<Props, State> {
           vertical: 'top',
           horizontal: 'center',
         }}
-        onClose={this.handlePopoverToggle(false)}
+        onClose={handlePopoverToggle(false)}
         disableRestoreFocus
       >
-        <Typography>{this.state.popoverText}</Typography>
+        <Typography>{popover.text}</Typography>
       </Popover>
     </>
   )
 
-  private submitNewContact = async (contact: object) => {
-    if (this.props.onSubmitContact) {
-      this.props.onSubmitContact(contact as ContactAPI)
-      this.search()
-      this.changeCreateFormOpened(false)()
-    }
+  const newContactFormOption: CreateFormOption<keyof ContactAPI> = {
+    title: 'New Contact',
+    fields: ['First name', 'Last name', 'Email', 'Phone'],
+    okText: 'Create',
   }
 
-  render () {
-    const { classes, contacts } = this.props
-    const { checked: checkedContacts, createFormOpened, createFormOption } = this.state
-
-    const newContactFormOption: CreateFormOption<keyof ContactAPI> = {
-      title: 'New Contact',
-      fields: ['First name', 'Last name', 'Email', 'Phone'],
-      okText: 'Create',
-    }
-
-    return (
-      <DisplayPaper>
-        <ContactTableThemeProvider>
-          <CreateForm
-            option={createFormOption}
-            open={createFormOpened}
-            onClose={this.changeCreateFormOpened(false)}
-            onOk={this.submitNewContact}
-          />
+  return (
+    <DisplayPaper>
+      <ContactTableThemeProvider>
+        <CreateForm
+          option={createForm.option}
+          open={createForm.opened}
+          onClose={changeCreateFormOpened(false)}
+          onOk={submitNewContact}
+        />
+        <div className={classes.head}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={changeCreateFormOpened(true, newContactFormOption)}
+          >New contact</Button>
+          <Hidden smDown>
+            {renderSearcher()}
+          </Hidden>
+          <Button color="primary">
+            <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
+            Download Plugin
+          </Button>
+        </div>
+        <Hidden mdUp>
           <div className={classes.head}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={this.changeCreateFormOpened(true, newContactFormOption)}
-            >New contact</Button>
-            <Hidden smDown>
-              {this.renderSearcher()}
-            </Hidden>
-            <Button color="primary">
-              <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
-              Download Plugin
-            </Button>
+          {renderSearcher()}
           </div>
-          <Hidden mdUp>
-            <div className={classes.head}>
-            {this.renderSearcher()}
-            </div>
-          </Hidden>
-          <Hidden mdUp>
-            <div className={classNames([classes.head, classes.alignRight])}>
-              {this.renderPagination()}
-            </div>
-          </Hidden>
-          <div className={classes.table}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="none" className={classes.minCell}>
-                    <Checkbox
-                      checked={contacts.every(contact => checkedContacts.includes(contact.id))}
-                      onClick={this.handleToggleAllChecked}
-                    />
-                  </TableCell>
-                  <TableCell colSpan={3} padding="none">
-                    {checkedContacts.length > 0 && this.renderControls()}
-                  </TableCell>
-                  <Hidden smDown>
-                    {this.renderPagination(true)}
-                  </Hidden>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                  {contacts.map(this.renderTableRows)}
-              </TableBody>
-            </Table>
+        </Hidden>
+        <Hidden mdUp>
+          <div className={classNames([classes.head, classes.alignRight])}>
+            {renderPagination()}
           </div>
-        </ContactTableThemeProvider>
-      </DisplayPaper>
-    )
-  }
-}
+        </Hidden>
+        <div className={classes.table}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="none" className={classes.minCell}>
+                  <Checkbox
+                    checked={contacts.every(contact => checked.includes(contact.id))}
+                    onClick={handleToggleAllChecked}
+                  />
+                </TableCell>
+                <TableCell colSpan={3} padding="none">
+                  {checked.length > 0 && renderControls()}
+                </TableCell>
+                <Hidden smDown>
+                  {renderPagination(true)}
+                </Hidden>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+                {contacts.map(renderTableRows)}
+            </TableBody>
+          </Table>
+        </div>
+      </ContactTableThemeProvider>
+    </DisplayPaper>
+  )
+})
 
-export default withStyles(styles)(PeopleList)
+export default PeopleList

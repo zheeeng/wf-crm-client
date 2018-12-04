@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -17,7 +18,7 @@ const drawerWidth = 240
 const mailFolderListItems = '123'
 const otherMailFolderListItems = '123'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     height: '100%',
@@ -40,12 +41,13 @@ const styles = (theme: Theme) => createStyles({
     padding: theme.spacing.unit * 3,
     minWidth: 0,
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles>, ComponentProps<'header'> {
+export interface Props extends ComponentProps<'header'> {
 }
 
-const App: React.FC<Props> = React.memo(({ classes, slots, children }) => {
+const App: React.FC<Props> = React.memo(({ slots, children }) => {
+  const classes = useStyles({})
   const appContext = React.useContext(appStore.Context)
   const { authored } = appContext
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
@@ -116,4 +118,4 @@ const App: React.FC<Props> = React.memo(({ classes, slots, children }) => {
   )
 })
 
-export default withStyles(styles)(App)
+export default App

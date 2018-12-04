@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -8,7 +9,7 @@ import cssTips from '~src/utils/cssTips'
 import notificationStore from '~src/services/notification'
 import { ContactAPI } from '~src/types/Contact'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     position: 'absolute',
     top: '50%',
@@ -26,7 +27,7 @@ const styles = (theme: Theme) => createStyles({
     marginTop: theme.spacing.unit * 4,
     ...cssTips(theme).horizontallySpaced,
   },
-})
+}))
 
 export interface CreateFormOption<F extends string> {
   title?: string,
@@ -35,15 +36,15 @@ export interface CreateFormOption<F extends string> {
   cancelText?: string
 }
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   open: boolean
   onClose?: React.ReactEventHandler<{}>
   onOk?: <O extends object>(o: O) => Promise<any>
   option?: CreateFormOption<keyof ContactAPI>
 }
 
-const CreateForm: React.FC<Props> = React.memo(props => {
-  const { option, open, onClose, onOk, classes } = props
+const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
+  const classes = useStyles({})
 
   const notificationContext = React.useContext(notificationStore.Context)
 
@@ -92,4 +93,4 @@ const CreateForm: React.FC<Props> = React.memo(props => {
   )
 })
 
-export default withStyles(styles)(CreateForm)
+export default CreateForm

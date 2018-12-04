@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-export default class Customers extends React.Component {
-  render () {
-    return (
-      <div>Customers</div>
-    )
-  }
-}
+const Customers: React.FC = React.memo(({ children }) => (
+  <div>Customers</div>
+))
+
+export default Customers

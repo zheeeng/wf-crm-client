@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { withStyles, createStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 
-export default withStyles(createStyles({
+const useGlobalStyles = makeStyles({
   '@global': {
     'div[role="group"][tabindex]': {
       display: 'flex',
@@ -9,4 +9,12 @@ export default withStyles(createStyles({
       flexGrow: 1,
     },
   },
-}))((() => null) as React.FC)
+})
+
+const InjectIntoGlobalStyles: React.FC = () => {
+  useGlobalStyles({})
+
+  return null
+}
+
+export default InjectIntoGlobalStyles

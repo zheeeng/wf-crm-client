@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { withStyles, createStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
@@ -8,7 +9,7 @@ import Assessment from '@material-ui/icons/Assessment'
 import contactStore from '~src/services/contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   tabsWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -34,15 +35,13 @@ const styles = (theme: Theme) => createStyles({
     textAlign: 'right',
     fontSize: '0.75rem',
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
 }
 
-export interface State {
-}
-
-const ContactAssets: React.FC<Props> = React.memo(({ classes }) => {
+const ContactAssets: React.FC<Props> = React.memo(() => {
+  const classes = useStyles({})
   const contactContext = React.useContext(contactStore.Context)
 
   const [currentTab, setCurrentTab] = React.useState(0)
@@ -129,4 +128,4 @@ const ContactAssets: React.FC<Props> = React.memo(({ classes }) => {
   )
 })
 
-export default withStyles(styles)(ContactAssets)
+export default ContactAssets
