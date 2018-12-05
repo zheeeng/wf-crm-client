@@ -61,11 +61,6 @@ export interface Props extends
   WithContext<typeof groupsStore, 'groupsStore'> {
 }
 
-export interface State {
-  groupsOpened: boolean
-  searchTerm: string
-}
-
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   const classes = useStyles({})
 
