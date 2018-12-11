@@ -6,7 +6,7 @@
     "@material-ui/core": "^3.6.2",
     "@material-ui/icons": "^3.0.1",
     "@material-ui/styles": "^3.0.0-alpha.3",
-    "@roundation/roundation": "^0.0.28",
+    "@roundation/roundation": "^0.0.29",
     "@roundation/store": "^0.0.13",
     "@types/classnames": "^2.2.6",
     "@types/jest": "^23.3.9",
