@@ -34,13 +34,17 @@ const store = createStore(setState => ({
   //   })
   // },
   async updateContact (id: string, contact: Contact) {
-    const result = await fetch<PeopleAPI>(`/api/people/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(contactOutputAdapter(contact)),
-    })
-    setState({
-      contact: contactInputAdapter(result),
-    })
+    try {
+      const result = await fetch<PeopleAPI>(`/api/people/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(contactOutputAdapter(contact)),
+      })
+      setState({
+        contact: contactInputAdapter(result),
+      })
+    } catch {
+      // TODO::
+    }
   },
   async starContact (id: string, star: boolean) {
     const result = await fetch<PeopleAPI>(`/api/people/${id}`, {
@@ -52,11 +56,12 @@ const store = createStore(setState => ({
     })
   },
   async addTag (id: string, tag: string) {
-    const tags = await fetch<string[]>(`/api/people/${id}/tags`, {
-      method: 'POST',
-      body:  JSON.stringify({ tag }),
-    })
-    setState(state => (state.contact && state.contact.id === id)
+    try {
+      const tags = await fetch<string[]>(`/api/people/${id}/tags`, {
+        method: 'POST',
+        body:  JSON.stringify({ tag }),
+      })
+      setState(state => (state.contact && state.contact.id === id)
         ? ({
             // TODO:: update tags field
             contact: {
@@ -69,12 +74,14 @@ const store = createStore(setState => ({
         })
         : state,
       )
+    } catch {}
   },
   async deleteTag (id: string, tag: string) {
-    const tags = await fetch<string[]>(`/api/people/${id}/tags/${tag}`, {
-      method: 'DELETE',
-    })
-    setState(state => (state.contact && state.contact.id === id)
+    try {
+      const tags = await fetch<string[]>(`/api/people/${id}/tags/${tag}`, {
+        method: 'DELETE',
+      })
+      setState(state => (state.contact && state.contact.id === id)
         ? ({
             // TODO:: update tags field
             contact: {
@@ -87,6 +94,7 @@ const store = createStore(setState => ({
         })
         : state,
       )
+    } catch {}
   },
 }))
 

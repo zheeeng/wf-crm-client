@@ -31,20 +31,24 @@ const store = createStore(setState => ({
     }
   },
   async addContact (contact: ContactAPI) {
-    const result = await fetch<PeopleAPI>('/api/people', {
-      method: 'POST',
-      body: JSON.stringify(contactFieldAdapter(contact)),
-    })
+    try {
+      const result = await fetch<PeopleAPI>('/api/people', {
+        method: 'POST',
+        body: JSON.stringify(contactFieldAdapter(contact)),
+      })
+    } catch {}
   },
   async starContact (id: string, star: boolean) {
-    const result = await fetch<PeopleAPI>(`/api/people/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ favourite: star }),
-    })
-    const contact = contactInputAdapter(result)
-    setState(state => ({
-      contacts: state.contacts.map(c => c.id === contact.id ? contact : c),
-    }))
+    try {
+      const result = await fetch<PeopleAPI>(`/api/people/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ favourite: star }),
+      })
+      const contact = contactInputAdapter(result)
+      setState(state => ({
+        contacts: state.contacts.map(c => c.id === contact.id ? contact : c),
+      }))
+    } catch {}
   },
   async fetchGroupContacts (groupId: string) {
     setState({ fetching: true })

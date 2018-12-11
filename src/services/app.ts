@@ -17,14 +17,10 @@ const store = createStore(setState => ({
         method: 'POST',
       })
 
-      setState({
-        authored: true,
-      })
+      setState({ authored: true })
     } catch {
     } finally {
-      setState({
-        isLogging: false,
-      })
+      setState({ isLogging: false })
     }
   },
   async login (email: string, password: string) {
@@ -47,9 +43,7 @@ const store = createStore(setState => ({
       })
     } catch {
     } finally {
-      setState({
-        isLogging: false,
-      })
+      setState({ isLogging: false })
     }
 
   },
@@ -68,9 +62,7 @@ const store = createStore(setState => ({
         email: '',
       })
     } finally {
-      setState({
-        isLoggingOut: false,
-      })
+      setState({ isLoggingOut: false })
     }
   },
   toggleDrawerExpanded (expanded?: boolean) {
