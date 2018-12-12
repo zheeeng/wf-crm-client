@@ -26,7 +26,7 @@ const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const searchContacts = React.useCallback(
     ({page = 0, size = 30, searchTerm = ''}) => {
       contactsContext.fetchContacts({
-        page: page + 1, size, searchTerm,
+        page: page + 1, size, searchTerm, starred: true,
       })
     },
     [],
