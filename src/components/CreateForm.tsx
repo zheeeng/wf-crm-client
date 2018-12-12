@@ -52,7 +52,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
 
   const handleCreateInfoChange = React.useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      fieldValues.current![field] = e.target.value
+      fieldValues.current[field] = e.target.value
     },
     [fieldValues],
   )
