@@ -246,8 +246,4 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   )
 })
 
-export default groupsStore.inject(
-  sideStore.inject(
-    Aside,
-  ),
-)
+export default Aside
