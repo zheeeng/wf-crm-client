@@ -15,10 +15,10 @@ const store = createStore(setState => ({
     const searchCondition = Object.assign({ page: 1, size: 30 }, search)
 
     try {
-      const ulr = searchCondition.searchTerm ? '/api/people/search' : '/api/people'
+      const url = searchCondition.searchTerm ? '/api/people/search' : '/api/people'
 
       const { pagination, result } = await fetch<{ pagination: Pagination, result: PeopleAPI[] }>(
-        `${ulr}${getQuery(searchCondition)}`,
+        `${url}${getQuery(searchCondition)}`,
       )
 
       setState({
