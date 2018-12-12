@@ -16,6 +16,12 @@ const fetchCountHelper = async (favourite: boolean) => {
 const store = createStore(setState => ({
   allCount: 0,
   starredCount: 0,
+  async updateAllCount (inc: number) {
+    setState(state => ({ allCount: state.allCount + inc }))
+  },
+  async updateStarredCount (inc: number) {
+    setState(state => ({ starredCount: state.starredCount + inc }))
+  },
   async fetchInitialCount () {
     try {
       await Promise.all([

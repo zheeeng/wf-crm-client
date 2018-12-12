@@ -1,5 +1,6 @@
 import * as React from 'react'
 import contactsStore from '~src/services/contacts'
+import sideStore from '~src/services/side'
 import PeopleList from '~src/components/PeopleList'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
@@ -7,6 +8,7 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 export interface Props extends ComponentProps {}
 const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const contactsContext = React.useContext(contactsStore.Context)
+  const sideContext = React.useContext(sideStore.Context)
 
   React.useEffect(
     () => {
@@ -17,7 +19,9 @@ const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
 
   const starContact = React.useCallback(
     (id: string, star: boolean) => {
-      contactsContext.starContact(id, star)
+      contactsContext.starContact(id, star).then(() => {
+        sideContext.updateStarredCount(star ? 1 : -1)
+      })
     },
     [],
   )
