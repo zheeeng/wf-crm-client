@@ -437,7 +437,7 @@ const PeopleList: React.FC<Props> = React.memo(({
                   />
                 </TableCell>
                 <TableCell colSpan={3} padding="none">
-                  {checked.length > 0 && renderControls()}
+                  {checked.length > 0 && searchTerm === '' && renderControls()}
                 </TableCell>
                 <Hidden smDown>
                   {renderPagination(true)}
