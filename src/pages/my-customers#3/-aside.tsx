@@ -2,7 +2,6 @@ import * as React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
-import { WithContext } from '@roundation/store'
 import classNames from 'classnames'
 import Portal from '@material-ui/core/Portal'
 import ToolBar from '@material-ui/core/Toolbar'
@@ -54,11 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export interface Props extends
-  ComponentProps,
-  WithContext<typeof appStore, 'appStore'>,
-  WithContext<typeof contactsStore, 'contactsStore'>,
-  WithContext<typeof groupsStore, 'groupsStore'> {
+export interface Props extends ComponentProps {
 }
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
