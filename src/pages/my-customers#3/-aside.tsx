@@ -25,7 +25,7 @@ import Delete from '@material-ui/icons/Delete'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
 import appStore from '~src/services/app'
-import contactsStore from '~src/services/contacts'
+import sideStore from '~src/services/side'
 import groupsStore from '~src/services/groups'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
@@ -64,9 +64,17 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
 
   const appContext = React.useContext(appStore.Context)
   const groupsContext = React.useContext(groupsStore.Context)
-  const contactsContext = React.useContext(contactsStore.Context)
+  const sideContext = React.useContext(sideStore.Context)
 
   const $mountElRef = React.useRef(document.querySelector('#sidebar'))
+
+  React.useEffect(
+    () => {
+      groupsContext.fetchGroups()
+      sideContext.fetchInitialCount()
+    },
+    [],
+  )
 
   const filteredGroups = React.useMemo(
     () => !searchTerm
@@ -100,14 +108,10 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   const renderLinkLabel = (name: string) => {
     switch (name) {
       case 'All': {
-        const allCounts = contactsContext.total
-
-        return <ListItemText>{name}({allCounts})</ListItemText>
+        return <ListItemText>{name}({sideContext.allCount})</ListItemText>
       }
       case 'Starred': {
-        const starredCounts = contactsContext.contacts.filter(contact => contact.info.starred).length
-
-        return <ListItemText>{name}({starredCounts})</ListItemText>
+        return <ListItemText>{name}({sideContext.starredCount})</ListItemText>
       }
       case 'Groups': {
         const groupsCount = groupsContext.groups.length
@@ -242,4 +246,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   )
 })
 
-export default Aside
+export default groupsStore.inject(
+  sideStore.inject(
+    Aside,
+  ),
+)

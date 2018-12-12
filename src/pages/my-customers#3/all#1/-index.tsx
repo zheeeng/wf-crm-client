@@ -8,6 +8,13 @@ export interface Props extends ComponentProps {}
 const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const contactsContext = React.useContext(contactsStore.Context)
 
+  React.useEffect(
+    () => {
+      contactsContext.fetchContacts()
+    },
+    [],
+  )
+
   const starContact = React.useCallback(
     (id: string, star: boolean) => {
       contactsContext.starContact(id, star)
@@ -45,4 +52,4 @@ const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   )
 })
 
-export default AllMyCustomersIndex
+export default contactsStore.inject(AllMyCustomersIndex)

@@ -9,10 +9,18 @@ const store = createStore(setState => ({
   page: 0,
   size: 0,
   total: 0,
-  async fetchContacts (search: { page?: number, pageSize?: number, searchTerm?: string } = {}) {
+  async fetchContacts ({
+    starred: favourite,
+    ...restSearch
+  }: {
+    page?: number,
+    pageSize?: number,
+    searchTerm?: string,
+    starred?: boolean,
+  } = {}) {
     setState({ fetching: true })
 
-    const searchCondition = Object.assign({ page: 1, size: 30 }, search)
+    const searchCondition = Object.assign({ page: 1, size: 30 }, { ...restSearch, favourite })
 
     try {
       const url = searchCondition.searchTerm ? '/api/people/search' : '/api/people'

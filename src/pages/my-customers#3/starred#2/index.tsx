@@ -9,6 +9,13 @@ export interface Props extends ComponentProps {}
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const contactsContext = React.useContext(contactsStore.Context)
 
+  React.useEffect(
+    () => {
+      contactsContext.fetchContacts({ starred: true })
+    },
+    [],
+  )
+
   const starContact = React.useCallback(
     (id: string, star: boolean) => {
       contactsContext.starContact(id, star)
@@ -46,4 +53,4 @@ const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   )
 })
 
-export default StarredMyCustomersIndex
+export default contactsStore.inject(StarredMyCustomersIndex)
