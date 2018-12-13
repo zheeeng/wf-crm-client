@@ -15,7 +15,7 @@
     "@types/react-dom": "^16.0.9",
     "classnames": "^2.2.6",
     "constate": "^1.0.0-alpha.5",
-    "core-js": "^2.5.7",
+    "core-js": "^2.6.0",
     "path-to-regexp": "^2.4.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2"
