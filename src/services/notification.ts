@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import createStore from '@roundation/store'
 
 const store = createStore(setState => ({

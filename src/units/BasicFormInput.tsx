@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { ClassNameMap } from '@material-ui/core/styles/withStyles'
 import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'

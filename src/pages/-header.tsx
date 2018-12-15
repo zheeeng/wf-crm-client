@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
@@ -15,7 +15,8 @@ import MenuIcon from '@material-ui/icons/Menu'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 import cssTips from '~src/utils/cssTips'
-import appStore from '~src/services/app'
+import AppContainer from '~src/containers/App'
+import AccountContainer from '~src/containers/Account'
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -67,15 +68,9 @@ export interface Props extends ComponentProps {}
 const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
   const classes = useStyles({})
   const mountElRef = React.useRef(document.querySelector('#header'))
-  const appContext = React.useContext(appStore.Context)
-  const { authored } = appContext
+  const { toggleDrawerExpanded } = React.useContext(AppContainer.Context)
+  const { authored, login, logout } = React.useContext(AccountContainer.Context)
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  const handleToggleDrawer = React.useCallback(
-    () => {
-      appContext.toggleDrawerExpanded()
-    },
-    [],
-  )
 
   const handleMenuToggle = React.useCallback(
     (forOpen: boolean) => (event: React.MouseEvent<HTMLDivElement>) => {
@@ -85,11 +80,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
   )
   const handleLogin = React.useCallback(
     () => {
-      if (authored) {
-        appContext.logout()
-      } else {
-        appContext.login('a', '0cc175b9c0f1b6a831c399e269772661')
-      }
+      authored ? logout() : login('a', '0cc175b9c0f1b6a831c399e269772661')
       setAnchorEl(null)
     },
     [authored],
@@ -111,7 +102,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
               className={classes.menuButton}
               color="inherit"
               aria-label="Menu"
-              onClick={handleToggleDrawer}
+              onClick={toggleDrawerExpanded}
             >
               <MenuIcon />
             </IconButton>

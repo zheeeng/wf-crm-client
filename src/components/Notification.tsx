@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { WithContext } from '@roundation/store'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'

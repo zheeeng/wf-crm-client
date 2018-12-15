@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState, useContext, useEffect, useCallback, useRef, useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
@@ -24,11 +24,12 @@ import Delete from '@material-ui/icons/Delete'
 
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
-import appStore from '~src/services/app'
-import sideStore from '~src/services/side'
-import groupsStore from '~src/services/groups'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
+import ContactsCountContainer from '~src/containers/ContactsCount'
+import AppContainer from '~src/containers/App'
+import cond from 'ramda/src/cond'
+import equals from 'ramda/src/equals'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
@@ -58,85 +59,56 @@ export interface Props extends ComponentProps {
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   const classes = useStyles({})
+  const { contactsCount, starredCount, groups } = useContext(ContactsCountContainer.Context)
+  const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
 
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const [groupsOpened, setGroupsOpened] = React.useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [groupsOpened, setGroupsOpened] = useState(false)
 
-  const appContext = React.useContext(appStore.Context)
-  const groupsContext = React.useContext(groupsStore.Context)
-  const sideContext = React.useContext(sideStore.Context)
+  const $mountElRef = useRef(document.querySelector('#sidebar'))
 
-  const $mountElRef = React.useRef(document.querySelector('#sidebar'))
-
-  React.useEffect(
-    () => {
-      groupsContext.fetchGroups()
-      sideContext.fetchInitialCount()
-    },
-    [],
-  )
-
-  const filteredGroups = React.useMemo(
+  const filteredGroups = useMemo(
     () => !searchTerm
-      ? groupsContext.groups
-      : groupsContext.groups
+      ? groups
+      : groups
         .filter(group => group.info.name.toLowerCase().includes(searchTerm.toLowerCase())),
-    [groupsContext.groups, searchTerm],
+    [groups, searchTerm],
   )
 
-  const handleSearchTermChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value)
-    },
+  const handleSearchTermChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value),
     [searchTerm],
   )
 
-  const navigateToGroup = React.useCallback(
-    (id: string) => () => {
-      navigate && navigate(`groups/${id}`)
-    },
+  const navigateToGroup = useCallback(
+    (id: string) => () => navigate && navigate(`groups/${id}`),
     [navigate],
   )
 
-  const handleGroupsOpenedToggled = React.useCallback(
-    (opened?: boolean) => () => {
-      setGroupsOpened(opened !== undefined ? opened : !groupsOpened)
-    },
+  const handleGroupsOpenedToggled = useCallback(
+    (opened?: boolean) => () => setGroupsOpened(opened !== undefined ? opened : !groupsOpened),
     [groupsOpened],
   )
 
-  const renderLinkLabel = (name: string) => {
-    switch (name) {
-      case 'All': {
-        return <ListItemText>{name}({sideContext.allCount})</ListItemText>
-      }
-      case 'Starred': {
-        return <ListItemText>{name}({sideContext.starredCount})</ListItemText>
-      }
-      case 'Groups': {
-        const groupsCount = groupsContext.groups.length
-
-        return (
-          <>
-            <ListItemText>
-              {name}({groupsCount})
-            </ListItemText>
-            <ListItemSecondaryAction>
-              {
-                groupsOpened
-                  ? <ExpandMore onClick={handleGroupsOpenedToggled(false)} />
-                  : <ChevronRight onClick={handleGroupsOpenedToggled(true)} />
-              }
-              <Add />
-            </ListItemSecondaryAction>
-          </>
-        )
-      }
-      default: {
-        return <ListItemText>{name}</ListItemText>
-      }
-    }
-  }
+  const renderLinkLabel = cond(
+    [
+      [equals('All'), name => <ListItemText>{name}({contactsCount})</ListItemText>],
+      [equals('Starred'), name => <ListItemText>{name}({starredCount})</ListItemText>],
+      [equals('Groups'), name => (
+        <>
+          <ListItemText>
+            {name}({groups.length})
+          </ListItemText>
+          <ListItemSecondaryAction>
+            {groupsOpened
+              ? <ExpandMore onClick={handleGroupsOpenedToggled(false)} />
+              : <ChevronRight onClick={handleGroupsOpenedToggled(true)} />}
+            <Add />
+          </ListItemSecondaryAction>
+        </>
+      )],
+    ],
+  )
 
   const renderGroups = () => (
     <Collapse in={groupsOpened} timeout="auto" unmountOnExit>
@@ -183,10 +155,6 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
     </React.Fragment>
   )
 
-  const closeDrawer = () => {
-    appContext.toggleDrawerExpanded(false)
-  }
-
   const renderDrawer = (isTemporary: boolean) => {
     const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
 
@@ -196,8 +164,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
         classes={{
           paper: classes.drawerPaper,
         }}
-        open={appContext.drawerExpanded}
-        onClose={closeDrawer}
+        open={drawerExpanded}
+        onClose={toggleOffDrawerExpanded}
         BackdropProps={{
           invisible: true,
         }}

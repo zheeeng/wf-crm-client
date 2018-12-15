@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -9,7 +9,6 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import AddCircle from '@material-ui/icons/AddCircle'
-import contactStore from '~src/services/contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import { Activity } from '~src/types/Contact'
 
@@ -55,18 +54,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  id: string
+  activities: Activity[]
 }
 
-const ContactAssets: React.FC<Props> = React.memo(({ id }) => {
+const ContactAssets: React.FC<Props> = React.memo(({ activities }) => {
   const classes = useStyles({})
-  const contactContext = React.useContext(contactStore.Context)
 
-  const ActivityGroups = React.useMemo(
+  const ActivityGroups = useMemo(
     () => {
-      if (!contactContext.contact) return []
-      const activities = contactContext.contact.info.activities
-        .slice().sort((p, c) => p.timeStamp - c.timeStamp)
+      const sortedActivities = activities.slice()
+        .sort((p, c) => p.timeStamp - c.timeStamp)
       const groupMap = activities.reduce<{ [key: string]: Activity[] }>(
         (m, act) => {
           m[act.date] = m[act.date] ? [...m[act.date], act] : [act]
@@ -82,10 +79,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ id }) => {
 
       return activityGroups
     },
-    [contactContext],
+    [activities],
   )
-
-  if (!contactContext.contact) return null
 
   return (
     <ContactTableThemeProvider>

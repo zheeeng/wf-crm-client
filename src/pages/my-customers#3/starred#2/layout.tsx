@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 const StarredLayout: React.FC = React.memo(({ children }) => <>{children}</>)
 

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -15,7 +15,8 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 import ContactFieldInput from '~src/units/ContactFieldInput'
-import contactStore from '~src/services/contact'
+import useToggle from '~src/hooks/useToggle'
+import { Contact } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   profileBar: {
@@ -72,44 +73,34 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const ContactPageProfile: React.FC = React.memo(props => {
-  const [editable, setEditable] = React.useState(false)
-  const contactContext = React.useContext(contactStore.Context)
+export interface Props {
+  contact: Contact,
+  tags: string[],
+  addTag: (tag: string) => void
+  removeTag: (tag: string) => void
+}
+
+const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag, removeTag }) => {
+  const { value: editable, toggle: toggleEditable } = useToggle(false)
   const classes = useStyles({})
 
-  const handleToggleEditable = React.useCallback(
-    () => {
-      setEditable(!editable)
-    },
-    [editable],
-  )
-
-  const handleTagsAdd = React.useCallback(
+  const handleTagsAdd = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.keyCode !== 13) return
       const newTag = event.currentTarget.value.trim()
       event.currentTarget.value = ''
-      if (!contactContext.contact) return
-      if (newTag) contactContext.addTag(contactContext.contact.id, newTag)
+      if (newTag) addTag(newTag)
     },
     [],
   )
 
-  const handleTagDelete = React.useCallback(
-    (tag: string) => () => {
-      if (!contactContext.contact) return
-      contactContext.deleteTag(contactContext.contact.id, tag)
-    },
-    [contactContext.contact],
-  )
-
-  if (!contactContext.contact) return null
+  const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [])
 
   return (
     <>
       <div className={classes.profileBar}>
         <Typography variant="h6">Profile</Typography>
-        <IconButton onClick={handleToggleEditable}>
+        <IconButton onClick={toggleEditable}>
           <Edit />
         </IconButton>
       </div>
@@ -124,7 +115,7 @@ const ContactPageProfile: React.FC = React.memo(props => {
             />
           </div>
           <div className={classes.tags}>
-            {contactContext.contact.info.tags.map((tag, index) => (
+            {tags.map((tag, index) => (
               <Chip
                 key={`${tag}-${index}`}
                 onDelete={handleTagDelete(tag)}
@@ -137,44 +128,44 @@ const ContactPageProfile: React.FC = React.memo(props => {
         </div>
         <div className={classes.avatarBar}>
           <Avatar
-            alt={contactContext.contact.info.name}
-            src={contactContext.contact.info.avatar}
+            alt={contact.info.name}
+            src={contact.info.avatar}
             className={classes.avatarIcon}
           />
-          <strong>{contactContext.contact.info.name}</strong>
+          <strong>{contact.info.name}</strong>
         </div>
         <ContactFieldInput
           key="name" name="name" placeholder="name" editable={editable}
           Icon={CreditCard}
-          valueAndNote={{ value: contactContext.contact.info.name }}
+          valueAndNote={{ value: contact.info.name }}
         />
         <ContactFieldInput
           key="email" name="email" placeholder="email" editable={editable}
           Icon={Email}
-          valueAndNote={[{ value: contactContext.contact.info.email, note: 'Personal' }]}
+          valueAndNote={[{ value: contact.info.email, note: 'Personal' }]}
         />
         <ContactFieldInput
           key="telephone" name="telephone" placeholder="telephone" editable={editable}
           Icon={Phone}
-          valueAndNote={[{ value: contactContext.contact.info.telephone, note: 'Work' }]}
+          valueAndNote={[{ value: contact.info.telephone, note: 'Work' }]}
         />
         <ContactFieldInput
           key="birthDay" name="birthDay" placeholder="birthDay" editable={editable}
           Icon={Cake}
-          valueAndNote={{ value: contactContext.contact.info.birthDay }}
+          valueAndNote={{ value: contact.info.birthDay }}
         />
         <ContactFieldInput
           key="gender" name="gender" placeholder="gender" editable={editable}
           Icon={People}
-          valueAndNote={{ value: contactContext.contact.info.gender || '' }}
+          valueAndNote={{ value: contact.info.gender || '' }}
         />
         <ContactFieldInput
           key="address" name="address" placeholder="address" editable={editable}
           Icon={LocationOn}
           valueAndNote={[
-            { value: contactContext.contact.info.address, note: 'Home' },
-            { value: contactContext.contact.info.address, note: 'Office' },
-            { value: contactContext.contact.info.address, note: '' },
+            { value: contact.info.address, note: 'Home' },
+            { value: contact.info.address, note: 'Office' },
+            { value: contact.info.address, note: '' },
           ]}
         />
       </div>

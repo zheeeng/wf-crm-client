@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 const DashboardDefault: React.FC = React.memo(({ children }) => (
   <div>DashboardDefault</div>

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Assessment from '@material-ui/icons/Assessment'
-import contactStore from '~src/services/contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,7 +41,6 @@ export interface Props {
 
 const ContactAssets: React.FC<Props> = React.memo(() => {
   const classes = useStyles({})
-  const contactContext = React.useContext(contactStore.Context)
 
   const [currentTab, setCurrentTab] = React.useState(0)
 
@@ -50,8 +48,6 @@ const ContactAssets: React.FC<Props> = React.memo(() => {
     (_: any, value: number) => setCurrentTab(value),
     [currentTab],
   )
-
-  if (!contactContext.contact) return null
 
   return (
     <ContactTableThemeProvider>

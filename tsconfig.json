@@ -5,12 +5,13 @@
     "paths": {
       "~src/*": ["src/*"]
     },
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es5",
     "lib": ["es2015", "es2016", "es2017", "dom"],
     "sourceMap": true,
     "allowJs": true,
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": "src",

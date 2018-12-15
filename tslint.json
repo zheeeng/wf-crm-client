@@ -183,7 +183,7 @@
 		"class-name": true,
 		"encoding": true,
 		"import-spacing": true,
-		"interface-over-type-literal": true,
+		"interface-over-type-literal": false,
 		"jsdoc-format": true,
 		"newline-before-return": true,
 		"new-parens": true,

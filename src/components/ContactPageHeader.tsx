@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import NavigateBefore from '@material-ui/icons/NavigateBefore'

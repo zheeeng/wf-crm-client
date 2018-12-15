@@ -1,15 +1,16 @@
 import './bootstrap'
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
+import React from 'react'
+import ReactDOM from 'react-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Roundation from '@roundation/roundation'
 import registerServiceWorker from '~src/registerServiceWorker'
 
-import appStore from '~src/services/app'
 import notificationStore from '~src/services/notification'
 import Notification from '~src/components/Notification'
 import InjectIntoGlobalStyles from '~src/components/InjectIntoGlobalStyles'
 import GlobalThemeProvider from '~src/theme/GlobalThemeProvider'
+import AppContainer from '~src/containers/App'
+import AccountContainer from '~src/containers/Account'
 
 const $mountEl = document.querySelector('#content')
 
@@ -18,12 +19,14 @@ if ($mountEl) {
     <GlobalThemeProvider>
       <CssBaseline />
       <InjectIntoGlobalStyles />
-      <appStore.Provider>
+      <AppContainer.Provider>
+      <AccountContainer.Provider>
       <notificationStore.Provider>
         <Notification />
         <Roundation />
       </notificationStore.Provider>
-      </appStore.Provider>
+      </AccountContainer.Provider>
+      </AppContainer.Provider>
     </GlobalThemeProvider>
   )
 

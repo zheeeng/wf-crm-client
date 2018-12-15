@@ -1,6 +1,5 @@
-import * as React from 'react'
-import contactsStore from '~src/services/contacts'
-import sideStore from '~src/services/side'
+import React, { useCallback, useEffect } from 'react'
+import useContacts from '~src/containers/useContacts'
 import PeopleList from '~src/components/PeopleList'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
@@ -8,53 +7,31 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 export interface Props extends ComponentProps {}
 
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
-  const contactsContext = React.useContext(contactsStore.Context)
-  const sideContext = React.useContext(sideStore.Context)
+  const { pagination, contacts, fetchContacts, addContact, starContact, addMutation, starMutation } = useContacts()
 
-  React.useEffect(
-    () => {
-      contactsContext.fetchContacts({ starred: true })
-    },
+  const refresh = useCallback(() => fetchContacts({ page: 1, size: 30, favourite: true }), [])
+
+  useEffect(() => { refresh() }, [addMutation, starMutation])
+
+  const searchContacts = useCallback(
+    ({page = 0, size = 30, searchTerm = '' }) => fetchContacts({ page: page + 1, size, searchTerm, favourite: true }),
     [],
   )
 
-  const starContact = React.useCallback(
-    (id: string, star: boolean) => {
-      contactsContext.starContact(id, star).then(() => {
-        sideContext.updateStarredCount(star ? 1 : -1)
-      })
-    },
-    [],
-  )
-
-  const searchContacts = React.useCallback(
-    ({page = 0, size = 30, searchTerm = ''}) => {
-      contactsContext.fetchContacts({
-        page: page + 1, size, searchTerm, starred: true,
-      })
-    },
-    [],
-  )
-
-  const navigateToProfile = React.useCallback(
-    (page: string) => {
-      navigate && navigate(page)
-    },
-    [navigate],
-  )
+  const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])
 
   return (
     <PeopleList
-      page={contactsContext.page - 1}
-      size={contactsContext.size}
-      total={contactsContext.total}
+      page={pagination.page - 1}
+      size={pagination.size}
+      total={pagination.total}
       onStar={starContact}
       onSearch={searchContacts}
-      contacts={contactsContext.contacts}
+      contacts={contacts}
       navigateToProfile={navigateToProfile}
-      onSubmitContact={contactsContext.addContact}
+      onSubmitContact={addContact}
     />
   )
 })
 
-export default contactsStore.inject(StarredMyCustomersIndex)
+export default StarredMyCustomersIndex
