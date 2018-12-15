@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 
 import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/TablePaginationActions'
+import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
 import FirstPageIcon from '@material-ui/icons/FirstPage'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
@@ -79,13 +80,15 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
 
   return (
     <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="First Page"
-      >
-        <FirstPageIcon />
-      </IconButton>
+      <Hidden smDown>
+        <IconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label="First Page"
+        >
+          <FirstPageIcon />
+        </IconButton>
+      </Hidden>
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
@@ -93,16 +96,18 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
       >
         <KeyboardArrowLeft />
       </IconButton>
-      <BasicFormInput
-        placeholder="Jump"
-        onEnterPress={handleEnterNewPage}
-        TextFieldClasses={{
-          root: classes.textField,
-        }}
-        InputClasses={{
-          root: classes.textFieldInput,
-        }}
-      />
+      <Hidden smDown>
+        <BasicFormInput
+          placeholder="Jump"
+          onEnterPress={handleEnterNewPage}
+          TextFieldClasses={{
+            root: classes.textField,
+          }}
+          InputClasses={{
+            root: classes.textFieldInput,
+          }}
+        />
+      </Hidden>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
@@ -110,13 +115,15 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
       >
         <KeyboardArrowRight />
       </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="Last Page"
-      >
-        <LastPageIcon />
-      </IconButton>
+      <Hidden smDown>
+        <IconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="Last Page"
+        >
+          <LastPageIcon />
+        </IconButton>
+      </Hidden>
     </div>
   )
 })
