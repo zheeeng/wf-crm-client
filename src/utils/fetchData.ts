@@ -30,7 +30,7 @@ export default async function fetchData<T = any> (url: string, option?: Option):
 
   const requestUrl = `https://crm-api-dev.waiverforeverk8s.com${url}`
   const query = (fetchOption.method && ['GET', 'HEAD'].includes(fetchOption.method || '') && fetchOption.params)
-    ? `?${getQuery(fetchOption.params)}` : ''
+    ? getQuery(fetchOption.params) : ''
   const method = fetchOption.method
   const headers = { Authorization }
   const body = (fetchOption.method !== 'GET' && fetchOption.params) ? JSON.stringify(fetchOption.params) : ''
