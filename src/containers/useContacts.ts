@@ -57,8 +57,7 @@ const useContacts = () => {
 
   const fetchContacts = useCallback(
     async (params: FetchParams) => {
-      await getContacts('/api/people')(params)
-      refreshCounts()
+      await getContacts('/api/people/search')(params)
     },
     [],
   )
