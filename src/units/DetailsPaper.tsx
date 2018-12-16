@@ -74,7 +74,7 @@ export interface Props {
   rightPart2: React.ReactNode
 }
 
-const DetailsWrapper: React.FC<Props> = ({ header, children, rightPart1, rightPart2 }) => {
+const DetailsPaper: React.FC<Props> = ({ header, children, rightPart1, rightPart2 }) => {
   const classes = useStyles({})
 
   return (
@@ -99,4 +99,4 @@ const DetailsWrapper: React.FC<Props> = ({ header, children, rightPart1, rightPa
   )
 }
 
-export default DetailsWrapper
+export default DetailsPaper
