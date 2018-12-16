@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useReducer } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
@@ -6,6 +6,8 @@ import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
 import { FSA } from '~src/types/FSA'
+import useDepMemo from '~src/hooks/useDepMemo'
+import concat from 'ramda/src/concat'
 
 const useStyles = makeStyles((theme: Theme) => ({
   fieldBar: {
@@ -90,17 +92,17 @@ const ContactFieldInput: React.FC<Props> = React.memo(props => {
   const classes = useStyles({})
   const { Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
 
-  const expandable = React.useMemo(() => Array.isArray(valueAndNote), [valueAndNote])
-  const valueAndNotes = React.useMemo(() => ([] as ValueAndNote[]).concat(valueAndNote), [valueAndNote])
+  const expandable = useDepMemo(Array.isArray, [valueAndNote])
+  const valueAndNotes = useDepMemo(concat([] as ValueAndNote[]), [valueAndNote])
 
-  const [ localValueAndNotes, dispatch ] = React.useReducer(reducer, valueAndNotes)
+  const [ localValueAndNotes, dispatch ] = useReducer(reducer, valueAndNotes)
 
-  const handleAddEntry = React.useCallback(
+  const handleAddEntry = useCallback(
     () => dispatch({ type: 'add' }),
     [valueAndNotes],
   )
 
-  const handleEntryChange = React.useCallback(
+  const handleEntryChange = useCallback(
     (type: 'changeValue' | 'changeNote', index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
       if (type === 'changeValue') return dispatch({ type, payload: { index, value: event.target.value } })
 
