@@ -20,6 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexGrow: 1,
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+      overflow: 'auto',
+    },
   },
   leftSider: {
     flexGrow: 1,
@@ -28,6 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0,
+      marginBottom: theme.spacing.unit * 4,
+    },
   },
   rightSider: {
     display: 'flex',
@@ -41,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     width: 408,
     maxHeight: '50%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
   rightPart2: {
     flexGrow: 1,
@@ -50,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     width: 408,
     maxHeight: '50%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 }))
 
