@@ -13,7 +13,7 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, group }) => {
 
   const refresh = useCallback(() => fetchContacts({ page: 1, size: 30, groupId: group }), [group])
 
-  useEffect(() => { refresh() }, [addMutation, starMutation])
+  useEffect(() => { refresh() }, [addMutation, starMutation, group])
 
   const searchContacts = useCallback(
     ({page = 0, size = 30, searchTerm = ''}) => fetchContacts({ page: page + 1, size, searchTerm, groupId: group }),
