@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -78,11 +78,27 @@ export interface Props {
   tags: string[],
   addTag: (tag: string) => void
   removeTag: (tag: string) => void
+  submitField: (fields: object) => void
 }
 
-const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag, removeTag }) => {
+const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag, removeTag, submitField }) => {
   const { value: editable, toggle: toggleEditable } = useToggle(false)
   const classes = useStyles({})
+  const draftRef = useRef<{ [key: string]: any }>({})
+
+  const onDraftChange = useCallback(
+    (name: string, value: any) => {
+      draftRef.current = Object.assign(draftRef.current, { [name]: value })
+    },
+    [],
+  )
+
+  useEffect(
+    () => {
+      if (!editable) submitField(draftRef.current)
+    },
+    [editable],
+  )
 
   const handleTagsAdd = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -137,31 +153,37 @@ const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag,
         <ContactFieldInput
           key="name" name="name" placeholder="name" editable={editable}
           Icon={CreditCard}
+          onDraftChange={onDraftChange}
           valueAndNote={{ value: contact.info.name }}
         />
         <ContactFieldInput
           key="email" name="email" placeholder="email" editable={editable}
           Icon={Email}
+          onDraftChange={onDraftChange}
           valueAndNote={[{ value: contact.info.email, note: 'Personal' }]}
         />
         <ContactFieldInput
           key="telephone" name="telephone" placeholder="telephone" editable={editable}
           Icon={Phone}
+          onDraftChange={onDraftChange}
           valueAndNote={[{ value: contact.info.telephone, note: 'Work' }]}
         />
         <ContactFieldInput
           key="birthDay" name="birthDay" placeholder="birthDay" editable={editable}
           Icon={Cake}
+          onDraftChange={onDraftChange}
           valueAndNote={{ value: contact.info.birthDay }}
         />
         <ContactFieldInput
           key="gender" name="gender" placeholder="gender" editable={editable}
           Icon={People}
+          onDraftChange={onDraftChange}
           valueAndNote={{ value: contact.info.gender || '' }}
         />
         <ContactFieldInput
           key="address" name="address" placeholder="address" editable={editable}
           Icon={LocationOn}
+          onDraftChange={onDraftChange}
           valueAndNote={[
             { value: contact.info.address, note: 'Home' },
             { value: contact.info.address, note: 'Office' },

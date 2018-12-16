@@ -11,7 +11,7 @@ export interface Props {
 }
 
 const ContactIndex: React.FC<Props> = React.memo(({ contactId }) => {
-  const { contact, tags, removeContact, addTag, removeTag } = useContact(contactId)
+  const { contact, tags, removeContact, addTag, removeTag, submitField } = useContact(contactId)
 
   if (!contact) return null
 
@@ -24,6 +24,7 @@ const ContactIndex: React.FC<Props> = React.memo(({ contactId }) => {
       <ContactProfile
         contact={contact}
         tags={tags} addTag={addTag} removeTag={removeTag}
+        submitField={submitField}
       />
     </DetailsPaper>
   )

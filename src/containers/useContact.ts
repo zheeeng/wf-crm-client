@@ -30,6 +30,7 @@ const useContact = (contactId: string) => {
   const { request: deleteContact } = useDelete()
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
+  const { request: putFields } = usePut()
 
   const freshContact = useDepMemo<Contact | undefined>(convertContact, [freshContactData])
   const updatedContact = useDepMemo<Contact | undefined>(convertContact, [updatedContactData])
@@ -98,6 +99,14 @@ const useContact = (contactId: string) => {
     [],
   )
 
+  const submitField = useCallback(
+    async (fields: object) => {
+      await putFields(`/api/people/${contactId}/fields/${'test'}`)(fields)
+      fetchContact()
+    },
+    [],
+  )
+
   return {
     contact,
     fetchContact,
@@ -105,6 +114,7 @@ const useContact = (contactId: string) => {
     starContact, starMutation,
     removeContact, removeMutation,
     tags, addTag, removeTag,
+    submitField,
   }
 }
 
