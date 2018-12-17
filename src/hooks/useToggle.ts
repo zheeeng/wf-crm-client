@@ -1,6 +1,28 @@
 import { useState, useCallback } from 'react'
 
-export default function useToggle (initial: boolean) {
+interface UseAlternativeToggle {
+  // tslint:disable-next-line:callable-types
+  <T1, T2 = T1 >(initial: T1, alternative: T2):
+    { value: T1 | T2, toggle: () => void, toggleOn: () => void, toggleOff: () => void }
+}
+type UseBooleanToggle = (initial?: boolean) =>
+    { value: boolean, toggle: () => void, toggleOn: () => void, toggleOff: () => void }
+
+interface UseToggle extends UseAlternativeToggle, UseBooleanToggle {
+}
+
+const useAlternativeToggle: UseAlternativeToggle = <T1, T2 = T1>(initial: T1, alternative: T2) => {
+  const [value, updateValue] = useState<T1 | T2>(initial)
+  const toggle = useCallback(() => updateValue(prev => prev === initial ? alternative : initial), [])
+  const toggleOn = useCallback(() => updateValue(alternative), [])
+  const toggleOff = useCallback(() => updateValue(initial), [])
+
+  return {
+    value, toggle, toggleOn, toggleOff,
+  }
+}
+
+const useBooleanToggle: UseBooleanToggle = (initial: boolean = false) => {
   const [value, updateValue] = useState(initial)
   const toggle = useCallback(() => updateValue(prev => !prev), [])
   const toggleOn = useCallback(() => updateValue(true), [])
@@ -10,3 +32,11 @@ export default function useToggle (initial: boolean) {
     value, toggle, toggleOn, toggleOff,
   }
 }
+
+function useToggle (...args: any[]) {
+  if (args.length === 2) return useAlternativeToggle(args[0], args[1])
+
+  return useBooleanToggle(args[0])
+}
+
+export default useToggle as UseToggle
