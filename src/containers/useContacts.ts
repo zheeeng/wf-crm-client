@@ -24,7 +24,7 @@ const convertPagination = pipe<
   Array<ContactsResponse | null>,
   ContactsResponse | null,
   ContactsResponse,
-  ContactsResponse['pagination']
+  Pagination
 >(
   head,
   defaultTo({ pagination: { page: 0, size: 0, total: 0 } }),
@@ -52,8 +52,8 @@ const useContacts = () => {
   const { request: postContact } = usePost()
   const { request: putContact } = usePut()
 
-  const pagination = useDepMemo<Pagination>(convertPagination, [contactsData])
-  const contacts = useDepMemo<Contact[]>(convertContacts, [contactsData])
+  const pagination = useDepMemo(convertPagination, [contactsData])
+  const contacts = useDepMemo(convertContacts, [contactsData])
 
   const fetchContacts = useCallback(
     async (params: FetchParams) => {

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
-export default function useDepMemo<T, A = any> (
+export default function useDepMemo<T, A = unknown> (
   f: (inputs: A[]) => T,
   inputs: A[],
 ) {
-  return useMemo(() => f(inputs || []), inputs)
+  return useMemo<T>(() => f(inputs || []), inputs)
 }

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
-export default function useDepEffect (
-  f: (inputs: ReadonlyArray<any>) => (void | (() => void)),
-  inputs?: ReadonlyArray<any>,
+export default function useDepEffect <A = unknown> (
+  f: (inputs: A[]) => (void | (() => void)),
+  inputs?: A[],
 ) {
   return useEffect(() => f(inputs || []), inputs)
 }
