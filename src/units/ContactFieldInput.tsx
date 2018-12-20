@@ -112,9 +112,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(props => {
   )
 
   React.useEffect(() => {
-    if (!onDraftChange) return
-
-    onDraftChange(name, expandable ? localValueAndNotes : localValueAndNotes[0])
+    onDraftChange && onDraftChange(name, expandable ? localValueAndNotes : localValueAndNotes[0])
   })
 
   return (

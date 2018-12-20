@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import classNames from 'classnames'
@@ -100,24 +100,21 @@ const PeopleList: React.FC<Props> = React.memo(({
   contacts, total, page, size, onSearch, navigateToProfile, onStar, onSubmitContact,
 }) => {
   const classes = useStyles({})
-  const [popover, setPopover] = React.useState({
+  const [popover, setPopover] = useState({
     anchorEl: null as HTMLElement | null,
     text: '',
   })
-  const [checked, setChecked] = React.useState<string[]>([])
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const [createForm, setCreateForm] = React.useState({
+  const [checked, setChecked] = useState<string[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [createForm, setCreateForm] = useState({
     opened: false,
     // tslint:disable-next-line:no-object-literal-type-assertion
     option: {} as CreateFormOption<any>,
   })
 
-  const pageNumber = React.useMemo(
-    () => Math.ceil(total / size) - 1,
-    [total, size],
-  )
+  const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 
-  const handlePopoverToggle = React.useCallback<{
+  const handlePopoverToggle = useCallback<{
     (opened: true, text: string): (event: React.MouseEvent<HTMLDivElement>) => void;
     (opened: false): (event: React.MouseEvent<HTMLDivElement>) => void;
   }> (
@@ -134,75 +131,47 @@ const PeopleList: React.FC<Props> = React.memo(({
     [popover],
   )
 
-  const handleSearchTermEnterChange = React.useCallback(
+  const handleSearchTermEnterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchTerm(e.target.value)
-      if (checked.length !== 0) {
-        setChecked([])
-      }
+      checked.length !== 0 && setChecked([])
     },
     [searchTerm, checked],
   )
 
-  const search = React.useCallback(
-    () => {
-      onSearch({ page, size, searchTerm })
-    },
-    [page, size, searchTerm],
-  )
+  const search = useCallback(() => onSearch({ page, size, searchTerm }), [page, size, searchTerm])
 
-  const handleSearchTermEnter = React.useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.keyCode !== 13) return
-
-      search()
-    },
+  const handleSearchTermEnter = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => e.keyCode === 13 && search(),
     [search],
   )
 
-  const handleChangePage = React.useCallback(
-    (_: any, newPage: number) => {
-      onSearch({ page: newPage, size, searchTerm })
-    },
+  const handleChangePage = useCallback(
+    (_: any, newPage: number) => onSearch({ page: newPage, size, searchTerm }),
     [onSearch, size, searchTerm],
   )
 
-  const handleShowProfile = React.useCallback(
-    (id: string) => () => {
-      navigateToProfile(id)
-    },
-    [navigateToProfile],
-  )
+  const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
 
-  const handleItemCheckedToggle = React.useCallback(
+  const handleItemCheckedToggle = useCallback(
     (id: string) => (e: React.SyntheticEvent) => {
       e.stopPropagation()
       const currentIndex = checked.indexOf(id)
       const newChecked = [...checked]
 
-      if (currentIndex === -1) {
-        newChecked.push(id)
-      } else {
-        newChecked.splice(currentIndex, 1)
-      }
+      currentIndex === -1 ? newChecked.push(id) : newChecked.splice(currentIndex, 1)
 
       setChecked(newChecked)
     },
     [checked],
   )
 
-  const handleToggleAllChecked = React.useCallback(
-    () => {
-      if (checked.length) {
-        setChecked([])
-      } else {
-        setChecked(contacts.map(contact => contact.id))
-      }
-    },
+  const handleToggleAllChecked = useCallback(
+    () => checked.length ? setChecked([]) : setChecked(contacts.map(contact => contact.id)),
     [checked, contacts],
   )
 
-  const handleStarClick = React.useCallback(
+  const handleStarClick = useCallback(
     (id: string, star: boolean) => (e: React.SyntheticEvent) => {
       e.stopPropagation()
       onStar(id, star)
@@ -210,7 +179,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     [onStar],
   )
 
-  const changeCreateFormOpened = React.useCallback<{
+  const changeCreateFormOpened = useCallback<{
     <F extends string>(opened: true, option: CreateFormOption<F>): () => void;
     (opened: false): () => void;
   }>(
@@ -223,7 +192,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     [createForm],
   )
 
-  const submitNewContact = React.useCallback(
+  const submitNewContact = useCallback(
     async (contact: object) => {
       if (onSubmitContact) {
         onSubmitContact(contact as ContactAPI)

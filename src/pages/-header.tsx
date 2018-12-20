@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
@@ -67,18 +67,18 @@ export interface Props extends ComponentProps {}
 
 const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
   const classes = useStyles({})
-  const mountElRef = React.useRef(document.querySelector('#header'))
-  const { toggleDrawerExpanded } = React.useContext(AppContainer.Context)
-  const { authored, login, logout } = React.useContext(AccountContainer.Context)
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const mountElRef = useRef(document.querySelector('#header'))
+  const { toggleDrawerExpanded } = useContext(AppContainer.Context)
+  const { authored, login, logout } = useContext(AccountContainer.Context)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
-  const handleMenuToggle = React.useCallback(
+  const handleMenuToggle = useCallback(
     (forOpen: boolean) => (event: React.MouseEvent<HTMLDivElement>) => {
       setAnchorEl(forOpen ? event.currentTarget : null)
     },
     [anchorEl],
   )
-  const handleLogin = React.useCallback(
+  const handleLogin = useCallback(
     () => {
       authored ? logout() : login('a', '0cc175b9c0f1b6a831c399e269772661')
       setAnchorEl(null)

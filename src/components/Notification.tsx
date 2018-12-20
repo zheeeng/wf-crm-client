@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useCallback } from 'react'
 import { WithContext } from '@roundation/store'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,9 +10,9 @@ export interface Props extends WithContext<typeof store, 'notificationStore'> {
 }
 
 const Notification: React.FC = () => {
-  const notificationContext = React.useContext(store.Context)
+  const notificationContext = useContext(store.Context)
 
-  const handleClose = React.useCallback(
+  const handleClose = useCallback(
     (_: any, reason?: string) => {
       if (reason === 'clickaway') {
         return

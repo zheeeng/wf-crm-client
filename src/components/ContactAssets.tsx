@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -42,9 +42,9 @@ export interface Props {
 const ContactAssets: React.FC<Props> = React.memo(() => {
   const classes = useStyles({})
 
-  const [currentTab, setCurrentTab] = React.useState(0)
+  const [currentTab, setCurrentTab] = useState(0)
 
-  const handleCurrentTabChange = React.useCallback(
+  const handleCurrentTabChange = useCallback(
     (_: any, value: number) => setCurrentTab(value),
     [currentTab],
   )

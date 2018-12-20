@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 
@@ -39,41 +39,32 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
 }) => {
   const classes = useStyles({})
 
-  const handleFirstPageButtonClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      onChangePage(event, 0)
-    },
+  const handleFirstPageButtonClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => onChangePage(event, 0),
     [onChangePage],
   )
 
-  const handleBackButtonClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      onChangePage(event, page - 1)
-    },
+  const handleBackButtonClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => onChangePage(event, page - 1),
     [onChangePage, page],
   )
 
-  const handleNextButtonClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      onChangePage(event, page + 1)
-    },
+  const handleNextButtonClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => onChangePage(event, page + 1),
     [onChangePage, page],
   )
 
-  const handleLastPageButtonClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
-    },
+  const handleLastPageButtonClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) =>
+      onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1)),
     [onChangePage, page, count, rowsPerPage],
   )
 
-  const handleEnterNewPage = React.useCallback(
+  const handleEnterNewPage = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       const newPage = event.currentTarget.value.trim()
       event.currentTarget.value = ''
-      if (isNaN(+newPage)) return
-
-      onChangePage(null, parseInt(newPage, 10))
+      !isNaN(+newPage) && onChangePage(null, parseInt(newPage, 10))
     },
     [page, count, rowsPerPage],
   )

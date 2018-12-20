@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { ClassNameMap } from '@material-ui/core/styles/withStyles'
 import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'
@@ -31,12 +31,11 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 }) => {
   const classes = useStyles({})
 
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (!onEnterPress) return
 
-      if (event.keyCode !== 13) return
-      onEnterPress(event)
+      event.keyCode === 13 && onEnterPress(event)
     },
     [onEnterPress],
   )

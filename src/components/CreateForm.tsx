@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useContext, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
@@ -46,18 +46,18 @@ export interface Props {
 const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
   const classes = useStyles({})
 
-  const notificationContext = React.useContext(notificationStore.Context)
+  const notificationContext = useContext(notificationStore.Context)
 
-  const fieldValues = React.useRef<{ [key: string]: string }>({})
+  const fieldValues = useRef<{ [key: string]: string }>({})
 
-  const handleCreateInfoChange = React.useCallback(
+  const handleCreateInfoChange = useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       fieldValues.current[field] = e.target.value
     },
     [fieldValues],
   )
 
-  const handleOkClick = React.useCallback(
+  const handleOkClick = useCallback(
     () => {
       (onOk ? onOk(fieldValues.current) : Promise.resolve()).then(() => {
         notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
