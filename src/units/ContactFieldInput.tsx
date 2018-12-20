@@ -7,7 +7,17 @@ import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
 import { FSA } from '~src/types/FSA'
 import useDepMemo from '~src/hooks/useDepMemo'
-import concat from 'ramda/src/concat'
+import pipe from 'ramda/src/pipe'
+import head from 'ramda/src/head'
+
+const extractValueAndNotes = pipe<
+  Array<ValueAndNote | ValueAndNote[]>,
+  ValueAndNote | ValueAndNote[],
+  ValueAndNote[]
+>(
+  head,
+  Array.prototype.concat.bind([] as ValueAndNote[]),
+)
 
 const useStyles = makeStyles((theme: Theme) => ({
   fieldBar: {
@@ -93,7 +103,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(props => {
   const { Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
 
   const expandable = useDepMemo(Array.isArray, [valueAndNote])
-  const valueAndNotes = useDepMemo(concat([] as ValueAndNote[]), [valueAndNote])
+  const valueAndNotes = useDepMemo<ValueAndNote[], ValueAndNote | ValueAndNote[]>(extractValueAndNotes, [valueAndNote])
 
   const [ localValueAndNotes, dispatch ] = useReducer(reducer, valueAndNotes)
 
