@@ -32,9 +32,9 @@ const useContact = (contactId: string) => {
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
   const { request: putFields } = usePut()
 
-  const freshContact = useDepMemo<Contact | undefined>(convertContact, [freshContactData])
-  const updatedContact = useDepMemo<Contact | undefined>(convertContact, [updatedContactData])
-  const latestContact = useLatest<Contact | undefined>(freshContact, updatedContact)
+  const freshContact = useDepMemo(convertContact, [freshContactData])
+  const updatedContact = useDepMemo(convertContact, [updatedContactData])
+  const latestContact = useLatest(freshContact, updatedContact)
 
   const tags = useLatest<string[] | undefined | null>(
     latestContact && latestContact.info.tags,

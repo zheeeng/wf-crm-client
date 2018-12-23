@@ -1,4 +1,4 @@
-export default function mergeOptions<O> (...options: O[]) {
+export default function mergeOptions<O extends object> (...options: O[]) {
 
   return options.reduce(
     (merged, option) => {
@@ -6,7 +6,9 @@ export default function mergeOptions<O> (...options: O[]) {
         if (!option.hasOwnProperty(key)) continue
 
         merged[key] = (
-          !merged[key] || typeof merged[key] !== 'object' || [merged[key], option[key]].some(Array.isArray)
+          !merged[key]
+          || typeof merged[key] !== 'object'
+          || [merged[key], option[key]].some(Array.isArray)
         )
           ? option[key]
           : mergeOptions(merged[key] as any, option[key] as any)
