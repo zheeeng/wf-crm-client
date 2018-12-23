@@ -7,6 +7,7 @@ export default function mergeOptions<O extends object> (...options: O[]) {
 
         merged[key] = (
           !merged[key]
+          // tslint:disable-next-line:strict-type-predicates
           || typeof merged[key] !== 'object'
           || [merged[key], option[key]].some(Array.isArray)
         )
