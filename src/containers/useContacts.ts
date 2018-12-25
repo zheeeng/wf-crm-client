@@ -4,11 +4,11 @@ import { PeopleAPI, ContactAPI, contactInputAdapter, Contact, contactFieldAdapte
 import { useGet, usePost, usePut } from '~src/hooks/useRequest'
 import useDepMemo from '~src/hooks/useDepMemo'
 import useInfoCallback from '~src/hooks/useInfoCallback'
-import pipe from 'ramda/src/pipe'
-import prop from 'ramda/src/prop'
-import head from 'ramda/src/head'
-import map from 'ramda/src/map'
-import defaultTo from 'ramda/src/defaultTo'
+import pipe from 'ramda/es/pipe'
+import prop from 'ramda/es/prop'
+import head from 'ramda/es/head'
+import map from 'ramda/es/map'
+import defaultTo from 'ramda/es/defaultTo'
 import ContactsCountContainer from './ContactsCount'
 
 type FetchParams = {
@@ -27,7 +27,7 @@ const convertPagination = pipe<
   Pagination
 >(
   head,
-  defaultTo({ pagination: { page: 0, size: 0, total: 0 } }),
+  defaultTo({ pagination: { page: 0, size: 0, total: 0 }, result: [] }),
   prop('pagination'),
 )
 
@@ -39,7 +39,7 @@ const convertContacts = pipe<
   Contact[]
 >(
   head,
-  defaultTo({ result: [] }),
+  defaultTo({ pagination: { page: 0, size: 0, total: 0 }, result: [] }),
   prop('result'),
   map(contactInputAdapter),
 )

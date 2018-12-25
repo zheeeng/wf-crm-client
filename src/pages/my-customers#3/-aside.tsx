@@ -28,8 +28,8 @@ import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import AppContainer from '~src/containers/App'
-import cond from 'ramda/src/cond'
-import equals from 'ramda/src/equals'
+import cond from 'ramda/es/cond'
+import equals from 'ramda/es/equals'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 

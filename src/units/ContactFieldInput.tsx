@@ -1,13 +1,12 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
-import useDepEffect from '~src/hooks/useDepEffect'
-import pipe from 'ramda/src/pipe'
-import head from 'ramda/src/head'
+import pipe from 'ramda/es/pipe'
+import head from 'ramda/es/head'
 
 const useStyles = makeStyles((theme: Theme) => ({
   fieldBar: {
@@ -77,8 +76,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
   const [ localFieldValues, updateLocalFieldValues ] = useState(fieldValues)
 
-  useDepEffect(
-    pipe(head, updateLocalFieldValues),
+  useEffect(
+    () => updateLocalFieldValues(fieldValues),
     [fieldValues],
   )
 
