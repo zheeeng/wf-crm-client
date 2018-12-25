@@ -1,4 +1,5 @@
-import { Arrify } from './utils'
+import { snake2pascal } from '~src/utils/caseConvert'
+import mapKeys from '~src/utils/mapKeys'
 
 export interface Activity {
   id: string
@@ -31,29 +32,65 @@ export interface NoteAPI {
   timestamp: number
 }
 
+export interface ContactField {
+  fieldType: string,
+  id?: string
+  priority: number
+}
+
+export interface NameField extends ContactField {
+  fieldType: 'name',
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  title: string
+}
+
+export interface EmailField extends ContactField {
+  fieldType: 'email',
+  email?: string
+  title: string
+}
+export interface PhoneField extends ContactField {
+  fieldType: 'phone',
+  number?: string
+  title: string
+}
+
+export interface AddressField extends ContactField {
+  fieldType: 'address',
+  firstLine?: string
+  secondLine?: string
+  city?: string
+  state?: string
+  zipcode?: string
+  country?: string
+  title: string
+}
+
+export type CommonField = NameField | EmailField | PhoneField | AddressField
+
 export interface Contact {
   id: string,
   info: {
     avatar: string,
     starred: boolean,
     name: string,
+    names: NameField[],
     gender: 'Male' | 'Female' | null,
     birthDay: string,
     email: string,
+    emails: EmailField[],
     address: string,
-    telephone: string,
+    addresses: AddressField[],
+    phone: string,
+    phones: PhoneField[],
     tags: string[],
     pictures: string[],
     waivers: any[],
     activities: Activity[],
     notes: Note[],
   }
-}
-
-export interface ContactFullInfo extends Arrify<{
-  id: Contact['id'],
-  info: Arrify<Contact['info']>,
-}> {
 }
 
 export interface Group {
@@ -78,6 +115,7 @@ export interface PeopleAPI {
   favourite: boolean | null
   account: string
   name: string | null
+  names?: any[]
   picture_url: string | null
   first_name: string | null
   middle_name: string | null
@@ -87,8 +125,11 @@ export interface PeopleAPI {
   dob_month: string | null
   dob_year: string | null
   email: string | null
+  emails?: any[]
   address: string | null
+  addresses?: any[]
   phone: string | null
+  phones?: []
   tags: string[]
   pictures: string[],
   waivers: any[],
@@ -106,7 +147,7 @@ export interface ContactAPI {
 export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
   const params = {
     email: output.info.email,
-    phone: output.info.telephone,
+    phone: output.info.phone,
     favourite: output.info.starred,
     picture_url: output.info.avatar,
     name: output.info.name,
@@ -200,8 +241,8 @@ export const groupInputAdapter = (input: GroupAPI): Group =>
 export const contactInputAdapter = (input: PeopleAPI): Contact => {
   const {
     id, account, favourite,
-    picture_url, name, gender, dob_day, dob_month, dob_year,
-    email, address, phone, tags,
+    picture_url, name, names, gender, dob_day, dob_month, dob_year,
+    email, emails, address, addresses, phone, phones, tags,
     pictures, waivers, activities, notes,
   } = input
 
@@ -209,11 +250,15 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
     avatar: picture_url || '',
     starred: favourite || false,
     name: name || '',
+    names: (names || []).map(o => mapKeys(snake2pascal, o)) as NameField[],
     gender: gender || null as 'Male' | 'Female' | null,
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
     email: email || '',
+    emails: (emails || []).map(o => mapKeys(snake2pascal, o)) as EmailField[],
     address: address || '',
-    telephone: phone || '',
+    addresses: (addresses || []).map(o => mapKeys(snake2pascal, o)) as AddressField[],
+    phone: phone || '',
+    phones: (phones || []).map(o => mapKeys(snake2pascal, o)) as PhoneField[],
     tags, pictures, waivers,
     activities: activities ? activities.map(activityInputAdapter) : [],
     notes: notes ? notes.map(noteInputAdapter) : [],

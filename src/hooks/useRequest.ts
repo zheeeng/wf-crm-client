@@ -7,13 +7,17 @@ const useRequest = <T = any>(method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
   const [error, setError] = useState<any>(null)
 
   const request = useCallback(
-    (url: string) => async (params?: object) => {
+    (url: string) => async (params?: object): Promise<T | null> => {
       try {
         setIsLoading(true)
         const response = await fetch<T>(url, { method, params })
         setData(response)
+
+        return response
       } catch (err) {
         setError(err)
+
+        return null
       } finally {
         setIsLoading(false)
       }

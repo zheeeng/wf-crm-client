@@ -1,9 +1,9 @@
+import { pascal2snake } from '~src/utils/caseConvert'
+
 type Option = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE',
   params?: object,
 }
-
-const pascal2snake = (str: string) => str.replace(/([A-Z])/g, '_$1').toLowerCase()
 
 export const getQuery = (query: object): string => {
   const search = Object.keys(query)

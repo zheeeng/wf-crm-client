@@ -1,3 +1,5 @@
+import { pascal2snake } from '~src/utils/caseConvert'
+
 type ArgumentsType<F> = F extends (...args: infer A) => any ? A : any
 
 export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>): Promise<T> {
@@ -44,8 +46,6 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
 
   return data
 }
-
-const pascal2snake = (str: string) => str.replace(/([A-Z])/g, '_$1').toLowerCase()
 
 export const getQuery = (query: object): string => {
   const search = Object.keys(query)

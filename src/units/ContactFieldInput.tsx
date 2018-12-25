@@ -1,23 +1,13 @@
-import React, { useCallback, useReducer } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
-import { FSA } from '~src/types/FSA'
-import useDepMemo from '~src/hooks/useDepMemo'
+import useDepEffect from '~src/hooks/useDepEffect'
 import pipe from 'ramda/src/pipe'
 import head from 'ramda/src/head'
-
-const extractValueAndNotes = pipe<
-  Array<ValueAndNote | ValueAndNote[]>,
-  ValueAndNote | ValueAndNote[],
-  ValueAndNote[]
->(
-  head,
-  Array.prototype.concat.bind([] as ValueAndNote[]),
-)
 
 const useStyles = makeStyles((theme: Theme) => ({
   fieldBar: {
@@ -60,96 +50,160 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export interface ValueAndNote {
+export interface FieldValue {
   value: string
-  note?: string
+  title: string
+  id?: string
 }
 
 export interface Props {
   Icon?: React.ComponentType<{ className?: string, color?: any }>,
-  key: string | number,
   name: string,
-  valueAndNote: ValueAndNote | ValueAndNote[],
+  fieldValues: FieldValue[],
+  expandable: boolean,
+  hasTitle: boolean,
   editable?: boolean,
-  onDraftChange?: (name: string, valueAndNote: ValueAndNote | ValueAndNote[]) => void,
+  onAddField (name: string, value: FieldValue): Promise<FieldValue | null>,
+  onUpdateField (name: string, value: FieldValue): Promise<FieldValue | null>
+  onDeleteField (id: string): void
   placeholder?: string,
-  notePlaceholder?: string,
+  titlePlaceholder?: string,
 }
 
-const reducer = (
-  state: ValueAndNote[],
-  action: FSA<'add'>
-    | FSA<'changeValue', { index: number, value: string }>
-    | FSA<'changeNote', { index: number, value: string }>,
-) => {
-  switch (action.type) {
-    case 'add': {
-      return state.concat({ value: '', note: state[0].note === undefined ? undefined : '' })
-    }
-    case 'changeValue': {
-      return state.map((pair, i) => i === action.payload.index ? { ...pair, value: action.payload.value } : pair)
-    }
-    case 'changeNote': {
-      return state.map((pair, i) => i === action.payload.index ? { ...pair, note: action.payload.value } : pair)
-    }
-    default: {
-      return state
-    }
-  }
-}
-
-const ContactFieldInput: React.FC<Props> = React.memo(props => {
+const ContactFieldInput: React.FC<Props> = React.memo(
+  ({ Icon, name, fieldValues, editable = false, placeholder, titlePlaceholder, hasTitle, expandable,
+     onAddField, onUpdateField, onDeleteField }) => {
   const classes = useStyles({})
-  const { Icon, name, valueAndNote, editable = false, onDraftChange, placeholder, notePlaceholder } = props
 
-  const expandable = useDepMemo(Array.isArray, [valueAndNote])
-  const valueAndNotes = useDepMemo<ValueAndNote[], ValueAndNote | ValueAndNote[]>(extractValueAndNotes, [valueAndNote])
+  const [ localFieldValues, updateLocalFieldValues ] = useState(fieldValues)
 
-  const [ localValueAndNotes, dispatch ] = useReducer(reducer, valueAndNotes)
+  useDepEffect(
+    pipe(head, updateLocalFieldValues),
+    [fieldValues],
+  )
+
+  const hasValues = useMemo(
+    () => !!fieldValues.length,
+    [fieldValues],
+  )
+
+  const addField = useCallback(
+    async (value: string, title: string) => {
+      const field = await onAddField(
+        name,
+        { value, title },
+      )
+
+      console.log(field)
+    },
+    [onAddField],
+  )
+  const updateField = useCallback(
+    async (value: string, title: string, id?: string) => {
+      const field = await onUpdateField(
+        name,
+        { value, title, id },
+      )
+
+      console.log(field)
+    },
+    [onUpdateField],
+  )
 
   const handleAddEntry = useCallback(
-    () => dispatch({ type: 'add' }),
-    [valueAndNotes],
-  )
-
-  const handleEntryChange = useCallback(
-    (type: 'changeValue' | 'changeNote', index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (type === 'changeValue') return dispatch({ type, payload: { index, value: event.target.value } })
-
-      return dispatch({ type, payload: { index, value: event.target.value } })
+    () => {
+      addField('', '')
     },
-    [valueAndNotes],
+    [localFieldValues, name],
   )
 
-  React.useEffect(() => {
-    onDraftChange && onDraftChange(name, expandable ? localValueAndNotes : localValueAndNotes[0])
-  })
+  const handleEntryUpdateByBlur = useCallback(
+    (type: 'changeValue' | 'changeTitle', index: number) => (event: React.FocusEvent<HTMLInputElement>) => {
+      const inputValue = event.target.value.trim()
+
+      if (!inputValue) return
+
+      const localFieldValue = localFieldValues[index]
+
+      if (hasValues) {
+        if (type === 'changeValue') {
+          updateField(inputValue, localFieldValue.title, localFieldValue.id)
+        } else {
+          updateField(localFieldValue.value, inputValue, localFieldValue.id)
+        }
+      } else {
+        if (type === 'changeValue') {
+          addField(inputValue, localFieldValue.title)
+        } else {
+          addField(localFieldValue.value, inputValue)
+        }
+      }
+
+    },
+    [localFieldValues],
+  )
+  const handleEntryUpdateByKeydown = useCallback(
+    (type: 'changeValue' | 'changeTitle', index: number) => async (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.keyCode !== 13) return
+      const inputValue = event.currentTarget.value.trim()
+      event.currentTarget.value = ''
+
+      if (!inputValue) return
+
+      const localFieldValue = localFieldValues[index]
+
+      if (hasValues) {
+        if (type === 'changeValue') {
+          updateField(inputValue, localFieldValue.title, localFieldValue.id)
+        } else {
+          updateField(localFieldValue.value, inputValue, localFieldValue.id)
+        }
+      } else {
+        if (type === 'changeValue') {
+          addField(inputValue, localFieldValue.title)
+        } else {
+          addField(localFieldValue.value, inputValue)
+        }
+      }
+    },
+    [localFieldValues],
+  )
+  const handleEntryDelete = useCallback(
+    (index: number) => async () => {
+      const localFieldValue = localFieldValues[index]
+
+      await onDeleteField(localFieldValue.id || '')
+    },
+    [localFieldValues],
+  )
 
   return (
     <div className={classes.fieldBar}>
       {Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
-        {localValueAndNotes.map((pair, index) => (
+        {(hasValues ? localFieldValues : [{ value: '', title: '' }]).map((pair, index) => (
           <div className={classes.fieldTextBar} key={index}>
             <Input
               disabled={!editable}
               disableUnderline={!editable}
               className={classes.fieldInput}
               placeholder={placeholder}
-              value={pair.value}
-              onChange={handleEntryChange('changeValue', index)}
+              defaultValue={pair.value}
+              onBlur={handleEntryUpdateByBlur('changeValue', index)}
+              onKeyDown={handleEntryUpdateByKeydown('changeValue', index)}
               startAdornment={
-                (pair.note === undefined || editable)
+                (!hasTitle || editable)
                   ? undefined
-                  : <strong className={classes.fieldTypeText}>{pair.note}</strong>
+                  : <strong className={classes.fieldTypeText}>{pair.title}</strong>
               }
             />
-            {(pair.note !== undefined && editable) ? (
+            {(hasTitle && editable) ? (
               <Input
                 className={classes.fieldTypeText}
-                value={pair.note}
-                onChange={handleEntryChange('changeNote', index)}
-                placeholder={notePlaceholder}
+                value={pair.title}
+                onBlur={handleEntryUpdateByBlur('changeTitle', index)}
+                onKeyDown={handleEntryUpdateByKeydown('changeTitle', index)}
+                placeholder={titlePlaceholder}
               />
             ) : undefined}
             {editable && (

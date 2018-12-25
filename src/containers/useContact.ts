@@ -1,5 +1,6 @@
 import { useCallback, useContext, useMemo, useEffect } from 'react'
-import { PeopleAPI, contactInputAdapter, Contact, contactOutputAdapter } from '~src/types/Contact'
+import { PeopleAPI, contactInputAdapter, Contact, CommonField,
+  contactOutputAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useDepMemo from '~src/hooks/useDepMemo'
 import useInfoCallback from '~src/hooks/useInfoCallback'
@@ -7,9 +8,11 @@ import useLatest from '~src/hooks/useLatest'
 import pipe from 'ramda/src/pipe'
 import cond from 'ramda/src/cond'
 import head from 'ramda/src/head'
-import isNil from 'ramda/src/isNil'
 import T from 'ramda/src/T'
+import isNil from 'ramda/src/isNil'
 import ContactsCountContainer from './ContactsCount'
+import { pascal2snake } from '~src/utils/caseConvert'
+import mapKeys from '~src/utils/mapKeys'
 
 const convertContact = pipe<
   Array<PeopleAPI | null>,
@@ -27,10 +30,13 @@ const useContact = (contactId: string) => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
   const { data: freshContactData, request: getContact } = useGet<PeopleAPI>()
   const { data: updatedContactData, request: putContact } = usePut()
+  const { data: contactFields, request: getContactFields } = useGet()
+  const { request: postContactField } = usePost<CommonField>()
+  const { request: putContactField } = usePut<CommonField>()
+  const { request: deleteContactField } = useDelete()
   const { request: deleteContact } = useDelete()
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
-  const { request: putFields } = usePut()
 
   const freshContact = useDepMemo(convertContact, [freshContactData])
   const updatedContact = useDepMemo(convertContact, [updatedContactData])
@@ -54,7 +60,7 @@ const useContact = (contactId: string) => {
   const fetchContact = useCallback(
     async () => {
       await getContact(`/api/people/${contactId}`)({
-        embeds: ['pictures', 'waivers', 'activities', 'notes'].join(','),
+        embeds: ['all'].join(','),
       })
     },
     [],
@@ -63,9 +69,25 @@ const useContact = (contactId: string) => {
   useEffect(() => { fetchContact() }, [contactId])
 
   const updateContact = useCallback(
-    async (cont: Contact)  => {
-      await putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont))
-    },
+    async (cont: Contact)  => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
+    [],
+  )
+  const fetchContactFields = useCallback(
+    async () => getContactFields(`/api/people/${contactId}/fields`)({}),
+    [],
+  )
+  const addContactField = useCallback(
+    async (field: CommonField): Promise<CommonField | null> =>
+      postContactField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field)),
+    [],
+  )
+  const updateContactField = useCallback(
+    async (field: CommonField): Promise<CommonField | null>  =>
+      putContactField(`/api/people/${contactId}/fields/${field.id || ''}`)(mapKeys(pascal2snake, field)),
+    [],
+  )
+  const removeContactField = useCallback(
+    async (fieldId: string)  => deleteContactField(`/api/people/${contactId}/fields/${fieldId}`)(),
     [],
   )
 
@@ -86,24 +108,12 @@ const useContact = (contactId: string) => {
   )
 
   const addTag = useCallback(
-    async (tag: string) => {
-      await postTag(`/api/people/${contactId}/tags`)({ tag })
-    },
+    async (tag: string) => postTag(`/api/people/${contactId}/tags`)({ tag }),
     [],
   )
 
   const removeTag = useCallback(
-    async (tag: string) => {
-      await deleteTag(`/api/people/${contactId}/tags/${tag}`)()
-    },
-    [],
-  )
-
-  const submitField = useCallback(
-    async (fields: object) => {
-      await putFields(`/api/people/${contactId}/fields/${'test'}`)(fields)
-      fetchContact()
-    },
+    async (tag: string) => deleteTag(`/api/people/${contactId}/tags/${tag}`)(),
     [],
   )
 
@@ -111,10 +121,11 @@ const useContact = (contactId: string) => {
     contact,
     fetchContact,
     updateContact,
+    fetchContactFields,
+    addContactField, updateContactField, removeContactField,
     starContact, starMutation,
     removeContact, removeMutation,
     tags, addTag, removeTag,
-    submitField,
   }
 }
 

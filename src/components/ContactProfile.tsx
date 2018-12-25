@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -7,16 +7,15 @@ import Avatar from '@material-ui/core/Avatar'
 import CreditCard from '@material-ui/icons/CreditCard'
 import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
-import Cake from '@material-ui/icons/Cake'
 import People from '@material-ui/icons/People'
 import LocationOn from '@material-ui/icons/LocationOn'
 import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
-import ContactFieldInput from '~src/units/ContactFieldInput'
+import ContactFieldInput, { FieldValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
-import { Contact } from '~src/types/Contact'
+import { Contact, CommonField, NameField, PhoneField, AddressField, EmailField } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   profileBar: {
@@ -73,32 +72,64 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'phone') => (
+  specificField: NameField | EmailField | AddressField | PhoneField | null,
+): FieldValue | null => {
+  if (specificField === null) return null
+
+  specificField.fieldType = fieldType
+
+  switch (specificField.fieldType) {
+    case 'name': {
+      return {
+        id: specificField.id,
+        title: specificField.title || '',
+        value: specificField.firstName || '',
+      }
+    }
+    case 'address': {
+      return {
+        id: specificField.id,
+        title: specificField.title || '',
+        value: specificField.firstLine || '',
+      }
+    }
+    case 'email': {
+      return {
+        id: specificField.id,
+        title: specificField.title || '',
+        value: specificField.email || '',
+      }
+    }
+    case 'phone': {
+      return {
+        id: specificField.id,
+        title: specificField.title || '',
+        value: specificField.number || '',
+      }
+    }
+    default: {
+      throw Error('invalid data')
+    }
+  }
+}
+
 export interface Props {
   contact: Contact,
   tags: string[],
-  addTag: (tag: string) => void
-  removeTag: (tag: string) => void
-  submitField: (fields: object) => void
+  addTag (tag: string): void
+  removeTag (tag: string): void
+  addField<F extends CommonField = CommonField> (field: F): Promise<F | null>
+  updateField<F extends CommonField = CommonField> (field: F): Promise<F | null>
+  removeField (fieldId: string): void
 }
 
-const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag, removeTag, submitField }) => {
+const ContactProfile: React.FC<Props> = React.memo(({
+  contact, tags, addTag, removeTag,
+  addField, updateField, removeField,
+}) => {
   const { value: editable, toggle: toggleEditable } = useToggle(false)
   const classes = useStyles({})
-  const draftRef = useRef<{ [key: string]: any }>({})
-
-  const onDraftChange = useCallback(
-    (name: string, value: any) => {
-      draftRef.current = Object.assign(draftRef.current, { [name]: value })
-    },
-    [],
-  )
-
-  useEffect(
-    () => {
-      if (!editable) submitField(draftRef.current)
-    },
-    [editable],
-  )
 
   const handleTagsAdd = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -111,6 +142,112 @@ const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag,
   )
 
   const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [])
+
+  const handleFieldAdd = useCallback(
+    (name: string, fieldValue: FieldValue) => {
+      switch (name) {
+        case 'name': {
+          return addField<NameField>({
+            fieldType: name,
+            firstName: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('name'))
+        }
+        case 'email': {
+          return addField<EmailField>({
+            fieldType: name,
+            email: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('email'))
+        }
+        case 'phone': {
+          return addField<PhoneField>({
+            fieldType: name,
+            number: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('phone'))
+        }
+        case 'address': {
+          return addField<AddressField>({
+            fieldType: name,
+            firstLine: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('address'))
+        }
+        default: {
+          throw Error('invalid type')
+        }
+      }
+    },
+    [],
+  )
+  const handleFieldUpdate = useCallback(
+    (name: string, fieldValue: FieldValue) => {
+      switch (name) {
+        case 'name': {
+          return updateField<NameField>({
+            id: fieldValue.id,
+            fieldType: name,
+            firstName: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('name'))
+        }
+        case 'email': {
+          return updateField<EmailField>({
+            id: fieldValue.id,
+            fieldType: name,
+            email: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('email'))
+        }
+        case 'phone': {
+          return updateField<PhoneField>({
+            id: fieldValue.id,
+            fieldType: name,
+            number: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('phone'))
+        }
+        case 'address': {
+          return updateField<AddressField>({
+            id: fieldValue.id,
+            fieldType: name,
+            firstLine: fieldValue.value,
+            title: fieldValue.title || '',
+            priority: 80,
+          }).then(specificFieldToInputField('address'))
+        }
+        default: {
+          throw Error('invalid field values')
+        }
+      }
+    },
+    [],
+  )
+
+  const names = useMemo(
+    () => contact.info.names.map(specificFieldToInputField('name')).filter((i): i is FieldValue => i !== null),
+    [contact],
+  )
+  const emails = useMemo(
+    () => contact.info.emails.map(specificFieldToInputField('email')).filter((i): i is FieldValue => i !== null),
+    [contact],
+  )
+  const phones = useMemo(
+    () => contact.info.phones.map(specificFieldToInputField('phone')).filter((i): i is FieldValue => i !== null),
+    [contact],
+  )
+  const addresses = useMemo(
+    () => contact.info.addresses.map(specificFieldToInputField('address')).filter((i): i is FieldValue => i !== null),
+    [contact],
+  )
 
   return (
     <>
@@ -153,46 +290,56 @@ const ContactPageProfile: React.FC<Props> = React.memo(({ contact, tags, addTag,
         <ContactFieldInput
           key="name" name="name" placeholder="name" editable={editable}
           Icon={CreditCard}
-          onDraftChange={onDraftChange}
-          valueAndNote={{ value: contact.info.name }}
+          hasTitle={false}
+          expandable={true}
+          fieldValues={names}
+          onAddField={handleFieldAdd}
+          onUpdateField={handleFieldUpdate}
+          onDeleteField={removeField}
         />
         <ContactFieldInput
-          key="email" name="email" placeholder="email" editable={editable}
+          key="email" name="name" placeholder="email" editable={editable}
           Icon={Email}
-          onDraftChange={onDraftChange}
-          valueAndNote={[{ value: contact.info.email, note: 'Personal' }]}
+          hasTitle={true}
+          expandable={true}
+          fieldValues={emails}
+          onAddField={handleFieldAdd}
+          onUpdateField={handleFieldUpdate}
+          onDeleteField={removeField}
         />
         <ContactFieldInput
-          key="telephone" name="telephone" placeholder="telephone" editable={editable}
+          key="phone" name="phone" placeholder="phone" editable={editable}
           Icon={Phone}
-          onDraftChange={onDraftChange}
-          valueAndNote={[{ value: contact.info.telephone, note: 'Work' }]}
+          hasTitle={true}
+          expandable={true}
+          fieldValues={phones}
+          onAddField={handleFieldAdd}
+          onUpdateField={handleFieldUpdate}
+          onDeleteField={removeField}
         />
-        <ContactFieldInput
-          key="birthDay" name="birthDay" placeholder="birthDay" editable={editable}
-          Icon={Cake}
-          onDraftChange={onDraftChange}
-          valueAndNote={{ value: contact.info.birthDay }}
-        />
-        <ContactFieldInput
+        {/* <ContactFieldInput
           key="gender" name="gender" placeholder="gender" editable={editable}
           Icon={People}
-          onDraftChange={onDraftChange}
-          valueAndNote={{ value: contact.info.gender || '' }}
-        />
+          hasTitle={false}
+          expandable={false}
+          fieldValues={gender}
+          onAddField={handleFieldAdd}
+          onUpdateField={handleFieldUpdate}
+          onDeleteField={removeField}
+        /> */}
         <ContactFieldInput
           key="address" name="address" placeholder="address" editable={editable}
           Icon={LocationOn}
-          onDraftChange={onDraftChange}
-          valueAndNote={[
-            { value: contact.info.address, note: 'Home' },
-            { value: contact.info.address, note: 'Office' },
-            { value: contact.info.address, note: '' },
-          ]}
+          hasTitle={true}
+          expandable={true}
+          fieldValues={addresses}
+          onAddField={handleFieldAdd}
+          onUpdateField={handleFieldUpdate}
+          onDeleteField={removeField}
         />
       </div>
     </>
   )
 })
 
-export default ContactPageProfile
+export default ContactProfile
