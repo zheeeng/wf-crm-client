@@ -11,7 +11,7 @@ import head from 'ramda/es/head'
 import T from 'ramda/es/T'
 import isNil from 'ramda/es/isNil'
 import ContactsCountContainer from './ContactsCount'
-import { pascal2snake } from '~src/utils/caseConvert'
+import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
 
 const convertContact = pipe<
@@ -77,13 +77,19 @@ const useContact = (contactId: string) => {
     [],
   )
   const addContactField = useCallback(
-    async (field: CommonField): Promise<CommonField | null> =>
-      postContactField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field)),
+    async (field: CommonField): Promise<CommonField | null> => {
+      const result = await postContactField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field))
+
+      return mapKeys(snake2pascal, result!)
+    },
     [],
   )
   const updateContactField = useCallback(
-    async (field: CommonField): Promise<CommonField | null>  =>
-      putContactField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
+    async (field: CommonField): Promise<CommonField | null>  => {
+      const result = await putContactField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
+
+      return mapKeys(snake2pascal, result!)
+    },
     [],
   )
   const removeContactField = useCallback(

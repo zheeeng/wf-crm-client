@@ -91,8 +91,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
 
   const hasValues = useMemo(
-    () => !!fieldValues.length,
-    [fieldValues],
+    () => !!fieldValues.length || !!localFieldValues.length,
+    [fieldValues, localFieldValues],
   )
 
   const addField = useCallback(
