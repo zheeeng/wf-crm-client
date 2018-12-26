@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
@@ -79,6 +80,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   ({ Icon, name, fieldValues, backupFieldValue,
      editable = false, hasTitle, expandable,
      onAddField, onUpdateField, onDeleteField, onHideField }) => {
+
   const classes = useStyles({})
 
   const [ localFieldValues, updateLocalFieldValues ] = useState(fieldValues)
@@ -164,9 +166,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         {(hasValues ? localFieldValues : [backupFieldValue]).map((fieldValue, index) => (
           <div className={classes.fieldTextBar} key={index}>
             {(hasTitle && !editable) && (
-              <strong className={classes.fieldTypeText}>
+              <Typography variant="subtitle1" className={classes.fieldTypeText}>
                 {fieldValue.values.find(sv => sv.key === 'title')!.value}
-              </strong>
+              </Typography>
             )}
             {editable
               ? fieldValue.values.filter(
