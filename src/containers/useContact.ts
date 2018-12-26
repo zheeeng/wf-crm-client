@@ -83,11 +83,12 @@ const useContact = (contactId: string) => {
   )
   const updateContactField = useCallback(
     async (field: CommonField): Promise<CommonField | null>  =>
-      putContactField(`/api/people/${contactId}/fields/${field.id || ''}`)(mapKeys(pascal2snake, field)),
+      putContactField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
     [],
   )
   const removeContactField = useCallback(
-    async (fieldId: string)  => deleteContactField(`/api/people/${contactId}/fields/${fieldId}`)(),
+    async (field: CommonField)  =>
+      deleteContactField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
     [],
   )
 

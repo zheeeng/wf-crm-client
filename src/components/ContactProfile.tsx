@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Edit from '@material-ui/icons/Edit'
-import Check from '@material-ui/icons/Check'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 import Avatar from '@material-ui/core/Avatar'
 import CreditCard from '@material-ui/icons/CreditCard'
 import Email from '@material-ui/icons/Email'
@@ -157,7 +157,7 @@ export interface Props {
   removeTag (tag: string): void
   addField<F extends CommonField = CommonField> (field: F): Promise<F | null>
   updateField<F extends CommonField = CommonField> (field: F): Promise<F | null>
-  removeField (fieldId: string): void
+  removeField <F extends CommonField = CommonField> (field: F): void
 }
 
 const ContactProfile: React.FC<Props> = React.memo(({
@@ -174,90 +174,47 @@ const ContactProfile: React.FC<Props> = React.memo(({
       event.currentTarget.value = ''
       if (newTag) addTag(newTag)
     },
-    [],
+    [addTag],
   )
 
-  const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [])
+  const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [removeTag])
 
   const handleFieldAdd = useCallback(
-    (name: string, { key, value }: FieldSegmentValue) => {
-      switch (name) {
-        case 'name': {
-          return addField<NameField>({
-            fieldType: 'name',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('name'))
-        }
-        case 'email': {
-          return addField<EmailField>({
-            fieldType: 'email',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('email'))
-        }
-        case 'phone': {
-          return addField<PhoneField>({
-            fieldType: 'phone',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('phone'))
-        }
-        case 'address': {
-          return addField<AddressField>({
-            fieldType: 'address',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('address'))
-        }
-        default: {
-          throw Error('invalid type')
-        }
-      }
-    },
-    [],
+    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue) =>
+      addField({
+        fieldType: name,
+        [key]: value,
+        priority: 80,
+      } as any).then(specificFieldToInputField(name)),
+    [addField],
   )
   const handleFieldUpdate = useCallback(
-    (name: string, { key, value }: FieldSegmentValue, id: string) => {
-      switch (name) {
-        case 'name': {
-          return updateField<NameField>({
-            id,
-            fieldType: 'name',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('name'))
-        }
-        case 'email': {
-          return updateField<EmailField>({
-            id,
-            fieldType: 'email',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('email'))
-        }
-        case 'phone': {
-          return updateField<PhoneField>({
-            id,
-            fieldType: 'phone',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('phone'))
-        }
-        case 'address': {
-          return updateField<AddressField>({
-            id,
-            fieldType: 'address',
-            [key]: value,
-            priority: 80,
-          }).then(specificFieldToInputField('address'))
-        }
-        default: {
-          throw Error('invalid field values')
-        }
-      }
-    },
-    [],
+    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, id: string) =>
+      updateField({
+        id,
+        fieldType: name,
+        [key]: value,
+        priority: 80,
+      } as any).then(specificFieldToInputField(name)),
+    [updateField],
+  )
+  const handleFieldRemove = useCallback(
+    (name: 'name' | 'email' | 'address' | 'phone', id: string) =>
+      removeField({
+        id,
+        fieldType: name,
+        priority: 0,
+      } as any),
+    [removeField],
+  )
+  const handleFieldHide = useCallback(
+    (name: 'name' | 'email' | 'address' | 'phone', id: string) =>
+      updateField({
+        id,
+        fieldType: name,
+        priority: 80,
+      } as any).then(specificFieldToInputField(name)),
+    [updateField],
   )
 
   const names = useMemo<FieldValue[]>(
@@ -282,7 +239,7 @@ const ContactProfile: React.FC<Props> = React.memo(({
       <div className={classes.profileBar}>
         <Typography variant="h6">Profile</Typography>
         <IconButton onClick={toggleEditable}>
-          {editable ? <Check /> : <Edit />}
+          {editable ? <CheckCircle /> : <Edit />}
         </IconButton>
       </div>
       <div>
@@ -324,7 +281,8 @@ const ContactProfile: React.FC<Props> = React.memo(({
           backupFieldValue={backupNameField}
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
-          onDeleteField={removeField}
+          onDeleteField={handleFieldRemove}
+          onHideField={handleFieldHide}
         />
         <ContactFieldInput
           key="email" name="email" editable={editable}
@@ -335,7 +293,8 @@ const ContactProfile: React.FC<Props> = React.memo(({
           backupFieldValue={backupEmailField}
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
-          onDeleteField={removeField}
+          onDeleteField={handleFieldRemove}
+          onHideField={handleFieldHide}
         />
         <ContactFieldInput
           key="phone" name="phone" editable={editable}
@@ -346,7 +305,8 @@ const ContactProfile: React.FC<Props> = React.memo(({
           backupFieldValue={backupPhoneField}
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
-          onDeleteField={removeField}
+          onDeleteField={handleFieldRemove}
+          onHideField={handleFieldHide}
         />
         {/* <ContactFieldInput
           key="gender" name="gender" editable={editable}
@@ -356,7 +316,8 @@ const ContactProfile: React.FC<Props> = React.memo(({
           fieldValues={gender}
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
-          onDeleteField={removeField}
+          onDeleteField={handleFieldRemove}
+          onHideField={handleFieldHide}
         /> */}
         <ContactFieldInput
           key="address" name="address" editable={editable}
@@ -367,7 +328,8 @@ const ContactProfile: React.FC<Props> = React.memo(({
           backupFieldValue={backupAddressField}
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
-          onDeleteField={removeField}
+          onDeleteField={handleFieldRemove}
+          onHideField={handleFieldHide}
         />
       </div>
     </>
