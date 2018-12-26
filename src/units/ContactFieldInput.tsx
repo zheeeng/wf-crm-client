@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -6,6 +7,9 @@ import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import RemoveCircle from '@material-ui/icons/RemoveCircle'
+import Eye from '@material-ui/icons/RemoveRedEye'
+import Reorder from '@material-ui/icons/Reorder'
+
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,7 +21,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     paddingTop: theme.spacing.unit * 2,
   },
+  fieldTextBarWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   fieldTextBar: {
+    flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing.unit,
@@ -30,14 +40,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing.unit * 2.5,
   },
   filedIconBox: {
-    width: theme.spacing.unit * 4,
-    marginLeft: theme.spacing.unit * 4,
+    display: 'flex',
+    margin: 0,
   },
   fieldControlIcon: {
-    padding: theme.spacing.unit,
+    margin: theme.spacing.unit,
+    marginRight: 0,
+    padding: 0,
+  },
+  fieldHoverShowingIcon: {
+    'visibility': 'hidden',
+    '$fieldTextBarWrapper:hover &': {
+      visibility: 'visible',
+    },
   },
   fieldTypeText: {
-    width: 128,
+    flexGrow: 0.5,
     padding: '6px 0 7px',
   },
   fieldInput: {
@@ -164,47 +182,63 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       {Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         {(hasValues ? localFieldValues : [backupFieldValue]).map((fieldValue, index) => (
-          <div className={classes.fieldTextBar} key={index}>
-            {(hasTitle && !editable) && (
-              <Typography variant="subtitle1" className={classes.fieldTypeText}>
-                {fieldValue.values.find(sv => sv.key === 'title')!.value}
-              </Typography>
-            )}
-            {editable
-              ? fieldValue.values.filter(
-                segmentValue => segmentValue.key !== 'title',
-              )
-                .map(segmentValue => (
+          <div className={classes.fieldTextBarWrapper} key={index}>
+            <div className={classes.fieldTextBar}>
+              {(hasTitle && !editable) && (
+                <Typography variant="subtitle1" className={classes.fieldTypeText}>
+                  {fieldValue.values.find(sv => sv.key === 'title')!.value}
+                </Typography>
+              )}
+              {editable
+                ? (
+                  <>
+                    {fieldValue.values.filter(segmentValue => segmentValue.key !== 'title')
+                      .map(segmentValue => (
+                        <Input
+                          key={segmentValue.key}
+                          className={classes.fieldInput}
+                          placeholder={segmentValue.key}
+                          defaultValue={segmentValue.value}
+                          onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
+                          onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
+                        />
+                      ))
+                    }
+                    {(hasTitle && editable) ? (
+                      <Input
+                        className={classes.fieldTypeText}
+                        defaultValue={fieldValue.values.find(sv => sv.key === 'title')!.value}
+                        onBlur={handleEntryUpdateByBlur('title', fieldValue.id!)}
+                        onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!)}
+                        placeholder={'label'}
+                      />
+                    ) : undefined}
+                </>
+                )
+                : (
                   <Input
-                    key={segmentValue.key}
+                    disabled={true}
+                    disableUnderline={true}
                     className={classes.fieldInput}
-                    placeholder={segmentValue.key}
-                    defaultValue={segmentValue.value}
-                    onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
-                    onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
+                    value={fieldValue.values.filter(sv => sv.key !== 'title').map(sv => sv.value).join(' ')}
                   />
-                ),
-              )
-              : (
-                <Input
-                  disabled={true}
-                  disableUnderline={true}
-                  className={classes.fieldInput}
-                  value={fieldValue.values.filter(sv => sv.key !== 'title').map(sv => sv.value).join(' ')}
-                />
-              )
-            }
-            {(hasTitle && editable) ? (
-              <Input
-                className={classes.fieldTypeText}
-                defaultValue={fieldValue.values.find(sv => sv.key === 'title')!.value}
-                onBlur={handleEntryUpdateByBlur('title', fieldValue.id!)}
-                onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!)}
-                placeholder={'label'}
-              />
-            ) : undefined}
+                )
+              }
+            </div>
             {editable && (
               <div className={classes.filedIconBox}>
+                <IconButton
+                  className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+                  onClick={handleAddEntry}
+                >
+                  <Eye color="primary" />
+                </IconButton>
+                <IconButton
+                  className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+                  onClick={handleAddEntry}
+                >
+                  <Reorder color="disabled" />
+                </IconButton>
                 {expandable && (index === 0
                   ? (
                     <IconButton className={classes.fieldControlIcon} onClick={handleAddEntry}>
@@ -213,7 +247,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                   )
                   : (
                     <IconButton className={classes.fieldControlIcon} onClick={handleEntryDelete(fieldValue.id!)}>
-                      <RemoveCircle color="primary" />
+                      <RemoveCircle color="disabled" />
                     </IconButton>
                   )
                 )}
