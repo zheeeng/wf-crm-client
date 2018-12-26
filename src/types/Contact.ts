@@ -36,6 +36,7 @@ export interface ContactField {
   fieldType: string,
   id?: string
   priority: number
+  title?: string
 }
 
 export interface NameField extends ContactField {
@@ -43,18 +44,15 @@ export interface NameField extends ContactField {
   firstName?: string
   middleName?: string
   lastName?: string
-  title: string
 }
 
 export interface EmailField extends ContactField {
   fieldType: 'email',
   email?: string
-  title: string
 }
 export interface PhoneField extends ContactField {
   fieldType: 'phone',
   number?: string
-  title: string
 }
 
 export interface AddressField extends ContactField {
@@ -65,7 +63,6 @@ export interface AddressField extends ContactField {
   state?: string
   zipcode?: string
   country?: string
-  title: string
 }
 
 export type CommonField = NameField | EmailField | PhoneField | AddressField

@@ -5,8 +5,6 @@ import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import AddCircle from '@material-ui/icons/AddCircle'
 import cssTips from '~src/utils/cssTips'
-import pipe from 'ramda/es/pipe'
-import head from 'ramda/es/head'
 
 const useStyles = makeStyles((theme: Theme) => ({
   fieldBar: {
@@ -49,9 +47,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+export interface FieldSegmentValue { key: string, value: string, fieldType: string }
+
 export interface FieldValue {
-  value: string
-  title: string
+  values: FieldSegmentValue[]
   id?: string
 }
 
@@ -59,18 +58,18 @@ export interface Props {
   Icon?: React.ComponentType<{ className?: string, color?: any }>,
   name: string,
   fieldValues: FieldValue[],
+  backupFieldValue: FieldValue,
   expandable: boolean,
   hasTitle: boolean,
   editable?: boolean,
-  onAddField (name: string, value: FieldValue): Promise<FieldValue | null>,
-  onUpdateField (name: string, value: FieldValue): Promise<FieldValue | null>
+  onAddField (name: string, value: FieldSegmentValue): Promise<FieldValue | null>,
+  onUpdateField (name: string, value: FieldSegmentValue, id: string): Promise<FieldValue | null>
   onDeleteField (id: string): void
-  placeholder?: string,
-  titlePlaceholder?: string,
 }
 
 const ContactFieldInput: React.FC<Props> = React.memo(
-  ({ Icon, name, fieldValues, editable = false, placeholder, titlePlaceholder, hasTitle, expandable,
+  ({ Icon, name, fieldValues, backupFieldValue,
+     editable = false, hasTitle, expandable,
      onAddField, onUpdateField, onDeleteField }) => {
   const classes = useStyles({})
 
@@ -87,91 +86,61 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
 
   const addField = useCallback(
-    async (value: string, title: string) => {
-      const field = await onAddField(
-        name,
-        { value, title },
-      )
-
-      console.log(field)
+    async (segmentValue: FieldSegmentValue) => {
+      const field = await onAddField(name, segmentValue)
     },
     [onAddField],
   )
   const updateField = useCallback(
-    async (value: string, title: string, id?: string) => {
-      const field = await onUpdateField(
-        name,
-        { value, title, id },
-      )
-
-      console.log(field)
+    async (segmentValue: FieldSegmentValue, id: string) => {
+      const field = await onUpdateField(name, segmentValue, id)
     },
     [onUpdateField],
   )
 
   const handleAddEntry = useCallback(
-    () => {
-      addField('', '')
-    },
+    () => { addField({ key: 'title', value: '', fieldType: name }) },
     [localFieldValues, name],
   )
 
   const handleEntryUpdateByBlur = useCallback(
-    (type: 'changeValue' | 'changeTitle', index: number) => (event: React.FocusEvent<HTMLInputElement>) => {
-      const inputValue = event.target.value.trim()
+    (key: string, index: number) =>
+      (event: React.FocusEvent<HTMLInputElement>) => {
+        const value = event.target.value.trim()
 
-      if (!inputValue) return
+        if (!value) return
 
-      const localFieldValue = localFieldValues[index]
-
-      if (hasValues) {
-        if (type === 'changeValue') {
-          updateField(inputValue, localFieldValue.title, localFieldValue.id)
+        if (hasValues) {
+          updateField({ key, value, fieldType: name }, localFieldValues[index].id!)
         } else {
-          updateField(localFieldValue.value, inputValue, localFieldValue.id)
+          addField({ key, value, fieldType: name })
         }
-      } else {
-        if (type === 'changeValue') {
-          addField(inputValue, localFieldValue.title)
-        } else {
-          addField(localFieldValue.value, inputValue)
-        }
-      }
-
-    },
-    [localFieldValues],
+      },
+    [localFieldValues, name],
   )
   const handleEntryUpdateByKeydown = useCallback(
-    (type: 'changeValue' | 'changeTitle', index: number) => async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.keyCode !== 13) return
-      const inputValue = event.currentTarget.value.trim()
-      event.currentTarget.value = ''
+    (key: string, index: number) =>
+      async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.keyCode !== 13) return
+        const value = event.currentTarget.value.trim()
+        event.currentTarget.value = ''
 
-      if (!inputValue) return
+        if (!value) return
 
-      const localFieldValue = localFieldValues[index]
-
-      if (hasValues) {
-        if (type === 'changeValue') {
-          updateField(inputValue, localFieldValue.title, localFieldValue.id)
+        if (hasValues) {
+          updateField({ key, value, fieldType: name }, localFieldValues[index].id!)
         } else {
-          updateField(localFieldValue.value, inputValue, localFieldValue.id)
+          addField({ key, value, fieldType: name })
         }
-      } else {
-        if (type === 'changeValue') {
-          addField(inputValue, localFieldValue.title)
-        } else {
-          addField(localFieldValue.value, inputValue)
-        }
-      }
-    },
-    [localFieldValues],
+      },
+    [localFieldValues, name],
   )
+
   const handleEntryDelete = useCallback(
     (index: number) => async () => {
       const localFieldValue = localFieldValues[index]
 
-      await onDeleteField(localFieldValue.id || '')
+      await onDeleteField(localFieldValue.id!)
     },
     [localFieldValues],
   )
@@ -180,34 +149,49 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     <div className={classes.fieldBar}>
       {Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
-        {(hasValues ? localFieldValues : [{ value: '', title: '' }]).map((pair, index) => (
+        {(hasValues ? localFieldValues : [backupFieldValue]).map((fieldValue, index, entries) => (
           <div className={classes.fieldTextBar} key={index}>
-            <Input
-              disabled={!editable}
-              disableUnderline={!editable}
-              className={classes.fieldInput}
-              placeholder={placeholder}
-              defaultValue={pair.value}
-              onBlur={handleEntryUpdateByBlur('changeValue', index)}
-              onKeyDown={handleEntryUpdateByKeydown('changeValue', index)}
-              startAdornment={
-                (!hasTitle || editable)
-                  ? undefined
-                  : <strong className={classes.fieldTypeText}>{pair.title}</strong>
-              }
-            />
+            {(hasTitle && !editable) && (
+              <strong className={classes.fieldTypeText}>
+                {fieldValue.values.find(sv => sv.key === 'title')!.value}
+              </strong>
+            )}
+            {editable
+              ? fieldValue.values.filter(
+                segmentValue => segmentValue.key !== 'title',
+              )
+                .map(segmentValue => (
+                  <Input
+                    key={segmentValue.key}
+                    className={classes.fieldInput}
+                    placeholder={segmentValue.key}
+                    defaultValue={segmentValue.value}
+                    onBlur={handleEntryUpdateByBlur(segmentValue.value, index)}
+                    onKeyDown={handleEntryUpdateByKeydown(segmentValue.value, index)}
+                  />
+                ),
+              )
+              : (
+                <Input
+                  disabled={true}
+                  disableUnderline={true}
+                  className={classes.fieldInput}
+                  value={fieldValue.values.filter(sv => sv.key !== 'title').map(sv => sv.value).join(' ')}
+                />
+              )
+            }
             {(hasTitle && editable) ? (
               <Input
                 className={classes.fieldTypeText}
-                value={pair.title}
-                onBlur={handleEntryUpdateByBlur('changeTitle', index)}
-                onKeyDown={handleEntryUpdateByKeydown('changeTitle', index)}
-                placeholder={titlePlaceholder}
+                value={fieldValue.values.find(sv => sv.key === 'title')!.value}
+                onBlur={handleEntryUpdateByBlur('title', index)}
+                onKeyDown={handleEntryUpdateByKeydown('title', index)}
+                placeholder={'label'}
               />
             ) : undefined}
             {editable && (
               <div className={classes.filedIconBox}>
-                {expandable && (
+                {expandable && (index === entries.length - 1) &&  (
                   <IconButton className={classes.fieldAddIcon} onClick={handleAddEntry}>
                     <AddCircle color="primary" />
                   </IconButton>
