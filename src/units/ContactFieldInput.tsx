@@ -13,12 +13,21 @@ import Reorder from '@material-ui/icons/Reorder'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  hidden: {
+    display: 'none',
+  },
+  disabled: {
+    'cursor': 'not-allowed',
+    '& *': {
+      cursor: 'not-allowed',
+    },
+  },
   fieldBar: {
     display: 'flex',
     marginBottom: theme.spacing.unit * 2,
   },
   fieldTextWrapper: {
-    flexGrow: 1,
+    flex: 1,
     paddingTop: theme.spacing.unit * 2,
   },
   fieldTextBarWrapper: {
@@ -27,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
   },
   fieldTextBar: {
-    flexGrow: 1,
+    flex: 1,
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing.unit,
@@ -55,11 +64,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   fieldTypeText: {
-    flexGrow: 0.5,
+    flex: 0.5,
     padding: '6px 0 7px',
   },
   fieldInput: {
-    flexGrow: 1,
+    flex: 1,
     padding: '6px 0 7px',
   },
   addTagIcon: {
@@ -78,6 +87,7 @@ const getEmptyFieldSegmentValue = (fieldType: string): FieldSegmentValue => ({
 export interface FieldValue {
   values: FieldSegmentValue[]
   id?: string
+  priority: number
 }
 
 export interface Props {
@@ -90,14 +100,14 @@ export interface Props {
   editable?: boolean,
   onAddField (name: string, value: FieldSegmentValue): Promise<FieldValue | null>,
   onUpdateField (name: string, value: FieldSegmentValue, id: string): Promise<FieldValue | null>
-  onDeleteField (name: string, id: string): void
-  onHideField (name: string, id: string): void
+  onDeleteField (name: string, id: string): Promise<void>
+  onToggleHideField (name: string, priority: number, id: string): Promise<FieldValue | null>
 }
 
 const ContactFieldInput: React.FC<Props> = React.memo(
   ({ Icon, name, fieldValues, backupFieldValue,
      editable = false, hasTitle, expandable,
-     onAddField, onUpdateField, onDeleteField, onHideField }) => {
+     onAddField, onUpdateField, onDeleteField, onToggleHideField }) => {
 
   const classes = useStyles({})
 
@@ -118,14 +128,14 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const field = await onAddField(name, segmentValue)
       if (field) updateLocalFieldValues(values => values.concat(field))
     },
-    [onAddField],
+    [onAddField, name],
   )
   const updateField = useCallback(
     async (segmentValue: FieldSegmentValue, id: string) => {
       const field = await onUpdateField(name, segmentValue, id)
       if (field) updateLocalFieldValues(values => values.map(v => v.id === id ? field : v))
     },
-    [onUpdateField],
+    [onUpdateField, name],
   )
   const removeField = useCallback(
     async (id: string) => {
@@ -133,6 +143,25 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       updateLocalFieldValues(values => values.filter(v => v.id !== id))
     },
     [onDeleteField, name],
+  )
+  const toggleHideField = useCallback(
+    async (id: string) => {
+      const priority = localFieldValues.find(v => v.id === id)!.priority
+      const newPriority = priority !== 0
+        ? 0
+        : Math.max(
+          Math.min.apply(null, localFieldValues.map(v => v.priority).filter(p => p)) - 1,
+          1,
+        )
+      const field = await onToggleHideField(name, newPriority, id)
+      if (field) {
+        updateLocalFieldValues(values => values
+          .map(v => v.id === id ? field : v)
+          .sort((p, c) => c.priority - p.priority),
+        )
+      }
+    },
+    [onUpdateField, name, localFieldValues],
   )
 
   const handleAddEntry = useCallback(
@@ -176,14 +205,27 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     (id: string) => () => removeField(id),
     [localFieldValues],
   )
+  const handleEntryToggleHide = useCallback(
+    (id: string) => () => toggleHideField(id),
+    [localFieldValues],
+  )
 
   return (
     <div className={classes.fieldBar}>
       {Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         {(hasValues ? localFieldValues : [backupFieldValue]).map((fieldValue, index) => (
-          <div className={classes.fieldTextBarWrapper} key={index}>
-            <div className={classes.fieldTextBar}>
+          <div
+            className={classnames(
+              classes.fieldTextBarWrapper,
+              !editable && fieldValue.priority === 0 && classes.hidden,
+            )}
+            key={index}
+          >
+            <div className={classnames(
+              classes.fieldTextBar,
+              editable && fieldValue.priority === 0 && classes.disabled,
+            )}>
               {(hasTitle && !editable) && (
                 <Typography variant="subtitle1" className={classes.fieldTypeText}>
                   {fieldValue.values.find(sv => sv.key === 'title')!.value}
@@ -201,16 +243,18 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                           defaultValue={segmentValue.value}
                           onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
                           onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
+                          disabled={fieldValue.priority === 0}
                         />
                       ))
                     }
-                    {(hasTitle && editable) ? (
+                    {hasTitle ? (
                       <Input
                         className={classes.fieldTypeText}
                         defaultValue={fieldValue.values.find(sv => sv.key === 'title')!.value}
                         onBlur={handleEntryUpdateByBlur('title', fieldValue.id!)}
                         onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!)}
                         placeholder={'label'}
+                        disabled={fieldValue.priority === 0}
                       />
                     ) : undefined}
                 </>
@@ -229,13 +273,12 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               <div className={classes.filedIconBox}>
                 <IconButton
                   className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                  onClick={handleAddEntry}
+                  onClick={handleEntryToggleHide(fieldValue.id!)}
                 >
-                  <Eye color="primary" />
+                  <Eye color={fieldValue.priority === 0 ? 'primary' : 'disabled'} />
                 </IconButton>
                 <IconButton
                   className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                  onClick={handleAddEntry}
                 >
                   <Reorder color="disabled" />
                 </IconButton>
