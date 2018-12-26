@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     width: 408,
     maxHeight: '50%',
+    [theme.breakpoints.down('lg')]: {
+      width: 320,
+    },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -61,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     width: 408,
     maxHeight: '50%',
+    [theme.breakpoints.down('lg')]: {
+      width: 320,
+    },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },

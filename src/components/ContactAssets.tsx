@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
   },
   entryTime: {
-    width: 160,
+    width: 128,
     textAlign: 'right',
     fontSize: '0.75rem',
   },
