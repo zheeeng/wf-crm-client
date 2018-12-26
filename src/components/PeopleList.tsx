@@ -210,7 +210,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       </TableCell>
       <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
       <TableCell className={classes.w25Cell}>{contact.info.address}</TableCell>
-      <TableCell numeric>{contact.info.phone}</TableCell>
+      <TableCell align="left">{contact.info.phone}</TableCell>
     </>
   )
 
