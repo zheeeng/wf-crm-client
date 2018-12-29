@@ -13,7 +13,7 @@ export const getQuery = (query: object): string => {
   return search ? `?${search}` : search
 }
 
-export default async function fetchData<T = any> (url: string, option?: Option): Promise<T | null> {
+export default async function fetchData<T = any> (url: string, option?: Option): Promise<T> {
   const fetchOption = Object.assign({ method: 'GET' }, option)
 
   const Authorization = window.localStorage.getItem('@token@') || ''
@@ -37,7 +37,11 @@ export default async function fetchData<T = any> (url: string, option?: Option):
 
   const response = await fetch(`${requestUrl}${query}`, { method, headers, ...(body ? { body } : {}) })
 
-  if (!response.ok) return null
+  if (!response.ok) {
+    const errorMessage = await response.json()
+
+    throw errorMessage
+  }
 
   const data = await response.json()
 

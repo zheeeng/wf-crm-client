@@ -100,7 +100,7 @@ export interface Props {
   editable?: boolean,
   onAddField (name: string, value: FieldSegmentValue): Promise<FieldValue | null>,
   onUpdateField (name: string, value: FieldSegmentValue, id: string): Promise<FieldValue | null>
-  onDeleteField (name: string, id: string): Promise<void>
+  onDeleteField (name: string, id: string): Promise<string | null>
   onToggleHideField (name: string, priority: number, id: string): Promise<FieldValue | null>
 }
 
@@ -141,8 +141,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   const removeField = useCallback(
     async (id: string) => {
       if (!id) return
-      await onDeleteField(name, id)
-      updateLocalFieldValues(values => values.filter(v => v.id !== id))
+      const removedId = await onDeleteField(name, id)
+      if (removedId) updateLocalFieldValues(values => values.filter(v => v.id !== removedId))
     },
     [onDeleteField, name],
   )

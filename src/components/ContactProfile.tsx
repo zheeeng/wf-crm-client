@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -15,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 
+import NotificationContainer from '~src/containers/Notification'
 import useContact from '~src/containers/useContact'
 import ContactFieldInput, { FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
@@ -162,12 +163,33 @@ export interface Props {
 }
 
 const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
+  const { notify } = useContext(NotificationContainer.Context)
+
   const {
     tags, addTag, removeTag,
     addField, addFieldError,
     updateField, updateFieldError,
     removeField, removeFieldError,
   } = useContact(contactId)
+
+  useEffect(
+    () => {
+      addFieldError && notify(addFieldError.message)
+    },
+    [addFieldError],
+  )
+  useEffect(
+    () => {
+      updateFieldError && notify(updateFieldError.message)
+    },
+    [updateFieldError],
+  )
+  useEffect(
+    () => {
+      removeFieldError && notify(removeFieldError.message)
+    },
+    [removeFieldError],
+  )
 
   const { value: editable, toggle: toggleEditable } = useToggle(false)
   const classes = useStyles({})
@@ -212,6 +234,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
       } as any),
     [removeField],
   )
+
   const handleFieldHide = useCallback(
     (name: 'name' | 'email' | 'address' | 'phone', priority: number, id: string) =>
       updateField({
