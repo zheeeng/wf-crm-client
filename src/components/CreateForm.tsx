@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
-import notificationStore from '~src/services/notification'
+import NotificationContainer from '~src/containers/Notification'
 import { ContactAPI } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,7 +46,7 @@ export interface Props {
 const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
   const classes = useStyles({})
 
-  const notificationContext = useContext(notificationStore.Context)
+  const { notify } = useContext(NotificationContainer.Context)
 
   const fieldValues = useRef<{ [key: string]: string }>({})
 
@@ -60,7 +60,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
   const handleOkClick = useCallback(
     () => {
       (onOk ? onOk(fieldValues.current) : Promise.resolve()).then(() => {
-        notificationContext.handleOpen(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+        notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
       })
     },
     [],

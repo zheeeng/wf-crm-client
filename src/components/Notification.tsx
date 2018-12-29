@@ -1,26 +1,22 @@
 import React, { useContext, useCallback } from 'react'
-import { WithContext } from '@roundation/store'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
+import NotificationContainer from '~src/containers/Notification'
 
-import store from '~src/services/notification'
-
-export interface Props extends WithContext<typeof store, 'notificationStore'> {
+export interface Props {
 }
 
 const Notification: React.FC = () => {
-  const notificationContext = useContext(store.Context)
+  const { message, dismiss } = useContext(NotificationContainer.Context)
 
   const handleClose = useCallback(
     (_: any, reason?: string) => {
-      if (reason === 'clickaway') {
-        return
-      }
+      if (reason === 'clickaway') return
 
-      notificationContext.handleClose()
+      dismiss()
     },
-    [notificationContext.handleClose],
+    [dismiss],
   )
 
   return (
@@ -29,10 +25,10 @@ const Notification: React.FC = () => {
         vertical: 'bottom',
         horizontal: 'left',
       }}
-      open={!!notificationContext.message}
+      open={!!message}
       autoHideDuration={6000}
       onClose={handleClose}
-      message={notificationContext.message}
+      message={message}
       action={[
         (
           <IconButton
