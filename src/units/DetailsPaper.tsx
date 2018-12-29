@@ -74,35 +74,37 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  header: React.ReactNode
+  renderHeader: () => React.ReactNode
   children: React.ReactNode
-  rightPart1: React.ReactNode
-  rightPart2: React.ReactNode
+  renderRightPart1: () => React.ReactNode
+  renderRightPart2: () => React.ReactNode
 }
 
-const DetailsPaper: React.FC<Props> = ({ header, children, rightPart1, rightPart2 }) => {
-  const classes = useStyles({})
+const DetailsPaper: React.FC<Props> = React.memo(
+  ({ renderHeader, children, renderRightPart1, renderRightPart2 }) => {
+    const classes = useStyles({})
 
-  return (
-    <main className={classes.main}>
-      <header className={classes.header}>
-        {header}
-      </header>
-      <div className={classes.content}>
-        <section className={classes.leftSider}>
-          {children}
-        </section>
-        <aside className={classes.rightSider}>
-          <section className={classes.rightPart1}>
-            {rightPart1}
+    return (
+      <main className={classes.main}>
+        <header className={classes.header}>
+          {renderHeader()}
+        </header>
+        <div className={classes.content}>
+          <section className={classes.leftSider}>
+            {children}
           </section>
-          <section className={classes.rightPart2}>
-            {rightPart2}
-          </section>
-        </aside>
-      </div>
-    </main>
-  )
-}
+          <aside className={classes.rightSider}>
+            <section className={classes.rightPart1}>
+              {renderRightPart1()}
+            </section>
+            <section className={classes.rightPart2}>
+              {renderRightPart2()}
+            </section>
+          </aside>
+        </div>
+      </main>
+    )
+  },
+)
 
 export default DetailsPaper

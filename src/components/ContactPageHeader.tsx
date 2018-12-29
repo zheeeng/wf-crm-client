@@ -17,22 +17,35 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
+  onGoBack: React.MouseEventHandler
+  onGoPrevious: React.MouseEventHandler
+  onGoNext: React.MouseEventHandler
   onDelete: React.MouseEventHandler
+  previousDisabled: boolean,
+  nextDisabled: boolean,
 }
 
-const ContactPageHeader: React.FC<Props> = React.memo(({ onDelete }) => {
-  const classes = useStyles({})
+const ContactPageHeader: React.FC<Props> = React.memo(
+  ({ onGoBack, onGoPrevious, onGoNext,  onDelete, previousDisabled, nextDisabled }) => {
+    const classes = useStyles({})
 
-  return (
-    <>
-      <div className={classes.left}>
-        <NavigateBefore />
-        <KeyboardArrowDown />
-        <KeyboardArrowUp />
-      </div>
-      <Delete className={classes.delete} onClick={onDelete} />
-    </>
-  )
-})
+    return (
+      <>
+        <div className={classes.left}>
+          <NavigateBefore onClick={onGoBack} />
+          <KeyboardArrowDown
+            color={previousDisabled ? 'disabled' : 'primary'}
+            onClick={previousDisabled ? undefined : onGoPrevious}
+          />
+          <KeyboardArrowUp
+            color={nextDisabled ? 'disabled' : 'primary'}
+            onClick={nextDisabled ? undefined : onGoNext}
+          />
+        </div>
+        <Delete className={classes.delete} onClick={onDelete} />
+      </>
+    )
+  },
+)
 
 export default ContactPageHeader

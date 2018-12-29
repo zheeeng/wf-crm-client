@@ -5,6 +5,7 @@ import PeopleList from '~src/components/PeopleList'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
 export interface Props extends ComponentProps {}
+
 const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const { pagination, contacts, fetchContacts, addContact, starContact, addMutation, starMutation } = useContacts()
 
