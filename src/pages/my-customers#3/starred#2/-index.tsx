@@ -7,7 +7,7 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 export interface Props extends ComponentProps {}
 
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
-  const { pagination, contacts, fetchContacts, addContact, starContact } = useContext(ContactsContainer.Context)
+  const { pagination, fetchContacts } = useContext(ContactsContainer.Context)
 
   const searchContacts = useCallback(
     ({page = 0, size = 30, searchTerm = '' }) => fetchContacts({ page: page + 1, size, searchTerm, favourite: true }),
@@ -21,11 +21,8 @@ const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
       page={pagination.page - 1}
       size={pagination.size}
       total={pagination.total}
-      onStar={starContact}
       onSearch={searchContacts}
-      contacts={contacts}
       navigateToProfile={navigateToProfile}
-      onSubmitContact={addContact}
     />
   )
 })

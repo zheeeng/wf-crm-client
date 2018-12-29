@@ -6,11 +6,11 @@ export interface Props {
 }
 
 const Content: React.FC<Props> = React.memo(({ group, children }) => {
-  const { fetchContacts, addMutation, starMutation } = useContext(ContactsContainer.Context)
+  const { fetchContacts, addMutation, starMutation, removeMutation } = useContext(ContactsContainer.Context)
 
   const refresh = useCallback(() => fetchContacts({ page: 1, size: 30, groupId: group }), [group])
 
-  useEffect(() => { refresh() }, [addMutation, starMutation, group])
+  useEffect(() => { refresh() }, [addMutation, starMutation, removeMutation, group])
 
   return <>{children}</>
 })

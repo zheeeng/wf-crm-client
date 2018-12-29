@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useContext } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import classNames from 'classnames'
@@ -24,6 +24,8 @@ import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import Delete from '@material-ui/icons/Delete'
 
+import NotificationContainer from '~src/containers/Notification'
+import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
@@ -86,19 +88,44 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  contacts: Contact[]
   page: number
   size: number
   total: number
-  onStar: (docid: string, star: boolean) => void
   onSearch: (search: { page: number, size: number, searchTerm: string}) => void
   navigateToProfile: (id: string) => void
-  onSubmitContact?: (contact: ContactAPI) => void
 }
 
 const PeopleList: React.FC<Props> = React.memo(({
-  contacts, total, page, size, onSearch, navigateToProfile, onStar, onSubmitContact,
+  total, page, size, onSearch, navigateToProfile,
 }) => {
+  const { notify } = useContext(NotificationContainer.Context)
+  const {
+    contacts,
+    addContact, addContactError,
+    starContact, starContactError,
+    removeContacts, removeContactError,
+  }
+  = useContext(ContactsContainer.Context)
+
+  useEffect(
+    () => {
+      addContactError && notify(addContactError.message)
+    },
+    [addContactError],
+  )
+  useEffect(
+    () => {
+      starContactError && notify(starContactError.message)
+    },
+    [starContactError],
+  )
+  useEffect(
+    () => {
+      removeContactError && notify(removeContactError.toString())
+    },
+    [removeContactError],
+  )
+
   const classes = useStyles({})
   const [popover, setPopover] = useState({
     anchorEl: null as HTMLElement | null,
@@ -174,9 +201,9 @@ const PeopleList: React.FC<Props> = React.memo(({
   const handleStarClick = useCallback(
     (id: string, star: boolean) => (e: React.SyntheticEvent) => {
       e.stopPropagation()
-      onStar(id, star)
+      starContact(id, star)
     },
-    [onStar],
+    [starContact],
   )
 
   const changeCreateFormOpened = useCallback<{
@@ -192,15 +219,22 @@ const PeopleList: React.FC<Props> = React.memo(({
     [createForm],
   )
 
-  const submitNewContact = useCallback(
+  const addNewContact = useCallback(
     async (contact: object) => {
-      if (onSubmitContact) {
-        onSubmitContact(contact as ContactAPI)
+      if (addContact) {
+        addContact(contact as ContactAPI)
         search()
         changeCreateFormOpened(false)()
       }
     },
-    [onSubmitContact, search, changeCreateFormOpened],
+    [addContact, search, changeCreateFormOpened],
+  )
+
+  const handleContactsRemove = useCallback(
+    async () => {
+      removeContacts(checked)
+    },
+    [checked],
   )
 
   const renderPCLayoutTableRows = (contact: Contact) => (
@@ -331,7 +365,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseEnter={handlePopoverToggle(true, 'delete')}
         onMouseLeave={handlePopoverToggle(false)}
       >
-        <Delete />
+        <Delete onClick={handleContactsRemove} />
       </IconButton>
       <Popover
         className={classes.popover}
@@ -369,7 +403,7 @@ const PeopleList: React.FC<Props> = React.memo(({
           option={createForm.option}
           open={createForm.opened}
           onClose={changeCreateFormOpened(false)}
-          onOk={submitNewContact}
+          onOk={addNewContact}
         />
         <div className={classes.head}>
           <Button

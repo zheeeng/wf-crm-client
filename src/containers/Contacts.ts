@@ -1,8 +1,8 @@
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactAPI, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
-import { useGet, usePost, usePut } from '~src/hooks/useRequest'
+import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useDepMemo from '~src/hooks/useDepMemo'
 import useInfoCallback from '~src/hooks/useInfoCallback'
 import pipe from 'ramda/es/pipe'
@@ -48,10 +48,11 @@ const convertContacts = pipe<
 const Contacts = createContainer(() => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
 
-  const { data: contactsData, request: getContacts } = useGet<ContactsResponse>()
+  const { data: contactsData, request: getContacts, error: getContactsError } = useGet<ContactsResponse>()
+  const { request: deleteContact, error: deleteContactError } = useDelete()
 
-  const { request: postContact } = usePost()
-  const { request: putContact } = usePut()
+  const { request: postContact, error: postContactError } = usePost()
+  const { request: putContact, error: putContactError } = usePut()
 
   const pagination = useDepMemo(convertPagination, [contactsData])
   const contacts = useDepMemo(convertContacts, [contactsData])
@@ -79,12 +80,37 @@ const Contacts = createContainer(() => {
     [],
   )
 
+  const [removeContacts, removeMutation] = useInfoCallback(
+    async (contactIds: string[]) => {
+      await contactIds.reduce(
+        async (p, id) => {
+          await p,
+          await deleteContact(`/api/people/${id}`)()
+        },
+        Promise.resolve(),
+      )
+      refreshCounts()
+    },
+    [],
+  )
+
+  const removeContactError = useMemo(
+    () => {
+      // tslint:disable-next-line:no-construct
+      if (deleteContactError) return new String(deleteContactError.message)
+
+      return null
+    },
+    [deleteContactError],
+  )
+
   return {
     pagination,
     contacts,
-    fetchContacts,
-    addContact, addMutation,
-    starContact, starMutation,
+    fetchContacts, fetchContactsError: getContactsError,
+    addContact, addMutation, addContactError: postContactError,
+    starContact, starMutation, starContactError: putContactError,
+    removeContacts, removeMutation, removeContactError,
   }
 })
 

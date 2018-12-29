@@ -9,8 +9,7 @@ export interface Props extends ComponentProps {
 }
 
 const GroupIndex: React.FC<Props> = React.memo(({ navigate, group }) => {
-  const { pagination, contacts, fetchContacts, addContact, starContact } = useContext(ContactsContainer.Context)
-
+  const { pagination, fetchContacts } = useContext(ContactsContainer.Context)
   const searchContacts = useCallback(
     ({page = 0, size = 30, searchTerm = ''}) => fetchContacts({ page: page + 1, size, searchTerm, groupId: group }),
     [group],
@@ -23,11 +22,8 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, group }) => {
       page={pagination.page - 1}
       size={pagination.size}
       total={pagination.total}
-      onStar={starContact}
       onSearch={searchContacts}
-      contacts={contacts}
       navigateToProfile={navigateToProfile}
-      onSubmitContact={addContact}
     />
   )
 })
