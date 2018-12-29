@@ -14,9 +14,11 @@ import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
+
+import useContact from '~src/containers/useContact'
 import ContactFieldInput, { FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
-import { Contact, CommonField, NameField, PhoneField, AddressField, EmailField } from '~src/types/Contact'
+import { Contact, NameField, PhoneField, AddressField, EmailField } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   profileBar: {
@@ -156,18 +158,17 @@ const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'ph
 
 export interface Props {
   contact: Contact,
-  tags: string[],
-  addTag (tag: string): void
-  removeTag (tag: string): void
-  addField<F extends CommonField = CommonField> (field: F): Promise<F | null>
-  updateField<F extends CommonField = CommonField> (field: F): Promise<F | null>
-  removeField <F extends CommonField = CommonField> (field: F): Promise<void>
+  contactId: string,
 }
 
-const ContactProfile: React.FC<Props> = React.memo(({
-  contact, tags, addTag, removeTag,
-  addField, updateField, removeField,
-}) => {
+const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
+  const {
+    tags, addTag, removeTag,
+    addField, addFieldError,
+    updateField, updateFieldError,
+    removeField, removeFieldError,
+  } = useContact(contactId)
+
   const { value: editable, toggle: toggleEditable } = useToggle(false)
   const classes = useStyles({})
 
@@ -312,7 +313,7 @@ const ContactProfile: React.FC<Props> = React.memo(({
           onDeleteField={handleFieldRemove}
           onToggleHideField={handleFieldHide}
         />
-        {/* <ContactFieldInput
+        {/* <FieldInput
           key="gender" name="gender" editable={editable}
           Icon={People}
           hasTitle={false}

@@ -29,12 +29,12 @@ const convertContact = pipe<
 const useContact = (contactId: string) => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
   const { data: freshContactData, request: getContact } = useGet<PeopleAPI>()
-  const { data: updatedContactData, request: putContact } = usePut()
-  const { data: contactFields, request: getContactFields } = useGet()
-  const { request: postContactField } = usePost<CommonField>()
-  const { request: putContactField } = usePut<CommonField>()
-  const { request: deleteContactField } = useDelete()
-  const { request: deleteContact } = useDelete()
+  const { data: updatedContactData, request: putContact, error: putContactError } = usePut()
+  const { request: getFields, error: getFieldsError } = useGet()
+  const { request: postField, error: postFieldError } = usePost<CommonField>()
+  const { request: putField, error: putFieldError } = usePut<CommonField>()
+  const { request: deleteField, error: deleteFieldError } = useDelete()
+  const { request: deleteContact, error: deleteContactError } = useDelete()
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
 
@@ -72,29 +72,29 @@ const useContact = (contactId: string) => {
     async (cont: Contact)  => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
     [],
   )
-  const fetchContactFields = useCallback(
-    async () => getContactFields(`/api/people/${contactId}/fields`)({}),
+  const fetchFields = useCallback(
+    async () => getFields(`/api/people/${contactId}/fields`)({}),
     [],
   )
-  const addContactField = useCallback(
+  const addField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
-      const result = await postContactField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field))
+      const result = await postField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field))
 
       return mapKeys(snake2pascal, result!)
     },
     [],
   )
-  const updateContactField = useCallback(
+  const updateField = useCallback(
     async (field: CommonField): Promise<CommonField | null>  => {
-      const result = await putContactField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
+      const result = await putField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
 
       return mapKeys(snake2pascal, result!)
     },
     [],
   )
-  const removeContactField = useCallback(
+  const removeField = useCallback(
     async (field: CommonField)  =>
-      deleteContactField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
+      deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
     [],
   )
 
@@ -127,11 +127,13 @@ const useContact = (contactId: string) => {
   return {
     contact,
     fetchContact,
-    updateContact,
-    fetchContactFields,
-    addContactField, updateContactField, removeContactField,
+    updateContact, updateContactError: putContactError,
+    fetchFields, fetchFieldsError: getFieldsError,
+    addField, addFieldError: postFieldError,
+    updateField, updateFieldError: putFieldError,
+    removeField, removeFieldError: deleteFieldError,
     starContact, starMutation,
-    removeContact, removeMutation,
+    removeContact, removeMutation, removeContactError: deleteContactError,
     tags, addTag, removeTag,
   }
 }
