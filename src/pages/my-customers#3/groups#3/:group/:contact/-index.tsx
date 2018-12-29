@@ -9,6 +9,7 @@ export interface Props extends ComponentProps {
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, location, contact }) => (
     <Contact
+      key={contact}
       contactId={contact}
       navigate={navigate!}
       path={location!.pathname}

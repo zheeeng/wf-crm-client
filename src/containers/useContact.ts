@@ -59,11 +59,13 @@ const useContact = (contactId: string) => {
 
   const fetchContact = useCallback(
     async () => {
+      if (!contactId) return
+
       await getContact(`/api/people/${contactId}`)({
         embeds: ['all'].join(','),
       })
     },
-    [],
+    [contactId],
   )
 
   useEffect(() => { fetchContact() }, [contactId])

@@ -37,8 +37,9 @@ const ContactIndex: React.FC<Props> = React.memo(
     const previousContactId = useMemo(
       () => {
         const target = contacts.findIndex(c => c.id === contactId)
+        const calculatedIndex = Math.max(target - 1, 0)
 
-        return Math.max(target - 1, 0)
+        return calculatedIndex === 0 ? null : contacts[calculatedIndex].id
       },
       [contactId, contacts],
     )
@@ -47,22 +48,25 @@ const ContactIndex: React.FC<Props> = React.memo(
       () => {
         const len = contacts.length
         const target = contacts.findIndex(c => c.id === contactId)
+        const calculatedIndex = Math.min(target + 1, len - 1)
 
-        return Math.min(target + 1, len - 1)
+        return calculatedIndex === len - 1 ? null : contacts[calculatedIndex].id
       },
       [contactId, contacts],
     )
 
     const goPreviousContact = useCallback(
       () => {
-        path && navigate && navigate(`${path.split('/').slice(0, -1).join('/')}/${previousContactId}`)
+        path && navigate && previousContactId
+          && navigate(`${path.split('/').slice(0, -1).join('/')}/${previousContactId}`)
       },
       [navigate, path, previousContactId],
     )
 
     const goNextContact = useCallback(
       () => {
-        path && navigate && navigate(`${path.split('/').slice(0, -1).join('/')}/${nextContactId}`)
+        path && navigate && nextContactId
+          && navigate(`${path.split('/').slice(0, -1).join('/')}/${nextContactId}`)
       },
       [navigate, path, nextContactId],
     )
@@ -74,15 +78,15 @@ const ContactIndex: React.FC<Props> = React.memo(
           onGoBack={navigateToContact}
           onGoPrevious={goPreviousContact}
           onGoNext={goNextContact}
-          previousDisabled={previousContactId === 0}
-          nextDisabled={nextContactId === contacts.length - 1}
+          previousDisabled={previousContactId === null}
+          nextDisabled={nextContactId === null}
         />
       ),
       [removeContact, navigateToContact],
     )
 
     const renderRightPart1 = useCallback(
-      () => <ContactAssets />,
+      () => contact && <ContactAssets />,
       [],
     )
     const renderRightPart2 = useCallback(
@@ -90,18 +94,18 @@ const ContactIndex: React.FC<Props> = React.memo(
       [contact],
     )
 
-    if (!contact) return null
-
     return (
       <DetailsPaper
         renderHeader={renderHeader}
         renderRightPart1={renderRightPart1}
         renderRightPart2={renderRightPart2}
       >
-        <ContactProfile
-          contact={contact}
-          contactId={contactId}
-        />
+        {contact && (
+          <ContactProfile
+            contact={contact}
+            contactId={contactId}
+          />
+        )}
       </DetailsPaper>
     )
   },
