@@ -1,17 +1,13 @@
-import React, { useCallback, useEffect } from 'react'
-import useContacts from '~src/containers/useContacts'
+import React, { useCallback, useContext } from 'react'
 import PeopleList from '~src/components/PeopleList'
+import ContactsContainer from '~src/containers/Contacts'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
 export interface Props extends ComponentProps {}
 
 const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
-  const { pagination, contacts, fetchContacts, addContact, starContact, addMutation, starMutation } = useContacts()
-
-  const refresh = useCallback(() => fetchContacts({ page: 1, size: 30 }), [])
-
-  useEffect(() => { refresh() }, [addMutation, starMutation])
+  const { pagination, contacts, fetchContacts, addContact, starContact } = useContext(ContactsContainer.Context)
 
   const searchContacts = useCallback(
     ({page = 0, size = 30, searchTerm = ''}) => fetchContacts({ page: page + 1, size, searchTerm }),

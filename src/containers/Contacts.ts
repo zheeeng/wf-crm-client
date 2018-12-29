@@ -1,4 +1,5 @@
 import { useCallback, useContext } from 'react'
+import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactAPI, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut } from '~src/hooks/useRequest'
@@ -44,7 +45,7 @@ const convertContacts = pipe<
   map(contactInputAdapter),
 )
 
-const useContacts = () => {
+const Contacts = createContainer(() => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
 
   const { data: contactsData, request: getContacts } = useGet<ContactsResponse>()
@@ -85,6 +86,6 @@ const useContacts = () => {
     addContact, addMutation,
     starContact, starMutation,
   }
-}
+})
 
-export default useContacts
+export default Contacts

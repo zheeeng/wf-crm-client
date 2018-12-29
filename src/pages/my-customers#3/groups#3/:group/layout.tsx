@@ -1,11 +1,28 @@
-import React from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
+import ContactsContainer from '~src/containers/Contacts'
 
-import { ComponentProps } from '@roundation/roundation/lib/types'
-
-export interface Props extends ComponentProps {
-  children: React.ReactElement<any>
+export interface Props {
+  group: string
 }
 
-const GroupsContactLayout: React.FC<Props> = React.memo(({ children }) => children)
+const Content: React.FC<Props> = React.memo(({ group, children }) => {
+  const { fetchContacts, addMutation, starMutation } = useContext(ContactsContainer.Context)
+
+  const refresh = useCallback(() => fetchContacts({ page: 1, size: 30, groupId: group }), [group])
+
+  useEffect(() => { refresh() }, [addMutation, starMutation, group])
+
+  return <>{children}</>
+})
+
+const GroupsContactLayout: React.FC<Props> = React.memo(
+  ({ group, children }) => (
+    <ContactsContainer.Provider>
+      <Content group={group}>
+        {children}
+      </Content>
+    </ContactsContainer.Provider>
+  ),
+)
 
 export default GroupsContactLayout

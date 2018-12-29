@@ -1,6 +1,6 @@
 import React, { useContext, useCallback, useEffect, useMemo } from 'react'
 import useContact from '~src/containers/useContact'
-import useContacts from '~src/containers/useContacts'
+import ContactsContainer from '~src/containers/Contacts'
 import DetailsPaper from '~src/units/DetailsPaper'
 import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
@@ -17,7 +17,7 @@ export interface Props {
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
     const { notify } = useContext(NotificationContainer.Context)
-    const { contacts } = useContacts()
+    const { contacts } = useContext(ContactsContainer.Context)
     const { contact, removeContact, removeContactError } = useContact(contactId)
 
     useEffect(
