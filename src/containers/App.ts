@@ -1,7 +1,7 @@
 import createContainer from 'constate'
 import useToggle from '~src/hooks/useToggle'
 
-const App = createContainer(() => {
+const AppContainer = createContainer(() => {
   const {
     value: drawerExpanded,
     toggle: toggleDrawerExpanded,
@@ -17,4 +17,4 @@ const App = createContainer(() => {
   }
 })
 
-export default App
+export default AppContainer

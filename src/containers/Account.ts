@@ -2,17 +2,14 @@ import { useCallback, useEffect, useMemo } from 'react'
 import createContainer from 'constate'
 import { usePost } from '~src/hooks/useRequest'
 import useLatest from '~src/hooks/useLatest'
-import pipe from 'ramda/es/pipe'
-import head from 'ramda/es/head'
 import merge from 'ramda/es/merge'
-import defaultTo from 'ramda/es/defaultTo'
 import pick from 'ramda/es/pick'
 
 type AuthData = { id: string, username: string }
 
 const getDefaultAuthData = (): AuthData => ({ id: '', username: '' })
 
-const Account = createContainer(() => {
+const AccountContainer = createContainer(() => {
   const { data: authData, request: postAuthentication } = usePost<AuthData>()
   const { data: loginData, request: postLogin } = usePost<AuthData>()
   const { data: tmpLogoutData, request: postLogout } = usePost<{}>()
@@ -37,4 +34,4 @@ const Account = createContainer(() => {
   }
 })
 
-export default Account
+export default AccountContainer

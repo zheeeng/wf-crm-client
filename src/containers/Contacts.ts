@@ -45,7 +45,7 @@ const convertContacts = pipe<
   map(contactInputAdapter),
 )
 
-const Contacts = createContainer(() => {
+const ContactsContainer = createContainer(() => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
 
   const { data: contactsData, request: getContacts, error: getContactsError } = useGet<ContactsResponse>()
@@ -114,4 +114,4 @@ const Contacts = createContainer(() => {
   }
 })
 
-export default Contacts
+export default ContactsContainer
