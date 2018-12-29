@@ -132,6 +132,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
   const updateField = useCallback(
     async (segmentValue: FieldSegmentValue, id: string) => {
+      if (!id) return
       const field = await onUpdateField(name, segmentValue, id)
       if (field) updateLocalFieldValues(values => values.map(v => v.id === id ? field : v))
     },
@@ -139,6 +140,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
   const removeField = useCallback(
     async (id: string) => {
+      if (!id) return
       await onDeleteField(name, id)
       updateLocalFieldValues(values => values.filter(v => v.id !== id))
     },
