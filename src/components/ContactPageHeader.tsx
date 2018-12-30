@@ -35,11 +35,11 @@ const ContactPageHeader: React.FC<Props> = React.memo(
           <NavigateBefore onClick={onGoBack} />
           <KeyboardArrowDown
             color={previousDisabled ? 'disabled' : 'primary'}
-            onClick={previousDisabled ? undefined : onGoPrevious}
+            onClick={nextDisabled ? undefined : onGoNext}
           />
           <KeyboardArrowUp
             color={nextDisabled ? 'disabled' : 'primary'}
-            onClick={nextDisabled ? undefined : onGoNext}
+            onClick={previousDisabled ? undefined : onGoPrevious}
           />
         </div>
         <Delete className={classes.delete} onClick={onDelete} />
