@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useGet } from '~src/hooks/useRequest'
 import { GroupAPI, groupInputAdapter } from '~src/types/Contact'
 
@@ -13,6 +13,11 @@ const useGroups = () => {
   const groups = useMemo(
     () => (groupsData || []).map(groupInputAdapter),
     [groupsData],
+  )
+
+  useEffect(
+    () => { fetchGroups() },
+    [],
   )
 
   return {

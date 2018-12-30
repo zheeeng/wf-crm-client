@@ -28,6 +28,7 @@ import NotificationContainer from '~src/containers/Notification'
 import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
+import AddContactToGroupForm, { AddContactToGroupFormOption } from '~src/components/AddContactToGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
@@ -104,6 +105,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     addContact, addContactError,
     starContact, starContactError,
     removeContacts, removeContactError,
+    addContactToGroup, addContactToGroupError,
   }
   = useContext(ContactsContainer.Context)
 
@@ -125,6 +127,12 @@ const PeopleList: React.FC<Props> = React.memo(({
     },
     [removeContactError],
   )
+  useEffect(
+    () => {
+      addContactToGroupError && notify(addContactToGroupError.message)
+    },
+    [addContactToGroupError],
+  )
 
   const classes = useStyles({})
   const [popover, setPopover] = useState({
@@ -137,6 +145,11 @@ const PeopleList: React.FC<Props> = React.memo(({
     opened: false,
     // tslint:disable-next-line:no-object-literal-type-assertion
     option: {} as CreateFormOption<any>,
+  })
+  const [addContactToGroupForm, setAddContactToGroupForm] = useState({
+    opened: false,
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    option: {} as AddContactToGroupFormOption<any>,
   })
 
   const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
@@ -206,7 +219,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     [starContact],
   )
 
-  const changeCreateFormOpened = useCallback<{
+  const changeCreateContactFormOpened = useCallback<{
     <F extends string>(opened: true, option: CreateFormOption<F>): () => void;
     (opened: false): () => void;
   }>(
@@ -219,20 +232,39 @@ const PeopleList: React.FC<Props> = React.memo(({
     [createForm],
   )
 
-  const addNewContact = useCallback(
+  const changeAddContactToGroupFormOpened = useCallback<{
+    <F extends string>(opened: true, option: AddContactToGroupFormOption<F>): () => void;
+    (opened: false): () => void;
+  }>(
+    <F extends string>(opened: boolean, option?: AddContactToGroupFormOption<F>) => () => {
+      setAddContactToGroupForm({
+        opened,
+        option: opened ? option as AddContactToGroupFormOption<F> : {},
+      })
+    },
+    [addContactToGroupForm],
+  )
+
+  const handleAddNewContact = useCallback(
     async (contact: object) => {
       if (addContact) {
         addContact(contact as ContactAPI)
         search()
-        changeCreateFormOpened(false)()
+        changeCreateContactFormOpened(false)()
       }
     },
-    [addContact, search, changeCreateFormOpened],
+    [addContact, search, changeCreateContactFormOpened],
+  )
+  const handleAddContactToGroup = useCallback(
+    async (groupId: string) => {
+      checked.length && addContactToGroup(groupId, checked)
+    },
+    [checked],
   )
 
   const handleContactsRemove = useCallback(
     async () => {
-      removeContacts(checked)
+      checked.length && removeContacts(checked)
     },
     [checked],
   )
@@ -335,6 +367,15 @@ const PeopleList: React.FC<Props> = React.memo(({
     />
   )
 
+  const addContactToGroupFormOption = useMemo(
+    () => ({
+      title: 'Add Contact to',
+      fields: ['New Contact'],
+      okText: 'Add',
+    }),
+    [],
+  )
+
   const renderControls = () => (
     <>
       <IconButton
@@ -353,13 +394,9 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseEnter={handlePopoverToggle(true, 'add')}
         onMouseLeave={handlePopoverToggle(false)}
       >
-        <PersonAdd onClick={changeCreateFormOpened(
-          true,
-          {
-            title: 'New Group',
-            fields: ['Group Name'],
-          },
-        )} />
+        <PersonAdd
+          onClick={changeAddContactToGroupFormOpened(true, addContactToGroupFormOption)}
+        />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'delete')}
@@ -402,14 +439,20 @@ const PeopleList: React.FC<Props> = React.memo(({
         <CreateForm
           option={createForm.option}
           open={createForm.opened}
-          onClose={changeCreateFormOpened(false)}
-          onOk={addNewContact}
+          onClose={changeCreateContactFormOpened(false)}
+          onOk={handleAddNewContact}
+        />
+        <AddContactToGroupForm
+          option={addContactToGroupForm.option}
+          open={addContactToGroupForm.opened}
+          onClose={changeAddContactToGroupFormOpened(false)}
+          onOk={handleAddContactToGroup}
         />
         <div className={classes.head}>
           <Button
             variant="outlined"
             color="primary"
-            onClick={changeCreateFormOpened(true, newContactFormOption)}
+            onClick={changeCreateContactFormOpened(true, newContactFormOption)}
           >New contact</Button>
           <Hidden smDown>
             {renderSearcher()}
