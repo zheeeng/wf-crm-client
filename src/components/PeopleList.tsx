@@ -24,11 +24,12 @@ import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import Delete from '@material-ui/icons/Delete'
 
+import useToggle from '~src/hooks/useToggle'
 import NotificationContainer from '~src/containers/Notification'
 import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
-import AddContactToGroupForm, { AddContactToGroupFormOption } from '~src/components/AddContactToGroupForm'
+import AddContactToGroupForm from '~src/components/AddContactToGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
@@ -146,11 +147,11 @@ const PeopleList: React.FC<Props> = React.memo(({
     // tslint:disable-next-line:no-object-literal-type-assertion
     option: {} as CreateFormOption<any>,
   })
-  const [addContactToGroupForm, setAddContactToGroupForm] = useState({
-    opened: false,
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    option: {} as AddContactToGroupFormOption<any>,
-  })
+  const {
+    value: addContactToGroupFormOpened,
+    toggleOn: toggleOnAddContactToGroupFormOpened,
+    toggleOff: toggleOffAddContactToGroupFormOpened,
+  } = useToggle(false)
 
   const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 
@@ -230,19 +231,6 @@ const PeopleList: React.FC<Props> = React.memo(({
       })
     },
     [createForm],
-  )
-
-  const changeAddContactToGroupFormOpened = useCallback<{
-    <F extends string>(opened: true, option: AddContactToGroupFormOption<F>): () => void;
-    (opened: false): () => void;
-  }>(
-    <F extends string>(opened: boolean, option?: AddContactToGroupFormOption<F>) => () => {
-      setAddContactToGroupForm({
-        opened,
-        option: opened ? option as AddContactToGroupFormOption<F> : {},
-      })
-    },
-    [addContactToGroupForm],
   )
 
   const handleAddNewContact = useCallback(
@@ -367,15 +355,6 @@ const PeopleList: React.FC<Props> = React.memo(({
     />
   )
 
-  const addContactToGroupFormOption = useMemo(
-    () => ({
-      title: 'Add Contact to',
-      fields: ['New Contact'],
-      okText: 'Add',
-    }),
-    [],
-  )
-
   const renderControls = () => (
     <>
       <IconButton
@@ -395,7 +374,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
       >
         <PersonAdd
-          onClick={changeAddContactToGroupFormOpened(true, addContactToGroupFormOption)}
+          onClick={toggleOnAddContactToGroupFormOpened}
         />
       </IconButton>
       <IconButton
@@ -442,12 +421,12 @@ const PeopleList: React.FC<Props> = React.memo(({
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
         />
-        <AddContactToGroupForm
-          option={addContactToGroupForm.option}
-          open={addContactToGroupForm.opened}
-          onClose={changeAddContactToGroupFormOpened(false)}
-          onOk={handleAddContactToGroup}
-        />
+        {addContactToGroupFormOpened && (
+          <AddContactToGroupForm
+            onClose={toggleOffAddContactToGroupFormOpened}
+            onOk={handleAddContactToGroup}
+          />
+        )}
         <div className={classes.head}>
           <Button
             variant="outlined"
