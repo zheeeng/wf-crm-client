@@ -53,6 +53,7 @@ const ContactsContainer = createContainer(() => {
 
   const { request: postContact, error: postContactError } = usePost()
   const { request: putContact, error: putContactError } = usePut()
+  const { request: postContactToGroup, error: postContactToGroupError } = usePost()
 
   const pagination = useDepMemo(convertPagination, [contactsData])
   const contacts = useDepMemo(convertContacts, [contactsData])
@@ -104,6 +105,15 @@ const ContactsContainer = createContainer(() => {
     [deleteContactError],
   )
 
+  const addContactToGroup = useCallback(
+    async (groupId: string, contactIds: string[]) => {
+      await postContactToGroup(`/api/group/${groupId}`)({
+        people: contactIds,
+      })
+    },
+    [],
+  )
+
   return {
     pagination,
     contacts,
@@ -111,6 +121,7 @@ const ContactsContainer = createContainer(() => {
     addContact, addMutation, addContactError: postContactError,
     starContact, starMutation, starContactError: putContactError,
     removeContacts, removeMutation, removeContactError,
+    addContactToGroup, addContactToGroupError: postContactToGroupError,
   }
 })
 
