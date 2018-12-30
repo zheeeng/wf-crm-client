@@ -152,9 +152,12 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const newPriority = priority !== 0
         ? 0
         : Math.max(
-          Math.min.apply(null, localFieldValues.map(v => v.priority).filter(p => p)) - 1,
-          1,
-        )
+            Math.min.apply(
+              null,
+              localFieldValues.map(v => v.priority).filter(p => typeof(p) !== 'undefined'),
+            ) - 1,
+            1,
+          )
       const field = await onToggleHideField(name, newPriority, id)
       if (field) {
         updateLocalFieldValues(values => values
@@ -222,7 +225,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               classes.fieldTextBarWrapper,
               !editable && fieldValue.priority === 0 && classes.hidden,
             )}
-            key={index}
+            key={fieldValue.id}
           >
             <div className={classnames(
               classes.fieldTextBar,
