@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useRef } from 'react'
+import React, { useCallback, useContext, useMemo, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
+import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
 import cssTips from '~src/utils/cssTips'
 import NotificationContainer from '~src/containers/Notification'
 import useGroups from '~src/containers/useGroups'
@@ -30,13 +31,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
+  open: boolean,
   onClose?: React.ReactEventHandler<{}>
   onOk?: (groupId: string, isNew: boolean) => Promise<any>
 }
 
-const AddContactToGroupForm: React.FC<Props> = React.memo(({ onClose, onOk }) => {
+const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
   const { groups } = useGroups()
   const classes = useStyles({})
+
+  const groupOptions = useMemo(
+    () => groups.map(group => ({ label: group.info.name, value: group.id })),
+    [groups],
+  )
 
   const { notify } = useContext(NotificationContainer.Context)
 
@@ -67,6 +74,9 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ onClose, onOk }) =>
         <Typography variant="subtitle1" align="center">
           Add contact to
         </Typography>
+        <BasicFormInputSelect
+          options={groupOptions}
+        />
         {/* {fields.map(field => (
           <BasicFormInput
             key={field}

@@ -421,12 +421,11 @@ const PeopleList: React.FC<Props> = React.memo(({
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
         />
-        {addContactToGroupFormOpened && (
-          <AddContactToGroupForm
-            onClose={toggleOffAddContactToGroupFormOpened}
-            onOk={handleAddContactToGroup}
-          />
-        )}
+        <AddContactToGroupForm
+          open={addContactToGroupFormOpened}
+          onClose={toggleOffAddContactToGroupFormOpened}
+          onOk={handleAddContactToGroup}
+        />
         <div className={classes.head}>
           <Button
             variant="outlined"

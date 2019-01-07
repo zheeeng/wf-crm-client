@@ -21,12 +21,10 @@ export interface Props {
   onGoPrevious: React.MouseEventHandler
   onGoNext: React.MouseEventHandler
   onDelete: React.MouseEventHandler
-  previousDisabled: boolean,
-  nextDisabled: boolean,
 }
 
 const ContactPageHeader: React.FC<Props> = React.memo(
-  ({ onGoBack, onGoPrevious, onGoNext,  onDelete, previousDisabled, nextDisabled }) => {
+  ({ onGoBack, onGoPrevious, onGoNext,  onDelete }) => {
     const classes = useStyles({})
 
     return (
@@ -34,12 +32,10 @@ const ContactPageHeader: React.FC<Props> = React.memo(
         <div className={classes.left}>
           <NavigateBefore onClick={onGoBack} />
           <KeyboardArrowDown
-            color={previousDisabled ? 'disabled' : 'primary'}
-            onClick={nextDisabled ? undefined : onGoNext}
+            onClick={onGoNext}
           />
           <KeyboardArrowUp
-            color={nextDisabled ? 'disabled' : 'primary'}
-            onClick={previousDisabled ? undefined : onGoPrevious}
+            onClick={onGoPrevious}
           />
         </div>
         <Delete className={classes.delete} onClick={onDelete} />
