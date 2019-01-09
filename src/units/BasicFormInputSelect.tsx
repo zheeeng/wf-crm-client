@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
 import { ClassNameMap } from '@material-ui/core/styles/withStyles'
 import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'
@@ -6,16 +7,17 @@ import { TextFieldClassKey } from '@material-ui/core/TextField/TextField'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   input: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
     height: 32,
     lineHeight: 32,
     borderRadius: 2,
-    padding: '7.7px 32.8px 5.3px 8px',
-    margin: '14px 0 0 0',
+    padding: theme.spacing.unit,
+    margin: 0,
+    marginTop: theme.spacing.unit * 2,
   },
-})
+}))
 
 export interface Props {
   value?: string,
@@ -29,7 +31,7 @@ export interface Props {
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', value, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses, options,
+  placeholder = '', value = '', onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses, options,
 }) => {
   const classes = useStyles({})
 

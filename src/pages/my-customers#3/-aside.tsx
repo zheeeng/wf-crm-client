@@ -12,8 +12,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
-import Collapse from '@material-ui/core/Collapse'
 import Hidden from '@material-ui/core/Hidden'
+import useToggle from '~src/hooks/useToggle'
 
 import Add from '@material-ui/icons/Add'
 import ChevronRight from '@material-ui/icons/ChevronRight'
@@ -22,10 +22,11 @@ import BorderColor from '@material-ui/icons/BorderColor'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import Delete from '@material-ui/icons/Delete'
 
-import Searcher from '~src/units/Searcher'
+import GroupMenu from '~src/components/GroupMenu'
 import MaterialIcon from '~src/units/MaterialIcon'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
+import muteClick from '~src/utils/muteClick'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import AppContainer from '~src/containers/App'
 import cond from 'ramda/es/cond'
@@ -38,9 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'fixed',
     width: theme.spacing.unit * 30,
     backgroundColor: theme.palette.background.paper,
-  },
-  nestedItem: {
-    paddingLeft: theme.spacing.unit * 6,
   },
   flexHeight: {
     flex: 1,
@@ -62,32 +60,26 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   const { contactsCount, starredCount, groups } = useContext(ContactsCountContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [groupsOpened, setGroupsOpened] = useState(false)
+  const {
+    value: groupsOpened,
+    toggle: toggleGroupsOpened,
+  } = useToggle(false)
+
+  const {
+    value: addGroupModalOpened,
+    toggleOn: toggleOnAddGroupModalOpenedFn,
+  } = useToggle(false)
+
+  const toggleOnAddGroupModalOpened = useCallback(
+    () => muteClick(toggleOnAddGroupModalOpenedFn),
+    [],
+  )
 
   const $mountElRef = useRef(document.querySelector('#sidebar'))
-
-  const filteredGroups = useMemo(
-    () => !searchTerm
-      ? groups
-      : groups
-        .filter(group => group.info.name.toLowerCase().includes(searchTerm.toLowerCase())),
-    [groups, searchTerm],
-  )
-
-  const handleSearchTermChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value),
-    [searchTerm],
-  )
 
   const navigateToGroup = useCallback(
     (id: string) => () => navigate && navigate(`groups/${id}`),
     [navigate],
-  )
-
-  const handleGroupsOpenedToggled = useCallback(
-    (opened?: boolean) => () => setGroupsOpened(opened !== undefined ? opened : !groupsOpened),
-    [groupsOpened],
   )
 
   const renderLinkLabel = cond(
@@ -101,49 +93,27 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
           </ListItemText>
           <ListItemSecondaryAction>
             {groupsOpened
-              ? <ExpandMore onClick={handleGroupsOpenedToggled(false)} />
-              : <ChevronRight onClick={handleGroupsOpenedToggled(true)} />}
-            <Add />
+              ? <ExpandMore />
+              : <ChevronRight />
+            }
+            <Add onClick={toggleOnAddGroupModalOpened} />
           </ListItemSecondaryAction>
         </>
       )],
     ],
   )
 
-  const renderGroups = () => (
-    <Collapse in={groupsOpened} timeout="auto" unmountOnExit>
-      <List disablePadding>
-        <ListItem button>
-          <Searcher
-            placeholder="Type a group name"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-          />
-        </ListItem>
-        {filteredGroups.map(group => (
-          <ListItem
-            key={group.id}
-            button
-            className={classes.nestedItem}
-            onClick={navigateToGroup(group.id)}
-          >
-            <ListItemText>
-              {group.info.name}
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
-    </Collapse>
-  )
-
-  const renderLinkWrapper = (routePath: string) => (props: ListItemProps) => (
-    <Link to={routePath} {...props} />
+  const renderLinkWrapper = (routePath: string, onClick?: () => void) => (props: ListItemProps) => (
+    <Link to={routePath} {...props} onClick={onClick} />
   )
 
   const renderLink = ({ routePath, name, icon }: { routePath: string, name: string, icon: string }) => (
     <React.Fragment key={routePath}>
       <ListItem
-        component={renderLinkWrapper(routePath)}
+        component={renderLinkWrapper(
+          routePath,
+          name === 'Groups' ? toggleGroupsOpened : undefined,
+        )}
         button
       >
         <ListItemIcon>
@@ -151,7 +121,12 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
         </ListItemIcon>
         {renderLinkLabel(name)}
       </ListItem>
-      {name === 'Groups' && renderGroups()}
+      {name === 'Groups' && (
+        <GroupMenu
+          groupsOpened={groupsOpened}
+          onClickGroup={navigateToGroup}
+        />
+      )}
     </React.Fragment>
   )
 

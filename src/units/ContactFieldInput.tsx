@@ -154,7 +154,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         : Math.max(
             Math.min.apply(
               null,
-              localFieldValues.map(v => v.priority).filter(p => typeof(p) !== 'undefined'),
+              localFieldValues.map(v => v.priority).filter(p => typeof p !== 'undefined'),
             ) - 1,
             1,
           )

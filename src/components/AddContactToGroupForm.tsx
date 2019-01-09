@@ -1,14 +1,18 @@
-import React, { useCallback, useContext, useMemo, useRef } from 'react'
+import React, { useCallback, useState, useContext, useMemo, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
-import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
 import cssTips from '~src/utils/cssTips'
+import GroupMenu from '~src/components/GroupMenu'
 import NotificationContainer from '~src/containers/Notification'
 import useGroups from '~src/containers/useGroups'
+import useToggle from '~src/hooks/useToggle'
+
+import ChevronRight from '@material-ui/icons/ChevronRight'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -16,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: theme.spacing.unit * 50,
+    width: theme.breakpoints.values.xs,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -27,6 +31,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
     ...cssTips(theme).horizontallySpaced,
+  },
+  label: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    lineHeight: theme.spacing.unit * 4,
+    height: theme.spacing.unit * 4,
+    padding: theme.spacing.unit,
+    color: theme.palette.primary.main,
   },
 }))
 
@@ -40,6 +53,18 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
   const { groups } = useGroups()
   const classes = useStyles({})
 
+  const {
+    value: groupsOpened,
+    toggle: toggleGroupsOpened,
+  } = useToggle(false)
+
+  const onClickGroup = useCallback(
+    (id: string) => {
+      // console.log('clicked:', id)
+    },
+    [],
+  )
+
   const groupOptions = useMemo(
     () => groups.map(group => ({ label: group.info.name, value: group.id })),
     [groups],
@@ -47,46 +72,57 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
 
   const { notify } = useContext(NotificationContainer.Context)
 
+  const [groupName, setGroupName] = useState('')
+
   const fieldValues = useRef<{ [key: string]: string }>({})
 
-  const handleCreateInfoChange = useCallback(
-    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      fieldValues.current[field] = e.target.value
+  const handleOkClick = useCallback(
+    async () => {
+      if (onOk) {
+        await onOk(groupName, false)
+      }
+      await notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
     },
-    [fieldValues],
+    [groupName],
   )
 
-  const handleOkClick = useCallback(
-    () => {
-      // (onOk ? onOk(fieldValues.current) : Promise.resolve()).then(() => {
-      //   notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
-      // })
+  const handleEnterNewGroup = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      const newGroup = event.currentTarget.value.trim()
+      event.currentTarget.value = ''
+
+      console.log(newGroup)
     },
     [],
   )
 
   return (
     <Modal
-      open={true}
+      open={open}
       onClose={onClose}
     >
       <div className={classes.paper}>
         <Typography variant="subtitle1" align="center">
           Add contact to
         </Typography>
-        <BasicFormInputSelect
-          options={groupOptions}
+        <BasicFormInput
+          placeholder="New Group"
+          onEnterPress={handleEnterNewGroup}
         />
-        {/* {fields.map(field => (
-          <BasicFormInput
-            key={field}
-            placeholder={field}
-            onChange={handleCreateInfoChange(field)}
-          />
-        ))} */}
+        <div className={classes.label} onClick={toggleGroupsOpened} >
+          Existing group
+          {groupsOpened
+            ? <ExpandMore />
+            : <ChevronRight />
+          }
+        </div>
+        <GroupMenu
+            groupsOpened={groupsOpened}
+            onClickGroup={onClickGroup}
+        />
         <div className={classes.buttonZone}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="primary" onClick={handleOkClick}>Add</Button>
+          <Button color="primary" onClick={handleOkClick}>Ok</Button>
         </div>
       </div>
     </Modal>
