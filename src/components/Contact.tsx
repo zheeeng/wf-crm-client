@@ -85,7 +85,7 @@ const ContactIndex: React.FC<Props> = React.memo(
 
     const renderRightPart1 = useCallback(
       () => contact && <ContactAssets />,
-      [],
+      [contact],
     )
     const renderRightPart2 = useCallback(
       () => contact && <ContactActivities activities={contact.info.activities} />,
