@@ -33,7 +33,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
     <OutlinedInput
       labelWidth={0}
       notched
-      className={classNames([className, classes.searchBar])}
+      className={classNames(className, classes.searchBar)}
       startAdornment={(
         <InputAdornment position="start" className={classes.inputAdornment}>
           <Search />

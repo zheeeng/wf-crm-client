@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -9,7 +9,7 @@ import AddCircle from '@material-ui/icons/AddCircle'
 import RemoveCircle from '@material-ui/icons/RemoveCircle'
 import Eye from '@material-ui/icons/RemoveRedEye'
 import Reorder from '@material-ui/icons/Reorder'
-
+import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '$fieldTextBarWrapper:hover &': {
       visibility: 'visible',
     },
+  },
+  fieldDragIcon: {
+    cursor: 'move',
   },
   fieldTypeText: {
     flex: 0.5,
@@ -118,6 +121,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [fieldValues],
   )
 
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const hasValues = useMemo(
     () => !!fieldValues.length || !!localFieldValues.length,
     [fieldValues, localFieldValues],
@@ -160,9 +165,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )
       const field = await onToggleHideField(name, newPriority, id)
       if (field) {
-        updateLocalFieldValues(values => values
-          .map(v => v.id === id ? field : v)
-          .sort((p, c) => c.priority - p.priority),
+        updateLocalFieldValues(
+          values => values
+            .map(v => v.id === id ? field : v)
+            .sort((p, c) => c.priority - p.priority),
         )
       }
     },
@@ -215,17 +221,27 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [localFieldValues],
   )
 
-  return (
-    <div className={classes.fieldBar}>
-      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
-      <div className={classes.fieldTextWrapper}>
-        {(hasValues ? localFieldValues : [backupFieldValue]).map((fieldValue, index) => (
+  const renderSortableComponent = useCallback<React.FC>(
+    ({ children }) => <>{children}</>,
+    [],
+  )
+
+  const onSortEnd = useCallback(
+    ({oldIndex, newIndex}) => {
+      updateLocalFieldValues(values => arrayMove(values, oldIndex, newIndex))
+    },
+    [],
+  )
+
+  const sortableItems = useMemo(
+    () => (hasValues ? localFieldValues : [backupFieldValue]).map(
+      (fieldValue, index) => ({
+        element: (
           <div
             className={classnames(
               classes.fieldTextBarWrapper,
               !editable && fieldValue.priority === 0 && classes.hidden,
             )}
-            key={fieldValue.id}
           >
             <div className={classnames(
               classes.fieldTextBar,
@@ -269,7 +285,11 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     disabled={true}
                     disableUnderline={true}
                     className={classes.fieldInput}
-                    value={fieldValue.values.filter(sv => sv.key !== 'title').map(sv => sv.value).join(' ')}
+                    value={fieldValue.values
+                      .filter(sv => sv.key !== 'title')
+                      .map(sv => sv.value)
+                      .join(' ')
+                    }
                   />
                 )
               }
@@ -282,19 +302,32 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 >
                   <Eye color={fieldValue.priority === 0 ? 'primary' : 'disabled'} />
                 </IconButton>
-                <IconButton
-                  className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                >
-                  <Reorder color="disabled" />
-                </IconButton>
+                <SortHandler
+                  element={
+                    <IconButton
+                      className={classnames(
+                        classes.fieldControlIcon,
+                        classes.fieldHoverShowingIcon,
+                        classes.fieldDragIcon,
+                      )}
+                    >
+                      <Reorder color="disabled" />
+                    </IconButton>
+                  }
+                />
                 {expandable && (index === 0
                   ? (
-                    <IconButton className={classes.fieldControlIcon} onClick={handleAddEntry}>
+                    <IconButton
+                      className={classes.fieldControlIcon}
+                      onClick={handleAddEntry}
+                    >
                       <AddCircle color="primary" />
                     </IconButton>
                   )
                   : (
-                    <IconButton className={classes.fieldControlIcon} onClick={handleEntryDelete(fieldValue.id!)}>
+                    <IconButton
+                      className={classes.fieldControlIcon}
+                      onClick={handleEntryDelete(fieldValue.id!)}>
                       <RemoveCircle color="disabled" />
                     </IconButton>
                   )
@@ -302,10 +335,125 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               </div>
             )}
           </div>
-        ))}
+        ),
+        id: fieldValue.id,
+      }),
+    ),
+    [
+      hasValues, localFieldValues, backupFieldValue, editable, hasTitle,
+      handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
+      handleEntryToggleHide, handleEntryDelete,
+    ],
+  )
+
+  return (
+    <div className={classes.fieldBar} ref={containerRef}>
+      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      <div className={classes.fieldTextWrapper}>
+        <SortableList
+          onSortEnd={onSortEnd}
+          useDragHandle
+          // tslint:disable-next-line:jsx-no-lambda
+          helperContainer={containerRef.current || undefined}
+        >
+          {sortableItems}
+        </SortableList>
       </div>
     </div>
   )
+
+  // return (
+  //   <div className={classes.fieldBar}>
+  //     {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+  //     <div className={classes.fieldTextWrapper}>
+  //       {(hasValues ? localFieldValues : [backupFieldValue])
+  //         .map((fieldValue, index) => (
+  //           <div
+  //             className={classnames(
+  //               classes.fieldTextBarWrapper,
+  //               !editable && fieldValue.priority === 0 && classes.hidden,
+  //             )}
+  //             key={fieldValue.id}
+  //           >
+  //             <div className={classnames(
+  //               classes.fieldTextBar,
+  //               editable && fieldValue.priority === 0 && classes.disabled,
+  //             )}>
+  //               {(hasTitle && !editable) && (
+  //                 <Typography variant="subtitle1" className={classes.fieldTypeText}>
+  //                   {fieldValue.values.find(sv => sv.key === 'title')!.value}
+  //                 </Typography>
+  //               )}
+  //               {editable
+  //                 ? (
+  //                   <>
+  //                     {fieldValue.values.filter(segmentValue => segmentValue.key !== 'title')
+  //                       .map(segmentValue => (
+  //                         <Input
+  //                           key={segmentValue.key}
+  //                           className={classes.fieldInput}
+  //                           placeholder={segmentValue.key}
+  //                           defaultValue={segmentValue.value}
+  //                           onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
+  //                           onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
+  //                           disabled={fieldValue.priority === 0}
+  //                         />
+  //                       ))
+  //                     }
+  //                     {hasTitle ? (
+  //                       <Input
+  //                         className={classes.fieldTypeText}
+  //                         defaultValue={fieldValue.values.find(sv => sv.key === 'title')!.value}
+  //                         onBlur={handleEntryUpdateByBlur('title', fieldValue.id!)}
+  //                         onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!)}
+  //                         placeholder={'label'}
+  //                         disabled={fieldValue.priority === 0}
+  //                       />
+  //                     ) : undefined}
+  //                 </>
+  //                 )
+  //                 : (
+  //                   <Input
+  //                     disabled={true}
+  //                     disableUnderline={true}
+  //                     className={classes.fieldInput}
+  //                     value={fieldValue.values.filter(sv => sv.key !== 'title').map(sv => sv.value).join(' ')}
+  //                   />
+  //                 )
+  //               }
+  //             </div>
+  //             {editable && (
+  //               <div className={classes.filedIconBox}>
+  //                 <IconButton
+  //                   className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+  //                   onClick={handleEntryToggleHide(fieldValue.id!)}
+  //                 >
+  //                   <Eye color={fieldValue.priority === 0 ? 'primary' : 'disabled'} />
+  //                 </IconButton>
+  //                 <IconButton
+  //                   className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+  //                 >
+  //                   <Reorder color="disabled" />
+  //                 </IconButton>
+  //                 {expandable && (index === 0
+  //                   ? (
+  //                     <IconButton className={classes.fieldControlIcon} onClick={handleAddEntry}>
+  //                       <AddCircle color="primary" />
+  //                     </IconButton>
+  //                   )
+  //                   : (
+  //                     <IconButton className={classes.fieldControlIcon} onClick={handleEntryDelete(fieldValue.id!)}>
+  //                       <RemoveCircle color="disabled" />
+  //                     </IconButton>
+  //                   )
+  //                 )}
+  //               </div>
+  //             )}
+  //           </div>
+  //       ))}
+  //     </div>
+  //   </div>
+  // )
 })
 
 export default ContactFieldInput

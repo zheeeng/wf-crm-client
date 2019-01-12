@@ -203,6 +203,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const handleItemCheckedToggle = useCallback(
     (id: string) => (e: React.SyntheticEvent) => {
       e.stopPropagation()
+      e.preventDefault()
       const currentIndex = checked.indexOf(id)
       const newChecked = [...checked]
 
@@ -219,7 +220,9 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const allChecked = useMemo(
-    () => contacts.length === checked.length && contacts.every(contact => checked.includes(contact.id)),
+    () => contacts.length !== 0
+      && contacts.length === checked.length
+      && contacts.every(contact => checked.includes(contact.id)),
     [contacts, checked],
   )
 
@@ -455,7 +458,7 @@ const PeopleList: React.FC<Props> = React.memo(({
           </div>
         </Hidden>
         <Hidden mdUp>
-          <div className={classNames([classes.head, classes.alignRight])}>
+          <div className={classNames(classes.head, classes.alignRight)}>
             {renderPagination()}
           </div>
         </Hidden>
