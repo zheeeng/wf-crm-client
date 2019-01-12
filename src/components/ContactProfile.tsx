@@ -207,21 +207,21 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [removeTag])
 
   const handleFieldAdd = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue) =>
+    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, priority: number) =>
       addField({
         fieldType: name,
         [key]: value,
-        priority: 80,
+        priority,
       } as any).then(specificFieldToInputField(name)),
     [addField],
   )
   const handleFieldUpdate = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, id: string) =>
+    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, id: string, priority: number) =>
       updateField({
         id,
         fieldType: name,
         [key]: value,
-        priority: 80,
+        priority,
       } as any).then(specificFieldToInputField(name)),
     [updateField],
   )
@@ -235,8 +235,8 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     [removeField],
   )
 
-  const handleFieldHide = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', priority: number, id: string) =>
+  const handleFieldPriorityChange = useCallback(
+    (name: 'name' | 'email' | 'address' | 'phone', id: string, priority: number) =>
       updateField({
         id,
         fieldType: name,
@@ -310,7 +310,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
           onDeleteField={handleFieldRemove}
-          onToggleHideField={handleFieldHide}
+          onChangePriority={handleFieldPriorityChange}
         />
         <ContactFieldInput
           key="email" name="email" editable={editable}
@@ -322,7 +322,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
           onDeleteField={handleFieldRemove}
-          onToggleHideField={handleFieldHide}
+          onChangePriority={handleFieldPriorityChange}
         />
         <ContactFieldInput
           key="phone" name="phone" editable={editable}
@@ -334,7 +334,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
           onDeleteField={handleFieldRemove}
-          onToggleHideField={handleFieldHide}
+          onChangePriority={handleFieldPriorityChange}
         />
         {/* <FieldInput
           key="gender" name="gender" editable={editable}
@@ -345,7 +345,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
           onDeleteField={handleFieldRemove}
-          onToggleHideField={handleFieldHide}
+          onChangePriority={handleFieldPriorityChange}
         /> */}
         <ContactFieldInput
           key="address" name="address" editable={editable}
@@ -357,7 +357,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
           onDeleteField={handleFieldRemove}
-          onToggleHideField={handleFieldHide}
+          onChangePriority={handleFieldPriorityChange}
         />
       </div>
     </>
