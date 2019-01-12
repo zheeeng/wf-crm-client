@@ -20,7 +20,8 @@
     "path-to-regexp": "^2.4.0",
     "ramda": "^0.26.1",
     "react": "16.7.0-alpha.2",
-    "react-dom": "16.7.0-alpha.2"
+    "react-dom": "16.7.0-alpha.2",
+    "react-sortable-hoc": "^1.4.0"
   },
   "scripts": {
     "start": "react-app-rewired start --scripts-version react-scripts-ts",
