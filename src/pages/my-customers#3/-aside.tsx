@@ -22,13 +22,15 @@ import BorderColor from '@material-ui/icons/BorderColor'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import Delete from '@material-ui/icons/Delete'
 
+import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
 import MaterialIcon from '~src/units/MaterialIcon'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
-import muteClick from '~src/utils/muteClick'
 import ContactsCountContainer from '~src/containers/ContactsCount'
+import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
+import { GroupFields } from '~src/types/Contact'
 import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
 
@@ -52,12 +54,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+type FormType = '' | 'add' | 'update' | 'remove'
+
 export interface Props extends ComponentProps {
 }
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   const classes = useStyles({})
-  const { contactsCount, starredCount, groups } = useContext(ContactsCountContainer.Context)
+  const { contactsCount, starredCount } = useContext(ContactsCountContainer.Context)
+  const { groupId, groups, addGroup, updateGroup, removeGroup } = useContext(GroupsContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
 
   const {
@@ -65,21 +70,75 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
     toggle: toggleGroupsOpened,
   } = useToggle(false)
 
-  const {
-    value: addGroupModalOpened,
-    toggleOn: toggleOnAddGroupModalOpenedFn,
-  } = useToggle(false)
-
-  const toggleOnAddGroupModalOpened = useCallback(
-    () => muteClick(toggleOnAddGroupModalOpenedFn),
-    [],
-  )
-
   const $mountElRef = useRef(document.querySelector('#sidebar'))
 
   const navigateToGroup = useCallback(
-    (id: string) => () => navigate && navigate(`groups/${id}`),
+    (id: string) => navigate && navigate(`groups/${id}`),
     [navigate],
+  )
+
+  const [groupForm, setGroupForm] = useState({
+    type: '' as FormType,
+    opened: false,
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    option: {} as CreateFormOption<any>,
+  })
+
+  const changeGroupFormOpened = useCallback<{
+    <F extends string>(opened: true, type: FormType, option: CreateFormOption<F>): () => void;
+    (opened: false): () => void;
+  }>(
+    <F extends string>(opened: boolean, type?: FormType, option?: CreateFormOption<F>) => () => {
+      setGroupForm({
+        type: type ? type : '',
+        opened,
+        option: opened ? option as CreateFormOption<F> : {},
+      })
+    },
+    [groupForm],
+  )
+
+  const handleAddNewGroup = useCallback(
+    async (group: object) => {
+      addGroup(group as GroupFields)
+      changeGroupFormOpened(false)()
+    },
+    [addGroup, changeGroupFormOpened],
+  )
+
+  const newGroupFormOption: CreateFormOption<keyof GroupFields> = {
+    title: 'New Group',
+    fields: ['Group name'],
+    okText: 'Ok',
+  }
+
+  const updateGroupFormOption: CreateFormOption<keyof GroupFields> = {
+    title: 'Update Group',
+    fields: ['Group name'],
+    okText: 'Ok',
+  }
+
+  const removeGroupFormOption: CreateFormOption<keyof GroupFields> = {
+    title: 'Remove Group',
+    tip: 'Are you sure you want to remove the selected group?',
+    fields: [],
+    okText: 'Ok',
+  }
+
+  const handleUpdateGroup = useCallback(
+    async (group: object) => {
+      updateGroup(group as GroupFields)
+      changeGroupFormOpened(false)()
+    },
+    [updateGroup, changeGroupFormOpened],
+  )
+
+  const handleRemoveGroup = useCallback(
+    async () => {
+      removeGroup()
+      changeGroupFormOpened(false)()
+    },
+    [removeGroup, changeGroupFormOpened],
   )
 
   const renderLinkLabel = cond(
@@ -96,7 +155,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
               ? <ExpandMore />
               : <ChevronRight />
             }
-            <Add onClick={toggleOnAddGroupModalOpened} />
+            <Add onClick={changeGroupFormOpened(true, 'add', newGroupFormOption)} />
           </ListItemSecondaryAction>
         </>
       )],
@@ -161,12 +220,18 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
           <List component="nav" className={classes.flexHeight}>
             {subPageNavs.map(renderLink)}
           </List>
-          <List className={classNames(!groupsOpened && classes.invisible)}>
+          <List
+            className={classNames(!groupsOpened && !groupId && classes.invisible)}
+          >
             <ListItem>
               <ListItemSecondaryAction className={classes.groupActions}>
-                <BorderColor />
+                <BorderColor
+                  onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
+                />
                 <ScreenShare />
-                <Delete />
+                <Delete
+                  onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
+                />
               </ListItemSecondaryAction>
             </ListItem>
           </List>
@@ -177,6 +242,20 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
 
   return (
     <>
+      <CreateForm
+        option={groupForm.option}
+        open={groupForm.opened}
+        onClose={changeGroupFormOpened(false)}
+        onOk={
+          groupForm.type === 'add'
+            ? handleAddNewGroup
+            : groupForm.type === 'update'
+              ? handleUpdateGroup
+              : groupForm.type === 'remove'
+                ? handleRemoveGroup
+                : undefined
+          }
+      />
       <Hidden mdDown>
           <Portal container={$mountElRef.current}>
           {renderDrawer(false)}

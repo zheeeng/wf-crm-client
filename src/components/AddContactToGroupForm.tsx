@@ -8,7 +8,7 @@ import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
 import NotificationContainer from '~src/containers/Notification'
-import useGroups from '~src/containers/useGroups'
+import GroupsContainer from '~src/containers/Groups'
 import useToggle from '~src/hooks/useToggle'
 
 import ChevronRight from '@material-ui/icons/ChevronRight'
@@ -50,7 +50,7 @@ export interface Props {
 }
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
-  const { groups } = useGroups()
+  const { groups } = useContext(GroupsContainer.Context)
   const classes = useStyles({})
 
   const {
@@ -78,10 +78,10 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
 
   const handleOkClick = useCallback(
     async () => {
-      if (onOk) {
-        await onOk(groupName, false)
-      }
-      await notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+      // if (onOk) {
+      //   await onOk(groupName, false)
+      // }
+      // await notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
     },
     [groupName],
   )
@@ -91,7 +91,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       const newGroup = event.currentTarget.value.trim()
       event.currentTarget.value = ''
 
-      console.log(newGroup)
+      // console.log(newGroup)
     },
     [],
   )

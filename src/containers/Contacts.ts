@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo } from 'react'
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
-import { PeopleAPI, ContactAPI, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
+import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useDepMemo from '~src/hooks/useDepMemo'
 import useInfoCallback from '~src/hooks/useInfoCallback'
@@ -66,7 +66,7 @@ const ContactsContainer = createContainer(() => {
   )
 
   const [addContact, addMutation] = useInfoCallback(
-    async (contact: ContactAPI) => {
+    async (contact: ContactFields) => {
       await postContact('/api/people')(contactFieldAdapter(contact))
       refreshCounts()
     },

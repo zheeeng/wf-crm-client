@@ -133,12 +133,14 @@ export interface PeopleAPI {
   activities: ActivityAPI[] | null,
   notes: NoteAPI[] | null,
 }
-
-export interface ContactAPI {
+export interface ContactFields {
   'First name': string
   'Last name': string
   'Email': string
   'Phone': string
+}
+export interface GroupFields {
+  'Group name': string
 }
 
 export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
@@ -163,12 +165,20 @@ export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
   return params
 }
 
-export const contactFieldAdapter = (field: ContactAPI): Partial<PeopleAPI> => {
+export const contactFieldAdapter = (field: ContactFields): Partial<PeopleAPI> => {
   const params = {
     email: field.Email || null,
     phone: field.Phone || null,
     first_name: field['First name'] || null,
     last_name: field['Last name'] || null,
+  }
+
+  return params
+}
+
+export const groupFieldAdapter = (field: GroupFields): Partial<GroupAPI> => {
+  const params = {
+    name: field['Group name'] || '',
   }
 
   return params

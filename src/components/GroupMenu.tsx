@@ -1,18 +1,22 @@
-import React, { useState, useContext, useCallback, useRef, useMemo } from 'react'
+import React, { useState, useContext, useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 
 import List from '@material-ui/core/List'
-import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
+import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import Searcher from '~src/units/Searcher'
 
-import ContactsCountContainer from '~src/containers/ContactsCount'
+import GroupsContainer from '~src/containers/Groups'
 
 const useStyles = makeStyles((theme: Theme) => ({
   nestedItem: {
     paddingLeft: theme.spacing.unit * 6,
+  },
+  activeItem: {
+    color: theme.palette.primary.main,
+    fontWeight: 600,
   },
 }))
 
@@ -24,7 +28,7 @@ export interface Props {
 const GroupMenu: React.FC<Props> = ({ groupsOpened, onClickGroup }) => {
   const classes = useStyles({})
 
-  const { groups } = useContext(ContactsCountContainer.Context)
+  const { groupId, groups } = useContext(GroupsContainer.Context)
 
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -65,7 +69,11 @@ const GroupMenu: React.FC<Props> = ({ groupsOpened, onClickGroup }) => {
             className={classes.nestedItem}
             onClick={handleOnClick(group.id)}
           >
-            <ListItemText>
+            <ListItemText
+              classes={{
+                primary: group.id === groupId ? classes.activeItem : '',
+              }}
+            >
               {group.info.name}
             </ListItemText>
           </ListItem>

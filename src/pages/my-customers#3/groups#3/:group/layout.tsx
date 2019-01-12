@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, useContext } from 'react'
+import GroupsContainer from '~src/containers/Groups'
 import ContactsContainer from '~src/containers/Contacts'
 
 export interface Props {
@@ -7,10 +8,22 @@ export interface Props {
 
 const Content: React.FC<Props> = React.memo(({ group, children }) => {
   const { fetchContacts, addMutation, starMutation, removeMutation } = useContext(ContactsContainer.Context)
+  const { setGroupId } = useContext(GroupsContainer.Context)
 
-  const refresh = useCallback(() => fetchContacts({ page: 1, size: 30, groupId: group }), [group])
+  const refresh = useCallback(
+    () => fetchContacts({ page: 1, size: 30, groupId: group }),
+    [group],
+  )
 
-  useEffect(() => { refresh() }, [addMutation, starMutation, removeMutation, group])
+  useEffect(
+    () => { refresh() },
+    [addMutation, starMutation, removeMutation, group],
+  )
+
+  useEffect(
+    () => { setGroupId(group) },
+    [group],
+  )
 
   return <>{children}</>
 })

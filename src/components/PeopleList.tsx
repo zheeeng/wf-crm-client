@@ -16,7 +16,7 @@ import Hidden from '@material-ui/core/Hidden'
 import Typography from '@material-ui/core/Typography'
 import Popover from '@material-ui/core/Popover'
 import cssTips from '~src/utils/cssTips'
-import { Contact, ContactAPI } from '~src/types/Contact'
+import { Contact, ContactFields } from '~src/types/Contact'
 
 import StarBorder from '@material-ui/icons/StarBorder'
 import CallMerge from '@material-ui/icons/CallMerge'
@@ -236,7 +236,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const handleAddNewContact = useCallback(
     async (contact: object) => {
       if (addContact) {
-        addContact(contact as ContactAPI)
+        addContact(contact as ContactFields)
         search()
         changeCreateContactFormOpened(false)()
       }
@@ -406,7 +406,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     </>
   )
 
-  const newContactFormOption: CreateFormOption<keyof ContactAPI> = {
+  const newContactFormOption: CreateFormOption<keyof ContactFields> = {
     title: 'New Contact',
     fields: ['First name', 'Last name', 'Email', 'Phone'],
     okText: 'Create',

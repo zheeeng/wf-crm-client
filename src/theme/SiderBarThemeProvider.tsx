@@ -13,7 +13,7 @@ export const siderBarTheme = createMuiTheme(mergeOptions(themeOptions, {
     },
     MuiListItemText: {
       primary: {
-        color: globalTheme.palette.primary.main,
+        fontWeight: 500,
       },
     },
     MuiListItemSecondaryAction: {

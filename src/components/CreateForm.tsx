@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import NotificationContainer from '~src/containers/Notification'
-import { ContactAPI } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -31,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface CreateFormOption<F extends string> {
   title?: string,
+  tip?: string,
   fields?: F[],
   okText?: string,
   cancelText?: string
@@ -39,8 +39,8 @@ export interface CreateFormOption<F extends string> {
 export interface Props {
   open: boolean
   onClose?: React.ReactEventHandler<{}>
-  onOk?: <O extends object>(o: O) => Promise<any>
-  option?: CreateFormOption<keyof ContactAPI>
+  onOk?: (o: object) => Promise<any>
+  option?: CreateFormOption<any>
 }
 
 const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
@@ -57,11 +57,22 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
     [fieldValues],
   )
 
+  const handleEnterSubmit = useCallback(
+    async () => {
+      if (onOk && Object.keys(fieldValues.current).length === 1) {
+        await onOk(fieldValues.current)
+      }
+      await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
+    },
+    [],
+  )
+
   const handleOkClick = useCallback(
-    () => {
-      (onOk ? onOk(fieldValues.current) : Promise.resolve()).then(() => {
-        notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
-      })
+    async () => {
+      if (onOk) {
+        await onOk(fieldValues.current)
+      }
+      await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
     },
     [],
   )
@@ -82,6 +93,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
             key={field}
             placeholder={field}
             onChange={handleCreateInfoChange(field)}
+            onEnterPress={handleEnterSubmit}
           />
         ))}
         <div className={classes.buttonZone}>
