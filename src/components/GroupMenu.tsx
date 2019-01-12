@@ -71,7 +71,7 @@ const GroupMenu: React.FC<Props> = ({ groupsOpened, onClickGroup }) => {
           >
             <ListItemText
               classes={{
-                primary: group.id === groupId ? classes.activeItem : '',
+                primary: group.id === groupId ? classes.activeItem : undefined,
               }}
             >
               {group.info.name}

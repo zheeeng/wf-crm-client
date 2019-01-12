@@ -27,6 +27,7 @@ import GroupMenu from '~src/components/GroupMenu'
 import MaterialIcon from '~src/units/MaterialIcon'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
+import muteClick from '~src/utils/muteClick'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
@@ -51,6 +52,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   invisible: {
     visibility: 'hidden',
     pointerEvents: 'none',
+  },
+  groupBtn: {
+    cursor: 'pointer',
   },
 }))
 
@@ -155,7 +159,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
               ? <ExpandMore />
               : <ChevronRight />
             }
-            <Add onClick={changeGroupFormOpened(true, 'add', newGroupFormOption)} />
+            <Add onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))} />
           </ListItemSecondaryAction>
         </>
       )],
@@ -221,15 +225,19 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
             {subPageNavs.map(renderLink)}
           </List>
           <List
-            className={classNames(!groupsOpened && !groupId && classes.invisible)}
+            className={classNames((!groupsOpened || !groupId) && classes.invisible)}
           >
             <ListItem>
               <ListItemSecondaryAction className={classes.groupActions}>
                 <BorderColor
+                  className={classes.groupBtn}
                   onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
                 />
-                <ScreenShare />
+                <ScreenShare
+                  className={classes.groupBtn}
+                />
                 <Delete
+                  className={classes.groupBtn}
                   onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
                 />
               </ListItemSecondaryAction>

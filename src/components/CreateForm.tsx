@@ -61,20 +61,20 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
     async () => {
       if (onOk && Object.keys(fieldValues.current).length === 1) {
         await onOk(fieldValues.current)
+        await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
       }
-      await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
     },
-    [],
+    [onOk],
   )
 
   const handleOkClick = useCallback(
     async () => {
       if (onOk) {
         await onOk(fieldValues.current)
+        await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
       }
-      await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
     },
-    [],
+    [onOk],
   )
 
   const { title = 'title', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
