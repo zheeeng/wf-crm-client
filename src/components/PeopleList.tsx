@@ -172,18 +172,24 @@ const PeopleList: React.FC<Props> = React.memo(({
     [popover],
   )
 
-  const handleSearchTermEnterChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value)
+  const search = useCallback(
+    (term: string) => {
+      searchTerm !== term && setSearchTerm(term)
+
       checked.length !== 0 && setChecked([])
+
+      onSearch({ page, size, searchTerm: term })
     },
-    [searchTerm, checked],
+    [page, size, searchTerm],
   )
 
-  const search = useCallback(() => onSearch({ page, size, searchTerm }), [page, size, searchTerm])
-
   const handleSearchTermEnter = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => e.keyCode === 13 && search(),
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.keyCode === 13) {
+        const term = event.currentTarget.value.trim()
+        search(term)
+      }
+    },
     [search],
   )
 
@@ -237,11 +243,11 @@ const PeopleList: React.FC<Props> = React.memo(({
     async (contact: object) => {
       if (addContact) {
         addContact(contact as ContactFields)
-        search()
+        search(searchTerm)
         changeCreateContactFormOpened(false)()
       }
     },
-    [addContact, search, changeCreateContactFormOpened],
+    [addContact, search, changeCreateContactFormOpened, searchTerm],
   )
   const handleAddContactToGroup = useCallback(
     async (groupId: string) => {
@@ -332,8 +338,6 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderSearcher = () => (
     <Searcher
       className={classes.search}
-      value={searchTerm}
-      onChange={handleSearchTermEnterChange}
       onKeyDown={handleSearchTermEnter}
       placeholder="Type a name or email"
     />
