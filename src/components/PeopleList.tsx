@@ -218,6 +218,11 @@ const PeopleList: React.FC<Props> = React.memo(({
     [checked, contacts],
   )
 
+  const allChecked = useMemo(
+    () => contacts.length === checked.length && contacts.every(contact => checked.includes(contact.id)),
+    [contacts, checked],
+  )
+
   const handleStarClick = useCallback(
     (id: string, star: boolean) => (e: React.SyntheticEvent) => {
       e.stopPropagation()
@@ -460,7 +465,7 @@ const PeopleList: React.FC<Props> = React.memo(({
               <TableRow>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
-                    checked={contacts.every(contact => checked.includes(contact.id))}
+                    checked={allChecked}
                     onClick={handleToggleAllChecked}
                   />
                 </TableCell>
