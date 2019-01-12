@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import Hidden from '@material-ui/core/Hidden'
 import Edit from '@material-ui/icons/Edit'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import Avatar from '@material-ui/core/Avatar'
@@ -43,6 +44,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   floatTagsWrapper: {
     float: 'right',
     maxWidth: 280,
+  },
+  blockTagsWrapper: {
+    paddingLeft: theme.spacing.unit * 2.5,
+    marginBottom: theme.spacing.unit * 2,
   },
   tagsBar: {
     display: 'flex',
@@ -270,28 +275,30 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           {editable ? <CheckCircle /> : <Edit />}
         </IconButton>
       </div>
-      <div>
-        <div className={classes.floatTagsWrapper}>
-          <div className={classes.tagsBar}>
-            <Input
-              placeholder="Click to add tag"
-              disableUnderline
-              startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
-              onKeyDown={handleTagsAdd}
-            />
-          </div>
-          <div className={classes.tags}>
-            {tags.map((tag, index) => (
-              <Chip
-                key={`${tag}-${index}`}
-                onDelete={handleTagDelete(tag)}
-                className={classes.tag}
-                classes={{ label: classes.tagLabel }}
-                label={tag}
+      <div >
+        <Hidden lgDown>
+          <div className={classes.floatTagsWrapper}>
+            <div className={classes.tagsBar}>
+              <Input
+                placeholder="Click to add tag"
+                disableUnderline
+                startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+                onKeyDown={handleTagsAdd}
               />
-            ))}
+            </div>
+            <div className={classes.tags}>
+              {tags.map((tag, index) => (
+                <Chip
+                  key={`${tag}-${index}`}
+                  onDelete={handleTagDelete(tag)}
+                  className={classes.tag}
+                  classes={{ label: classes.tagLabel }}
+                  label={tag}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        </Hidden>
         <div className={classes.avatarBar}>
           <Avatar
             alt={contact.info.name}
@@ -300,6 +307,29 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           />
           <strong>{contact.info.name}</strong>
         </div>
+        <Hidden xlUp>
+          <div className={classes.blockTagsWrapper}>
+            <div className={classes.tagsBar}>
+              <Input
+                placeholder="Click to add tag"
+                disableUnderline
+                startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+                onKeyDown={handleTagsAdd}
+              />
+            </div>
+            <div className={classes.tags}>
+              {tags.map((tag, index) => (
+                <Chip
+                  key={`${tag}-${index}`}
+                  onDelete={handleTagDelete(tag)}
+                  className={classes.tag}
+                  classes={{ label: classes.tagLabel }}
+                  label={tag}
+                />
+              ))}
+            </div>
+          </div>
+        </Hidden>
         <ContactFieldInput
           key="name" name="name" editable={editable}
           Icon={CreditCard}
