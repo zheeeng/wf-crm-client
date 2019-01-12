@@ -23,7 +23,7 @@ const GroupsContainer = createContainer(() => {
   const [addGroup, addGroupMutation] = useInfoCallback(
     async (group: GroupFields) => {
       await postGroup('/api/group')(groupFieldAdapter(group))
-      refreshGroupCounts()
+      await refreshGroupCounts()
     },
     [],
   )
@@ -32,7 +32,7 @@ const GroupsContainer = createContainer(() => {
     async (group: GroupFields) => {
       if (groupId) {
         await putGroup(`/api/group/${groupId}`)(groupFieldAdapter(group))
-        refreshGroupCounts()
+        await refreshGroupCounts()
       }
     },
     [groupId],
@@ -42,7 +42,7 @@ const GroupsContainer = createContainer(() => {
     async () => {
       if (groupId) {
         await deleteGroup(`/api/group/${groupId}`)()
-        refreshGroupCounts()
+        await refreshGroupCounts()
       }
     },
     [groupId],
