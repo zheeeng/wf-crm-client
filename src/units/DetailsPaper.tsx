@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   main: {
     display: 'flex',
     flexDirection: 'column',
-    flexGrow: 1,
+    flex: 1,
   },
   header: {
     display: 'flex',
@@ -19,14 +19,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     display: 'flex',
     flexDirection: 'row',
-    flexGrow: 1,
+    flex: 1,
     [theme.breakpoints.down('sm')]: {
       display: 'block',
       overflow: 'auto',
     },
   },
   leftSider: {
-    flexGrow: 1,
+    flex: 1,
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
     marginRight: theme.spacing.unit * 4,
     boxShadow: '0 0 5px 1px lightgrey',
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   rightPart2: {
-    flexGrow: 1,
+    flex: 1,
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,

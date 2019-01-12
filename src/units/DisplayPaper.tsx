@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing.unit * 4,
     backgroundColor: theme.palette.background.paper,
     boxShadow: '0 0 5px 1px lightgrey',
-    flexGrow: 1,
+    flex: 1,
   },
 }))
 

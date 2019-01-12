@@ -6,7 +6,7 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flexGrow: 1,
+    flex: 1,
     height: '100%',
     zIndex: 1,
     overflow: 'hidden',
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
   },
   main: {
-    flexGrow: 1,
+    flex: 1,
     marginLeft: theme.spacing.unit * 30,
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,

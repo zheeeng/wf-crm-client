@@ -6,7 +6,7 @@ const useGlobalStyles = makeStyles({
     'div[role="group"][tabindex]': {
       display: 'flex',
       flexDirection: 'column',
-      flexGrow: 1,
+      flex: 1,
     },
   },
 })

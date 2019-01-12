@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   table: {
-    flexGrow: 1,
+    flex: 1,
     overflowY: 'auto',
   },
   search: {
