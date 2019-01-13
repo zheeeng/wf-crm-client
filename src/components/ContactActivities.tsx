@@ -11,6 +11,7 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Input from '@material-ui/core/Input'
 import StepContent from '@material-ui/core/StepContent'
 import AddCircle from '@material-ui/icons/AddCircle'
+import RemoveCircle from '@material-ui/icons/RemoveCircle'
 import CalendarToday from '@material-ui/icons/CalendarToday'
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes'
 import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
@@ -64,8 +65,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   noteSubmitter: {
     position: 'absolute',
     padding: 0,
-    right: theme.spacing.unit,
-    bottom: theme.spacing.unit,
+    right: theme.spacing.unit / 2,
+    bottom: theme.spacing.unit / 2,
+  },
+  noteRemover: {
+    'position': 'absolute',
+    'padding': 0,
+    'right': theme.spacing.unit / 2,
+    'bottom': theme.spacing.unit / 2,
+    'visibility': 'hidden',
+    '$entryContent:hover &': {
+      visibility: 'visible',
+    },
   },
   entryTime: {
     width: 80,
@@ -104,7 +115,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [],
   )
 
-  useEffect(() => { freshNotes() }, [])
+  useEffect(() => { freshNotes() }, [contactId])
 
   useEffect(
     () => {
@@ -176,6 +187,15 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [addNote],
   )
 
+  const handleNoteRemove = useCallback(
+    (id: string) =>
+      async () => {
+        await removeNote(id)
+        await freshNotes()
+      },
+    [],
+  )
+
   const NoteGroups = useMemo(
     () => {
       const sortedNotes = notes.slice()
@@ -242,6 +262,11 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 <div className={classes.entry} key={note.id}>
                   <div className={classes.entryContent}>
                     {note.content}
+                    <IconButton
+                      color="primary"
+                      className={classes.noteRemover}>
+                      <RemoveCircle onClick={handleNoteRemove(note.id)} />
+                    </IconButton>
                   </div>
                   <time className={classes.entryTime}>
                     {getTime(note.timestamp)}
