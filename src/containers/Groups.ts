@@ -5,7 +5,7 @@ import { groupInputAdapter, GroupFields, GroupAPI, groupFieldAdapter } from '~sr
 import useInfoCallback from '~src/hooks/useInfoCallback'
 
 const GroupsContainer = createContainer(() => {
-  const [groupId, setGroupId] = useState('')
+  const [ groupId, setGroupId ] = useState('')
   const { data: groupsData, request: getGroupsData } = useGet<GroupAPI[]>()
   const { request: postGroup, error: postGroupError } = usePost()
   const { request: putGroup, error: putGroupError } = usePut()

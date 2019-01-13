@@ -4,15 +4,15 @@ import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import ChevronRight from '@material-ui/icons/ChevronRight'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
 import NotificationContainer from '~src/containers/Notification'
 import GroupsContainer from '~src/containers/Groups'
 import useToggle from '~src/hooks/useToggle'
-
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import ExpandMore from '@material-ui/icons/ExpandMore'
+import { GroupFields } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -53,50 +53,56 @@ export interface Props {
 }
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
-  const { groups } = useContext(GroupsContainer.Context)
+  const { notify } = useContext(NotificationContainer.Context)
+  const { addGroup } = useContext(GroupsContainer.Context)
   const classes = useStyles({})
+
+  const [ newGroupName, setNewGroupName ] = useState('')
+  const [ selectedGroupId, setSelectedGroupId ] = useState('')
 
   const {
     value: groupsOpened,
     toggle: toggleGroupsOpened,
-  } = useToggle(false)
+    toggleOn: toggleOnGroupsOpened,
+  } = useToggle(true)
 
-  const onClickGroup = useCallback(
+  const handleGroupClick = useCallback(
     (id: string) => {
-      // console.log('clicked:', id)
+      if (selectedGroupId === id) {
+        setSelectedGroupId('')
+      } else {
+        setSelectedGroupId(id)
+      }
+    },
+    [selectedGroupId],
+  )
+
+  const handleNewGroupNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const name = event.target.value
+
+      setNewGroupName(name)
+    },
+    [setNewGroupName],
+  )
+
+  const handleCreateGroupClick = useCallback(
+    async () => {
+      const newName = newGroupName.trim()
+      if (newName) {
+        await addGroup({ 'Group name': newGroupName })
+        toggleOnGroupsOpened()
+      }
+      setNewGroupName('')
     },
     [],
   )
-
-  const groupOptions = useMemo(
-    () => groups.map(group => ({ label: group.info.name, value: group.id })),
-    [groups],
-  )
-
-  const { notify } = useContext(NotificationContainer.Context)
-
-  const [groupName, setGroupName] = useState('')
-
-  const fieldValues = useRef<{ [key: string]: string }>({})
 
   const handleOkClick = useCallback(
     async () => {
-      // if (onOk) {
-      //   await onOk(groupName, false)
-      // }
-      // await notify(`Success create a new Contact: ${JSON.stringify(fieldValues.current)}`)
+      console.log(selectedGroupId)
     },
-    [groupName],
-  )
-
-  const handleEnterNewGroup = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      const newGroup = event.currentTarget.value.trim()
-      event.currentTarget.value = ''
-
-      // console.log(newGroup)
-    },
-    [],
+    [selectedGroupId],
   )
 
   return (
@@ -110,7 +116,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         </Typography>
         <BasicFormInput
           placeholder="New Group"
-          onEnterPress={handleEnterNewGroup}
+          onChange={handleNewGroupNameChange}
         />
         <div className={classes.label} onClick={toggleGroupsOpened} >
           Existing group
@@ -120,12 +126,29 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
           }
         </div>
         <GroupMenu
-            groupsOpened={groupsOpened}
-            onClickGroup={onClickGroup}
+          selectedId={selectedGroupId}
+          groupsOpened={groupsOpened}
+          onClickGroup={handleGroupClick}
         />
         <div className={classes.buttonZone}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="primary" onClick={handleOkClick}>Ok</Button>
+          {newGroupName
+            ? (
+              <Button
+                color="primary"
+                onClick={handleCreateGroupClick}
+              >
+                Create
+              </Button>)
+            : (
+              <Button
+                color="primary"
+                onClick={handleOkClick}
+                disabled={!selectedGroupId}
+              >
+                Ok
+              </Button>)
+          }
         </div>
       </div>
     </Modal>

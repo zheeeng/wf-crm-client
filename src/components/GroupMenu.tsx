@@ -21,11 +21,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
+  selectedId?: string
   groupsOpened: boolean
   onClickGroup: (id: string) => void
 }
 
-const GroupMenu: React.FC<Props> = ({ groupsOpened, onClickGroup }) => {
+const GroupMenu: React.FC<Props> = ({ selectedId, groupsOpened, onClickGroup }) => {
   const classes = useStyles({})
 
   const { groupId, groups } = useContext(GroupsContainer.Context)
@@ -43,7 +44,11 @@ const GroupMenu: React.FC<Props> = ({ groupsOpened, onClickGroup }) => {
     () => !searchTerm
       ? groups
       : groups
-        .filter(group => group.info.name.toLowerCase().includes(searchTerm.toLowerCase())),
+        .filter(
+          group => group.info.name.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+            || (group.id && group.id === selectedId),
+          ),
     [groups, searchTerm],
   )
 
@@ -71,7 +76,9 @@ const GroupMenu: React.FC<Props> = ({ groupsOpened, onClickGroup }) => {
           >
             <ListItemText
               classes={{
-                primary: group.id === groupId ? classes.activeItem : undefined,
+                primary: (group.id === groupId || group.id === selectedId)
+                  ? classes.activeItem
+                  : undefined,
               }}
             >
               {group.info.name}
