@@ -20,12 +20,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: theme.breakpoints.values.xs,
+    width: theme.breakpoints.values.sm,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
     border: 'none',
     outline: '#efefef inset 1px',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   buttonZone: {
     textAlign: 'right',
