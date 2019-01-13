@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useContext, useMemo, useRef } from 'react'
+import React, { useCallback, useState, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
@@ -11,8 +11,8 @@ import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
 import NotificationContainer from '~src/containers/Notification'
 import GroupsContainer from '~src/containers/Groups'
+import ContactsContainer from '~src/containers/Contacts'
 import useToggle from '~src/hooks/useToggle'
-import { GroupFields } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -49,13 +49,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   open: boolean,
   onClose?: React.ReactEventHandler<{}>
-  onOk?: (groupId: string, isNew: boolean) => Promise<any>
+  onOk?: (groupId: string) => Promise<any>
 }
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
   const { notify } = useContext(NotificationContainer.Context)
-  const { addGroup } = useContext(GroupsContainer.Context)
+  const { addGroup, addGroupError } = useContext(GroupsContainer.Context)
+  const { addContactToGroup, addContactToGroupError } = useContext(ContactsContainer.Context)
   const classes = useStyles({})
+
+  useEffect(
+    () => {
+      addGroupError && notify(addGroupError.message)
+    },
+    [addGroupError],
+  )
+
+  useEffect(
+    () => {
+      addContactToGroupError && notify(addContactToGroupError.message)
+    },
+    [addContactToGroupError],
+  )
 
   const [ newGroupName, setNewGroupName ] = useState('')
   const [ selectedGroupId, setSelectedGroupId ] = useState('')
@@ -100,7 +115,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
 
   const handleOkClick = useCallback(
     async () => {
-      console.log(selectedGroupId)
+      onOk && onOk(selectedGroupId)
     },
     [selectedGroupId],
   )

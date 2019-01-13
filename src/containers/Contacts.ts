@@ -107,11 +107,11 @@ const ContactsContainer = createContainer(() => {
 
   const addContactToGroup = useCallback(
     async (groupId: string, contactIds: string[]) => {
-      await postContactToGroup(`/api/group/${groupId}`)({
+      await postContactToGroup(`/api/group/${groupId}/people`)({
         people: contactIds,
       })
     },
-    [],
+    [postContactToGroup],
   )
 
   return {
