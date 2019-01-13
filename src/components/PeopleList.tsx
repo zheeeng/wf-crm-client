@@ -259,14 +259,20 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
   const handleAddContactToGroup = useCallback(
     async (groupId: string) => {
-      checked.length && addContactToGroup(groupId, checked)
+      if (checked.length) {
+        await addContactToGroup(groupId, checked)
+      }
+      toggleOffAddContactToGroupFormOpened()
     },
     [checked],
   )
 
   const handleContactsRemove = useCallback(
     async () => {
-      checked.length && removeContacts(checked)
+      if (checked.length) {
+        await removeContacts(checked)
+      }
+      setChecked([])
     },
     [checked],
   )

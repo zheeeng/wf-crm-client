@@ -55,7 +55,6 @@ export interface Props {
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
   const { notify } = useContext(NotificationContainer.Context)
   const { addGroup, addGroupError } = useContext(GroupsContainer.Context)
-  const { addContactToGroup, addContactToGroupError } = useContext(ContactsContainer.Context)
   const classes = useStyles({})
 
   useEffect(
@@ -63,13 +62,6 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       addGroupError && notify(addGroupError.message)
     },
     [addGroupError],
-  )
-
-  useEffect(
-    () => {
-      addContactToGroupError && notify(addContactToGroupError.message)
-    },
-    [addContactToGroupError],
   )
 
   const [ newGroupName, setNewGroupName ] = useState('')
