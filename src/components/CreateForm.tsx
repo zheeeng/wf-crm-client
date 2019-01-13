@@ -77,7 +77,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
     [onOk],
   )
 
-  const { title = 'title', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
+  const { title = 'title', tip = '', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
 
   return (
     <Modal
@@ -88,6 +88,11 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
         <Typography variant="subtitle1" align="center">
           {title}
         </Typography>
+        {tip && (
+          <Typography variant="body2" align="center">
+            {tip}
+          </Typography>)
+        }
         {fields.map(field => (
           <BasicFormInput
             key={field}
