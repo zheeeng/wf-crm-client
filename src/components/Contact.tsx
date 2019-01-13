@@ -18,7 +18,12 @@ const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
     const { notify } = useContext(NotificationContainer.Context)
     const { contacts } = useContext(ContactsContainer.Context)
-    const { contact, removeContact, removeContactError } = useContact(contactId)
+    const { contact, fetchContact, removeContact, removeContactError } = useContact(contactId)
+
+    useEffect(
+      () => { fetchContact() },
+      [contactId],
+    )
 
     useEffect(
       () => {
@@ -88,7 +93,7 @@ const ContactIndex: React.FC<Props> = React.memo(
       [contact],
     )
     const renderRightPart2 = useCallback(
-      () => contact && <ContactActivities activities={contact.info.activities} />,
+      () => contact && <ContactActivities contactId={contactId} />,
       [contact],
     )
 

@@ -171,11 +171,17 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   const { notify } = useContext(NotificationContainer.Context)
 
   const {
+    fetchContact,
     tags, addTag, removeTag,
     addField, addFieldError,
     updateField, updateFieldError,
     removeField, removeFieldError,
   } = useContact(contactId)
+
+  useEffect(
+    () => { fetchContact() },
+    [contactId],
+  )
 
   useEffect(
     () => {

@@ -216,13 +216,14 @@ export const activityOutputAdapter = (output: Partial<Activity>): Partial<Activi
 }
 
 export const noteInputAdapter = (input: NoteAPI): Note => {
-  const activity = {
+  console.log('input is', input)
+  const note = {
     id: input.id,
-    timestamp: input.timestamp,
+    timestamp: input.timestamp * 1000,
     content: input.content,
   }
 
-  return activity
+  return note
 }
 
 export const noteOutputAdapter = (output: Partial<Note>): Partial<NoteAPI> => {

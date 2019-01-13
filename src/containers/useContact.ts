@@ -3,7 +3,7 @@ import {
   PeopleAPI, contactInputAdapter, Contact,
   contactOutputAdapter,
   CommonField,
-  Note, NoteAPI, noteInputAdapter, noteOutputAdapter,
+  NoteAPI, noteInputAdapter,
 } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useDepMemo from '~src/hooks/useDepMemo'
@@ -41,9 +41,9 @@ const useContact = (contactId: string) => {
   const { request: deleteContact, error: deleteContactError } = useDelete()
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
-  const { request: getNotes, error: getNotesError } = useGet()
-  const { request: postNote, error: postNoteError } = usePost<Note>()
-  const { request: putNote, error: putNoteError } = usePut<Note>()
+  const { request: getNotes, error: getNotesError } = useGet<NoteAPI[]>()
+  const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
+  const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
 
   const freshContact = useDepMemo(convertContact, [freshContactData])
@@ -75,8 +75,6 @@ const useContact = (contactId: string) => {
     },
     [contactId],
   )
-
-  useEffect(() => { fetchContact() }, [contactId])
 
   const updateContact = useCallback(
     async (cont: Contact)  => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
@@ -136,47 +134,52 @@ const useContact = (contactId: string) => {
   )
 
   const fetchNotes = useCallback(
-    async () => getNotes(`/api/people/${contactId}/notes`)({}),
+    async () => getNotes(`/api/people/${contactId}/notes`)({})
+      .then(notes => (notes || []).map(noteInputAdapter)),
     [],
   )
   const addNote = useCallback(
-    async (note: Note): Promise<NoteAPI | null> => {
-      const result = await postNote(`/api/people/${contactId}/notes`)(mapKeys(pascal2snake, note))
+    async (content: string): Promise<NoteAPI | null> => {
+      const result = await postNote(`/api/people/${contactId}/notes`)({ note: content })
+        .then(n => noteInputAdapter(n!))
 
       return mapKeys(snake2pascal, result!)
     },
     [],
   )
+
   const updateNote = useCallback(
-    async (note: Note): Promise<NoteAPI | null>  => {
-      const result = await putNote(`/api/people/${contactId}/notes/${note.id!}`)(mapKeys(pascal2snake, note))
+    async (id: string, content: string): Promise<NoteAPI | null>  => {
+      const result = await putNote(`/api/people/${contactId}/notes/${id}`)({ note: content })
+        .then(n => noteInputAdapter(n!))
 
       return mapKeys(snake2pascal, result!)
     },
     [],
   )
+
   const removeNote = useCallback(
-    async (note: Note)  =>
-      deleteNote(`/api/people/${contactId}/notes/${note.id!}`)(mapKeys(pascal2snake, note)),
+    async (id: string)  =>
+      deleteNote(`/api/people/${contactId}/notes/${id}`)(),
     [],
   )
 
   return {
-    contact,
-    fetchContact,
-    updateContact, updateContactError: putContactError,
-    fetchFields, fetchFieldsError: getFieldsError,
-    addField, addFieldError: postFieldError,
-    updateField, updateFieldError: putFieldError,
-    removeField, removeFieldError: deleteFieldError,
-    starContact, starMutation,
-    removeContact, removeMutation, removeContactError: deleteContactError,
-    tags, addTag, removeTag,
-    fetchNotes, fetchNotesError: getNotesError,
-    addNote, addNoteError: postNoteError,
-    updateNote, updateNoteError: putNoteError,
-    removeNote, removeNoteError: deleteNoteError,
-  }
+      contact,
+      fetchContact,
+      updateContact, updateContactError: putContactError,
+      fetchFields, fetchFieldsError: getFieldsError,
+      addField, addFieldError: postFieldError,
+      updateField, updateFieldError: putFieldError,
+      removeField, removeFieldError: deleteFieldError,
+      starContact, starMutation,
+      removeContact, removeMutation, removeContactError: deleteContactError,
+      tags, addTag, removeTag,
+      fetchNotes, fetchNotesError: getNotesError,
+      addNote, addNoteError: postNoteError,
+      updateNote, updateNoteError: putNoteError,
+      removeNote, removeNoteError: deleteNoteError,
+    }
 }
 
 export default useContact
