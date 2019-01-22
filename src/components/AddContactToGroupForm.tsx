@@ -102,7 +102,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       }
       setNewGroupName('')
     },
-    [],
+    [newGroupName],
   )
 
   const handleOkClick = useCallback(
