@@ -11,6 +11,8 @@ import head from 'ramda/es/head'
 import map from 'ramda/es/map'
 import defaultTo from 'ramda/es/defaultTo'
 import ContactsCountContainer from './ContactsCount'
+import sleep from '~src/utils/sleep'
+import downloadFile from '~src/utils/downloadFile'
 
 type FetchParams = {
   page?: number,
@@ -54,6 +56,16 @@ const ContactsContainer = createContainer(() => {
   const { request: postContact, error: postContactError } = usePost()
   const { request: putContact, error: putContactError } = usePut()
   const { request: postContactToGroup, error: postContactToGroupError } = usePost()
+
+  const { request: postExportContacts } = usePost<{ task_id: string }>()
+  const { request: getExportStatus, data: exportContactsStatus, error: getExportStatusError } = useGet<{
+    id: string,
+    ready: boolean,
+    status: string,
+    result?: {
+      url: string,
+    },
+  }>()
 
   const pagination = useDepMemo(convertPagination, [contactsData])
   const contacts = useDepMemo(convertContacts, [contactsData])
@@ -114,6 +126,33 @@ const ContactsContainer = createContainer(() => {
     [postContactToGroup],
   )
 
+  const exportContacts = useCallback(
+    async (contactIds: string[]) => {
+      const response = await postExportContacts('/api/backgroundTasks/exportPeople')({
+        query: {
+          id: contactIds,
+        },
+      })
+
+      if (response) {
+        const taskId = response.task_id
+
+        let statusResponse = await getExportStatus(`/api/backgroundTasks/checkStatus/${taskId}`)()
+
+        while (statusResponse && statusResponse.status === 'pending') {
+          await sleep(2000)
+          statusResponse = await getExportStatus(`/api/backgroundTasks/checkStatus/${taskId}`)()
+        }
+
+        if (statusResponse && statusResponse.ready === true
+          && statusResponse.result && statusResponse.result.url) {
+            downloadFile(statusResponse.result.url)
+        }
+      }
+    },
+    [postExportContacts],
+  )
+
   return {
     pagination,
     contacts,
@@ -122,6 +161,7 @@ const ContactsContainer = createContainer(() => {
     starContact, starMutation, starContactError: putContactError,
     removeContacts, removeMutation, removeContactError,
     addContactToGroup, addContactToGroupError: postContactToGroupError,
+    exportContacts, exportContactsStatus, getExportStatusError,
   }
 })
 

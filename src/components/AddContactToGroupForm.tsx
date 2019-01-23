@@ -11,7 +11,6 @@ import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
 import NotificationContainer from '~src/containers/Notification'
 import GroupsContainer from '~src/containers/Groups'
-import ContactsContainer from '~src/containers/Contacts'
 import useToggle from '~src/hooks/useToggle'
 
 const useStyles = makeStyles((theme: Theme) => ({

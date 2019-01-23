@@ -29,6 +29,7 @@ import NotificationContainer from '~src/containers/Notification'
 import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
+import ExportContactsForm from '~src/components/ExportContactsForm'
 import AddContactToGroupForm from '~src/components/AddContactToGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
@@ -153,6 +154,12 @@ const PeopleList: React.FC<Props> = React.memo(({
     toggleOff: toggleOffAddContactToGroupFormOpened,
   } = useToggle(false)
 
+  const {
+    value: exportContactsOpened,
+    toggleOn: toggleOnExportContactsOpened,
+    toggleOff: toggleOffExportContactsOpened,
+  } = useToggle(false)
+
   const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 
   const handlePopoverToggle = useCallback<{
@@ -257,6 +264,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     },
     [addContact, search, changeCreateContactFormOpened, searchTerm],
   )
+
   const handleAddContactToGroup = useCallback(
     async (groupId: string) => {
       if (checked.length) {
@@ -376,19 +384,21 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderControls = () => (
     <>
       <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'copy')}
+        onMouseEnter={handlePopoverToggle(true, 'merge')}
         onMouseLeave={handlePopoverToggle(false)}
       >
         <ScreenShare />
       </IconButton>
       <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'share')}
+        onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
       >
-        <CallMerge />
+        <CallMerge
+          onClick={toggleOnExportContactsOpened}
+        />
       </IconButton>
       <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'add')}
+        onMouseEnter={handlePopoverToggle(true, 'add to group')}
         onMouseLeave={handlePopoverToggle(false)}
       >
         <PersonAdd
@@ -438,6 +448,11 @@ const PeopleList: React.FC<Props> = React.memo(({
           open={createForm.opened}
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
+        />
+        <ExportContactsForm
+          open={exportContactsOpened}
+          onClose={toggleOffExportContactsOpened}
+          contactIds={checked}
         />
         <AddContactToGroupForm
           open={addContactToGroupFormOpened}
