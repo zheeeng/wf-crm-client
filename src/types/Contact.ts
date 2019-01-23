@@ -216,7 +216,6 @@ export const activityOutputAdapter = (output: Partial<Activity>): Partial<Activi
 }
 
 export const noteInputAdapter = (input: NoteAPI): Note => {
-  console.log('input is', input)
   const note = {
     id: input.id,
     timestamp: input.timestamp * 1000,
