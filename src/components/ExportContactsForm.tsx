@@ -53,7 +53,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
 
     useEffect(
       () => {
-        if (open && contactIds.length < -5) {
+        if (open && contactIds.length) {
           exportContacts(contactIds)
         }
       },
@@ -62,7 +62,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
 
     return (
       <Modal
-        open={true}
+        open={open}
         onClose={onClose}
       >
         <div className={classes.paper}>
