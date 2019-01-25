@@ -107,7 +107,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     contacts,
     addContact, addContactError,
     starContact, starContactError,
-    removeContacts, removeContactError,
+    // removeContacts, removeContactError,
     addContactToGroup, addContactToGroupError,
     mergeContacts, mergeContactsError,
   } = useContext(ContactsContainer.Context)
@@ -124,12 +124,12 @@ const PeopleList: React.FC<Props> = React.memo(({
     },
     [starContactError],
   )
-  useEffect(
-    () => {
-      removeContactError && notify(removeContactError.toString())
-    },
-    [removeContactError],
-  )
+  // useEffect(
+  //   () => {
+  //     removeContactError && notify(removeContactError.toString())
+  //   },
+  //   [removeContactError],
+  // )
   useEffect(
     () => {
       addContactToGroupError && notify(addContactToGroupError.message)
@@ -288,15 +288,15 @@ const PeopleList: React.FC<Props> = React.memo(({
     [checked],
   )
 
-  const handleContactsRemove = useCallback(
-    async () => {
-      if (checked.length) {
-        await removeContacts(checked)
-      }
-      setChecked([])
-    },
-    [checked],
-  )
+  // const handleContactsRemove = useCallback(
+  //   async () => {
+  //     if (checked.length) {
+  //       await removeContacts(checked)
+  //     }
+  //     setChecked([])
+  //   },
+  //   [checked],
+  // )
 
   const handleMergeContacts = useCallback(
     async () => {
@@ -430,12 +430,12 @@ const PeopleList: React.FC<Props> = React.memo(({
           onClick={toggleOnAddContactToGroupFormOpened}
         />
       </IconButton>
-      <IconButton
+      {/* <IconButton
         onMouseEnter={handlePopoverToggle(true, 'delete')}
         onMouseLeave={handlePopoverToggle(false)}
       >
         <Delete onClick={handleContactsRemove} />
-      </IconButton>
+      </IconButton> */}
       <Popover
         className={classes.popover}
         classes={{
