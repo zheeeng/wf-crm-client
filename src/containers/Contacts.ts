@@ -57,6 +57,7 @@ const ContactsContainer = createContainer(() => {
   const { request: putContact, error: putContactError } = usePut()
   const { request: postContactToGroup, error: postContactToGroupError } = usePost()
 
+  const { request: postMergeContacts, error: postMergeContactsError } = usePost<PeopleAPI>()
   const { request: postExportContacts } = usePost<{ task_id: string }>()
   const { request: getExportStatus, data: exportContactsStatus, error: getExportStatusError } = useGet<{
     id: string,
@@ -126,6 +127,30 @@ const ContactsContainer = createContainer(() => {
     [postContactToGroup],
   )
 
+  const mergeContacts = useCallback(
+    async ([targetId, ...sourceIds]: string[]) => {
+      let latestResponse: Promise<PeopleAPI | null>
+
+      const response = await sourceIds.reduce(
+        async (chain, sId) => {
+          try {
+            await chain
+            latestResponse = postMergeContacts(`/api/people/${targetId}/mergePerson/${sId}`)()
+          } finally {
+            // tslint:disable-next-line:no-unsafe-finally
+            return latestResponse
+          }
+        },
+        Promise.resolve() as any as Promise<PeopleAPI | null>,
+      )
+
+      refreshCounts()
+
+      return contactInputAdapter(response!)
+    },
+    [],
+  )
+
   const exportContacts = useCallback(
     async (contactIds: string[]) => {
       const response = await postExportContacts('/api/backgroundTasks/exportPeople')({
@@ -161,7 +186,8 @@ const ContactsContainer = createContainer(() => {
     starContact, starMutation, starContactError: putContactError,
     removeContacts, removeMutation, removeContactError,
     addContactToGroup, addContactToGroupError: postContactToGroupError,
-    exportContacts, exportContactsStatus, getExportStatusError,
+    exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
+    mergeContacts, mergeContactsError: postMergeContactsError,
   }
 })
 

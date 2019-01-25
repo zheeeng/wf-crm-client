@@ -30,6 +30,7 @@ import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import ExportContactsForm from '~src/components/ExportContactsForm'
+import MergeContactsForm from '~src/components/MergeContactsForm'
 import AddContactToGroupForm from '~src/components/AddContactToGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
@@ -108,8 +109,8 @@ const PeopleList: React.FC<Props> = React.memo(({
     starContact, starContactError,
     removeContacts, removeContactError,
     addContactToGroup, addContactToGroupError,
-  }
-  = useContext(ContactsContainer.Context)
+    mergeContacts, mergeContactsError,
+  } = useContext(ContactsContainer.Context)
 
   useEffect(
     () => {
@@ -135,6 +136,12 @@ const PeopleList: React.FC<Props> = React.memo(({
     },
     [addContactToGroupError],
   )
+  useEffect(
+    () => {
+      mergeContactsError && notify(mergeContactsError.message)
+    },
+    [mergeContactsError],
+  )
 
   const classes = useStyles({})
   const [popover, setPopover] = useState({
@@ -152,6 +159,12 @@ const PeopleList: React.FC<Props> = React.memo(({
     value: addContactToGroupFormOpened,
     toggleOn: toggleOnAddContactToGroupFormOpened,
     toggleOff: toggleOffAddContactToGroupFormOpened,
+  } = useToggle(false)
+
+  const {
+    value: mergeContactsOpened,
+    toggleOn: toggleOnMergeContactsOpened,
+    toggleOff: toggleOffMergeContactsOpened,
   } = useToggle(false)
 
   const {
@@ -285,6 +298,16 @@ const PeopleList: React.FC<Props> = React.memo(({
     [checked],
   )
 
+  const handleMergeContacts = useCallback(
+    async () => {
+      if (checked.length < 2) return
+
+      await mergeContacts(checked)
+      onSearch({ page, size, searchTerm })
+    },
+    [checked, page, size, searchTerm],
+  )
+
   const renderPCLayoutTableRows = (contact: Contact) => (
     <>
       <TableCell className={classes.w15Cell}>
@@ -387,7 +410,9 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseEnter={handlePopoverToggle(true, 'merge')}
         onMouseLeave={handlePopoverToggle(false)}
       >
-        <ScreenShare />
+        <ScreenShare
+          onClick={toggleOnMergeContactsOpened}
+        />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
@@ -448,6 +473,11 @@ const PeopleList: React.FC<Props> = React.memo(({
           open={createForm.opened}
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
+        />
+        <MergeContactsForm
+          open={mergeContactsOpened}
+          onClose={toggleOffMergeContactsOpened}
+          onOk={handleMergeContacts}
         />
         <ExportContactsForm
           open={exportContactsOpened}

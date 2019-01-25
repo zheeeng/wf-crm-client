@@ -38,17 +38,17 @@ export interface Props {
 const ExportContactsForm: React.FC<Props> = React.memo(
   ({ open, onClose, contactIds }) => {
     const { notify } = useContext(NotificationContainer.Context)
-    const { exportContacts, exportContactsStatus, getExportStatusError } = useContext(ContactsContainer.Context)
+    const { exportContacts, exportContactsStatus, exportStatusError } = useContext(ContactsContainer.Context)
     const classes = useStyles({})
 
     useEffect(
       () => {
-        if ((exportContactsStatus && exportContactsStatus.ready === true) || getExportStatusError) {
+        if ((exportContactsStatus && exportContactsStatus.ready === true) || exportStatusError) {
           onClose()
           notify('Download success')
         }
       },
-      [exportContactsStatus, getExportStatusError],
+      [exportContactsStatus, exportStatusError],
     )
 
     useEffect(
