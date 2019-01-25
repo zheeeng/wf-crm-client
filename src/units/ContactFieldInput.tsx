@@ -565,3 +565,75 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
     </div>
   )
 })
+
+export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
+  Icon, editable, hasTitle, name, value, options, updateField,
+}) => {
+  const classes = useStyles({})
+
+  const handleEntryUpdate = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const val = event.target.value.trim()
+
+      updateField(val)
+    },
+    [],
+  )
+
+  return (
+    <div className={classes.fieldBar}>
+      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      <div className={classes.fieldTextWrapper}>
+        <div
+          className={classnames(
+            classes.fieldTextBarWrapper,
+            !editable && classes.hidden,
+          )}
+        >
+          <div className={classes.fieldTextBar}>
+            {(hasTitle && !editable) && (
+              <Typography variant="subtitle1" className={classes.fieldTypeText}>
+                {name}
+              </Typography>
+            )}
+            {editable
+              ? (
+                <Select
+                  defaultValue={value}
+                  onChange={handleEntryUpdate}
+                >
+                  {options.map(option => (
+                    <MenuItem value={option} key={option}>
+                      <em>{option || 'None'}</em>
+                    </MenuItem>
+                  ))}
+                </Select>
+              )
+              : (
+                <Input
+                  disabled={true}
+                  disableUnderline={true}
+                  className={classes.fieldInput}
+                  value={value}
+                />
+              )
+            }
+          </div>
+          {editable && (
+            <div className={classes.filedIconBox}>
+              <IconButton className={classes.fieldControlIcon}>
+                <Eye className={classes.placeholderIcon} />
+              </IconButton>
+              <IconButton className={classes.fieldControlIcon}>
+                <Reorder className={classes.placeholderIcon} />
+              </IconButton>
+              <IconButton className={classes.fieldControlIcon}>
+                <AddCircle className={classes.placeholderIcon} />
+              </IconButton>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+})

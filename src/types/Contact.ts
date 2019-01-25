@@ -25,6 +25,12 @@ export interface Note {
   timestamp: number
 }
 
+export interface OtherField extends ContactField {
+  fieldType: 'other'
+  content?: string
+  title?: string
+}
+
 export interface NoteAPI {
   account: string
   content: string
@@ -87,6 +93,7 @@ export interface Contact {
     waivers: any[],
     activities: Activity[],
     notes: Note[],
+    other: OtherField[],
   }
 }
 
@@ -126,7 +133,8 @@ export interface PeopleAPI {
   address: string | null
   addresses?: any[]
   phone: string | null
-  phones?: []
+  phones?: any[]
+  other?: any[]
   tags: string[]
   pictures: string[],
   waivers: any[],
@@ -249,7 +257,7 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
   const {
     id, account, favourite,
     picture_url, name, names, gender, dob_day, dob_month, dob_year,
-    email, emails, address, addresses, phone, phones, tags,
+    email, emails, address, addresses, phone, phones, other, tags,
     pictures, waivers, activities, notes,
   } = input
 
@@ -266,6 +274,7 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
     addresses: (addresses || []).map(o => mapKeys(snake2pascal, o)),
     phone: phone || '',
     phones: (phones || []).map(o => mapKeys(snake2pascal, o)),
+    other: (other || []).map(o => mapKeys(snake2pascal, o)),
     tags, pictures, waivers,
     activities: activities ? activities.map(activityInputAdapter) : [],
     notes: notes ? notes.map(noteInputAdapter) : [],

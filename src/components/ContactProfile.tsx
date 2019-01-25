@@ -11,6 +11,7 @@ import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
 import People from '@material-ui/icons/People'
 import LocationOn from '@material-ui/icons/LocationOn'
+import Description from '@material-ui/icons/Description'
 import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
@@ -21,7 +22,7 @@ import useContact from '~src/containers/useContact'
 import ContactFieldInput,
   { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
-import { Contact, NameField, PhoneField, AddressField, EmailField } from '~src/types/Contact'
+import { Contact, NameField, PhoneField, AddressField, EmailField, OtherField } from '~src/types/Contact'
 
 const useStyles = makeStyles((theme: Theme) => ({
   profileBar: {
@@ -134,11 +135,24 @@ const addressFieldMap = ({ id, firstLine, secondLine, title, priority }: Address
     priority,
   })
 
+const otherFieldMap = ({ id, content, title, priority }: OtherField): FieldValue =>
+  ({
+    values: [
+      { key: 'content', value: content || '', fieldType: 'other' },
+      { key: 'title', value: title || '', fieldType: 'other' },
+    ],
+    id,
+    priority,
+  })
+
 const backupAddressField =
   addressFieldMap({ id: '', firstLine: '', secondLine: '', title: '', fieldType: 'address', priority: 100 })
 
-const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'phone') => (
-  specificField: NameField | EmailField | AddressField | PhoneField | null,
+const backupOtherField =
+  otherFieldMap({ id: '', content: '', title: '', fieldType: 'other', priority: 100 })
+
+const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'phone' | 'other') => (
+  specificField: NameField | EmailField | AddressField | PhoneField | OtherField | null,
 ): FieldValue | null => {
   if (specificField === null) return null
 
@@ -156,6 +170,9 @@ const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'ph
     }
     case 'address': {
       return addressFieldMap(specificField)
+    }
+    case 'other': {
+      return otherFieldMap(specificField)
     }
     default: {
       throw Error('invalid data')
@@ -287,6 +304,10 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     () => contact.info.addresses.map(addressFieldMap),
     [contact],
   )
+  const other = useMemo<FieldValue[]>(
+    () => contact.info.other.map(otherFieldMap),
+    [contact],
+  )
 
   return (
     <>
@@ -402,6 +423,18 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           expandable={true}
           fieldValues={addresses}
           backupFieldValue={backupAddressField}
+          onAddField={handleFieldAdd}
+          onUpdateField={handleFieldUpdate}
+          onDeleteField={handleFieldRemove}
+          onChangePriority={handleFieldPriorityChange}
+        />
+        <ContactFieldInput
+          key="other" name="other" editable={editable}
+          Icon={Description}
+          hasTitle={true}
+          expandable={true}
+          fieldValues={other}
+          backupFieldValue={backupOtherField}
           onAddField={handleFieldAdd}
           onUpdateField={handleFieldUpdate}
           onDeleteField={handleFieldRemove}
