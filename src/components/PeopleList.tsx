@@ -22,7 +22,7 @@ import StarBorder from '@material-ui/icons/StarBorder'
 import CallMerge from '@material-ui/icons/CallMerge'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
-import Delete from '@material-ui/icons/Delete'
+// import Delete from '@material-ui/icons/Delete'
 
 import useToggle from '~src/hooks/useToggle'
 import NotificationContainer from '~src/containers/Notification'

@@ -18,7 +18,8 @@ import Chip from '@material-ui/core/Chip'
 
 import NotificationContainer from '~src/containers/Notification'
 import useContact from '~src/containers/useContact'
-import ContactFieldInput, { FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
+import ContactFieldInput,
+  { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
 import { Contact, NameField, PhoneField, AddressField, EmailField } from '~src/types/Contact'
 
@@ -174,6 +175,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     fetchContact,
     tags, addTag, removeTag,
     addField, addFieldError,
+    updateContactGender,
     updateField, updateFieldError,
     removeField, removeFieldError,
   } = useContact(contactId)
@@ -216,6 +218,15 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   )
 
   const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [removeTag])
+
+  const handleUpdateContactGender = useCallback(
+    (value: string) => {
+      if (value !== 'Male' && value !== 'Female') return
+
+      updateContactGender(value)
+    },
+    [],
+  )
 
   const handleFieldAdd = useCallback(
     (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, priority: number) =>
@@ -262,6 +273,10 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   )
   const emails = useMemo<FieldValue[]>(
     () => contact.info.emails.map(emailFieldMap),
+    [contact],
+  )
+  const gender = useMemo<Contact['info']['gender']>(
+    () => contact.info.gender,
     [contact],
   )
   const phones = useMemo<FieldValue[]>(
@@ -372,17 +387,14 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           onDeleteField={handleFieldRemove}
           onChangePriority={handleFieldPriorityChange}
         />
-        {/* <FieldInput
+        <ContactSelectedFieldInput
           key="gender" name="gender" editable={editable}
           Icon={People}
-          hasTitle={false}
-          expandable={false}
-          fieldValues={gender}
-          onAddField={handleFieldAdd}
-          onUpdateField={handleFieldUpdate}
-          onDeleteField={handleFieldRemove}
-          onChangePriority={handleFieldPriorityChange}
-        /> */}
+          hasTitle={true}
+          value={gender || ''}
+          options={['', 'Male', 'Female']}
+          updateField={handleUpdateContactGender}
+        />
         <ContactFieldInput
           key="address" name="address" editable={editable}
           Icon={LocationOn}

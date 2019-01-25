@@ -115,6 +115,13 @@ const useContact = (contactId: string) => {
     [],
   )
 
+  const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
+    async (gender: 'Male' | 'Female') => {
+      await putContact(`/api/people/${contactId}`)({ gender })
+    },
+    [],
+  )
+
   const [removeContact, removeMutation] = useInfoCallback(
     async () => {
       await deleteContact(`/api/people/${contactId}`)()
@@ -173,6 +180,7 @@ const useContact = (contactId: string) => {
       updateField, updateFieldError: putFieldError,
       removeField, removeFieldError: deleteFieldError,
       starContact, starMutation,
+      updateContactGender, updateContactGenderMutation,
       removeContact, removeMutation, removeContactError: deleteContactError,
       tags, addTag, removeTag,
       fetchNotes, fetchNotesError: getNotesError,

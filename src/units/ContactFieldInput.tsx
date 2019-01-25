@@ -5,6 +5,8 @@ import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import AddCircle from '@material-ui/icons/AddCircle'
 import RemoveCircle from '@material-ui/icons/RemoveCircle'
 import Eye from '@material-ui/icons/RemoveRedEye'
@@ -57,6 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing.unit,
     marginRight: 0,
     padding: 0,
+  },
+  placeholderIcon: {
+    visibility: 'hidden',
   },
   fieldHoverShowingIcon: {
     'visibility': 'hidden',
@@ -298,7 +303,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                         disabled={fieldValue.priority === 0}
                       />
                     ) : undefined}
-                </>
+                  </>
                 )
                 : (
                   <Input
@@ -384,3 +389,179 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 })
 
 export default ContactFieldInput
+
+export type InputProps = {
+  Icon?: React.ComponentType<{ className?: string, color?: any }>,
+  name: string,
+  hasTitle: boolean,
+  editable?: boolean,
+  updateField: (value: string) => void,
+}
+
+export type TextInputProps = InputProps & {
+  value: string,
+}
+
+export type SelectedInputProps = InputProps & {
+  value: string,
+  options: string[],
+}
+
+export type DataInputProps = InputProps & {
+  value: string,
+}
+
+export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
+  Icon, editable, hasTitle, name, value, updateField,
+}) => {
+  const classes = useStyles({})
+
+  const handleEntryUpdateByBlur = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      const val = event.target.value.trim()
+
+      if (!val) return
+
+      updateField(val)
+    },
+    [],
+  )
+  const handleEntryUpdateByKeydown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.keyCode !== 13) return
+      const val = event.currentTarget.value.trim()
+
+      if (!val) return
+
+      updateField(val)
+    },
+    [],
+  )
+
+  return (
+    <div className={classes.fieldBar}>
+      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      <div className={classes.fieldTextWrapper}>
+        <div
+          className={classnames(
+            classes.fieldTextBarWrapper,
+            !editable && classes.hidden,
+          )}
+        >
+          <div className={classes.fieldTextBar}>
+            {(hasTitle && !editable) && (
+              <Typography variant="subtitle1" className={classes.fieldTypeText}>
+                {name}
+              </Typography>
+            )}
+            {editable
+              ? (
+                <Input
+                  key={name}
+                  className={classes.fieldInput}
+                  placeholder={name}
+                  defaultValue={value}
+                  onBlur={handleEntryUpdateByBlur}
+                  onKeyDown={handleEntryUpdateByKeydown}
+                />
+              )
+              : (
+                <Input
+                  disabled={true}
+                  disableUnderline={true}
+                  className={classes.fieldInput}
+                  value={value}
+                />
+              )
+            }
+          </div>
+          {editable && (
+            <div className={classes.filedIconBox}>
+              <IconButton className={classes.fieldControlIcon}>
+                <Eye className={classes.placeholderIcon} />
+              </IconButton>
+              <IconButton className={classes.fieldControlIcon}>
+                <Reorder className={classes.placeholderIcon} />
+              </IconButton>
+              <IconButton className={classes.fieldControlIcon}>
+                <AddCircle className={classes.placeholderIcon} />
+              </IconButton>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+})
+
+export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
+  Icon, editable, hasTitle, name, value, options, updateField,
+}) => {
+  const classes = useStyles({})
+
+  const handleEntryUpdate = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const val = event.target.value.trim()
+
+      updateField(val)
+    },
+    [],
+  )
+
+  return (
+    <div className={classes.fieldBar}>
+      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      <div className={classes.fieldTextWrapper}>
+        <div
+          className={classnames(
+            classes.fieldTextBarWrapper,
+            !editable && classes.hidden,
+          )}
+        >
+          <div className={classes.fieldTextBar}>
+            {(hasTitle && !editable) && (
+              <Typography variant="subtitle1" className={classes.fieldTypeText}>
+                {name}
+              </Typography>
+            )}
+            {editable
+              ? (
+                <Select
+                  defaultValue={value}
+                  onChange={handleEntryUpdate}
+                >
+                  {options.map(option => (
+                    <MenuItem value={option} key={option}>
+                      <em>{option || 'None'}</em>
+                    </MenuItem>
+                  ))}
+                </Select>
+              )
+              : (
+                <Input
+                  disabled={true}
+                  disableUnderline={true}
+                  className={classes.fieldInput}
+                  value={value}
+                />
+              )
+            }
+          </div>
+          {editable && (
+            <div className={classes.filedIconBox}>
+              <IconButton className={classes.fieldControlIcon}>
+                <Eye className={classes.placeholderIcon} />
+              </IconButton>
+              <IconButton className={classes.fieldControlIcon}>
+                <Reorder className={classes.placeholderIcon} />
+              </IconButton>
+              <IconButton className={classes.fieldControlIcon}>
+                <AddCircle className={classes.placeholderIcon} />
+              </IconButton>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+})
