@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import {
   PeopleAPI, contactInputAdapter, Contact,
   contactOutputAdapter,
@@ -39,7 +39,8 @@ const useContact = (contactId: string) => {
     isLoading: isFetchingContact,
     error: getContactError,
   } = useGet<PeopleAPI>()
-  const { data: updatedContactData, request: putContact, error: putContactError } = usePut()
+  const { data: updatedContactData, request: putContact, error: putContactError } = usePut<PeopleAPI>()
+  const { data: putContactFiledData, request: putContactFiled } = usePut<PeopleAPI>()
   const { request: getFields, error: getFieldsError } = useGet()
   const { request: postField, error: postFieldError } = usePost<CommonField>()
   const { request: putField, error: putFieldError } = usePut<CommonField>()
@@ -73,9 +74,9 @@ const useContact = (contactId: string) => {
     afterRemovedTags,
   ) || []
 
-  const gender = useMemo(
-    () => latestContact && latestContact.info.gender,
-    [latestContact],
+  const gender = useLatest<'Male' | 'Female' | ''>(
+    latestContact && latestContact.info.gender || '',
+    putContactFiledData && putContactFiledData.gender || '',
   )
 
   const contact = useMemo<Contact | undefined>(
@@ -139,7 +140,7 @@ const useContact = (contactId: string) => {
 
   const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
     async (newGender: 'Male' | 'Female') => {
-      await putContact(`/api/people/${contactId}`)({ gender: newGender })
+      await putContactFiled(`/api/people/${contactId}`)({ gender: newGender })
     },
     [contactId],
   )

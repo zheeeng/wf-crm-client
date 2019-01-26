@@ -12,6 +12,7 @@ import CreditCard from '@material-ui/icons/CreditCard'
 import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
 import People from '@material-ui/icons/People'
+import Cake from '@material-ui/icons/Cake'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import LocationOn from '@material-ui/icons/LocationOn'
 import Description from '@material-ui/icons/Description'
@@ -26,7 +27,7 @@ import useContact from '~src/containers/useContact'
 import ContactFieldInput,
   { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
-import { NameField, PhoneField, AddressField, EmailField, OtherField } from '~src/types/Contact'
+import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -119,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const nameFieldMap = ({ id, firstName, middleName, lastName, title, priority }: NameField): FieldValue =>
+const nameFieldMap = ({ id, firstName, middleName, lastName, title, priority, waiver }: NameField): FieldValue =>
   ({
     values: [
       { key: 'firstName', value: firstName || '', fieldType: 'name' },
@@ -129,11 +130,12 @@ const nameFieldMap = ({ id, firstName, middleName, lastName, title, priority }: 
     ],
     id,
     priority,
+    waiver,
   })
 const backupNameField =
   nameFieldMap({ id: '', firstName: '', middleName: '', lastName: '', title: '', fieldType: 'name', priority: 100 })
 
-const emailFieldMap = ({ id, email, title, priority }: EmailField): FieldValue =>
+const emailFieldMap = ({ id, email, title, priority, waiver }: EmailField): FieldValue =>
   ({
     values: [
       { key: 'email', value: email || '', fieldType: 'email' },
@@ -141,13 +143,14 @@ const emailFieldMap = ({ id, email, title, priority }: EmailField): FieldValue =
     ],
     id,
     priority,
+    waiver,
   })
 
 const backupEmailField =
   emailFieldMap({ id: '', email: '', title: '', fieldType: 'email', priority: 100 })
 
 // tslint:disable-next-line:variable-name
-const phoneFieldMap = ({ id, number, title, priority }: PhoneField): FieldValue =>
+const phoneFieldMap = ({ id, number, title, priority, waiver }: PhoneField): FieldValue =>
   ({
     values: [
       { key: 'number', value: number || '', fieldType: 'phone' },
@@ -155,12 +158,29 @@ const phoneFieldMap = ({ id, number, title, priority }: PhoneField): FieldValue 
     ],
     id,
     priority,
+    waiver,
   })
 
 const backupPhoneField =
   phoneFieldMap({ id: '', number: '', title: '', fieldType: 'phone', priority: 100 })
 
-const addressFieldMap = ({ id, firstLine, secondLine, title, priority }: AddressField): FieldValue =>
+const dateFieldMap = ({ id, year, month, day, title, priority, waiver }: DateField): FieldValue =>
+  ({
+    values: [
+      { key: 'year', value: year ? `${year}` : '', fieldType: 'date' },
+      { key: 'month', value: month ? `${month}` : '', fieldType: 'date' },
+      { key: 'day', value: day ? `${day}` : '', fieldType: 'date' },
+      { key: 'title', value: title || '', fieldType: 'date' },
+    ],
+    id,
+    priority,
+    waiver,
+  })
+
+const backupDateField =
+  dateFieldMap({ id: '', year: 0, month: 0, day: 0, fieldType: 'date', priority: 100 })
+
+const addressFieldMap = ({ id, firstLine, secondLine, title, priority, waiver }: AddressField): FieldValue =>
   ({
     values: [
       { key: 'firstLine', value: firstLine || '', fieldType: 'address' },
@@ -169,9 +189,13 @@ const addressFieldMap = ({ id, firstLine, secondLine, title, priority }: Address
     ],
     id,
     priority,
+    waiver,
   })
 
-const otherFieldMap = ({ id, content, title, priority }: OtherField): FieldValue =>
+const backupAddressField =
+  addressFieldMap({ id: '', firstLine: '', secondLine: '', title: '', fieldType: 'address', priority: 100 })
+
+const otherFieldMap = ({ id, content, title, priority, waiver }: OtherField): FieldValue =>
   ({
     values: [
       { key: 'content', value: content || '', fieldType: 'other' },
@@ -179,16 +203,14 @@ const otherFieldMap = ({ id, content, title, priority }: OtherField): FieldValue
     ],
     id,
     priority,
+    waiver,
   })
-
-const backupAddressField =
-  addressFieldMap({ id: '', firstLine: '', secondLine: '', title: '', fieldType: 'address', priority: 100 })
 
 const backupOtherField =
   otherFieldMap({ id: '', content: '', title: '', fieldType: 'other', priority: 100 })
 
-const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'phone' | 'other') => (
-  specificField: NameField | EmailField | AddressField | PhoneField | OtherField | null,
+const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'phone' | 'date' | 'other') => (
+  specificField: NameField | EmailField | AddressField | PhoneField | DateField | OtherField | null,
 ): FieldValue | null => {
   if (specificField === null) return null
 
@@ -203,6 +225,9 @@ const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'ph
     }
     case 'phone': {
       return phoneFieldMap(specificField)
+    }
+    case 'date': {
+      return dateFieldMap(specificField)
     }
     case 'address': {
       return addressFieldMap(specificField)
@@ -301,7 +326,9 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   const handleFieldAdd = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, priority: number) =>
+    (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other',
+     { key, value }: FieldSegmentValue, priority: number,
+    ) =>
       addField({
         fieldType: name,
         [key]: value,
@@ -310,7 +337,9 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [addField],
   )
   const handleFieldUpdate = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', { key, value }: FieldSegmentValue, id: string, priority: number) =>
+    (name: 'name' | 'email' | 'address' | 'phone' | 'date'  | 'other',
+     { key, value }: FieldSegmentValue, id: string, priority: number,
+  ) =>
       updateField({
         id,
         fieldType: name,
@@ -320,7 +349,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [updateField],
   )
   const handleFieldRemove = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', id: string) =>
+    (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other', id: string) =>
       removeField({
         id,
         fieldType: name,
@@ -330,7 +359,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   const handleFieldPriorityChange = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone', id: string, priority: number) =>
+    (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other', id: string, priority: number) =>
       updateField({
         id,
         fieldType: name,
@@ -357,15 +386,21 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       : [],
     [contact],
   )
+  const dates = useMemo<FieldValue[]>(
+    () => contact
+      ? contact.info.dates.map(dateFieldMap)
+      : [],
+    [contact],
+  )
   const addresses = useMemo<FieldValue[]>(
     () => contact
       ? contact.info.addresses.map(addressFieldMap)
       : [],
     [contact],
   )
-  const other = useMemo<FieldValue[]>(
+  const others = useMemo<FieldValue[]>(
     () => contact
-      ? contact.info.other.map(otherFieldMap)
+      ? contact.info.others.map(otherFieldMap)
       : [],
     [contact],
   )
@@ -392,6 +427,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     <>
       <ContactFieldInput
         key="name" name="name" editable={e}
+        fieldName="Name"
         showName={showName}
         Icon={CreditCard}
         hasTitle={false}
@@ -405,6 +441,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="email" name="email" editable={e}
+        fieldName="Email"
         showName={showName}
         Icon={Email}
         hasTitle={true}
@@ -418,6 +455,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="phone" name="phone" editable={e}
+        fieldName="Phone"
         showName={showName}
         Icon={Phone}
         hasTitle={true}
@@ -429,17 +467,33 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
+      <ContactFieldInput
+        key="date" name="date" editable={e}
+        fieldName="Birthday"
+        showName={showName}
+        Icon={Cake}
+        hasTitle={false}
+        expandable={true}
+        fieldValues={dates}
+        backupFieldValue={backupDateField}
+        onAddField={handleFieldAdd}
+        onUpdateField={handleFieldUpdate}
+        onDeleteField={handleFieldRemove}
+        onChangePriority={handleFieldPriorityChange}
+      />
       <ContactSelectedFieldInput
         key="gender" name="gender" editable={e}
+        fieldName="Gender"
         showName={showName}
         Icon={People}
-        hasTitle={true}
+        hasTitle={false}
         value={gender || ''}
         options={['', 'Male', 'Female']}
         updateField={handleUpdateContactGender}
       />
       <ContactFieldInput
         key="address" name="address" editable={e}
+        fieldName="Address"
         showName={showName}
         Icon={LocationOn}
         hasTitle={true}
@@ -457,7 +511,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         Icon={Description}
         hasTitle={true}
         expandable={true}
-        fieldValues={other}
+        fieldValues={others}
         backupFieldValue={backupOtherField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}

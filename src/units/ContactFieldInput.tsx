@@ -109,9 +109,11 @@ export interface FieldValue {
   values: FieldSegmentValue[]
   id?: string
   priority: number
+  waiver?: any
 }
 
 export type InputProps = {
+  fieldName?: string,
   showName?: boolean,
   Icon?: React.ComponentType<{ className?: string, color?: any }>,
   name: string,
@@ -130,7 +132,7 @@ export type Props = InputProps & {
 }
 
 const ContactFieldInput: React.FC<Props> = React.memo(
-  ({ showName = false, Icon, name, fieldValues, backupFieldValue,
+  ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
      editable = false, hasTitle, expandable,
      onAddField, onUpdateField, onDeleteField, onChangePriority }) => {
 
@@ -301,7 +303,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                           defaultValue={segmentValue.value}
                           onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
                           onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
-                          disabled={fieldValue.priority === 0}
+                          disabled={fieldValue.priority === 0 || fieldValue.waiver}
                         />
                       ))
                     }
@@ -386,7 +388,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   return (
     <div className={classes.fieldBar} ref={containerRef}>
       {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <SortableList
@@ -421,7 +423,7 @@ export type DataInputProps = InputProps & {
 }
 
 export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
-  showName = false, Icon, editable, hasTitle, name, value, updateField,
+  fieldName = '', showName = false, Icon, editable, hasTitle, name, value, updateField,
 }) => {
   const classes = useStyles({})
 
@@ -450,7 +452,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   return (
     <div className={classes.fieldBar}>
       {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
@@ -506,7 +508,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 })
 
 export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  showName = false, Icon, editable, hasTitle, name, value, options, updateField,
+  fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
@@ -522,7 +524,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
   return (
     <div className={classes.fieldBar}>
       {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
@@ -580,77 +582,77 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
   )
 })
 
-export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  showName = false, Icon, editable, hasTitle, name, value, options, updateField,
-}) => {
-  const classes = useStyles({})
+// export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
+//   fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
+// }) => {
+//   const classes = useStyles({})
 
-  const handleEntryUpdate = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const val = event.target.value.trim()
+//   const handleEntryUpdate = useCallback(
+//     (event: React.ChangeEvent<HTMLSelectElement>) => {
+//       const val = event.target.value.trim()
 
-      updateField(val)
-    },
-    [],
-  )
+//       updateField(val)
+//     },
+//     [],
+//   )
 
-  return (
-    <div className={classes.fieldBar}>
-      {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
-      <div className={classes.fieldTextWrapper}>
-        <div
-          className={classnames(
-            classes.fieldTextBarWrapper,
-            !editable && classes.hidden,
-          )}
-        >
-          <div className={classes.fieldTextBar}>
-            {(hasTitle && !editable) && (
-              <Typography variant="subtitle2" className={classes.fieldTypeText}>
-                {name}
-              </Typography>
-            )}
-            {editable
-              ? (
-                <Select
-                  className={classes.fieldInput}
-                  defaultValue={value}
-                  onChange={handleEntryUpdate}
-                >
-                  {options.map(option => (
-                    <MenuItem value={option} key={option}>
-                      <em>{option || 'None'}</em>
-                    </MenuItem>
-                  ))}
-                </Select>
-              )
-              : (
-                <Input
-                  disabled={true}
-                  disableUnderline={true}
-                  className={classes.fieldInput}
-                  value={value}
-                />
-              )
-            }
-          </div>
-          {editable && (
-            <div className={classes.filedIconBox}>
-              <IconButton className={classes.fieldControlIcon}>
-                <Eye className={classes.placeholderIcon} />
-              </IconButton>
-              <IconButton className={classes.fieldControlIcon}>
-                <Reorder className={classes.placeholderIcon} />
-              </IconButton>
-              <IconButton className={classes.fieldControlIcon}>
-                <AddCircle className={classes.placeholderIcon} />
-              </IconButton>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-})
+//   return (
+//     <div className={classes.fieldBar}>
+//       {showName
+//         ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
+//         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
+//       <div className={classes.fieldTextWrapper}>
+//         <div
+//           className={classnames(
+//             classes.fieldTextBarWrapper,
+//             !editable && classes.hidden,
+//           )}
+//         >
+//           <div className={classes.fieldTextBar}>
+//             {(hasTitle && !editable) && (
+//               <Typography variant="subtitle2" className={classes.fieldTypeText}>
+//                 {name}
+//               </Typography>
+//             )}
+//             {editable
+//               ? (
+//                 <Select
+//                   className={classes.fieldInput}
+//                   defaultValue={value}
+//                   onChange={handleEntryUpdate}
+//                 >
+//                   {options.map(option => (
+//                     <MenuItem value={option} key={option}>
+//                       <em>{option || 'None'}</em>
+//                     </MenuItem>
+//                   ))}
+//                 </Select>
+//               )
+//               : (
+//                 <Input
+//                   disabled={true}
+//                   disableUnderline={true}
+//                   className={classes.fieldInput}
+//                   value={value}
+//                 />
+//               )
+//             }
+//           </div>
+//           {editable && (
+//             <div className={classes.filedIconBox}>
+//               <IconButton className={classes.fieldControlIcon}>
+//                 <Eye className={classes.placeholderIcon} />
+//               </IconButton>
+//               <IconButton className={classes.fieldControlIcon}>
+//                 <Reorder className={classes.placeholderIcon} />
+//               </IconButton>
+//               <IconButton className={classes.fieldControlIcon}>
+//                 <AddCircle className={classes.placeholderIcon} />
+//               </IconButton>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   )
+// })

@@ -25,12 +25,6 @@ export interface Note {
   timestamp: number
 }
 
-export interface OtherField extends ContactField {
-  fieldType: 'other'
-  content?: string
-  title?: string
-}
-
 export interface NoteAPI {
   account: string
   content: string
@@ -57,6 +51,7 @@ export interface ContactField {
   id?: string
   priority: number
   title?: string
+  waiver?: any
 }
 
 export interface NameField extends ContactField {
@@ -74,6 +69,12 @@ export interface PhoneField extends ContactField {
   fieldType: 'phone',
   number?: string
 }
+export interface DateField extends ContactField {
+  fieldType: 'date',
+  year?: number
+  month?: number
+  day?: number
+}
 
 export interface AddressField extends ContactField {
   fieldType: 'address',
@@ -85,7 +86,13 @@ export interface AddressField extends ContactField {
   country?: string
 }
 
-export type CommonField = NameField | EmailField | PhoneField | AddressField
+export interface OtherField extends ContactField {
+  fieldType: 'other'
+  content?: string
+  title?: string
+}
+
+export type CommonField = NameField | EmailField | PhoneField | AddressField | DateField | OtherField
 
 export interface Contact {
   id: string,
@@ -96,6 +103,7 @@ export interface Contact {
     names: NameField[],
     gender: 'Male' | 'Female' | null,
     birthDay: string,
+    dates: any[],
     email: string,
     emails: EmailField[],
     address: string,
@@ -107,7 +115,7 @@ export interface Contact {
     waivers: any[],
     activities: Activity[],
     notes: Note[],
-    other: OtherField[],
+    others: OtherField[],
   }
 }
 
@@ -148,7 +156,8 @@ export interface PeopleAPI {
   addresses?: any[]
   phone: string | null
   phones?: any[]
-  other?: any[]
+  others?: any[]
+  dates?: any[]
   tags: string[]
   pictures: string[],
   waivers: any[],
@@ -281,7 +290,7 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
   const {
     id, account, favourite,
     picture_url, name, names, gender, dob_day, dob_month, dob_year,
-    email, emails, address, addresses, phone, phones, other, tags,
+    email, emails, address, addresses, phone, phones, others, tags, dates,
     pictures, waivers, activities, notes,
   } = input
 
@@ -298,7 +307,8 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
     addresses: (addresses || []).map(o => mapKeys(snake2pascal, o)),
     phone: phone || '',
     phones: (phones || []).map(o => mapKeys(snake2pascal, o)),
-    other: (other || []).map(o => mapKeys(snake2pascal, o)),
+    dates: (dates || []).map(o => mapKeys(snake2pascal, o)),
+    others: (others || []).map(o => mapKeys(snake2pascal, o)),
     tags, pictures, waivers,
     activities: activities ? activities.map(activityInputAdapter) : [],
     notes: notes ? notes.map(noteInputAdapter) : [],
