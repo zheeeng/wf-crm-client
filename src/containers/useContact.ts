@@ -44,6 +44,7 @@ const useContact = (contactId: string) => {
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
   const { request: getNotes, error: getNotesError } = useGet<NoteAPI[]>()
   const { request: getWaivers, error: getWaiversError } = useGet<WaiverAPI[]>()
+  const { request: postSplitWaiver, error: postSplitWaiverError } = usePost<PeopleAPI>()
   const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
@@ -85,12 +86,12 @@ const useContact = (contactId: string) => {
 
   const updateContact = useCallback(
     async (cont: Contact) => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
-    [],
+    [contactId],
   )
 
   const fetchFields = useCallback(
     async () => getFields(`/api/people/${contactId}/fields`)({}),
-    [],
+    [contactId],
   )
   const addField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
@@ -98,7 +99,7 @@ const useContact = (contactId: string) => {
 
       return mapKeys(snake2pascal, result!)
     },
-    [],
+    [contactId],
   )
   const updateField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
@@ -106,12 +107,12 @@ const useContact = (contactId: string) => {
 
       return mapKeys(snake2pascal, result!)
     },
-    [],
+    [contactId],
   )
   const removeField = useCallback(
     async (field: CommonField) =>
       deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
-    [],
+    [contactId],
   )
 
   const [starContact, starMutation] = useInfoCallback(
@@ -119,14 +120,14 @@ const useContact = (contactId: string) => {
       await putContact(`/api/people/${contactId}`)({ favourite: star })
       refreshCounts()
     },
-    [],
+    [contactId],
   )
 
   const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
     async (newGender: 'Male' | 'Female') => {
       await putContact(`/api/people/${contactId}`)({ gender: newGender })
     },
-    [],
+    [contactId],
   )
 
   const [removeContact, removeMutation] = useInfoCallback(
@@ -134,24 +135,25 @@ const useContact = (contactId: string) => {
       await deleteContact(`/api/people/${contactId}`)()
       refreshCounts()
     },
-    [],
+    [contactId],
   )
 
   const addTag = useCallback(
     async (tag: string) => postTag(`/api/people/${contactId}/tags`)({ tag }),
-    [],
+    [contactId],
   )
 
   const removeTag = useCallback(
     async (tag: string) => deleteTag(`/api/people/${contactId}/tags/${tag}`)(),
-    [],
+    [contactId],
   )
 
   const fetchNotes = useCallback(
     async () => getNotes(`/api/people/${contactId}/notes`)({})
       .then(notes => (notes || []).map(noteInputAdapter)),
-    [],
+    [contactId],
   )
+
   const addNote = useCallback(
     async (content: string): Promise<NoteAPI | null> => {
       const result = await postNote(`/api/people/${contactId}/notes`)({ note: content })
@@ -159,12 +161,21 @@ const useContact = (contactId: string) => {
 
       return mapKeys(snake2pascal, result!)
     },
-    [],
+    [contactId],
   )
   const fetchWaivers = useCallback(
     async () => getWaivers(`/api/people/${contactId}/waivers`)({})
       .then(waivers => (waivers || []).map(waiverInputAdapter)),
-    [],
+    [contactId],
+  )
+
+  const splitWaiver = useCallback(
+    async (waiverId: string): Promise<PeopleAPI | null> => {
+      const result = await postSplitWaiver(`/api/people/${contactId}/splitWaiver/${waiverId}`)()
+
+      return mapKeys(snake2pascal, result!)
+    },
+    [contactId],
   )
 
   const updateNote = useCallback(
@@ -174,13 +185,13 @@ const useContact = (contactId: string) => {
 
       return mapKeys(snake2pascal, result!)
     },
-    [],
+    [contactId],
   )
 
   const removeNote = useCallback(
     async (id: string) =>
       deleteNote(`/api/people/${contactId}/notes/${id}`)(),
-    [],
+    [contactId],
   )
 
   return {
@@ -198,6 +209,7 @@ const useContact = (contactId: string) => {
     gender,
     fetchNotes, fetchNotesError: getNotesError,
     fetchWaivers, fetchWaiversError: getWaiversError,
+    splitWaiver, splitWaiverError: postSplitWaiverError,
     addNote, addNoteError: postNoteError,
     updateNote, updateNoteError: putNoteError,
     removeNote, removeNoteError: deleteNoteError,

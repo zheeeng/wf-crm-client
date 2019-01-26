@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   rightPart1: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
+    padding: `${theme.spacing.unit * 2}px 0`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing.unit * 4,
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart2: {
     flex: 1,
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
+    padding: `${theme.spacing.unit * 2}px 0`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',

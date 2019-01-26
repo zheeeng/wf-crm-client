@@ -5,7 +5,10 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import IconButton from '@material-ui/core/IconButton'
 import Assessment from '@material-ui/icons/Assessment'
+import CallSplit from '@material-ui/icons/CallSplit'
+import CloudDownload from '@material-ui/icons/CloudDownload'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
 import NotificationContainer from '~src/containers/Notification'
@@ -92,6 +95,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
 
   const {
     fetchWaivers, fetchWaiversError,
+    splitWaiver, splitWaiverError,
    } = useContact(contactId)
 
   const freshWaivers = useCallback(
@@ -110,6 +114,14 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       fetchWaiversError && notify(fetchWaiversError.message)
     },
     [fetchWaiversError],
+  )
+
+  const handleEntrySplit = useCallback(
+    (id: string) => async () => {
+      await splitWaiver(id)
+      freshWaivers()
+    },
+    [],
   )
 
   return (
@@ -142,6 +154,25 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
               <Assessment className={classes.entryIcon} color="primary" />
               <span className={classes.entryContent}>{waiver.title}</span>
               <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
+              <div className={classes.entryButtons}>
+                <IconButton
+                  className={classes.entryButton}
+                  classes={{
+                    label: classes.entryButtonIcon,
+                  }}
+                  onClick={handleEntrySplit(waiver.id)}
+                >
+                  <CallSplit fontSize="small" />
+                </IconButton>
+                <IconButton
+                  className={classes.entryButton}
+                  classes={{
+                    label: classes.entryButtonIcon,
+                  }}
+                >
+                  <CloudDownload fontSize="small" />
+                </IconButton>
+              </div>
             </div>
           ))}
         </div>
