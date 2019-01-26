@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useContext, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -12,6 +12,7 @@ import CreditCard from '@material-ui/icons/CreditCard'
 import Email from '@material-ui/icons/Email'
 import Phone from '@material-ui/icons/Phone'
 import People from '@material-ui/icons/People'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import LocationOn from '@material-ui/icons/LocationOn'
 import Description from '@material-ui/icons/Description'
 import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
@@ -25,7 +26,7 @@ import useContact from '~src/containers/useContact'
 import ContactFieldInput,
   { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
-import { Contact, NameField, PhoneField, AddressField, EmailField, OtherField } from '~src/types/Contact'
+import { NameField, PhoneField, AddressField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -105,6 +106,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tagLabel: {
     padding: 0,
+  },
+  progressWrapper: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
   },
 }))
 
@@ -206,16 +217,17 @@ const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'ph
 }
 
 export interface Props {
-  contact: Contact,
   contactId: string,
 }
 
-const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
+const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   const { notify } = useContext(NotificationContainer.Context)
   const { toSplitWaiver, cancelSplitWaiver, splitDone } = useContext(WaiverSplitterContainer.Context)
 
   const {
-    fetchContact,
+    contact,
+    fetchContact, isFetchingContact, fetchContactError,
+    fetchFields,
     tags, addTag, removeTag,
     gender,
     addField, addFieldError,
@@ -264,7 +276,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     [toSplitWaiver.id],
   )
 
-  const { value: editable, toggle: toggleEditable } = useToggle(false)
+  const { value: editable, toggle: toggleEditable, toggleOff: toggleOffEditable } = useToggle(false)
   const classes = useStyles({})
 
   const handleTagsAdd = useCallback(
@@ -328,28 +340,51 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   )
 
   const names = useMemo<FieldValue[]>(
-    () => contact.info.names.map(nameFieldMap),
+    () => contact
+      ? contact.info.names.map(nameFieldMap)
+      : [],
     [contact],
   )
   const emails = useMemo<FieldValue[]>(
-    () => contact.info.emails.map(emailFieldMap),
+    () => contact
+      ? contact.info.emails.map(emailFieldMap)
+      : [],
     [contact],
   )
   const phones = useMemo<FieldValue[]>(
-    () => contact.info.phones.map(phoneFieldMap),
+    () => contact
+      ? contact.info.phones.map(phoneFieldMap)
+      : [],
     [contact],
   )
   const addresses = useMemo<FieldValue[]>(
-    () => contact.info.addresses.map(addressFieldMap),
+    () => contact
+      ? contact.info.addresses.map(addressFieldMap)
+      : [],
     [contact],
   )
   const other = useMemo<FieldValue[]>(
-    () => contact.info.other.map(otherFieldMap),
+    () => contact
+      ? contact.info.other.map(otherFieldMap)
+      : [],
     [contact],
   )
 
-  const openSplitModel = useMemo(
-    () => !!toSplitWaiver.id,
+  const [splitModelOpened, setSplitModelOpened] = useState(false)
+
+  useEffect(
+    () => {
+      (async () => {
+        if (!toSplitWaiver.id) {
+          setSplitModelOpened(false)
+          toggleOffEditable()
+        } else {
+          await fetchFields()
+          setSplitModelOpened(true)
+        }
+      })()
+
+    },
     [toSplitWaiver.id],
   )
 
@@ -432,102 +467,114 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     </>
   )
 
-  return (
-    <>
-      <div className={classes.profileBar}>
-        <Typography variant="h6">Profile</Typography>
-        <IconButton onClick={toggleEditable}>
-          {editable ? <CheckCircle /> : <Edit />}
-        </IconButton>
+  return isFetchingContact
+    ? (
+      <div className={classes.progressWrapper}>
+        <CircularProgress className={classes.progress} size={64} />
       </div>
-      <div>
-        <Modal
-          open={openSplitModel}
-          onClose={cancelSplitWaiver}
-        >
-          {openSplitModel
-            ? (
-              <div className={classes.modelPaper}>
-                <Typography variant="subtitle1" align="center">
-                  {toSplitWaiver.title}
-                </Typography>
-                {renderFields(true, false)}
-                <div className={classes.modelButtonZone}>
-                  <Button
-                    onClick={cancelSplitWaiver}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    onClick={handleWaiverSplit}
-                  >
-                    Split
-                  </Button>
-                </div>
-              </div>
-            )
-            : null
-          }
-        </Modal>
-        <Hidden lgDown>
-          <div className={classes.floatTagsWrapper}>
-            <div className={classes.tagsBar}>
-              <Input
-                placeholder="Click to add tag"
-                disableUnderline
-                startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
-                onKeyDown={handleTagsAdd}
-              />
-            </div>
-            <div className={classes.tags}>
-              {tags.map((tag, index) => (
-                <Chip
-                  key={`${tag}-${index}`}
-                  onDelete={handleTagDelete(tag)}
-                  className={classes.tag}
-                  classes={{ label: classes.tagLabel }}
-                  label={tag}
-                />
-              ))}
-            </div>
-          </div>
-        </Hidden>
-        <div className={classes.avatarBar}>
-          <Avatar
-            alt={contact.info.name}
-            src={contact.info.avatar}
-            className={classes.avatarIcon}
-          />
-          <strong>{contact.info.name}</strong>
+    )
+    : fetchContactError
+    ? (
+      <Typography>Oops, an error occurred!</Typography>
+    )
+    : contact
+    ? (
+      <>
+        <div className={classes.profileBar}>
+          <Typography variant="h6">Profile</Typography>
+          <IconButton onClick={toggleEditable}>
+            {editable ? <CheckCircle /> : <Edit />}
+          </IconButton>
         </div>
-        <Hidden xlUp>
-          <div className={classes.blockTagsWrapper}>
-            <div className={classes.tagsBar}>
-              <Input
-                placeholder="Click to add tag"
-                disableUnderline
-                startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
-                onKeyDown={handleTagsAdd}
-              />
-            </div>
-            <div className={classes.tags}>
-              {tags.map((tag, index) => (
-                <Chip
-                  key={`${tag}-${index}`}
-                  onDelete={handleTagDelete(tag)}
-                  className={classes.tag}
-                  classes={{ label: classes.tagLabel }}
-                  label={tag}
+        <div>
+          <Modal
+            open={splitModelOpened}
+            onClose={cancelSplitWaiver}
+          >
+            {splitModelOpened
+              ? (
+                <div className={classes.modelPaper}>
+                  <Typography variant="subtitle1" align="center">
+                    {toSplitWaiver.title}
+                  </Typography>
+                  {renderFields(true, false)}
+                  <div className={classes.modelButtonZone}>
+                    <Button
+                      onClick={cancelSplitWaiver}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="primary"
+                      onClick={handleWaiverSplit}
+                    >
+                      Split
+                    </Button>
+                  </div>
+                </div>
+              )
+              : null
+            }
+          </Modal>
+          <Hidden lgDown>
+            <div className={classes.floatTagsWrapper}>
+              <div className={classes.tagsBar}>
+                <Input
+                  placeholder="Click to add tag"
+                  disableUnderline
+                  startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+                  onKeyDown={handleTagsAdd}
                 />
-              ))}
+              </div>
+              <div className={classes.tags}>
+                {tags.map((tag, index) => (
+                  <Chip
+                    key={`${tag}-${index}`}
+                    onDelete={handleTagDelete(tag)}
+                    className={classes.tag}
+                    classes={{ label: classes.tagLabel }}
+                    label={tag}
+                  />
+                ))}
+              </div>
             </div>
+          </Hidden>
+          <div className={classes.avatarBar}>
+            <Avatar
+              alt={contact.info.name}
+              src={contact.info.avatar}
+              className={classes.avatarIcon}
+            />
+            <strong>{contact.info.name}</strong>
           </div>
-        </Hidden>
-        {renderFields(false, editable)}
-      </div>
-    </>
-  )
+          <Hidden xlUp>
+            <div className={classes.blockTagsWrapper}>
+              <div className={classes.tagsBar}>
+                <Input
+                  placeholder="Click to add tag"
+                  disableUnderline
+                  startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+                  onKeyDown={handleTagsAdd}
+                />
+              </div>
+              <div className={classes.tags}>
+                {tags.map((tag, index) => (
+                  <Chip
+                    key={`${tag}-${index}`}
+                    onDelete={handleTagDelete(tag)}
+                    className={classes.tag}
+                    classes={{ label: classes.tagLabel }}
+                    label={tag}
+                  />
+                ))}
+              </div>
+            </div>
+          </Hidden>
+          {renderFields(false, editable)}
+        </div>
+      </>
+    )
+    : null
 })
 
 export default ContactProfile

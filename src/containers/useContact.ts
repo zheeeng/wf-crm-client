@@ -33,7 +33,12 @@ const convertContact = pipe<
 
 const useContact = (contactId: string) => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
-  const { data: freshContactData, request: getContact } = useGet<PeopleAPI>()
+  const {
+    data: contactData,
+    request: getContact,
+    isLoading: isFetchingContact,
+    error: getContactError,
+  } = useGet<PeopleAPI>()
   const { data: updatedContactData, request: putContact, error: putContactError } = usePut()
   const { request: getFields, error: getFieldsError } = useGet()
   const { request: postField, error: postFieldError } = usePost<CommonField>()
@@ -49,7 +54,7 @@ const useContact = (contactId: string) => {
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
 
-  const freshContact = useDepMemo(convertContact, [freshContactData])
+  const freshContact = useDepMemo(convertContact, [contactData])
   const updatedContact = useDepMemo(convertContact, [updatedContactData])
   const latestContact = useLatest(freshContact, updatedContact)
 
@@ -201,7 +206,7 @@ const useContact = (contactId: string) => {
 
   return {
     contact,
-    fetchContact,
+    fetchContact, isFetchingContact, fetchContactError: getContactError,
     updateContact, updateContactError: putContactError,
     fetchFields, fetchFieldsError: getFieldsError,
     addField, addFieldError: postFieldError,

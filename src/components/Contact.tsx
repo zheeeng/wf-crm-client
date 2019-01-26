@@ -107,7 +107,6 @@ const ContactIndex: React.FC<Props> = React.memo(
         >
           {contact && (
             <ContactProfile
-              contact={contact}
               contactId={contactId}
             />
           )}
