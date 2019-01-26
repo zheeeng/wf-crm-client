@@ -12,6 +12,7 @@ import CloudDownload from '@material-ui/icons/CloudDownload'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
 import NotificationContainer from '~src/containers/Notification'
+import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -85,6 +86,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
 
   const { notify } = useContext(NotificationContainer.Context)
+  const { readyToSplitWaiver, splitMutation } = useContext(WaiverSplitterContainer.Context)
 
   const [currentTab, setCurrentTab] = useState(0)
 
@@ -94,11 +96,10 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   const {
-    readyToSplitWaiver,
     waivers, fetchWaivers, fetchWaiversError,
    } = useContact(contactId)
 
-  useEffect(() => { fetchWaivers() }, [contactId])
+  useEffect(() => { fetchWaivers() }, [contactId, splitMutation])
 
   useEffect(
     () => {

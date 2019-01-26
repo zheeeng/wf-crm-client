@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldTextWrapper: {
     flex: 1,
-    paddingTop: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit,
   },
   fieldTextBarWrapper: {
     display: 'flex',
@@ -44,6 +44,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: theme.spacing.unit,
     ...cssTips(theme, { sizeFactor: 2 }).horizontallySpaced,
+  },
+  fieldName: {
+    padding: theme.spacing.unit * 2.5,
+    height: theme.spacing.unit * 8,
+    width: theme.spacing.unit * 16,
+    marginRight: theme.spacing.unit * 2.5,
+    textAlign: 'left',
   },
   fieldIcon: {
     padding: theme.spacing.unit * 2.5,
@@ -74,11 +81,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldTypeText: {
     flex: 0.5,
-    padding: '6px 0 7px',
+    padding: `${theme.spacing.unit}px 0`,
+    textAlign: 'left',
   },
   fieldInput: {
     flex: 1,
-    padding: '6px 0 7px',
+    padding: `${theme.spacing.unit}px 0`,
   },
   addTagIcon: {
     marginRight: theme.spacing.unit,
@@ -103,22 +111,26 @@ export interface FieldValue {
   priority: number
 }
 
-export interface Props {
+export type InputProps = {
+  showName?: boolean,
   Icon?: React.ComponentType<{ className?: string, color?: any }>,
   name: string,
+  hasTitle: boolean,
+  editable?: boolean,
+}
+
+export type Props = InputProps & {
   fieldValues: FieldValue[],
   backupFieldValue: FieldValue,
   expandable: boolean,
-  hasTitle: boolean,
-  editable?: boolean,
   onAddField (name: string, value: FieldSegmentValue, priority: number): Promise<FieldValue | null>,
   onUpdateField (name: string, value: FieldSegmentValue, id: string,  priority: number): Promise<FieldValue | null>
   onDeleteField (name: string, id: string): Promise<string | null>
-  onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>
+  onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>,
 }
 
 const ContactFieldInput: React.FC<Props> = React.memo(
-  ({ Icon, name, fieldValues, backupFieldValue,
+  ({ showName = false, Icon, name, fieldValues, backupFieldValue,
      editable = false, hasTitle, expandable,
      onAddField, onUpdateField, onDeleteField, onChangePriority }) => {
 
@@ -273,7 +285,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               editable && fieldValue.priority === 0 && classes.disabled,
             )}>
               {(hasTitle && !editable) && (
-                <Typography variant="subtitle1" className={classes.fieldTypeText}>
+                <Typography variant="subtitle2" className={classes.fieldTypeText}>
                   {fieldValue.values.find(sv => sv.key === 'title')!.value}
                 </Typography>
               )}
@@ -373,7 +385,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
   return (
     <div className={classes.fieldBar} ref={containerRef}>
-      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      {showName
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <SortableList
           onSortEnd={onSortEnd}
@@ -390,29 +404,24 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
 export default ContactFieldInput
 
-export type InputProps = {
-  Icon?: React.ComponentType<{ className?: string, color?: any }>,
-  name: string,
-  hasTitle: boolean,
-  editable?: boolean,
-  updateField: (value: string) => void,
-}
-
 export type TextInputProps = InputProps & {
   value: string,
+  updateField: (value: string) => void,
 }
 
 export type SelectedInputProps = InputProps & {
   value: string,
   options: string[],
+  updateField: (value: string) => void,
 }
 
 export type DataInputProps = InputProps & {
   value: string,
+  updateField: (value: string) => void,
 }
 
 export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
-  Icon, editable, hasTitle, name, value, updateField,
+  showName = false, Icon, editable, hasTitle, name, value, updateField,
 }) => {
   const classes = useStyles({})
 
@@ -440,7 +449,9 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
   return (
     <div className={classes.fieldBar}>
-      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      {showName
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
           className={classnames(
@@ -450,7 +461,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
         >
           <div className={classes.fieldTextBar}>
             {(hasTitle && !editable) && (
-              <Typography variant="subtitle1" className={classes.fieldTypeText}>
+              <Typography variant="subtitle2" className={classes.fieldTypeText}>
                 {name}
               </Typography>
             )}
@@ -495,7 +506,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 })
 
 export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  Icon, editable, hasTitle, name, value, options, updateField,
+  showName = false, Icon, editable, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
@@ -510,7 +521,9 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 
   return (
     <div className={classes.fieldBar}>
-      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      {showName
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
           className={classnames(
@@ -520,13 +533,14 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
         >
           <div className={classes.fieldTextBar}>
             {(hasTitle && !editable) && (
-              <Typography variant="subtitle1" className={classes.fieldTypeText}>
+              <Typography variant="subtitle2" className={classes.fieldTypeText}>
                 {name}
               </Typography>
             )}
             {editable
               ? (
                 <Select
+                  className={classes.fieldInput}
                   value={value}
                   onChange={handleEntryUpdate}
                 >
@@ -567,7 +581,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 })
 
 export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  Icon, editable, hasTitle, name, value, options, updateField,
+  showName = false, Icon, editable, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
@@ -582,7 +596,9 @@ export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
 
   return (
     <div className={classes.fieldBar}>
-      {Icon && <Icon className={classes.fieldIcon} color="primary" />}
+      {showName
+        ? <Typography variant="subtitle1" className={classes.fieldName}>{name}</Typography>
+        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
           className={classnames(
@@ -592,13 +608,14 @@ export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
         >
           <div className={classes.fieldTextBar}>
             {(hasTitle && !editable) && (
-              <Typography variant="subtitle1" className={classes.fieldTypeText}>
+              <Typography variant="subtitle2" className={classes.fieldTypeText}>
                 {name}
               </Typography>
             )}
             {editable
               ? (
                 <Select
+                  className={classes.fieldInput}
                   defaultValue={value}
                   onChange={handleEntryUpdate}
                 >

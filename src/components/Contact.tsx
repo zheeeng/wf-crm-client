@@ -7,6 +7,7 @@ import ContactProfile from '~src/components/ContactProfile'
 import ContactAssets from '~src/components/ContactAssets'
 import ContactActivities from '~src/components/ContactActivities'
 import NotificationContainer from '~src/containers/Notification'
+import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 
 export interface Props {
   contactId: string
@@ -98,18 +99,20 @@ const ContactIndex: React.FC<Props> = React.memo(
     )
 
     return (
-      <DetailsPaper
-        renderHeader={renderHeader}
-        renderRightPart1={renderRightPart1}
-        renderRightPart2={renderRightPart2}
-      >
-        {contact && (
-          <ContactProfile
-            contact={contact}
-            contactId={contactId}
-          />
-        )}
-      </DetailsPaper>
+      <WaiverSplitterContainer.Provider>
+        <DetailsPaper
+          renderHeader={renderHeader}
+          renderRightPart1={renderRightPart1}
+          renderRightPart2={renderRightPart2}
+        >
+          {contact && (
+            <ContactProfile
+              contact={contact}
+              contactId={contactId}
+            />
+          )}
+        </DetailsPaper>
+      </WaiverSplitterContainer.Provider>
     )
   },
 )

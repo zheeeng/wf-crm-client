@@ -183,21 +183,6 @@ const useContact = (contactId: string) => {
     [contactId],
   )
 
-  const [ toSplitWaiver, setToSplitWaiver ] = useState({
-    id: '',
-    title: '',
-  })
-
-  const readyToSplitWaiver = useCallback(
-    (id: string, title: string) => setToSplitWaiver({ id, title }),
-    [],
-  )
-
-  const cancelSplitWaiver = useCallback(
-    () => setToSplitWaiver({ id: '', title: '' }),
-    [],
-  )
-
   const updateNote = useCallback(
     async (id: string, content: string): Promise<NoteAPI | null> => {
       const result = await putNote(`/api/people/${contactId}/notes/${id}`)({ note: content })
@@ -229,7 +214,6 @@ const useContact = (contactId: string) => {
     gender,
     fetchNotes, fetchNotesError: getNotesError,
     waivers, fetchWaivers, fetchWaiversError: getWaiversError,
-    toSplitWaiver, readyToSplitWaiver, cancelSplitWaiver,
     splitWaiver, splitWaiverError: postSplitWaiverError,
     addNote, addNoteError: postNoteError,
     updateNote, updateNoteError: putNoteError,

@@ -20,6 +20,7 @@ import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 
 import NotificationContainer from '~src/containers/Notification'
+import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import useContact from '~src/containers/useContact'
 import ContactFieldInput,
   { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
@@ -33,14 +34,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: theme.breakpoints.values.sm / 2,
+    width: theme.breakpoints.values.md,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
     border: 'none',
     outline: '#efefef inset 1px',
     textAlign: 'center',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -211,6 +212,7 @@ export interface Props {
 
 const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   const { notify } = useContext(NotificationContainer.Context)
+  const { toSplitWaiver, cancelSplitWaiver, splitDone } = useContext(WaiverSplitterContainer.Context)
 
   const {
     fetchContact,
@@ -221,8 +223,6 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     updateField, updateFieldError,
     removeField, removeFieldError,
     splitWaiver, splitWaiverError,
-    fetchWaivers,
-    toSplitWaiver, cancelSplitWaiver,
   } = useContact(contactId)
 
   useEffect(
@@ -259,7 +259,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   const handleWaiverSplit = useCallback(
     async () => {
       await splitWaiver(toSplitWaiver.id)
-      fetchWaivers()
+      splitDone()
     },
     [toSplitWaiver.id],
   )
@@ -353,6 +353,85 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     [toSplitWaiver.id],
   )
 
+  const renderFields = (showName: boolean, e: boolean) => (
+    <>
+      <ContactFieldInput
+        key="name" name="name" editable={e}
+        showName={showName}
+        Icon={CreditCard}
+        hasTitle={false}
+        expandable={true}
+        fieldValues={names}
+        backupFieldValue={backupNameField}
+        onAddField={handleFieldAdd}
+        onUpdateField={handleFieldUpdate}
+        onDeleteField={handleFieldRemove}
+        onChangePriority={handleFieldPriorityChange}
+      />
+      <ContactFieldInput
+        key="email" name="email" editable={e}
+        showName={showName}
+        Icon={Email}
+        hasTitle={true}
+        expandable={true}
+        fieldValues={emails}
+        backupFieldValue={backupEmailField}
+        onAddField={handleFieldAdd}
+        onUpdateField={handleFieldUpdate}
+        onDeleteField={handleFieldRemove}
+        onChangePriority={handleFieldPriorityChange}
+      />
+      <ContactFieldInput
+        key="phone" name="phone" editable={e}
+        showName={showName}
+        Icon={Phone}
+        hasTitle={true}
+        expandable={true}
+        fieldValues={phones}
+        backupFieldValue={backupPhoneField}
+        onAddField={handleFieldAdd}
+        onUpdateField={handleFieldUpdate}
+        onDeleteField={handleFieldRemove}
+        onChangePriority={handleFieldPriorityChange}
+      />
+      <ContactSelectedFieldInput
+        key="gender" name="gender" editable={e}
+        showName={showName}
+        Icon={People}
+        hasTitle={true}
+        value={gender || ''}
+        options={['', 'Male', 'Female']}
+        updateField={handleUpdateContactGender}
+      />
+      <ContactFieldInput
+        key="address" name="address" editable={e}
+        showName={showName}
+        Icon={LocationOn}
+        hasTitle={true}
+        expandable={true}
+        fieldValues={addresses}
+        backupFieldValue={backupAddressField}
+        onAddField={handleFieldAdd}
+        onUpdateField={handleFieldUpdate}
+        onDeleteField={handleFieldRemove}
+        onChangePriority={handleFieldPriorityChange}
+      />
+      <ContactFieldInput
+        key="other" name="other" editable={e}
+        showName={showName}
+        Icon={Description}
+        hasTitle={true}
+        expandable={true}
+        fieldValues={other}
+        backupFieldValue={backupOtherField}
+        onAddField={handleFieldAdd}
+        onUpdateField={handleFieldUpdate}
+        onDeleteField={handleFieldRemove}
+        onChangePriority={handleFieldPriorityChange}
+      />
+    </>
+  )
+
   return (
     <>
       <div className={classes.profileBar}>
@@ -372,13 +451,13 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
                 <Typography variant="subtitle1" align="center">
                   {toSplitWaiver.title}
                 </Typography>
-
+                {renderFields(true, false)}
                 <div className={classes.modelButtonZone}>
                   <Button
                     onClick={cancelSplitWaiver}
                   >
                     Cancel
-                  </Button>)
+                  </Button>
                   <Button
                     color="primary"
                     onClick={handleWaiverSplit}
@@ -445,74 +524,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
             </div>
           </div>
         </Hidden>
-        <ContactFieldInput
-          key="name" name="name" editable={editable}
-          Icon={CreditCard}
-          hasTitle={false}
-          expandable={true}
-          fieldValues={names}
-          backupFieldValue={backupNameField}
-          onAddField={handleFieldAdd}
-          onUpdateField={handleFieldUpdate}
-          onDeleteField={handleFieldRemove}
-          onChangePriority={handleFieldPriorityChange}
-        />
-        <ContactFieldInput
-          key="email" name="email" editable={editable}
-          Icon={Email}
-          hasTitle={true}
-          expandable={true}
-          fieldValues={emails}
-          backupFieldValue={backupEmailField}
-          onAddField={handleFieldAdd}
-          onUpdateField={handleFieldUpdate}
-          onDeleteField={handleFieldRemove}
-          onChangePriority={handleFieldPriorityChange}
-        />
-        <ContactFieldInput
-          key="phone" name="phone" editable={editable}
-          Icon={Phone}
-          hasTitle={true}
-          expandable={true}
-          fieldValues={phones}
-          backupFieldValue={backupPhoneField}
-          onAddField={handleFieldAdd}
-          onUpdateField={handleFieldUpdate}
-          onDeleteField={handleFieldRemove}
-          onChangePriority={handleFieldPriorityChange}
-        />
-        <ContactSelectedFieldInput
-          key="gender" name="gender" editable={editable}
-          Icon={People}
-          hasTitle={true}
-          value={gender || ''}
-          options={['', 'Male', 'Female']}
-          updateField={handleUpdateContactGender}
-        />
-        <ContactFieldInput
-          key="address" name="address" editable={editable}
-          Icon={LocationOn}
-          hasTitle={true}
-          expandable={true}
-          fieldValues={addresses}
-          backupFieldValue={backupAddressField}
-          onAddField={handleFieldAdd}
-          onUpdateField={handleFieldUpdate}
-          onDeleteField={handleFieldRemove}
-          onChangePriority={handleFieldPriorityChange}
-        />
-        <ContactFieldInput
-          key="other" name="other" editable={editable}
-          Icon={Description}
-          hasTitle={true}
-          expandable={true}
-          fieldValues={other}
-          backupFieldValue={backupOtherField}
-          onAddField={handleFieldAdd}
-          onUpdateField={handleFieldUpdate}
-          onDeleteField={handleFieldRemove}
-          onChangePriority={handleFieldPriorityChange}
-        />
+        {renderFields(false, editable)}
       </div>
     </>
   )
