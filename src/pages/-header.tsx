@@ -1,4 +1,5 @@
 import React, { useRef, useState, useContext, useCallback } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
@@ -17,10 +18,24 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
 import AccountContainer from '~src/containers/Account'
+import AlertContainer from '~src/containers/Alert'
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+  },
+  appAlert: {
+    zIndex: theme.zIndex.drawer + 1,
+    width: '100%',
+    height: theme.spacing.unit * 6,
+    lineHeight: `${theme.spacing.unit * 6}px`,
+    textAlign: 'center',
+  },
+  successAlert: {
+    backgroundColor: '#00cfbb',
+  },
+  failAlert: {
+    backgroundColor: '#e53214',
   },
   menuButton: {
     marginLeft: 12,
@@ -69,6 +84,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
   const classes = useStyles({})
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
+  const { message, dismiss } = useContext(AlertContainer.Context)
   const { authored, login, logout } = useContext(AccountContainer.Context)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
@@ -138,6 +154,17 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
             </Menu>
           </div>
         </Toolbar>
+        {message && (
+          <div
+            className={classnames(
+              classes.appAlert,
+              message.type === 'success' ? classes.successAlert : classes.failAlert,
+            )}
+            onClick={dismiss}
+          >
+            {message.content}
+          </div>
+        )}
       </AppBar>
     </Portal>
   )

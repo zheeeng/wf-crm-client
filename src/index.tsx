@@ -10,6 +10,7 @@ import InjectIntoGlobalStyles from '~src/components/InjectIntoGlobalStyles'
 import GlobalThemeProvider from '~src/theme/GlobalThemeProvider'
 import AppContainer from '~src/containers/App'
 import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import AccountContainer from '~src/containers/Account'
 
 const $mountEl = document.querySelector('#content')
@@ -22,8 +23,10 @@ if ($mountEl) {
       <AppContainer.Provider>
       <AccountContainer.Provider>
       <NotificationContainer.Provider>
+      <AlertContainer.Provider>
         <Notification />
         <Roundation />
+      </AlertContainer.Provider>
       </NotificationContainer.Provider>
       </AccountContainer.Provider>
       </AppContainer.Provider>
