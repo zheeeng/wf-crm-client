@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    lineHeight: theme.spacing.unit * 4,
+    lineHeight: `${theme.spacing.unit * 4}px`,
     height: theme.spacing.unit * 4,
     padding: theme.spacing.unit,
     color: theme.palette.primary.main,

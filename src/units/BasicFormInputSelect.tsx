@@ -10,8 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
-    height: 32,
-    lineHeight: 32,
+    height: theme.spacing.unit * 4,
+    lineHeight: `${theme.spacing.unit * 4}px`,
     borderRadius: 2,
     padding: theme.spacing.unit,
     margin: 0,

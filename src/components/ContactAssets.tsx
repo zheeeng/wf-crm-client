@@ -28,13 +28,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     padding: `0 ${theme.spacing.unit * 4}px`,
     height: theme.spacing.unit * 4,
-    lineHeight: theme.spacing.unit * 4,
+    lineHeight: `${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit,
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['200'],
       },
     },
+  },
+  uploadButton: {
+    paddingLeft: theme.spacing.unit * 4,
+    paddingRight: theme.spacing.unit * 4,
   },
   entryIcon: {
     marginRight: theme.spacing.unit,
@@ -68,9 +72,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing.unit / 2,
   },
   entryButtonIcon: {
-    'color': theme.palette.text.primary,
     '&:hover': {
-      color: theme.palette.text.primary,
+      color: theme.palette.primary.main,
     },
   },
 }))
@@ -142,6 +145,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
         </Tabs>
         {currentTab === 1 && (
           <Button
+            className={classes.uploadButton}
             variant="outlined"
             color="primary"
           >Upload</Button>
