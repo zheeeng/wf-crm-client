@@ -114,7 +114,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const [notes, setNotes] = useState<Note[]>([])
 
   const {
-    fetchNotes, fetchNotesError,
+    fetchNotes,
     addNote, addNoteError,
     // updateNote, updateNoteError,
     removeNote, removeNoteError,
@@ -131,12 +131,6 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
 
   useEffect(() => { freshNotes() }, [contactId])
 
-  useEffect(
-    () => {
-      fetchNotesError && notify(fetchNotesError.message)
-    },
-    [fetchNotesError],
-  )
   useEffect(
     () => {
       addNoteError && notify(addNoteError.message)

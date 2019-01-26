@@ -47,8 +47,17 @@ const useContact = (contactId: string) => {
   const { request: deleteContact, error: deleteContactError } = useDelete()
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
-  const { request: getNotes, error: getNotesError } = useGet<NoteAPI[]>()
-  const { data: waiversData, request: getWaivers, error: getWaiversError } = useGet<WaiverAPI[]>()
+  const {
+    request: getNotes,
+    isLoading: isFetchingNote,
+    error: getNotesError,
+  } = useGet<NoteAPI[]>()
+  const {
+    data: waiversData,
+    request: getWaivers,
+    isLoading: isFetchingWaivers,
+    error: getWaiversError,
+  } = useGet<WaiverAPI[]>()
   const { request: postSplitWaiver, error: postSplitWaiverError } = usePost<PeopleAPI>()
   const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
@@ -217,8 +226,8 @@ const useContact = (contactId: string) => {
     removeContact, removeMutation, removeContactError: deleteContactError,
     tags, addTag, removeTag,
     gender,
-    fetchNotes, fetchNotesError: getNotesError,
-    waivers, fetchWaivers, fetchWaiversError: getWaiversError,
+    fetchNotes, isFetchingNote, fetchNotesError: getNotesError,
+    waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError: getWaiversError,
     splitWaiver, splitWaiverError: postSplitWaiverError,
     addNote, addNoteError: postNoteError,
     updateNote, updateNoteError: putNoteError,

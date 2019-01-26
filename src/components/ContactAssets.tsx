@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import Assessment from '@material-ui/icons/Assessment'
 import CallSplit from '@material-ui/icons/CallSplit'
@@ -76,6 +77,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  progressWrapper: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
 }))
 
 export interface Props {
@@ -96,17 +107,10 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   const {
-    waivers, fetchWaivers, fetchWaiversError,
+    waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError,
    } = useContact(contactId)
 
   useEffect(() => { fetchWaivers() }, [contactId, splitMutation])
-
-  useEffect(
-    () => {
-      fetchWaiversError && notify(fetchWaiversError.message)
-    },
-    [fetchWaiversError],
-  )
 
   const handleOpenWaiverSplitter = useCallback(
     (id: string, title: string) => () => readyToSplitWaiver(id, title),
@@ -137,7 +141,18 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           >Upload</Button>
         )}
       </div>
-      {currentTab === 0 && (
+      {currentTab === 0
+      && isFetchingWaivers
+      ? (
+        <div className={classes.progressWrapper}>
+          <CircularProgress className={classes.progress} size={64} />
+        </div>
+      )
+      : fetchWaiversError
+      ? (
+        <Typography>Oops, an error occurred!</Typography>
+      )
+      : (
         <div>
           {waivers.map(waiver => (
             <div key={waiver.id} className={classes.entry}>
