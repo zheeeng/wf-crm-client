@@ -42,7 +42,7 @@ export function getTime (time: number): string {
   return t.toLocaleString(
     'en-US',
     { hour: 'numeric', minute: 'numeric', hour12: true },
-  )
+  ).toLowerCase()
 }
 
 export default getDate
@@ -55,7 +55,7 @@ export function getDateAndTime (time: number): string {
   const formattedTime = t.toLocaleString(
     'en-US',
     { hour: 'numeric', minute: 'numeric', hour12: true },
-  )
+  ).toLowerCase()
 
   return `${month} ${date}, ${year}, ${formattedTime}`
 }
