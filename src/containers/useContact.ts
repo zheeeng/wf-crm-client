@@ -1,9 +1,10 @@
-import { useCallback, useContext, useMemo, useEffect } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import {
   PeopleAPI, contactInputAdapter, Contact,
   contactOutputAdapter,
   CommonField,
   NoteAPI, noteInputAdapter,
+  WaiverAPI, waiverInputAdapter,
 } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useDepMemo from '~src/hooks/useDepMemo'
@@ -42,6 +43,7 @@ const useContact = (contactId: string) => {
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
   const { request: getNotes, error: getNotesError } = useGet<NoteAPI[]>()
+  const { request: getWaivers, error: getWaiversError } = useGet<WaiverAPI[]>()
   const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
@@ -82,7 +84,7 @@ const useContact = (contactId: string) => {
   )
 
   const updateContact = useCallback(
-    async (cont: Contact)  => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
+    async (cont: Contact) => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
     [],
   )
 
@@ -99,7 +101,7 @@ const useContact = (contactId: string) => {
     [],
   )
   const updateField = useCallback(
-    async (field: CommonField): Promise<CommonField | null>  => {
+    async (field: CommonField): Promise<CommonField | null> => {
       const result = await putField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
 
       return mapKeys(snake2pascal, result!)
@@ -107,7 +109,7 @@ const useContact = (contactId: string) => {
     [],
   )
   const removeField = useCallback(
-    async (field: CommonField)  =>
+    async (field: CommonField) =>
       deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)),
     [],
   )
@@ -159,9 +161,14 @@ const useContact = (contactId: string) => {
     },
     [],
   )
+  const fetchWaivers = useCallback(
+    async () => getWaivers(`/api/people/${contactId}/waivers`)({})
+      .then(waivers => (waivers || []).map(waiverInputAdapter)),
+    [],
+  )
 
   const updateNote = useCallback(
-    async (id: string, content: string): Promise<NoteAPI | null>  => {
+    async (id: string, content: string): Promise<NoteAPI | null> => {
       const result = await putNote(`/api/people/${contactId}/notes/${id}`)({ note: content })
         .then(n => noteInputAdapter(n!))
 
@@ -171,29 +178,30 @@ const useContact = (contactId: string) => {
   )
 
   const removeNote = useCallback(
-    async (id: string)  =>
+    async (id: string) =>
       deleteNote(`/api/people/${contactId}/notes/${id}`)(),
     [],
   )
 
   return {
-      contact,
-      fetchContact,
-      updateContact, updateContactError: putContactError,
-      fetchFields, fetchFieldsError: getFieldsError,
-      addField, addFieldError: postFieldError,
-      updateField, updateFieldError: putFieldError,
-      removeField, removeFieldError: deleteFieldError,
-      starContact, starMutation,
-      updateContactGender, updateContactGenderMutation,
-      removeContact, removeMutation, removeContactError: deleteContactError,
-      tags, addTag, removeTag,
-      gender,
-      fetchNotes, fetchNotesError: getNotesError,
-      addNote, addNoteError: postNoteError,
-      updateNote, updateNoteError: putNoteError,
-      removeNote, removeNoteError: deleteNoteError,
-    }
+    contact,
+    fetchContact,
+    updateContact, updateContactError: putContactError,
+    fetchFields, fetchFieldsError: getFieldsError,
+    addField, addFieldError: postFieldError,
+    updateField, updateFieldError: putFieldError,
+    removeField, removeFieldError: deleteFieldError,
+    starContact, starMutation,
+    updateContactGender, updateContactGenderMutation,
+    removeContact, removeMutation, removeContactError: deleteContactError,
+    tags, addTag, removeTag,
+    gender,
+    fetchNotes, fetchNotesError: getNotesError,
+    fetchWaivers, fetchWaiversError: getWaiversError,
+    addNote, addNoteError: postNoteError,
+    updateNote, updateNoteError: putNoteError,
+    removeNote, removeNoteError: deleteNoteError,
+  }
 }
 
 export default useContact

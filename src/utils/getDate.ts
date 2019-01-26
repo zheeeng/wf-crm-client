@@ -12,6 +12,20 @@ const monthTable = [
   'November',
   'December',
 ]
+const abbrMonthTable = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
 
 function getDate (time: number): string {
   const t = new Date(time)
@@ -32,3 +46,16 @@ export function getTime (time: number): string {
 }
 
 export default getDate
+
+export function getDateAndTime (time: number): string {
+  const t = new Date(time)
+  const month = abbrMonthTable[t.getMonth()]
+  const date = t.getDate()
+  const year = t.getFullYear()
+  const formattedTime = t.toLocaleString(
+    'en-US',
+    { hour: 'numeric', minute: 'numeric', hour12: true },
+  )
+
+  return `${month} ${date}, ${year}, ${formattedTime}`
+}

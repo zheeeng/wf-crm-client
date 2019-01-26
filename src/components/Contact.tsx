@@ -89,7 +89,7 @@ const ContactIndex: React.FC<Props> = React.memo(
     )
 
     const renderRightPart1 = useCallback(
-      () => contact && <ContactAssets />,
+      () => contact && <ContactAssets contactId={contactId} />,
       [contact],
     )
     const renderRightPart2 = useCallback(

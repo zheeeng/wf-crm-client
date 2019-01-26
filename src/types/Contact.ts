@@ -38,6 +38,20 @@ export interface NoteAPI {
   timestamp: number
 }
 
+export interface Waiver {
+  id: string
+  signedTimestamp: number
+  title: string
+}
+
+export interface WaiverAPI {
+  account: string
+  id: string
+  signed_timestamp: number
+  waiver_key: string
+  waiver_title: string
+}
+
 export interface ContactField {
   fieldType: string,
   id?: string
@@ -239,6 +253,16 @@ export const noteOutputAdapter = (output: Partial<Note>): Partial<NoteAPI> => {
   }
 
   return note
+}
+
+export const waiverInputAdapter = (input: WaiverAPI): Waiver => {
+  const waiver = {
+    id: input.id,
+    signedTimestamp: input.signed_timestamp * 1000,
+    title: input.waiver_title,
+  }
+
+  return waiver
 }
 
 export const groupInputAdapter = (input: GroupAPI): Group =>
