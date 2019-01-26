@@ -22,20 +22,28 @@ import AlertContainer from '~src/containers/Alert'
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 2,
   },
   appAlert: {
+    position: 'absolute',
     zIndex: theme.zIndex.drawer + 1,
+    marginTop: theme.spacing.unit * 8,
     width: '100%',
     height: theme.spacing.unit * 6,
     lineHeight: `${theme.spacing.unit * 6}px`,
+    opacity: 0.6,
     textAlign: 'center',
+    transform: 'translateY(-100%)',
+    transition: 'transform 1s',
   },
   successAlert: {
     backgroundColor: '#00cfbb',
   },
   failAlert: {
     backgroundColor: '#e53214',
+  },
+  alertDisplay: {
+    transform: 'translateY(0)',
   },
   menuButton: {
     marginLeft: 12,
@@ -106,66 +114,67 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
 
   return (
     <Portal container={mountElRef.current}>
-      <AppBar position="absolute" className={classes.appBar}>
-        <Toolbar>
-          <Hidden mdDown>
-            <Typography variant="subtitle1" color="inherit">
-              WaiverForever
-            </Typography>
-          </Hidden>
-          <Hidden lgUp>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-              onClick={toggleDrawerExpanded}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Hidden>
-          <div className={classes.navList}>
-            {headers.map(({ name, routePath }) => (
-              <Typography key={name} variant="subtitle1" color="inherit">
-                <Link to={routePath} className={classes.link}>{name}</Link>
+      <div>
+        <AppBar position="absolute" className={classes.appBar}>
+          <Toolbar>
+            <Hidden mdDown>
+              <Typography variant="subtitle1" color="inherit">
+                WaiverForever
               </Typography>
-            ))}
-          </div>
-          <div>
-            <Button onClick={handleMenuToggle(true)}>
-              <Typography>Open</Typography>
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={!!anchorEl}
-              onClose={handleMenuToggle(false)}
-            >
-              <MenuItem onClick={handleMenuToggle(false)}>Profile</MenuItem>
-              <MenuItem onClick={handleLogin}>
-                {authored ? 'My account' : 'Log in'}
-              </MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
-        {message && (
-          <div
-            className={classnames(
-              classes.appAlert,
-              message.type === 'success' ? classes.successAlert : classes.failAlert,
-            )}
-            onClick={dismiss}
-          >
-            {message.content}
-          </div>
-        )}
-      </AppBar>
+            </Hidden>
+            <Hidden lgUp>
+              <IconButton
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="Menu"
+                onClick={toggleDrawerExpanded}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
+            <div className={classes.navList}>
+              {headers.map(({ name, routePath }) => (
+                <Typography key={name} variant="subtitle1" color="inherit">
+                  <Link to={routePath} className={classes.link}>{name}</Link>
+                </Typography>
+              ))}
+            </div>
+            <div>
+              <Button onClick={handleMenuToggle(true)}>
+                <Typography>Open</Typography>
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={!!anchorEl}
+                onClose={handleMenuToggle(false)}
+              >
+                <MenuItem onClick={handleMenuToggle(false)}>Profile</MenuItem>
+                <MenuItem onClick={handleLogin}>
+                  {authored ? 'My account' : 'Log in'}
+                </MenuItem>
+              </Menu>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <div
+          className={classnames(
+            message && classes.alertDisplay,
+            classes.appAlert,
+            (message && (message.type === 'success')) ? classes.successAlert : classes.failAlert,
+          )}
+          onClick={dismiss}
+        >
+          {message && message.content}
+        </div>
+      </div>
     </Portal>
   )
 })
