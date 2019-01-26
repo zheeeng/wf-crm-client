@@ -150,21 +150,21 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [removeNoteError],
   )
 
-  const {value: showCtlBtns, toggleOn: toggleOnShowCtlBtns, toggleOff: toggleOffShowCtlBtns} = useToggle(false)
+  const {value: showCtlButtons, toggleOn: toggleOnShowCtlButtons, toggleOff: toggleOffShowCtlButtons} = useToggle(false)
   // const {value: editActivity, toggle: toggleEditActivity, toggleOff: toggleOffEditActivity} = useToggle(false)
   const {value: showAddNote, toggleOn: toggleOnAddNote, toggleOff: toggleOffShowAddNote} = useToggle(false)
 
   const toggleShowButtons = useCallback(
     () => {
-      if (showCtlBtns) {
+      if (showCtlButtons) {
         toggleOffShowAddNote()
-        toggleOffShowCtlBtns()
+        toggleOffShowCtlButtons()
       } else {
         toggleOffShowAddNote()
-        toggleOnShowCtlBtns()
+        toggleOnShowCtlButtons()
       }
     },
-    [showCtlBtns],
+    [showCtlButtons],
   )
 
   const handleNoteUpdateByBlur = useCallback(
@@ -290,7 +290,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
         ))}
       </Stepper>
       <div className={classes.buttonWrapper}>
-        {showCtlBtns && (
+        {showCtlButtons && (
           <>
             <IconButton
               classes={{
