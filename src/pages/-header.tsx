@@ -167,7 +167,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
             </div>
           </Toolbar>
         </AppBar>
-        <div
+        <Typography variant="subtitle1"
           className={classnames(
             message && classes.alertDisplay,
             classes.appAlert,
@@ -176,7 +176,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
           onClick={dismiss}
         >
           {message && message.content}
-        </div>
+        </Typography>
       </div>
     </Portal>
   )
