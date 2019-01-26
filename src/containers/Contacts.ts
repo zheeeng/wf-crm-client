@@ -53,11 +53,15 @@ const ContactsContainer = createContainer(() => {
   const { data: contactsData, request: getContacts, error: getContactsError } = useGet<ContactsResponse>()
   const { request: deleteContact, error: deleteContactError } = useDelete()
 
-  const { request: postContact, error: postContactError } = usePost()
+  const { data: postContactData, request: postContact, error: postContactError } = usePost()
   const { request: putContact, error: putContactError } = usePut()
-  const { request: postContactToGroup, error: postContactToGroupError } = usePost()
+  const { data: postContactToGroupData, request: postContactToGroup, error: postContactToGroupError } = usePost()
 
-  const { request: postMergeContacts, error: postMergeContactsError } = usePost<PeopleAPI>()
+  const {
+    data: postMergeContactsData,
+    request: postMergeContacts,
+    error: postMergeContactsError,
+  } = usePost<PeopleAPI>()
   const { request: postExportContacts } = usePost<{ task_id: string }>()
   const { request: getExportStatus, data: exportContactsStatus, error: getExportStatusError } = useGet<{
     id: string,
@@ -182,12 +186,12 @@ const ContactsContainer = createContainer(() => {
     pagination,
     contacts,
     fetchContacts, fetchContactsError: getContactsError,
-    addContact, addMutation, addContactError: postContactError,
+    addContactData: postContactData, addContact, addMutation, addContactError: postContactError,
     starContact, starMutation, starContactError: putContactError,
     removeContacts, removeMutation, removeContactError,
-    addContactToGroup, addContactToGroupError: postContactToGroupError,
+    addContactToGroupData: postContactToGroupData, addContactToGroup, addContactToGroupError: postContactToGroupError,
     exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
-    mergeContacts, mergeContactsError: postMergeContactsError,
+    mergeContactsData: postMergeContactsData, mergeContacts, mergeContactsError: postMergeContactsError,
   }
 })
 

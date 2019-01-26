@@ -23,9 +23,10 @@ import CallMerge from '@material-ui/icons/CallMerge'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 // import Delete from '@material-ui/icons/Delete'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 
 import useToggle from '~src/hooks/useToggle'
-import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
@@ -102,45 +103,49 @@ export interface Props {
 const PeopleList: React.FC<Props> = React.memo(({
   total, page, size, onSearch, navigateToProfile,
 }) => {
-  const { notify } = useContext(NotificationContainer.Context)
+  const { success, fail } = useContext(AlertContainer.Context)
   const {
     contacts,
-    addContact, addContactError,
+    addContactData, addContact, addContactError,
     starContact, starContactError,
     // removeContacts, removeContactError,
-    addContactToGroup, addContactToGroupError,
-    mergeContacts, mergeContactsError,
+    addContactToGroupData, addContactToGroup, addContactToGroupError,
+    mergeContactsData, mergeContacts, mergeContactsError,
   } = useContext(ContactsContainer.Context)
 
   useEffect(
     () => {
-      addContactError && notify(addContactError.message)
+      addContactError && fail(addContactError.message)
+      addContactData && success(<><CheckCircle /> Contact Created</>)
     },
-    [addContactError],
+    [addContactError, addContactData],
   )
   useEffect(
     () => {
-      starContactError && notify(starContactError.message)
+      starContactError && fail('Star contacts failed')
     },
     [starContactError],
   )
   // useEffect(
   //   () => {
-  //     removeContactError && notify(removeContactError.toString())
+  //     removeContactError && fail('Remove contact failed')
+  //     removeContactData && success(<><CheckCircle /> Contacts Removed</>)
   //   },
-  //   [removeContactError],
+  //   [removeContactError, removeContactData],
   // )
   useEffect(
     () => {
-      addContactToGroupError && notify(addContactToGroupError.message)
+      addContactToGroupError && fail('Add contacts failed')
+      addContactToGroupData && success(<><CheckCircle /> Contacts Added</>)
     },
-    [addContactToGroupError],
+    [addContactToGroupError, addContactToGroupData],
   )
   useEffect(
     () => {
-      mergeContactsError && notify(mergeContactsError.message)
+      mergeContactsError && fail('Merge contacts failed')
+      mergeContactsData && success(<><CheckCircle /> Contacts Merged</>)
     },
-    [mergeContactsError],
+    [mergeContactsError, mergeContactsData],
   )
 
   const classes = useStyles({})

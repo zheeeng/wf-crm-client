@@ -6,10 +6,11 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import ChevronRight from '@material-ui/icons/ChevronRight'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
-import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import GroupsContainer from '~src/containers/Groups'
 import useToggle from '~src/hooks/useToggle'
 
@@ -52,13 +53,13 @@ export interface Props {
 }
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
-  const { notify } = useContext(NotificationContainer.Context)
+  const { fail } = useContext(AlertContainer.Context)
   const { addGroup, addGroupError } = useContext(GroupsContainer.Context)
   const classes = useStyles({})
 
   useEffect(
     () => {
-      addGroupError && notify(addGroupError.message)
+      addGroupError && fail(<><CheckCircle /> Add group failed</>)
     },
     [addGroupError],
   )

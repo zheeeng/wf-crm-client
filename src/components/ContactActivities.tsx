@@ -18,7 +18,7 @@ import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import { Note } from '~src/types/Contact'
 
-import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 import useToggle from '~src/hooks/useToggle'
@@ -109,9 +109,9 @@ export interface Props {
 const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
 
-  const { notify } = useContext(NotificationContainer.Context)
+  const { fail } = useContext(AlertContainer.Context)
 
-  const [notes, setNotes] = useState<Note[]>([])
+  const [ notes, setNotes ] = useState<Note[]>([])
 
   const {
     fetchNotes,
@@ -133,19 +133,19 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
 
   useEffect(
     () => {
-      addNoteError && notify(addNoteError.message)
+      addNoteError && fail('Add note failed')
     },
     [addNoteError],
   )
   // useEffect(
   //   () => {
-  //     updateNoteError && notify(updateNoteError.message)
+  //     updateNoteError && fail('Update note failed')
   //   },
   //   [updateNoteError],
   // )
   useEffect(
     () => {
-      removeNoteError && notify(removeNoteError.message)
+      removeNoteError && fail('Remove note failed')
     },
     [removeNoteError],
   )

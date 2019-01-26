@@ -21,7 +21,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 
-import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import useContact from '~src/containers/useContact'
 import ContactFieldInput,
@@ -246,7 +246,7 @@ export interface Props {
 }
 
 const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
-  const { notify } = useContext(NotificationContainer.Context)
+  const { fail } = useContext(AlertContainer.Context)
   const { toSplitWaiver, cancelSplitWaiver, splitDone } = useContext(WaiverSplitterContainer.Context)
 
   const {
@@ -269,26 +269,26 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   useEffect(
     () => {
-      addFieldError && notify(addFieldError.message)
+      addFieldError && fail(addFieldError.message)
     },
     [addFieldError],
   )
   useEffect(
     () => {
-      updateFieldError && notify(updateFieldError.message)
+      updateFieldError && fail(updateFieldError.message)
     },
     [updateFieldError],
   )
   useEffect(
     () => {
-      removeFieldError && notify(removeFieldError.message)
+      removeFieldError && fail(removeFieldError.message)
     },
     [removeFieldError],
   )
 
   useEffect(
     () => {
-      splitWaiverError && notify(splitWaiverError.message)
+      splitWaiverError && fail('Split waiver failed')
     },
     [splitWaiverError],
   )

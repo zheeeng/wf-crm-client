@@ -96,7 +96,6 @@ export interface Props {
 const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
 
-  const { notify } = useContext(NotificationContainer.Context)
   const { readyToSplitWaiver, splitMutation } = useContext(WaiverSplitterContainer.Context)
 
   const [currentTab, setCurrentTab] = useState(0)

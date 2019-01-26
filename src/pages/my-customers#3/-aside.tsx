@@ -21,6 +21,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import BorderColor from '@material-ui/icons/BorderColor'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import Delete from '@material-ui/icons/Delete'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
@@ -28,6 +29,7 @@ import MaterialIcon from '~src/units/MaterialIcon'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import muteClick from '~src/utils/muteClick'
+import AlertContainer from '~src/containers/Alert'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
@@ -65,9 +67,17 @@ export interface Props extends ComponentProps {
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   const classes = useStyles({})
+  const { success } = useContext(AlertContainer.Context)
   const { contactsCount, starredCount } = useContext(ContactsCountContainer.Context)
-  const { groupId, groups, addGroup, updateGroup, removeGroup } = useContext(GroupsContainer.Context)
+  const { groupId, groups, addGroup, updateGroup, removeGroupData, removeGroup } = useContext(GroupsContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
+
+  useEffect(
+    () => {
+      removeGroupData && success(<><CheckCircle /> Contacts Removed</>)
+    },
+    [removeGroupData],
+  )
 
   const {
     value: groupsOpened,

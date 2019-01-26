@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
-import NotificationContainer from '~src/containers/Notification'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -49,8 +48,6 @@ export interface Props {
 const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
   const classes = useStyles({})
 
-  const { notify } = useContext(NotificationContainer.Context)
-
   const fieldValues = useRef<{ [key: string]: string }>({})
 
   const handleCreateInfoChange = useCallback(
@@ -64,7 +61,6 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
     async () => {
       if (onOk && Object.keys(fieldValues.current).length === 1) {
         await onOk(fieldValues.current)
-        await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
       }
     },
     [onOk],
@@ -74,7 +70,6 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
     async () => {
       if (onOk) {
         await onOk(fieldValues.current)
-        await notify(`Success create: ${JSON.stringify(fieldValues.current)}`)
       }
     },
     [onOk],

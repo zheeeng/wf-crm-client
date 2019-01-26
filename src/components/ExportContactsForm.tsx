@@ -4,8 +4,9 @@ import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
+import CheckCircle from '@material-ui/icons/CheckCircle'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -37,7 +38,7 @@ export interface Props {
 
 const ExportContactsForm: React.FC<Props> = React.memo(
   ({ open, onClose, contactIds }) => {
-    const { notify } = useContext(NotificationContainer.Context)
+    const { success, fail } = useContext(AlertContainer.Context)
     const { exportContacts, exportContactsStatus, exportStatusError } = useContext(ContactsContainer.Context)
     const classes = useStyles({})
 
@@ -45,8 +46,9 @@ const ExportContactsForm: React.FC<Props> = React.memo(
       () => {
         if ((exportContactsStatus && exportContactsStatus.ready === true) || exportStatusError) {
           onClose()
-          notify('Download success')
+          success(<><CheckCircle /> Contacts Exported</>)
         }
+        exportStatusError && fail('Exported contacts failed')
       },
       [exportContactsStatus, exportStatusError],
     )

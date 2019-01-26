@@ -6,7 +6,7 @@ import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
 import ContactAssets from '~src/components/ContactAssets'
 import ContactActivities from '~src/components/ContactActivities'
-import NotificationContainer from '~src/containers/Notification'
+import AlertContainer from '~src/containers/Alert'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 
 export interface Props {
@@ -17,7 +17,7 @@ export interface Props {
 
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
-    const { notify } = useContext(NotificationContainer.Context)
+    const { fail } = useContext(AlertContainer.Context)
     const { contacts } = useContext(ContactsContainer.Context)
     const { contact, fetchContact, removeContact, removeContactError } = useContact(contactId)
 
@@ -28,7 +28,7 @@ const ContactIndex: React.FC<Props> = React.memo(
 
     useEffect(
       () => {
-        removeContactError && notify(removeContactError.message)
+        removeContactError && fail('Remove contact failed')
       },
       [removeContactError],
     )

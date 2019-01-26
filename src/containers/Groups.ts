@@ -9,7 +9,7 @@ const GroupsContainer = createContainer(() => {
   const { data: groupsData, request: getGroupsData } = useGet<GroupAPI[]>()
   const { request: postGroup, error: postGroupError } = usePost()
   const { request: putGroup, error: putGroupError } = usePut()
-  const { request: deleteGroup, error: deleteGroupError } = useDelete()
+  const { data: deleteGroupData, request: deleteGroup, error: deleteGroupError } = useDelete()
 
   const refreshGroupCounts = useCallback(
     () => {
@@ -55,7 +55,7 @@ const GroupsContainer = createContainer(() => {
     refreshGroupCounts,
     addGroup, addGroupMutation, addGroupError: postGroupError,
     updateGroup, updateGroupMutation, updateGroupError: putGroupError,
-    removeGroup, removeGroupMutation, removeGroupError: deleteGroupError,
+    removeGroupData: deleteGroupData, removeGroup, removeGroupMutation, removeGroupError: deleteGroupError,
   }
 })
 
