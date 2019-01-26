@@ -17,12 +17,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    padding: `0 ${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit * 2,
   },
   entry: {
     display: 'flex',
     alignItems: 'center',
+    padding: `0 ${theme.spacing.unit * 4}px`,
+    height: theme.spacing.unit * 4,
+    lineHeight: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit,
+    ...{
+      '&:hover': {
+        backgroundColor: theme.palette.grey['200'],
+      },
+    },
   },
   entryIcon: {
     marginRight: theme.spacing.unit,
@@ -37,6 +46,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 128,
     textAlign: 'right',
     fontSize: '0.75rem',
+    ...{
+      '$entry:hover &': {
+        display: 'none',
+      },
+    },
+  },
+  entryButtons: {
+    display: 'none',
+    ...{
+      '$entry:hover &': {
+        display: 'block',
+      },
+    },
+  },
+  entryButton: {
+    padding: theme.spacing.unit / 2,
+    marginLeft: theme.spacing.unit / 2,
+  },
+  entryButtonIcon: {
+    'color': theme.palette.text.primary,
+    '&:hover': {
+      color: theme.palette.text.primary,
+    },
   },
 }))
 

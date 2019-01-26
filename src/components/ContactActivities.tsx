@@ -28,7 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    padding: `0 ${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit * 2,
+  },
+  manageButton: {
+    paddingLeft: theme.spacing.unit * 4,
+    paddingRight: theme.spacing.unit * 4,
   },
   activityLabel: {
     'fontSize': theme.spacing.unit * 2,
@@ -59,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing.unit,
     backgroundColor: theme.palette.grey['200'],
   },
+  stepperItem: {
+    padding: `0 ${theme.spacing.unit * 4}px`,
+  },
   entryInputContent: {
     marginBottom: theme.spacing.unit,
   },
@@ -84,6 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.75rem',
   },
   buttonWrapper: {
+    padding: `0 ${theme.spacing.unit * 4}px`,
     textAlign: 'right',
   },
 }))
@@ -224,13 +233,18 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       <div className={classes.headWrapper}>
         <Typography variant="h5">Activities</Typography>
         <Button
+          className={classes.manageButton}
           variant="outlined"
           color="primary"
         >Manage</Button>
       </div>
       <Stepper orientation="vertical">
         {NoteGroups.map((group, gIndex) => (
-          <Step key={group.date} active>
+          <Step
+            className={classes.stepperItem}
+            key={group.date}
+            active
+          >
             <StepLabel
               classes={{
                 label: classes.activityLabel,
