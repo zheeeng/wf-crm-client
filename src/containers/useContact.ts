@@ -56,6 +56,11 @@ const useContact = (contactId: string) => {
     afterRemovedTags,
   ) || []
 
+  const gender = useMemo(
+    () => latestContact && latestContact.info.gender,
+    [latestContact],
+  )
+
   const contact = useMemo<Contact | undefined>(
     () => latestContact
       ? tags.length
@@ -116,8 +121,8 @@ const useContact = (contactId: string) => {
   )
 
   const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
-    async (gender: 'Male' | 'Female') => {
-      await putContact(`/api/people/${contactId}`)({ gender })
+    async (newGender: 'Male' | 'Female') => {
+      await putContact(`/api/people/${contactId}`)({ gender: newGender })
     },
     [],
   )
@@ -183,6 +188,7 @@ const useContact = (contactId: string) => {
       updateContactGender, updateContactGenderMutation,
       removeContact, removeMutation, removeContactError: deleteContactError,
       tags, addTag, removeTag,
+      gender,
       fetchNotes, fetchNotesError: getNotesError,
       addNote, addNoteError: postNoteError,
       updateNote, updateNoteError: putNoteError,

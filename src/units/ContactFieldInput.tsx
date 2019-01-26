@@ -527,7 +527,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
             {editable
               ? (
                 <Select
-                  defaultValue={value}
+                  value={value}
                   onChange={handleEntryUpdate}
                 >
                   {options.map(option => (

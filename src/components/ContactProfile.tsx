@@ -191,6 +191,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   const {
     fetchContact,
     tags, addTag, removeTag,
+    gender,
     addField, addFieldError,
     updateContactGender,
     updateField, updateFieldError,
@@ -290,10 +291,6 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
   )
   const emails = useMemo<FieldValue[]>(
     () => contact.info.emails.map(emailFieldMap),
-    [contact],
-  )
-  const gender = useMemo<Contact['info']['gender']>(
-    () => contact.info.gender,
     [contact],
   )
   const phones = useMemo<FieldValue[]>(
