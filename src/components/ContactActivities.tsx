@@ -70,6 +70,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   entryInputContent: {
     marginBottom: theme.spacing.unit,
   },
+  entryButtonIcon: {
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
+  },
   noteSubmitter: {
     position: 'absolute',
     padding: 0,
@@ -294,10 +299,19 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       <div className={classes.buttonWrapper}>
         {showCtlBtns && (
           <>
-            <IconButton color="default">
+            <IconButton
+              classes={{
+                label: classes.entryButtonIcon,
+              }}
+            >
               <CalendarToday />
             </IconButton>
-            <IconButton color={showAddNote ? 'primary' : 'default'}>
+            <IconButton
+              color={showAddNote ? 'primary' : 'default'}
+              classes={{
+                label: classes.entryButtonIcon,
+              }}
+            >
               <SpeakerNotes onClick={toggleOnAddNote} />
             </IconButton>
           </>
