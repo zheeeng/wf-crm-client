@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from 'react'
+import { useState, useCallback, useContext, useMemo } from 'react'
 import {
   PeopleAPI, contactInputAdapter, Contact,
   contactOutputAdapter,
@@ -43,7 +43,7 @@ const useContact = (contactId: string) => {
   const { data: afterAddedTags, request: postTag } = usePost<string[]>()
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
   const { request: getNotes, error: getNotesError } = useGet<NoteAPI[]>()
-  const { request: getWaivers, error: getWaiversError } = useGet<WaiverAPI[]>()
+  const { data: waiversData, request: getWaivers, error: getWaiversError } = useGet<WaiverAPI[]>()
   const { request: postSplitWaiver, error: postSplitWaiverError } = usePost<PeopleAPI>()
   const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
@@ -163,10 +163,15 @@ const useContact = (contactId: string) => {
     },
     [contactId],
   )
+
   const fetchWaivers = useCallback(
-    async () => getWaivers(`/api/people/${contactId}/waivers`)({})
-      .then(waivers => (waivers || []).map(waiverInputAdapter)),
+    async () => getWaivers(`/api/people/${contactId}/waivers`)({}),
     [contactId],
+  )
+
+  const waivers = useMemo(
+    () => (waiversData || []).map(waiverInputAdapter).sort((p, c) => c.signedTimestamp - p.signedTimestamp),
+    [waiversData],
   )
 
   const splitWaiver = useCallback(
@@ -176,6 +181,21 @@ const useContact = (contactId: string) => {
       return mapKeys(snake2pascal, result!)
     },
     [contactId],
+  )
+
+  const [ toSplitWaiver, setToSplitWaiver ] = useState({
+    id: '',
+    title: '',
+  })
+
+  const readyToSplitWaiver = useCallback(
+    (id: string, title: string) => setToSplitWaiver({ id, title }),
+    [],
+  )
+
+  const cancelSplitWaiver = useCallback(
+    () => setToSplitWaiver({ id: '', title: '' }),
+    [],
   )
 
   const updateNote = useCallback(
@@ -208,7 +228,8 @@ const useContact = (contactId: string) => {
     tags, addTag, removeTag,
     gender,
     fetchNotes, fetchNotesError: getNotesError,
-    fetchWaivers, fetchWaiversError: getWaiversError,
+    waivers, fetchWaivers, fetchWaiversError: getWaiversError,
+    toSplitWaiver, readyToSplitWaiver, cancelSplitWaiver,
     splitWaiver, splitWaiverError: postSplitWaiverError,
     addNote, addNoteError: postNoteError,
     updateNote, updateNoteError: putNoteError,

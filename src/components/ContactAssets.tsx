@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
+import React, { useState, useCallback, useEffect, useMemo, useContext } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -12,7 +12,6 @@ import CloudDownload from '@material-ui/icons/CloudDownload'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
 import NotificationContainer from '~src/containers/Notification'
-import { Waiver } from '~src/types/Contact'
 import { getDateAndTime } from '~src/utils/getDate'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   entry: {
     display: 'flex',
     alignItems: 'center',
-    padding: `0 ${theme.spacing.unit * 4}px`,
+    padding: `0 ${theme.spacing.unit * 4.5}px`,
     height: theme.spacing.unit * 4,
-    lineHeight: `${theme.spacing.unit * 4}px`,
+    lineHeight: `${theme.spacing.unit * 4.5}px`,
     marginBottom: theme.spacing.unit,
     ...{
       '&:hover': {
@@ -94,23 +93,12 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     [currentTab],
   )
 
-  const [waivers, setWaivers] = useState<Waiver[]>([])
-
   const {
-    fetchWaivers, fetchWaiversError,
-    splitWaiver, splitWaiverError,
+    readyToSplitWaiver,
+    waivers, fetchWaivers, fetchWaiversError,
    } = useContact(contactId)
 
-  const freshWaivers = useCallback(
-    async () => {
-      const ws = await fetchWaivers()
-      const sortedWs = ws.sort((p, c) => c.signedTimestamp - p.signedTimestamp)
-      setWaivers(sortedWs)
-    },
-    [],
-  )
-
-  useEffect(() => { freshWaivers() }, [contactId])
+  useEffect(() => { fetchWaivers() }, [contactId])
 
   useEffect(
     () => {
@@ -119,11 +107,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     [fetchWaiversError],
   )
 
-  const handleEntrySplit = useCallback(
-    (id: string) => async () => {
-      await splitWaiver(id)
-      freshWaivers()
-    },
+  const handleOpenWaiverSplitter = useCallback(
+    (id: string, title: string) => () => readyToSplitWaiver(id, title),
     [],
   )
 
@@ -164,7 +149,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                   classes={{
                     label: classes.entryButtonIcon,
                   }}
-                  onClick={handleEntrySplit(waiver.id)}
+                  onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
                 >
                   <CallSplit fontSize="small" />
                 </IconButton>

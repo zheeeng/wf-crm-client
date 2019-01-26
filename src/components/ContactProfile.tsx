@@ -2,6 +2,8 @@ import React, { useCallback, useMemo, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import Modal from '@material-ui/core/Modal'
+import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
 import Edit from '@material-ui/icons/Edit'
 import CheckCircle from '@material-ui/icons/CheckCircle'
@@ -23,8 +25,30 @@ import ContactFieldInput,
   { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
 import { Contact, NameField, PhoneField, AddressField, EmailField, OtherField } from '~src/types/Contact'
+import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  modelPaper: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: theme.breakpoints.values.sm / 2,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing.unit * 4,
+    border: 'none',
+    outline: '#efefef inset 1px',
+    textAlign: 'center',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  modelButtonZone: {
+    textAlign: 'right',
+    marginTop: theme.spacing.unit * 4,
+    ...cssTips(theme).horizontallySpaced,
+  },
   profileBar: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -196,6 +220,9 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     updateContactGender,
     updateField, updateFieldError,
     removeField, removeFieldError,
+    splitWaiver, splitWaiverError,
+    fetchWaivers,
+    toSplitWaiver, cancelSplitWaiver,
   } = useContact(contactId)
 
   useEffect(
@@ -220,6 +247,21 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
       removeFieldError && notify(removeFieldError.message)
     },
     [removeFieldError],
+  )
+
+  useEffect(
+    () => {
+      splitWaiverError && notify(splitWaiverError.message)
+    },
+    [splitWaiverError],
+  )
+
+  const handleWaiverSplit = useCallback(
+    async () => {
+      await splitWaiver(toSplitWaiver.id)
+      fetchWaivers()
+    },
+    [toSplitWaiver.id],
   )
 
   const { value: editable, toggle: toggleEditable } = useToggle(false)
@@ -306,6 +348,11 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
     [contact],
   )
 
+  const openSplitModel = useMemo(
+    () => !!toSplitWaiver.id,
+    [toSplitWaiver.id],
+  )
+
   return (
     <>
       <div className={classes.profileBar}>
@@ -314,7 +361,36 @@ const ContactProfile: React.FC<Props> = React.memo(({ contact, contactId }) => {
           {editable ? <CheckCircle /> : <Edit />}
         </IconButton>
       </div>
-      <div >
+      <div>
+        <Modal
+          open={openSplitModel}
+          onClose={cancelSplitWaiver}
+        >
+          {openSplitModel
+            ? (
+              <div className={classes.modelPaper}>
+                <Typography variant="subtitle1" align="center">
+                  {toSplitWaiver.title}
+                </Typography>
+
+                <div className={classes.modelButtonZone}>
+                  <Button
+                    onClick={cancelSplitWaiver}
+                  >
+                    Cancel
+                  </Button>)
+                  <Button
+                    color="primary"
+                    onClick={handleWaiverSplit}
+                  >
+                    Split
+                  </Button>
+                </div>
+              </div>
+            )
+            : null
+          }
+        </Modal>
         <Hidden lgDown>
           <div className={classes.floatTagsWrapper}>
             <div className={classes.tagsBar}>
