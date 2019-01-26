@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing.unit,
     backgroundColor: theme.palette.grey['200'],
   },
-  stepperItem: {
+  stepper: {
     padding: `0 ${theme.spacing.unit * 4}px`,
   },
   entryInputContent: {
@@ -237,10 +237,9 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           color="primary"
         >Manage</Button>
       </div>
-      <Stepper orientation="vertical">
+      <Stepper orientation="vertical" className={classes.stepper}>
         {NoteGroups.map((group, gIndex) => (
           <Step
-            className={classes.stepperItem}
             key={group.date}
             active
           >
