@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
     width: 408,
-    maxHeight: '50%',
     [theme.breakpoints.down('lg')]: {
       width: 320,
     },
