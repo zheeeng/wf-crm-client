@@ -5,14 +5,15 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
+
 import Assessment from '@material-ui/icons/Assessment'
 import CallSplit from '@material-ui/icons/CallSplit'
 import CloudDownload from '@material-ui/icons/CloudDownload'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
-import NotificationContainer from '~src/containers/Notification'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
 
