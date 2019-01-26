@@ -295,6 +295,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   const handleWaiverSplit = useCallback(
     async () => {
+      cancelSplitWaiver()
       await splitWaiver(toSplitWaiver.id)
       splitDone()
     },
