@@ -102,6 +102,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `0 ${theme.spacing.unit * 4}px`,
     textAlign: 'right',
   },
+  progressWrapper: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
 }))
 
 export interface Props {
