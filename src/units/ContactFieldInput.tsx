@@ -289,7 +289,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               editable && fieldValue.priority === 0 && classes.disabled,
             )}>
               {(hasTitle && !editable) && (
-                <Typography variant="subtitle2" className={classes.fieldTypeText}>
+                <Typography variant="h6" className={classes.fieldTypeText}>
                   {fieldValue.values.find(sv => sv.key === 'title')!.value}
                 </Typography>
               )}
@@ -390,7 +390,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   return (
     <div className={classes.fieldBar} ref={containerRef}>
       {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
+        ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <SortableList
@@ -454,7 +454,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   return (
     <div className={classes.fieldBar}>
       {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
+        ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
@@ -465,7 +465,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
         >
           <div className={classes.fieldTextBar}>
             {(hasTitle && !editable) && (
-              <Typography variant="subtitle2" className={classes.fieldTypeText}>
+              <Typography variant="h6" className={classes.fieldTypeText}>
                 {name}
               </Typography>
             )}
@@ -526,7 +526,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
   return (
     <div className={classes.fieldBar}>
       {showName
-        ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
+        ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
       <div className={classes.fieldTextWrapper}>
         <div
@@ -537,7 +537,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
         >
           <div className={classes.fieldTextBar}>
             {(hasTitle && !editable) && (
-              <Typography variant="subtitle2" className={classes.fieldTypeText}>
+              <Typography variant="h6" className={classes.fieldTypeText}>
                 {name}
               </Typography>
             )}
@@ -601,7 +601,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 //   return (
 //     <div className={classes.fieldBar}>
 //       {showName
-//         ? <Typography variant="subtitle1" className={classes.fieldName}>{fieldName}</Typography>
+//         ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
 //         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
 //       <div className={classes.fieldTextWrapper}>
 //         <div
@@ -612,7 +612,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 //         >
 //           <div className={classes.fieldTextBar}>
 //             {(hasTitle && !editable) && (
-//               <Typography variant="subtitle2" className={classes.fieldTypeText}>
+//               <Typography variant="h6" className={classes.fieldTypeText}>
 //                 {name}
 //               </Typography>
 //             )}

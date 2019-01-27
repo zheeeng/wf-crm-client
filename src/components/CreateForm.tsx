@@ -83,7 +83,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
       onClose={onClose}
     >
       <div className={classes.paper}>
-        <Typography variant="subtitle1" align="center">
+        <Typography variant="h5" align="center">
           {title}
         </Typography>
         {tip && (

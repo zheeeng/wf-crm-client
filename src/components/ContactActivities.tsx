@@ -243,7 +243,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
-        <Typography variant="title">Activities</Typography>
+        <Typography variant="h4">Activities</Typography>
         <Button
           className={classes.manageButton}
           variant="outlined"

@@ -543,7 +543,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     ? (
       <>
         <div className={classes.profileBar}>
-          <Typography variant="title">Profile</Typography>
+          <Typography variant="h4">Profile</Typography>
           <IconButton onClick={toggleEditable}>
             {editable ? <CheckCircle /> : <Edit />}
           </IconButton>
@@ -556,7 +556,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             {splitModelOpened
               ? (
                 <div className={classes.modelPaper}>
-                  <Typography variant="subtitle1" align="center">
+                  <Typography variant="h5" align="center">
                     {toSplitWaiver.title}
                   </Typography>
                   {renderFields(true, false)}

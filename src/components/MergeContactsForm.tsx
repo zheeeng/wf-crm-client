@@ -60,7 +60,7 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
       onClose={onClose}
     >
       <div className={classes.paper}>
-        <Typography variant="subtitle1" align="center">
+        <Typography variant="h5" align="center">
           Merge contacts
         </Typography>
         {isLoading

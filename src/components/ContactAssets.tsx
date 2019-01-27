@@ -128,10 +128,10 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           onChange={handleCurrentTabChange}
         >
           <Tab
-            label={<Typography variant="title">Waivers</Typography>}
+            label={<Typography variant="h4">Waivers</Typography>}
           />
           <Tab
-            label={<Typography variant="title">Attachments</Typography>}
+            label={<Typography variant="h4">Attachments</Typography>}
           />
         </Tabs>
         {currentTab === 1 && (

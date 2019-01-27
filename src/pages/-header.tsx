@@ -121,7 +121,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
         <AppBar position="absolute" className={classes.appBar}>
           <Toolbar>
             <Hidden mdDown>
-              <Typography variant="subtitle1" color="inherit">
+              <Typography variant="h5" color="inherit">
                 WaiverForever
               </Typography>
             </Hidden>
@@ -137,7 +137,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
             </Hidden>
             <div className={classes.navList}>
               {headers.map(({ name, routePath }) => (
-                <Typography key={name} variant="subtitle1" color="inherit">
+                <Typography key={name} variant="h5" color="inherit">
                   <Link to={routePath} className={classes.link}>{name}</Link>
                 </Typography>
               ))}
@@ -167,7 +167,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
             </div>
           </Toolbar>
         </AppBar>
-        <Typography variant="subtitle1"
+        <Typography variant="h5"
           className={classnames(
             message && classes.alertDisplay,
             classes.appAlert,
