@@ -317,7 +317,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderPCLayoutTableRows = (contact: Contact) => (
     <>
       <TableCell className={classes.w15Cell}>
-        <Typography component="strong" variant="h5">{contact.info.name}</Typography>
+        <Typography component="b" variant="body1">{contact.info.name}</Typography>
       </TableCell>
       <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
       <TableCell className={classes.w25Cell}>{contact.info.address}</TableCell>
@@ -328,7 +328,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderTabletLayoutTableRows = (contact: Contact) => (
     <>
       <TableCell className={classes.w25Cell}>
-        <Typography component="strong" variant="h5">{contact.info.name}</Typography>
+        <Typography component="b" variant="body1">{contact.info.name}</Typography>
       </TableCell>
       <TableCell>
         <Typography>{contact.info.email}</Typography>
@@ -340,7 +340,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderMobileLayoutTableRows = (contact: Contact) => (
     <TableCell>
-      <Typography component="strong" variant="h5">{contact.info.name}</Typography>
+      <Typography component="b" variant="body1">{contact.info.name}</Typography>
       <Typography>{contact.info.email}</Typography>
       <Typography>{contact.info.address}</Typography>
       <Typography>{contact.info.phone}</Typography>
