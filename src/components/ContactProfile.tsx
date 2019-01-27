@@ -276,19 +276,19 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   useEffect(
     () => {
-      addFieldError && fail(addFieldError.message)
+      addFieldError && fail('Add new field failed')
     },
     [addFieldError],
   )
   useEffect(
     () => {
-      updateFieldError && fail(updateFieldError.message)
+      updateFieldError && fail('Update field failed')
     },
     [updateFieldError],
   )
   useEffect(
     () => {
-      removeFieldError && fail(removeFieldError.message)
+      removeFieldError && fail('Remove field failed')
     },
     [removeFieldError],
   )
