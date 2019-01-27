@@ -97,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 80,
     textAlign: 'right',
     fontSize: '0.75rem',
+    color: theme.palette.text.hint,
   },
   buttonWrapper: {
     padding: `0 ${theme.spacing.unit * 4}px`,
@@ -242,7 +243,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
-        <Typography variant="h5">Activities</Typography>
+        <Typography variant="title">Activities</Typography>
         <Button
           className={classes.manageButton}
           variant="outlined"

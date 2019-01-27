@@ -543,7 +543,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     ? (
       <>
         <div className={classes.profileBar}>
-          <Typography variant="h6">Profile</Typography>
+          <Typography variant="title">Profile</Typography>
           <IconButton onClick={toggleEditable}>
             {editable ? <CheckCircle /> : <Edit />}
           </IconButton>

@@ -33,17 +33,21 @@ export const themeOptions: ThemeOptions = {
       '"Helvetica Neue"',
       'sans-serif',
     ].join(','),
-    body1: {
-      fontSize: 14,
-      fontWeight: 400,
-    },
     title: {
       fontSize: 20,
       fontWeight: 600,
     },
     subtitle1: {
+      fontSize: 18,
+      fontWeight: 700,
+    },
+    subtitle2: {
       fontSize: 16,
       fontWeight: 700,
+    },
+    body1: {
+      fontSize: 14,
+      fontWeight: 400,
     },
   },
   breakpoints: {

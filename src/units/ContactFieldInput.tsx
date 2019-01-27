@@ -83,10 +83,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 0.5,
     padding: `${theme.spacing.unit}px 0`,
     textAlign: 'left',
+    color: theme.palette.text.secondary,
   },
   fieldInput: {
     flex: 1,
     padding: `${theme.spacing.unit}px 0`,
+    color: theme.palette.text.disabled,
   },
   addTagIcon: {
     marginRight: theme.spacing.unit,

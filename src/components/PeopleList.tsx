@@ -37,6 +37,7 @@ import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import MaterialIcon from '~src/units/MaterialIcon'
+import StarThemeProvider from '~src/theme/StarThemeProvider'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
@@ -537,7 +538,9 @@ const PeopleList: React.FC<Props> = React.memo(({
               </TableRow>
             </TableHead>
             <TableBody>
+              <StarThemeProvider>
                 {contacts.map(renderTableRows)}
+              </StarThemeProvider>
             </TableBody>
           </Table>
         </div>

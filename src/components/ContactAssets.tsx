@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'none',
       },
     },
+    color: theme.palette.text.hint,
   },
   entryButtons: {
     display: 'none',
@@ -127,10 +128,10 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           onChange={handleCurrentTabChange}
         >
           <Tab
-            label={<Typography variant="h6">Waivers</Typography>}
+            label={<Typography variant="title">Waivers</Typography>}
           />
           <Tab
-            label={<Typography variant="h6">Attachments</Typography>}
+            label={<Typography variant="title">Attachments</Typography>}
           />
         </Tabs>
         {currentTab === 1 && (
