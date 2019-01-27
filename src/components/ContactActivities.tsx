@@ -126,7 +126,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const [ notes, setNotes ] = useState<Note[]>([])
 
   const {
-    fetchNotes,
+    fetchNotes, isFetchingNotes, fetchNotesError,
     addNote, addNoteError,
     // updateNote, updateNoteError,
     removeNote, removeNoteError,
@@ -249,58 +249,70 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           color="primary"
         >Manage</Button>
       </div>
-      <Stepper orientation="vertical" className={classes.stepper}>
-        {NoteGroups.map((group, gIndex) => (
-          <Step
-            key={group.date}
-            active
-          >
-            <StepLabel
-              classes={{
-                label: classes.activityLabel,
-              }}
-              icon={<div className={classes.dot} />}
+      {isFetchingNotes
+      ? (
+        <div className={classes.progressWrapper}>
+          <CircularProgress className={classes.progress} size={64} />
+        </div>
+      )
+      : fetchNotesError
+      ? (
+        <Typography>Oops, an error occurred!</Typography>
+      )
+      : (
+        <Stepper orientation="vertical" className={classes.stepper}>
+          {NoteGroups.map((group, gIndex) => (
+            <Step
+              key={group.date}
+              active
             >
-              {group.date}
-            </StepLabel>
-            <StepContent>
-              {!showAddNote && gIndex === 0 && (group.notes.length === 0) && (
-                <div>Add Note for today!</div>
-              )}
-              {showAddNote && gIndex === 0 && (
-                <div className={classnames(classes.entryContent, classes.entryInputContent)}>
-                  <Input
-                    placeholder="note"
-                    disableUnderline
-                    onBlur={handleNoteUpdateByBlur}
-                    onKeyDown={handleNoteUpdateByKeydown}
-                  />
-                  <IconButton
-                    color="primary"
-                    className={classes.noteSubmitter}>
-                    <PlayCircleFilled />
-                  </IconButton>
-                </div>
-              )}
-              {group.notes.map(note => (
-                <div className={classes.entry} key={note.id}>
-                  <div className={classes.entryContent}>
-                    {note.content}
+              <StepLabel
+                classes={{
+                  label: classes.activityLabel,
+                }}
+                icon={<div className={classes.dot} />}
+              >
+                {group.date}
+              </StepLabel>
+              <StepContent>
+                {!showAddNote && gIndex === 0 && (group.notes.length === 0) && (
+                  <div>Add Note for today!</div>
+                )}
+                {showAddNote && gIndex === 0 && (
+                  <div className={classnames(classes.entryContent, classes.entryInputContent)}>
+                    <Input
+                      placeholder="note"
+                      disableUnderline
+                      onBlur={handleNoteUpdateByBlur}
+                      onKeyDown={handleNoteUpdateByKeydown}
+                    />
                     <IconButton
                       color="primary"
-                      className={classes.noteRemover}>
-                      <RemoveCircle onClick={handleNoteRemove(note.id)} />
+                      className={classes.noteSubmitter}>
+                      <PlayCircleFilled />
                     </IconButton>
                   </div>
-                  <time className={classes.entryTime}>
-                    {getTime(note.timestamp)}
-                  </time>
-                </div>
-              ))}
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
+                )}
+                {group.notes.map(note => (
+                  <div className={classes.entry} key={note.id}>
+                    <div className={classes.entryContent}>
+                      {note.content}
+                      <IconButton
+                        color="primary"
+                        className={classes.noteRemover}>
+                        <RemoveCircle onClick={handleNoteRemove(note.id)} />
+                      </IconButton>
+                    </div>
+                    <time className={classes.entryTime}>
+                      {getTime(note.timestamp)}
+                    </time>
+                  </div>
+                ))}
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+      )}
       <div className={classes.buttonWrapper}>
         {showCtlButtons && (
           <>

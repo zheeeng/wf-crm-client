@@ -37,6 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: theme.breakpoints.values.md,
+    maxHeight: '90%',
+    overflow: 'auto',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -44,7 +46,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: '#efefef inset 1px',
     textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
+      width: '90%',
+    },
+    [theme.breakpoints.down('xs')]: {
       width: '100%',
+      height: '100%',
+      maxHeight: '100%',
     },
   },
   modelButtonZone: {

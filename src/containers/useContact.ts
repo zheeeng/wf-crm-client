@@ -36,7 +36,7 @@ const useContact = (contactId: string) => {
   const {
     data: contactData,
     request: getContact,
-    isLoading: isFetchingContact,
+    isLoading: isGettingContact,
     error: getContactError,
   } = useGet<PeopleAPI>()
   const { data: updatedContactData, request: putContact, error: putContactError } = usePut<PeopleAPI>()
@@ -50,7 +50,7 @@ const useContact = (contactId: string) => {
   const { data: afterRemovedTags, request: deleteTag } = useDelete<string[]>()
   const {
     request: getNotes,
-    isLoading: isFetchingNote,
+    isLoading: isGettingNotes,
     error: getNotesError,
   } = useGet<NoteAPI[]>()
   const {
@@ -216,7 +216,7 @@ const useContact = (contactId: string) => {
 
   return {
     contact,
-    fetchContact, isFetchingContact, fetchContactError: getContactError,
+    fetchContact, isFetchingContact: isGettingContact, fetchContactError: getContactError,
     updateContact, updateContactError: putContactError,
     fetchFields, fetchFieldsError: getFieldsError,
     addField, addFieldError: postFieldError,
@@ -227,7 +227,7 @@ const useContact = (contactId: string) => {
     removeContact, removeMutation, removeContactError: deleteContactError,
     tags, addTag, removeTag,
     gender,
-    fetchNotes, isFetchingNote, fetchNotesError: getNotesError,
+    fetchNotes, isFetchingNotes: isGettingNotes, fetchNotesError: getNotesError,
     waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError: getWaiversError,
     splitWaiver, splitWaiverError: postSplitWaiverError,
     addNote, addNoteError: postNoteError,
