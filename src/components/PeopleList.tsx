@@ -360,11 +360,8 @@ const PeopleList: React.FC<Props> = React.memo(({
           />
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>
-          <IconButton>
-            <StarBorder
-              color={contact.info.starred ? 'secondary' : 'primary'}
-              onClick={handleStarClick(id, !contact.info.starred)}
-            />
+          <IconButton onClick={handleStarClick(id, !contact.info.starred)}>
+            <StarBorder color={contact.info.starred ? 'secondary' : 'primary'} />
           </IconButton>
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>
@@ -415,32 +412,30 @@ const PeopleList: React.FC<Props> = React.memo(({
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'merge')}
         onMouseLeave={handlePopoverToggle(false)}
+        onClick={toggleOnMergeContactsOpened}
       >
-        <ScreenShare
-          onClick={toggleOnMergeContactsOpened}
-        />
+        <ScreenShare />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
+        onClick={toggleOnExportContactsOpened}
       >
-        <CallMerge
-          onClick={toggleOnExportContactsOpened}
-        />
+        <CallMerge />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'add to group')}
         onMouseLeave={handlePopoverToggle(false)}
+        onClick={toggleOnAddContactToGroupFormOpened}
       >
-        <PersonAdd
-          onClick={toggleOnAddContactToGroupFormOpened}
-        />
+        <PersonAdd />
       </IconButton>
       {/* <IconButton
         onMouseEnter={handlePopoverToggle(true, 'delete')}
         onMouseLeave={handlePopoverToggle(false)}
+        onClick={handleContactsRemove}
       >
-        <Delete onClick={handleContactsRemove} />
+        <Delete />
       </IconButton> */}
       <Popover
         className={classes.popover}
