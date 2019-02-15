@@ -3,27 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^3.8.2",
+    "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
-    "@material-ui/styles": "^3.0.0-alpha.7",
+    "@material-ui/styles": "^3.0.0-alpha.10",
     "@roundation/roundation": "^0.0.30",
     "@roundation/store": "^0.0.13",
     "@types/classnames": "^2.2.7",
-    "@types/jest": "^23.3.9",
+    "@types/jest": "^24.0.5",
     "@types/node": "^10.12.2",
-    "@types/ramda": "^0.25.46",
-    "@types/react": "^16.8.1",
-    "@types/react-dom": "^16.0.11",
+    "@types/ramda": "^0.25.50",
+    "@types/react": "^16.8.3",
+    "@types/react-dom": "^16.8.1",
     "classnames": "^2.2.6",
-    "constate": "^1.0.0-alpha.6",
-    "core-js": "^2.6.1",
-    "path-to-regexp": "^2.4.0",
+    "constate": "^1.0.0",
+    "core-js": "^2.6.4",
+    "path-to-regexp": "^3.0.0",
     "ramda": "^0.26.1",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0",
-    "react-sortable-hoc": "^1.4.0"
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
+    "react-sortable-hoc": "^1.6.1"
   },
   "scripts": {
+    "postinstall": "mkdir -p node_modules/@material-ui/core/node_modules/@types/jss && cp -r node_modules/@types/jss node_modules/@material-ui/core/node_modules/@types",
     "start": "react-app-rewired start --scripts-version react-scripts-ts",
     "build": "react-app-rewired build --scripts-version react-scripts-ts",
     "test": "react-scripts-ts test --env=jsdom",
@@ -35,8 +36,8 @@
     "json-server": "^0.14.0",
     "react-app-rewired": "^1.6.2",
     "react-scripts-ts": "^3.1.0",
-    "tslint": "^5.12.0",
-    "typescript": "^3.2.2"
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
   },
   "proxy": "https://crm-api-dev.waiverforeverk8s.com/"
 }
