@@ -289,7 +289,8 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                     />
                     <IconButton
                       color="primary"
-                      className={classes.noteSubmitter}>
+                      className={classes.noteSubmitter}
+                    >
                       <PlayCircleFilled />
                     </IconButton>
                   </div>
@@ -300,8 +301,10 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                       {note.content}
                       <IconButton
                         color="primary"
-                        className={classes.noteRemover}>
-                        <RemoveCircle onClick={handleNoteRemove(note.id)} />
+                        className={classes.noteRemover}
+                        onClick={handleNoteRemove(note.id)}
+                      >
+                        <RemoveCircle />
                       </IconButton>
                     </div>
                     <time className={classes.entryTime}>
@@ -334,8 +337,8 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
             </IconButton>
           </>
         )}
-        <IconButton color="primary">
-          <AddCircle onClick={toggleShowButtons} />
+        <IconButton color="primary" onClick={toggleShowButtons}>
+          <AddCircle />
         </IconButton>
       </div>
     </ContactTableThemeProvider>
