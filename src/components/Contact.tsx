@@ -42,10 +42,10 @@ const ContactIndex: React.FC<Props> = React.memo(
 
     const previousContactId = useMemo(
       () => {
-        const target = contacts.findIndex(c => c.id === contactId)
-        const calculatedIndex = Math.max(target - 1, 0)
+        const targetIndex = contacts.findIndex(c => c.id === contactId)
+        const calculatedIndex = Math.max(targetIndex - 1, -1)
 
-        return calculatedIndex === 0 ? null : contacts[calculatedIndex].id
+        return calculatedIndex === -1 ? null : contacts[calculatedIndex].id
       },
       [contactId, contacts],
     )
@@ -53,8 +53,8 @@ const ContactIndex: React.FC<Props> = React.memo(
     const nextContactId = useMemo(
       () => {
         const len = contacts.length
-        const target = contacts.findIndex(c => c.id === contactId)
-        const calculatedIndex = Math.min(target + 1, len - 1)
+        const targetIndex = contacts.findIndex(c => c.id === contactId)
+        const calculatedIndex = Math.min(targetIndex + 1, len - 1)
 
         return calculatedIndex === len - 1 ? null : contacts[calculatedIndex].id
       },
