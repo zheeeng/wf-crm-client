@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   progressWrapper: {
     width: '100%',
-    height: '100%',
+    maxHeight: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
