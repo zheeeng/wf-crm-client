@@ -196,7 +196,8 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
             </div>
           </Toolbar>
         </AppBar>
-        <Typography variant="h5"
+        <Typography
+          variant="h6"
           className={classnames(
             message && classes.alertDisplay,
             classes.appAlert,
