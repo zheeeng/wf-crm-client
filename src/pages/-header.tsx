@@ -13,21 +13,38 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
-
 import { ComponentProps } from '@roundation/roundation/lib/types'
+
+import logIcon from '~src/assets/logo.svg'
 import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
 import AccountContainer from '~src/containers/Account'
 import AlertContainer from '~src/containers/Alert'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  logo: {
+    margin: '13px 40px',
+    height: 30,
+    width: 200,
+    backgroundSize: '156px 22px',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center left',
+    backgroundImage: `url(${logIcon})`,
+  },
   appBar: {
     zIndex: theme.zIndex.drawer + 2,
+    fontFamily: '\'Open Sans\',sans-serif',
+  },
+  appBarRoot: {
+    boxShadow: 'none',
+  },
+  toolBar: {
+    padding: 0,
   },
   appAlert: {
     position: 'absolute',
     zIndex: theme.zIndex.drawer + 1,
-    marginTop: theme.spacing.unit * 8,
+    marginTop: 54,
     width: '100%',
     height: theme.spacing.unit * 6,
     lineHeight: `${theme.spacing.unit * 6}px`,
@@ -53,11 +70,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 20,
   },
   navList: {
-    flex: 1,
     display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit * 8,
+    flex: 1,
+    fontSize: 14,
+    fontWeight: 600,
+    lineHeight: '30px',
+    margin: '13px 0',
     overflow: 'hidden',
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
     [theme.breakpoints.down('md')]: {
@@ -73,13 +91,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced,
     },
   },
+  navItem: {
+    display: 'inline-block',
+    marginLeft: 25,
+    marginRight: 25,
+  },
   link: {
     color: 'inherit',
     opacity: 0.8,
-    fontSize: 'inherit',
     textDecoration: 'none',
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
     transition: 'opacity 0.5s',
     ...{
       '&:hover': {
@@ -118,12 +138,10 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
   return (
     <Portal container={mountElRef.current}>
       <div>
-        <AppBar position="absolute" className={classes.appBar}>
-          <Toolbar>
+        <AppBar position="absolute" className={classes.appBar} classes={{root: classes.appBarRoot}}>
+          <Toolbar variant="dense" className={classes.toolBar}>
             <Hidden mdDown>
-              <Typography variant="h5" color="inherit">
-                WaiverForever
-              </Typography>
+              <div className={classes.logo} />
             </Hidden>
             <Hidden lgUp>
               <IconButton
@@ -135,13 +153,13 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
                 <MenuIcon />
               </IconButton>
             </Hidden>
-            <div className={classes.navList}>
+            <nav className={classes.navList}>
               {headers.map(({ name, routePath }) => (
-                <Typography key={name} variant="h5" color="inherit">
+                <div key={name} className={classes.navItem}>
                   <Link to={routePath} className={classes.link}>{name}</Link>
-                </Typography>
+                </div>
               ))}
-            </div>
+            </nav>
             <div>
               <Button onClick={handleMenuToggle(true)}>
                 <Typography>Open</Typography>

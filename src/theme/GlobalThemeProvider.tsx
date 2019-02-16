@@ -2,12 +2,16 @@ import React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 
-export const defaultTheme = createMuiTheme({})
+export const defaultTheme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+})
 
 export const themeOptions: ThemeOptions = {
   palette: {
     primary: {
-      main: '#5d8df8',
+      main: '#4173e3',
     },
     text: {
       primary: '#3a5b8e',
@@ -69,6 +73,11 @@ export const themeOptions: ThemeOptions = {
     },
   },
   overrides: {
+    MuiToolbar: {
+      dense: {
+         height: 56,
+      },
+    },
     MuiButton: {
       root: {
         borderRadius: defaultTheme.spacing.unit * 2,

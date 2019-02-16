@@ -218,7 +218,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
           invisible: true,
         }}
       >
-        <ToolBar />
+        <ToolBar variant="dense" />
         <SiderBarThemeProvider>
           <List>
             <ListItem>

@@ -38,7 +38,7 @@ const App: React.FC<Props> = React.memo(({ slots, children }) => {
     <div className={classes.root}>
       {slots.header}
       <div className={classes.main}>
-        <Toolbar />
+        <Toolbar variant="dense" />
         {children}
       </div>
     </div>
