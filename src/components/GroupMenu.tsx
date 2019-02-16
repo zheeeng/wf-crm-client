@@ -52,11 +52,6 @@ const GroupMenu: React.FC<Props> = ({ selectedId, groupsOpened, onClickGroup }) 
     [groups, searchTerm],
   )
 
-  const handleSearchTermChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value),
-    [searchTerm],
-  )
-
   return (
     <Collapse in={groupsOpened} timeout="auto" unmountOnExit>
       <List disablePadding>
@@ -64,7 +59,7 @@ const GroupMenu: React.FC<Props> = ({ selectedId, groupsOpened, onClickGroup }) 
           <Searcher
             placeholder="Type a group name"
             value={searchTerm}
-            onChange={handleSearchTermChange}
+            onChange={setSearchTerm}
           />
         </ListItem>
         {filteredGroups.map(group => (

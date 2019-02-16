@@ -216,16 +216,6 @@ const PeopleList: React.FC<Props> = React.memo(({
     [page, size, searchTerm],
   )
 
-  const handleSearchTermEnter = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.keyCode === 13) {
-        const term = event.currentTarget.value.trim()
-        search(term)
-      }
-    },
-    [search],
-  )
-
   const handleChangePage = useCallback(
     (_: any, newPage: number) => onSearch({ page: newPage, size, searchTerm }),
     [onSearch, size, searchTerm],
@@ -398,7 +388,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderSearcher = () => (
     <Searcher
       className={classes.search}
-      onKeyDown={handleSearchTermEnter}
+      onKeyDown={search}
       placeholder="Type a name or email"
     />
   )

@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classNames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Search from '@material-ui/icons/Search'
+import Close from '@material-ui/icons/Close'
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
   },
   input: {
+    color: theme.palette.text.secondary,
     padding: 0,
   },
   inputAdornment: {
@@ -21,13 +23,51 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   className?: string,
   value?: string,
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (v: string) => void
   placeholder?: string
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  onKeyDown?: (v: string) => void
 }
 
 const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, onChange, onKeyDown }) => {
   const classes = useStyles({})
+
+  const [text, setText] = useState(value)
+
+  useEffect(
+    () => {
+      if (text !== value) {
+        setText(value)
+      }
+    },
+    [value],
+  )
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const t = event.target.value
+      setText(t)
+      onChange && onChange(t)
+    },
+    [onChange],
+  )
+  const handleEnter = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.keyCode === 13) {
+        const term = event.currentTarget.value.trim()
+        onKeyDown && onKeyDown(term)
+      }
+    },
+    [onKeyDown],
+  )
+
+  const handleClick = useCallback(
+    () => {
+      setText('')
+      onChange && onChange('')
+      onKeyDown && onKeyDown('')
+    },
+    [],
+  )
 
   return (
     <OutlinedInput
@@ -39,12 +79,20 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
           <Search />
         </InputAdornment>
       )}
+      endAdornment={text
+        ? (
+          <InputAdornment position="end" className={classes.inputAdornment} onClick={handleClick}>
+            <Close />
+          </InputAdornment>
+        )
+        : undefined
+      }
       inputProps={{
         className: classes.input,
       }}
-      value={value}
-      onChange={onChange}
-      onKeyDown={onKeyDown}
+      value={text}
+      onChange={handleChange}
+      onKeyDown={handleEnter}
       placeholder={placeholder}
     />
   )
