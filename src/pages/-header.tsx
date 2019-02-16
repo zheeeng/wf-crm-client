@@ -98,10 +98,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     color: 'inherit',
-    opacity: 0.8,
+    opacity: 0.6,
     textDecoration: 'none',
     transition: 'opacity 0.5s',
     ...{
+      '&.active': {
+        opacity: 1,
+      },
       '&:hover': {
         opacity: 1,
       },
@@ -111,7 +114,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends ComponentProps {}
 
-const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
+const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
   const classes = useStyles({})
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
@@ -133,7 +136,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
     [authored],
   )
 
-  const headers = locationInfo.list().map(({ name, routePath }) => ({ name, routePath}))
+  const headers = locationInfo.list().map(({ name, routePath, routeFullPath }) => ({ name, routePath, routeFullPath }))
 
   return (
     <Portal container={mountElRef.current}>
@@ -154,9 +157,17 @@ const Header: React.FC<Props> = React.memo(({ locationInfo }) => {
               </IconButton>
             </Hidden>
             <nav className={classes.navList}>
-              {headers.map(({ name, routePath }) => (
+              {headers.map(({ name, routePath, routeFullPath }) => (
                 <div key={name} className={classes.navItem}>
-                  <Link to={routePath} className={classes.link}>{name}</Link>
+                  <Link
+                    to={routePath}
+                    className={classnames(
+                      classes.link,
+                      location && location.pathname.startsWith(routeFullPath) && 'active',
+                    )}
+                    >
+                      {name}
+                    </Link>
                 </div>
               ))}
             </nav>

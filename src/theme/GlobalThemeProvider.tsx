@@ -14,7 +14,7 @@ export const themeOptions: ThemeOptions = {
       main: '#4173e3',
     },
     text: {
-      primary: '#3a5b8e',
+      primary: '#5d8df8',
       secondary: '#637694',
       disabled: '#8693a7',
       hint: '#afbebb',
@@ -22,6 +22,9 @@ export const themeOptions: ThemeOptions = {
     background: {
       paper: '#fff',
       default: '#f2f4f7',
+    },
+    grey: {
+      A100: '#e9edf4',
     },
     // error: {
     //   main: '#e53214',
@@ -32,6 +35,11 @@ export const themeOptions: ThemeOptions = {
   },
   typography: {
     useNextVariants: true,
+    fontFamily: [
+      '"Open sans"',
+      '"Helvetica Neue"',
+      'sans-serif',
+    ].join(','),
     h4: {
       fontSize: 20,
       fontWeight: 600,

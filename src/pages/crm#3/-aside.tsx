@@ -70,7 +70,7 @@ type FormType = '' | 'add' | 'update' | 'remove'
 export interface Props extends ComponentProps {
 }
 
-const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
+const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
   const { success } = useContext(AlertContainer.Context)
   const { contactsCount, starredCount } = useContext(ContactsCountContainer.Context)
@@ -185,13 +185,17 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
     <Link to={routePath} {...props} onClick={onClick} />
   )
 
-  const renderLink = ({ routePath, name, icon }: { routePath: string, name: string, icon: string }) => (
+  const renderLink = (
+    { routePath, routeFullPath, name, icon }:
+    { routePath: string, routeFullPath: string, name: string, icon: string },
+  ) => (
     <React.Fragment key={routePath}>
       <ListItem
         component={renderLinkWrapper(
           routePath,
           name === 'Groups' ? toggleGroupsOpened : undefined,
         )}
+        classes={{ button: (location && location.pathname.startsWith(routeFullPath)) ? 'active' : '' }}
         button
       >
         <ListItemIcon>
@@ -209,7 +213,9 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
   )
 
   const renderDrawer = (isTemporary: boolean) => {
-    const subPageNavs = locationInfo.list().map(({ routePath, name, icon }) => ({ routePath, name, icon }))
+    const subPageNavs = locationInfo.list().map(
+      ({ routeFullPath, routePath, name, icon }) => ({ routeFullPath, routePath, name, icon }),
+    )
 
     return (
       <Drawer
@@ -225,38 +231,37 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
       >
         <ToolBar variant="dense" />
         <SiderBarThemeProvider>
-          <List>
-            <ListItem>
+          <List component="nav" className={classes.flexHeight}>
+            <ListItem component="div">
               <ListItemIcon>
                 <MaterialIcon icon={'PermContactCalendar'} />
               </ListItemIcon>
-              <ListItemText className={classes.titleText}>
+              <ListItemText classes={{primary: classes.titleText}}>
                 Contacts
               </ListItemText>
             </ListItem>
-          </List>
-          <Divider />
-          <List component="nav" className={classes.flexHeight}>
+            <Divider />
             {subPageNavs.map(renderLink)}
-          </List>
-          <List
-            className={classNames((!groupsOpened || !groupId) && classes.invisible)}
-          >
-            <ListItem>
-              <ListItemSecondaryAction className={classes.groupActions}>
-                <BorderColor
-                  className={classes.groupBtn}
-                  onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
-                />
-                <ScreenShare
-                  className={classes.groupBtn}
-                />
-                <Delete
-                  className={classes.groupBtn}
-                  onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
+            <List
+              component="nav"
+              className={classNames((!groupsOpened || !groupId) && classes.invisible)}
+            >
+              <ListItem component="div">
+                <ListItemSecondaryAction className={classes.groupActions}>
+                  <BorderColor
+                    className={classes.groupBtn}
+                    onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
+                  />
+                  <ScreenShare
+                    className={classes.groupBtn}
+                  />
+                  <Delete
+                    className={classes.groupBtn}
+                    onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
           </List>
         </SiderBarThemeProvider>
       </Drawer>
