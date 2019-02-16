@@ -508,8 +508,14 @@ const PeopleList: React.FC<Props> = React.memo(({
           <Hidden smDown>
             {renderSearcher()}
           </Hidden>
-          <Button color="primary">
-            <MaterialIcon icon="CloudDownload" className={classes.leftIcon} />
+          <Button
+            color="primary"
+            href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
+          >
+            <MaterialIcon
+              icon="CloudDownload"
+              className={classes.leftIcon}
+            />
             Download Plugin
           </Button>
         </div>
