@@ -19,6 +19,7 @@ import cssTips from '~src/utils/cssTips'
 import { Contact, ContactFields } from '~src/types/Contact'
 
 import StarBorder from '@material-ui/icons/StarBorder'
+import Star from '@material-ui/icons/Star'
 import CallMerge from '@material-ui/icons/CallMerge'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
@@ -90,6 +91,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   w25Cell: {
     width: '25%',
+  },
+  checkbox: {
+    color: theme.palette.grey.A200,
   },
 }))
 
@@ -357,11 +361,16 @@ const PeopleList: React.FC<Props> = React.memo(({
             onClick={handleItemCheckedToggle(id)}
             checked={checked.includes(id)}
             tabIndex={-1}
+            className={classes.checkbox}
           />
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>
           <IconButton onClick={handleStarClick(id, !contact.info.starred)}>
-            <StarBorder color={contact.info.starred ? 'secondary' : 'primary'} />
+            {contact.info.starred ? (
+              <Star color="secondary" />
+            ) : (
+            <StarBorder className={classes.checkbox} />
+            )}
           </IconButton>
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>

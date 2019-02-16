@@ -25,6 +25,7 @@ export const themeOptions: ThemeOptions = {
     },
     grey: {
       A100: '#e9edf4',
+      A200: '#aeb9ce',
     },
     // error: {
     //   main: '#e53214',
