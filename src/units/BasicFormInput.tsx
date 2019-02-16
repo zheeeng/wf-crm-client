@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import classnames from 'classnames'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
 import { ClassNameMap } from '@material-ui/core/styles/withStyles'
@@ -7,6 +8,9 @@ import { TextFieldClassKey } from '@material-ui/core/TextField/TextField'
 import TextField from '@material-ui/core/TextField'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  text: {
+    color: theme.palette.text.secondary,
+  },
   input: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
     height: theme.spacing.unit * 4,
@@ -23,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: 'translate(0, 8px) scale(1)',
     paddingLeft: theme.spacing.unit,
   },
-  focused: {
+  shrink: {
     fontSize: 6,
     transform: 'translate(0, 4px) scale(1)',
   },
@@ -65,12 +69,15 @@ const BasicFormInput: React.FC<Props> = React.memo(({
       InputProps={{
         onKeyDown: handleKeyDown,
         disableUnderline: true,
-        classes: InputClasses,
+        classes: {
+          ...InputClasses,
+          root: classnames(classes.text, InputClasses && InputClasses.root),
+        },
       }}
       InputLabelProps={{
         classes: {
           formControl: classes.formLabel,
-          focused: classes.focused,
+          shrink: classes.shrink,
         },
       }}
     />
