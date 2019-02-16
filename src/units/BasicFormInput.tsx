@@ -15,6 +15,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing.unit,
     margin: 0,
     marginTop: theme.spacing.unit * 2,
+    overflow: 'hidden',
+  },
+  formLabel: {
+    fontSize: 14,
+    color: theme.palette.grey.A400,
+    transform: 'translate(0, 8px) scale(1)',
+    paddingLeft: theme.spacing.unit,
+  },
+  focused: {
+    fontSize: 6,
+    transform: 'translate(0, 4px) scale(1)',
   },
 }))
 
@@ -46,8 +57,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
     <TextField
       classes={TextFieldClasses}
       className={classes.input}
-      label={null}
-      placeholder={placeholder}
+      label={placeholder}
       value={value}
       onChange={onChange}
       margin="normal"
@@ -56,6 +66,12 @@ const BasicFormInput: React.FC<Props> = React.memo(({
         onKeyDown: handleKeyDown,
         disableUnderline: true,
         classes: InputClasses,
+      }}
+      InputLabelProps={{
+        classes: {
+          formControl: classes.formLabel,
+          focused: classes.focused,
+        },
       }}
     />
   )

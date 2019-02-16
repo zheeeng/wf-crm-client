@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   fieldInput: {
     flex: 1,
     padding: `${theme.spacing.unit}px 0`,
-    color: theme.palette.text.disabled,
+    color: theme.palette.grey.A400,
   },
   addTagIcon: {
     marginRight: theme.spacing.unit,

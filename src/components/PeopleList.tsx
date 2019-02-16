@@ -74,7 +74,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   search: {
     flex: 1,
   },
-  leftIcon: {
+  download: {
+    color: theme.palette.text.secondary,
+  },
+  downloadIcon: {
     marginRight: theme.spacing.unit,
   },
   minCell: {
@@ -504,17 +507,20 @@ const PeopleList: React.FC<Props> = React.memo(({
             variant="outlined"
             color="primary"
             onClick={changeCreateContactFormOpened(true, newContactFormOption)}
-          >New contact</Button>
+          >
+            New contact
+          </Button>
           <Hidden smDown>
             {renderSearcher()}
           </Hidden>
           <Button
             color="primary"
             href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
+            className={classes.download}
           >
             <MaterialIcon
               icon="CloudDownload"
-              className={classes.leftIcon}
+              className={classes.downloadIcon}
             />
             Download Plugin
           </Button>

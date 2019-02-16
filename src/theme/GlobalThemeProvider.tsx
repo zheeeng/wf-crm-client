@@ -26,6 +26,7 @@ export const themeOptions: ThemeOptions = {
     grey: {
       A100: '#e9edf4',
       A200: '#aeb9ce',
+      A400: '#afb4bb',
     },
     // error: {
     //   main: '#e53214',
@@ -51,7 +52,7 @@ export const themeOptions: ThemeOptions = {
     },
     h6: {
       fontSize: 16,
-      fontWeight: 700,
+      fontWeight: 600,
     },
     body1: {
       fontSize: 14,

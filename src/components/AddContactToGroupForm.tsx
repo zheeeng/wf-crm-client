@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: theme.breakpoints.values.sm,
+    width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -118,7 +118,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       onClose={onClose}
     >
       <div className={classes.paper}>
-        <Typography variant="h5" align="center">
+        <Typography variant="h6" align="center" color="textSecondary">
           Add contact to
         </Typography>
         <BasicFormInput
