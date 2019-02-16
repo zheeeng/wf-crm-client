@@ -8,6 +8,15 @@ const useGlobalStyles = makeStyles({
       flexDirection: 'column',
       flex: 1,
     },
+    ...{
+      body: {
+        fontFamily: [
+          '"Open sans"',
+          '"Helvetica Neue"',
+          'sans-serif',
+        ].join(','),
+      },
+    },
   },
 })
 

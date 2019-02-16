@@ -32,11 +32,6 @@ export const themeOptions: ThemeOptions = {
   },
   typography: {
     useNextVariants: true,
-    fontFamily: [
-      '"Open sans"',
-      '"Helvetica Neue"',
-      'sans-serif',
-    ].join(','),
     h4: {
       fontSize: 20,
       fontWeight: 600,

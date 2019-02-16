@@ -15,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
+import * as vars from '~src/theme/vars'
 import logIcon from '~src/assets/logo.svg'
 import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
@@ -33,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 2,
-    fontFamily: '\'Open Sans\',sans-serif',
   },
   appBarRoot: {
     boxShadow: 'none',
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   appAlert: {
     position: 'absolute',
     zIndex: theme.zIndex.drawer + 1,
-    marginTop: 54,
+    marginTop: vars.HeaderHeight,
     width: '100%',
     height: theme.spacing.unit * 6,
     lineHeight: `${theme.spacing.unit * 6}px`,

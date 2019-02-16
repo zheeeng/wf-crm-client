@@ -13,7 +13,9 @@ export const siderBarTheme = createMuiTheme(mergeOptions(themeOptions, {
     },
     MuiListItemText: {
       primary: {
-        fontWeight: 500,
+        fontSize: 16,
+        fontWeight: 600,
+        textAlign: 'left',
       },
     },
     MuiListItemSecondaryAction: {

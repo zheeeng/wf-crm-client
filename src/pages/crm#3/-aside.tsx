@@ -23,6 +23,10 @@ import ScreenShare from '@material-ui/icons/ScreenShare'
 import Delete from '@material-ui/icons/Delete'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 
+import cond from 'ramda/es/cond'
+import equals from 'ramda/es/equals'
+import { ComponentProps } from '@roundation/roundation/lib/types'
+
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
 import MaterialIcon from '~src/units/MaterialIcon'
@@ -34,15 +38,16 @@ import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
 import { GroupFields } from '~src/types/Contact'
-import cond from 'ramda/es/cond'
-import equals from 'ramda/es/equals'
-
-import { ComponentProps } from '@roundation/roundation/lib/types'
+import * as vars from '~src/theme/vars'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  titleText: {
+    fontSize: 18,
+    fontWeight: 600,
+  },
   drawerPaper: {
     position: 'fixed',
-    width: theme.spacing.unit * 30,
+    width: vars.SiderBarWidth,
     backgroundColor: theme.palette.background.paper,
   },
   flexHeight: {
@@ -225,7 +230,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo }) => {
               <ListItemIcon>
                 <MaterialIcon icon={'PermContactCalendar'} />
               </ListItemIcon>
-              <ListItemText>
+              <ListItemText className={classes.titleText}>
                 Contacts
               </ListItemText>
             </ListItem>

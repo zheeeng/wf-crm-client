@@ -4,6 +4,8 @@ import { Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
+import * as vars from '~src/theme/vars'
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flex: 1,
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   main: {
     flex: 1,
-    marginLeft: theme.spacing.unit * 30,
+    marginLeft: vars.SiderBarWidth,
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
     },
