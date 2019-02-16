@@ -84,6 +84,8 @@ const ContactIndex: React.FC<Props> = React.memo(
           onGoBack={navigateToContact}
           onGoPrevious={goPreviousContact}
           onGoNext={goNextContact}
+          disableGoPrevious={!previousContactId}
+          disableGoNext={!nextContactId}
         />
       ),
       [removeContact, navigateToContact],
