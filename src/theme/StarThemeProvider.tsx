@@ -37,6 +37,11 @@ export const themeOptions: ThemeOptions = createMuiTheme(mergeOptions(gThemeOpti
         fontWeight: 400,
       },
     },
+    MuiCheckbox: {
+      checked: {
+        color: `${globalTheme.palette.grey.A200} !important`,
+      },
+    },
   },
 }))
 

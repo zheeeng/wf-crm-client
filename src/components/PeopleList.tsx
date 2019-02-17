@@ -23,7 +23,7 @@ import Star from '@material-ui/icons/Star'
 import CallMerge from '@material-ui/icons/CallMerge'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
-import Check from '@material-ui/icons/Check'
+import CheckBoxOutlined from '@material-ui/icons/CheckBoxOutlined'
 // import Delete from '@material-ui/icons/Delete'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 
@@ -371,7 +371,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<Check />}
+            checkedIcon={<CheckBoxOutlined />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
