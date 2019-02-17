@@ -24,9 +24,11 @@ export const themeOptions: ThemeOptions = {
       default: '#f2f4f7',
     },
     grey: {
+      900: '#e8edf5',
       A100: '#e9edf4',
       A200: '#aeb9ce',
       A400: '#afb4bb',
+      A700: '#979797',
     },
     // error: {
     //   main: '#e53214',

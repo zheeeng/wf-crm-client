@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect, useContext } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-import classNames from 'classnames'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import Table from '@material-ui/core/Table'
@@ -80,6 +80,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   downloadIcon: {
     marginRight: theme.spacing.unit,
   },
+  tableRow: {
+  },
+  checkedRow: {
+    backgroundColor: theme.palette.grey[900],
+  },
+  contactName: {
+    fontWeight: 600,
+  },
   minCell: {
     width: '1%',
   },
@@ -96,6 +104,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '25%',
   },
   checkbox: {
+    color: theme.palette.grey.A200,
+  },
+  star: {
     color: theme.palette.grey.A200,
   },
 }))
@@ -313,8 +324,8 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderPCLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell className={classes.w15Cell}>
-        <Typography component="b" variant="body1">{contact.info.name}</Typography>
+      <TableCell className={classnames(classes.contactName, classes.w15Cell)}>
+        {contact.info.name}
       </TableCell>
       <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
       <TableCell className={classes.w25Cell}>{contact.info.address}</TableCell>
@@ -346,13 +357,18 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderTableRows = (contact: Contact) => {
     const { id } = contact
+    const isChecked = checked.includes(id)
 
     return (
-      <TableRow key={id} onClick={handleShowProfile(id)}>
+      <TableRow
+        key={id}
+        onClick={handleShowProfile(id)}
+        className={classnames(classes.tableRow, isChecked && classes.checkedRow)}
+      >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
             onClick={handleItemCheckedToggle(id)}
-            checked={checked.includes(id)}
+            checked={isChecked}
             tabIndex={-1}
             className={classes.checkbox}
           />
@@ -362,7 +378,7 @@ const PeopleList: React.FC<Props> = React.memo(({
             {contact.info.starred ? (
               <Star color="secondary" />
             ) : (
-            <StarBorder className={classes.checkbox} />
+            <StarBorder className={classes.star} />
             )}
           </IconButton>
         </TableCell>
@@ -521,7 +537,7 @@ const PeopleList: React.FC<Props> = React.memo(({
           </div>
         </Hidden>
         <Hidden mdUp>
-          <div className={classNames(classes.head, classes.alignRight)}>
+          <div className={classnames(classes.head, classes.alignRight)}>
             {renderPagination()}
           </div>
         </Hidden>

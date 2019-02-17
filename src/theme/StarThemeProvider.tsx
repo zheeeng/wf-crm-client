@@ -1,10 +1,10 @@
 import React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { globalTheme, themeOptions as gThemeOptions } from './GlobalThemeProvider'
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
+import mergeOptions from '~src/utils/mergeOptions'
 
-export const defaultTheme = createMuiTheme({})
-
-export const themeOptions: ThemeOptions = {
+export const themeOptions: ThemeOptions = createMuiTheme(mergeOptions(gThemeOptions, {
   palette: {
     primary: {
       main: '#4173e3',
@@ -13,7 +13,25 @@ export const themeOptions: ThemeOptions = {
       main: '#ffc84a',
     },
   },
-}
+  overrides: {
+    MuiAvatar: {
+      root: {
+        width: 32,
+        height: 32,
+      },
+    },
+    MuiTableCell: {
+      root: {
+        padding: 10,
+      },
+      body: {
+        color: globalTheme.palette.text.secondary,
+        fontSize: 16,
+        fontWeight: 400,
+      },
+    },
+  },
+}))
 
 export const starTheme = createMuiTheme(themeOptions)
 
