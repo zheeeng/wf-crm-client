@@ -24,6 +24,7 @@ export const themeOptions: ThemeOptions = {
       default: '#f2f4f7',
     },
     grey: {
+      800: '#3a5b8e',
       900: '#e8edf5',
       A100: '#e9edf4',
       A200: '#aeb9ce',

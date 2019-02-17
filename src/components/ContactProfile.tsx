@@ -65,6 +65,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: theme.spacing.unit * 2,
   },
+  profileTitle: {
+    color: theme.palette.grey[800],
+    fontSize: 20,
+  },
   avatarBar: {
     display: 'flex',
     alignItems: 'center',
@@ -543,7 +547,9 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     ? (
       <>
         <div className={classes.profileBar}>
-          <Typography variant="h4">Profile</Typography>
+          <Typography variant="h4" className={classes.profileTitle}>
+            Profile
+          </Typography>
           <IconButton onClick={toggleEditable}>
             {editable ? <CheckCircle /> : <Edit />}
           </IconButton>
