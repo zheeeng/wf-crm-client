@@ -21,9 +21,9 @@ const useStyles = makeStyles(
     },
     textField: {
       display: 'inline-block',
-      margin: '12px 4px',
-      width: theme.spacing.unit * 4,
-      height: 'initial',
+      margin: '8px 4px',
+      width: theme.spacing.unit * 7,
+      height: theme.spacing.unit * 4,
       fontSize: 0,
       padding: 0,
     },
@@ -90,6 +90,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
       <Hidden smDown>
         <BasicFormInput
           placeholder="Jump"
+          noLabel
           onEnterPress={handleEnterNewPage}
           TextFieldClasses={{
             root: classes.textField,
