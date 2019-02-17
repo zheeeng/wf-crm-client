@@ -23,6 +23,7 @@ import Star from '@material-ui/icons/Star'
 import CallMerge from '@material-ui/icons/CallMerge'
 import ScreenShare from '@material-ui/icons/ScreenShare'
 import PersonAdd from '@material-ui/icons/PersonAdd'
+import Check from '@material-ui/icons/Check'
 // import Delete from '@material-ui/icons/Delete'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 
@@ -81,6 +82,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing.unit,
   },
   tableRow: {
+    '&:hover': {
+      backgroundColor: theme.palette.grey[900],
+    },
   },
   checkedRow: {
     backgroundColor: theme.palette.grey[900],
@@ -335,8 +339,8 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderTabletLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell className={classes.w25Cell}>
-        <Typography component="b" variant="body1">{contact.info.name}</Typography>
+      <TableCell className={classnames(classes.contactName, classes.w25Cell)}>
+        {contact.info.name}
       </TableCell>
       <TableCell>
         <Typography>{contact.info.email}</Typography>
@@ -367,6 +371,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
+            checkedIcon={<Check />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
