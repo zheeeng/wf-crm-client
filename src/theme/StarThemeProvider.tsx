@@ -20,6 +20,13 @@ export const themeOptions: ThemeOptions = createMuiTheme(mergeOptions(gThemeOpti
         height: 32,
       },
     },
+    MuiTypography: {
+      body2: {
+        color: globalTheme.palette.text.secondary,
+        fontSize: 16,
+        fontWeight: 400,
+      },
+    },
     MuiTableCell: {
       root: {
         padding: 10,
