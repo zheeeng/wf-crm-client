@@ -27,6 +27,7 @@ import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
+import isEmbedded from '~src/utils/isEmbedded'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
 import MaterialIcon from '~src/units/MaterialIcon'
@@ -89,7 +90,11 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     toggle: toggleGroupsOpened,
   } = useToggle(false)
 
-  const $mountElRef = useRef(document.querySelector('#sidebar'))
+  const $mountElRef = useRef(
+    isEmbedded
+      ? document.querySelector('#sidebar')
+      : window.top.document.querySelector('#sidebar'),
+  )
 
   const navigateToGroup = useCallback(
     (id: string) => navigate && navigate(`groups/${id}`),
@@ -285,7 +290,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           }
       />
       <Hidden mdDown>
-          <Portal container={$mountElRef.current}>
+        <Portal container={$mountElRef.current}>
           {renderDrawer(false)}
         </Portal>
       </Hidden>
