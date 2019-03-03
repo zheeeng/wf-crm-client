@@ -1,5 +1,4 @@
 import './bootstrap'
-import './messenger'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
