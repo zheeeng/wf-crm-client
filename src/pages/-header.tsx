@@ -12,15 +12,17 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import * as vars from '~src/theme/vars'
+
 import logIcon from '~src/assets/logo.svg'
 import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
 import AccountContainer from '~src/containers/Account'
 import AlertContainer from '~src/containers/Alert'
+
+import menuSVG from '~src/assets/icons/menu.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   logo: {
@@ -153,7 +155,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
                 aria-label="Menu"
                 onClick={toggleDrawerExpanded}
               >
-                <MenuIcon />
+                <img src={menuSVG} />
               </IconButton>
             </Hidden>
             <nav className={classes.navList}>

@@ -18,15 +18,6 @@ import Popover from '@material-ui/core/Popover'
 import cssTips from '~src/utils/cssTips'
 import { Contact, ContactFields } from '~src/types/Contact'
 
-import StarBorder from '@material-ui/icons/StarBorder'
-import Star from '@material-ui/icons/Star'
-import CallMerge from '@material-ui/icons/CallMerge'
-import ScreenShare from '@material-ui/icons/ScreenShare'
-import PersonAdd from '@material-ui/icons/PersonAdd'
-import CheckBoxOutlined from '@material-ui/icons/CheckBoxOutlined'
-// import Delete from '@material-ui/icons/Delete'
-import CheckCircle from '@material-ui/icons/CheckCircle'
-
 import useToggle from '~src/hooks/useToggle'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
@@ -38,8 +29,16 @@ import AddContactToGroupForm from '~src/components/AddContactToGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
-import DownloadIcon from '~src/units/download.svg'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
+
+import starBorderSVG from '~src/assets/icons/star-border.svg'
+import starSVG from '~src/assets/icons/star.svg'
+import mergeSVG from '~src/assets/icons/merge.svg'
+import shareSVG from '~src/assets/icons/share.svg'
+import personAddSVG from '~src/assets/icons/person-add.svg'
+import checkBoxOutlinedSVG from '~src/assets/icons/check-box-outlined.svg'
+import checkCircleSVG from '~src/assets/icons/check-circle.svg'
+import downloadSVG from '~src/assets/icons/download.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
@@ -78,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   download: {
     color: theme.palette.text.secondary,
   },
-  downloadIcon: {
+  downloadSVG: {
     marginRight: theme.spacing.unit,
   },
   tableRow: {
@@ -139,7 +138,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactError && fail(addContactError.message)
-      addContactData && success(<><CheckCircle /> Contact Created</>)
+      addContactData && success(<><img src={checkCircleSVG} /> Contact Created</>)
     },
     [addContactError, addContactData],
   )
@@ -159,14 +158,14 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactToGroupError && fail('Add contacts failed')
-      addContactToGroupData && success(<><CheckCircle /> Contacts Added</>)
+      addContactToGroupData && success(<><img src={checkCircleSVG} /> Contacts Added</>)
     },
     [addContactToGroupError, addContactToGroupData],
   )
   useEffect(
     () => {
       mergeContactsError && fail('Merge contacts failed')
-      mergeContactsData && success(<><CheckCircle /> Contacts Merged</>)
+      mergeContactsData && success(<><img src={checkCircleSVG} /> Contacts Merged</>)
     },
     [mergeContactsError, mergeContactsData],
   )
@@ -371,7 +370,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<CheckBoxOutlined />}
+            checkedIcon={<img src={checkBoxOutlinedSVG} />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -381,9 +380,9 @@ const PeopleList: React.FC<Props> = React.memo(({
         <TableCell padding="none" className={classes.minCell}>
           <IconButton onClick={handleStarClick(id, !contact.info.starred)}>
             {contact.info.starred ? (
-              <Star color="secondary" />
+              <img src={starSVG} color="secondary" />
             ) : (
-            <StarBorder className={classes.star} />
+              <img src={starBorderSVG} className={classes.star} />
             )}
           </IconButton>
         </TableCell>
@@ -437,21 +436,21 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnMergeContactsOpened}
       >
-        <ScreenShare />
+        <img src={shareSVG} />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnExportContactsOpened}
       >
-        <CallMerge />
+        <img src={mergeSVG} />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'add to group')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnAddContactToGroupFormOpened}
       >
-        <PersonAdd />
+        <img src={personAddSVG} />
       </IconButton>
       {/* <IconButton
         onMouseEnter={handlePopoverToggle(true, 'delete')}
@@ -530,8 +529,8 @@ const PeopleList: React.FC<Props> = React.memo(({
             className={classes.download}
           >
             <img
-              src={DownloadIcon}
-              className={classes.downloadIcon}
+              src={downloadSVG}
+              className={classes.downloadSVG}
             />
             Download Plugin
           </Button>

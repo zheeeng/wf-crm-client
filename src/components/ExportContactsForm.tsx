@@ -6,7 +6,8 @@ import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
-import CheckCircle from '@material-ui/icons/CheckCircle'
+
+import checkCircleSVG from '~src/assets/icons/check-circle.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -46,7 +47,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
       () => {
         if ((exportContactsStatus && exportContactsStatus.ready === true) || exportStatusError) {
           onClose()
-          success(<><CheckCircle /> Contacts Exported</>)
+          success(<><img src={checkCircleSVG} /> Contacts Exported</>)
         }
         exportStatusError && fail('Exported contacts failed')
       },

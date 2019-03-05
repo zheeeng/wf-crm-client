@@ -11,13 +11,13 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Input from '@material-ui/core/Input'
 import StepContent from '@material-ui/core/StepContent'
 
-import AddCircle from '@material-ui/icons/AddCircle'
-import RemoveCircle from '@material-ui/icons/RemoveCircle'
-import CalendarToday from '@material-ui/icons/CalendarToday'
-import SpeakerNotes from '@material-ui/icons/SpeakerNotes'
-import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import addCircleSVG from '~src/assets/icons/add-circle.svg'
+import removeCircleSVG from '~src/assets/icons/remove-circle.svg'
+import calendarSVG from '~src/assets/icons/calendar.svg'
+import notesSVG from '~src/assets/icons/notes.svg'
+import playCircleSVG from '~src/assets/icons/play-circle.svg'
 
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import AlertContainer from '~src/containers/Alert'
@@ -291,7 +291,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                       color="primary"
                       className={classes.noteSubmitter}
                     >
-                      <PlayCircleFilled />
+                      <img src={playCircleSVG} />
                     </IconButton>
                   </div>
                 )}
@@ -304,7 +304,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                         className={classes.noteRemover}
                         onClick={handleNoteRemove(note.id)}
                       >
-                        <RemoveCircle />
+                        <img src={removeCircleSVG} />
                       </IconButton>
                     </div>
                     <time className={classes.entryTime}>
@@ -325,7 +325,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 label: classes.entryButtonIcon,
               }}
             >
-              <CalendarToday />
+              <img src={calendarSVG} />
             </IconButton>
             <IconButton
               color={showAddNote ? 'primary' : 'default'}
@@ -333,12 +333,12 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 label: classes.entryButtonIcon,
               }}
             >
-              <SpeakerNotes onClick={toggleOnAddNote} />
+              <img src={notesSVG} onClick={toggleOnAddNote} />
             </IconButton>
           </>
         )}
         <IconButton color="primary" onClick={toggleShowButtons}>
-          <AddCircle />
+          <img src={addCircleSVG} />
         </IconButton>
       </div>
     </ContactTableThemeProvider>

@@ -15,22 +15,22 @@ import Divider from '@material-ui/core/Divider'
 import Hidden from '@material-ui/core/Hidden'
 import useToggle from '~src/hooks/useToggle'
 
-import Add from '@material-ui/icons/Add'
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import BorderColor from '@material-ui/icons/BorderColor'
-import ScreenShare from '@material-ui/icons/ScreenShare'
-import Delete from '@material-ui/icons/Delete'
-import CheckCircle from '@material-ui/icons/CheckCircle'
-
 import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
-import ContactIcon from '~src/assets/icons/side-contact.svg'
-import PersonIcon from '~src/assets/icons/side-person.svg'
-import StarIcon from '~src/assets/icons/side-star.svg'
-import GroupIcon from '~src/assets/icons/side-group.svg'
+import addSVG from '~src/assets/icons/add.svg'
+import chevronRightSVG from '~src/assets/icons/chevron-right.svg'
+import expandMoreSVG from '~src/assets/icons/expand-more.svg'
+import borderColorSVG from '~src/assets/icons/border-color.svg'
+import screenShareSVG from '~src/assets/icons/share.svg'
+import deleteSVG from '~src/assets/icons/delete.svg'
+import checkCircleSVG from '~src/assets/icons/check-circle.svg'
+
+import contactSVG from '~src/assets/icons/side-contact.svg'
+import personIconSVG from '~src/assets/icons/side-person.svg'
+import starSVG from '~src/assets/icons/side-star.svg'
+import groupSVG from '~src/assets/icons/side-group.svg'
 
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
@@ -74,11 +74,11 @@ type FormType = '' | 'add' | 'update' | 'remove'
 const getIcon = (icon: string): JSX.Element => {
   switch (icon) {
     case 'StarBorder':
-      return <img src={StarIcon} />
+      return <img src={starSVG} />
     case 'Group':
-      return <img src={GroupIcon} />
+      return <img src={groupSVG} />
     default:
-      return <img src={PersonIcon} />
+      return <img src={personIconSVG} />
   }
 }
 
@@ -94,7 +94,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   useEffect(
     () => {
-      removeGroupData && success(<><CheckCircle /> Contacts Removed</>)
+      removeGroupData && success(<><img src={checkCircleSVG} /> Contacts Removed</>)
     },
     [removeGroupData],
   )
@@ -186,10 +186,10 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           </ListItemText>
           <ListItemSecondaryAction>
             {groupsOpened
-              ? <ExpandMore />
-              : <ChevronRight />
+              ? <img src={expandMoreSVG} />
+              : <img src={chevronRightSVG} />
             }
-            <Add onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))} />
+            <img src={addSVG} onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))} />
           </ListItemSecondaryAction>
         </>
       )],
@@ -249,7 +249,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           <List component="nav" className={classes.flexHeight}>
             <ListItem component="div">
               <ListItemIcon>
-                <img src={ContactIcon} />
+                <img src={contactSVG} />
               </ListItemIcon>
               <ListItemText classes={{primary: classes.titleText}}>
                 Contacts
@@ -263,14 +263,14 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
             >
               <ListItem component="div">
                 <ListItemSecondaryAction className={classes.groupActions}>
-                  <BorderColor
+                  <img src={borderColorSVG}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
                   />
-                  <ScreenShare
+                  <img src={screenShareSVG}
                     className={classes.groupBtn}
                   />
-                  <Delete
+                  <img src={deleteSVG}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
                   />

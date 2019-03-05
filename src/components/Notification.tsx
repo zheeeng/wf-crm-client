@@ -1,8 +1,9 @@
 import React, { useContext, useCallback } from 'react'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
 import NotificationContainer from '~src/containers/Notification'
+
+import closeSVG from '~src/assets/icons/close.svg'
 
 export interface Props {
 }
@@ -37,7 +38,7 @@ const Notification: React.FC = () => {
             color="inherit"
             onClick={handleClose}
           >
-            <CloseIcon />
+            <img src={closeSVG} />
           </IconButton>
         ),
       ]}

@@ -4,15 +4,17 @@ import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import CheckCircle from '@material-ui/icons/CheckCircle'
+
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
 import AlertContainer from '~src/containers/Alert'
 import GroupsContainer from '~src/containers/Groups'
 import useToggle from '~src/hooks/useToggle'
+
+import chevronRightSVG from '~src/assets/icons/chevron-right.svg'
+import expandMoreSVG from '~src/assets/icons/expand-more.svg'
+import checkCircleSVG from '~src/assets/icons/check-circle.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -59,7 +61,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
 
   useEffect(
     () => {
-      addGroupError && fail(<><CheckCircle /> Add group failed</>)
+      addGroupError && fail(<><img src={checkCircleSVG} /> Add group failed</>)
     },
     [addGroupError],
   )
@@ -128,8 +130,8 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         <div className={classes.label} onClick={toggleGroupsOpened} >
           Existing group
           {groupsOpened
-            ? <ExpandMore />
-            : <ChevronRight />
+            ? <img src={expandMoreSVG} />
+            : <img src={chevronRightSVG} />
           }
         </div>
         <GroupMenu

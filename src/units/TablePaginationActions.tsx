@@ -5,12 +5,13 @@ import { Theme } from '@material-ui/core/styles'
 import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/TablePaginationActions'
 import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
-import FirstPageIcon from '@material-ui/icons/FirstPage'
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
-import LastPageIcon from '@material-ui/icons/LastPage'
 
 import BasicFormInput from '~src/units/BasicFormInput'
+
+import firstPageSVG from '~src/assets/icons/first-page.svg'
+import arrowLeftSVG from '~src/assets/icons/arrow-left.svg'
+import arrowRightSVG from '~src/assets/icons/arrow-right.svg'
+import lastPageSVG from '~src/assets/icons/last-page.svg'
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -77,7 +78,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
           disabled={page === 0}
           aria-label="First Page"
         >
-          <FirstPageIcon />
+          <img src={firstPageSVG} />
         </IconButton>
       </Hidden>
       <IconButton
@@ -85,7 +86,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         disabled={page === 0}
         aria-label="Previous Page"
       >
-        <KeyboardArrowLeft />
+        <img src={arrowLeftSVG} />
       </IconButton>
       <Hidden smDown>
         <BasicFormInput
@@ -105,7 +106,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="Next Page"
       >
-        <KeyboardArrowRight />
+        <img src={arrowRightSVG} />
       </IconButton>
       <Hidden smDown>
         <IconButton
@@ -113,7 +114,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="Last Page"
         >
-          <LastPageIcon />
+          <img src={lastPageSVG} />
         </IconButton>
       </Hidden>
     </div>

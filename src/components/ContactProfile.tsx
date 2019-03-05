@@ -5,19 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import Modal from '@material-ui/core/Modal'
 import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
-import Edit from '@material-ui/icons/Edit'
 import Avatar from '@material-ui/core/Avatar'
-
-import Check from '~src/units/check.svg'
-import Bookmark from '@material-ui/icons/bookmark.svg'
-
-import CreditCard from '~src/units/creditCard.svg'
-import Email from '~src/units/email.svg'
-import Phone from '~src/units/phone.svg'
-import People from '~src/units/people.svg'
-import Cake from '~src/units/cake.svg'
-import Location from '~src/units/location.svg'
-import Description from '~src/units/description.svg'
 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
@@ -33,16 +21,27 @@ import useToggle from '~src/hooks/useToggle'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
+import editSVG from '~src/assets/icons/edit.svg'
+import checkSVG from '~src/assets/icons/check.svg'
+import bookmarkSVG from '~src/assets/icons/bookmark.svg'
+
+import creditCardSVG from '~src/assets/icons/creditcard.svg'
+import emailSVG from '~src/assets/icons/email.svg'
+import phoneSVG from '~src/assets/icons/phone.svg'
+import peopleSVG from '~src/assets/icons/people.svg'
+import cakeSVG from '~src/assets/icons/cake.svg'
+import locationSVG from '~src/assets/icons/location.svg'
+import descriptionSVG from '~src/assets/icons/description.svg'
 interface IconProp {
   className?: string
 }
-const CreditCardIcon: React.FC<IconProp> = ({className}) => <img src={CreditCard} className={className}/>
-const EmailIcon: React.FC<IconProp> = ({className}) => <img src={Email} className={className}/>
-const PhoneIcon: React.FC<IconProp> = ({className}) => <img src={Phone} className={className} />
-const PeopleIcon: React.FC<IconProp> = ({className}) => <img src={People} className={className} />
-const CakeIcon: React.FC<IconProp> = ({className}) => <img src={Cake} className={className} />
-const LocationIcon: React.FC<IconProp> = ({className}) => <img src={Location} className={className} />
-const DescriptionIcon: React.FC<IconProp> = ({className}) => <img src={Description} className={className} />
+const CreditCardIcon: React.FC<IconProp> = ({className}) => <img src={creditCardSVG} className={className}/>
+const EmailIcon: React.FC<IconProp> = ({className}) => <img src={emailSVG} className={className}/>
+const PhoneIcon: React.FC<IconProp> = ({className}) => <img src={phoneSVG} className={className} />
+const PeopleIcon: React.FC<IconProp> = ({className}) => <img src={peopleSVG} className={className} />
+const CakeIcon: React.FC<IconProp> = ({className}) => <img src={cakeSVG} className={className} />
+const LocationIcon: React.FC<IconProp> = ({className}) => <img src={locationSVG} className={className} />
+const DescriptionIcon: React.FC<IconProp> = ({className}) => <img src={descriptionSVG} className={className} />
 
 const useStyles = makeStyles((theme: Theme) => ({
   modelPaper: {
@@ -565,7 +564,10 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             Profile
           </Typography>
           <IconButton onClick={toggleEditable}>
-            {editable ? <img src={Check} /> : <Edit />}
+            {editable
+              ? <img src={checkSVG} />
+              : <img src={editSVG} />
+            }
           </IconButton>
         </div>
         <div>
@@ -604,7 +606,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<img src={Bookmark} className={classes.addTagIcon} />}
+                  startAdornment={<img src={bookmarkSVG} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>
@@ -635,7 +637,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<img src={Bookmark} className={classes.addTagIcon} />}
+                  startAdornment={<img src={bookmarkSVG} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>

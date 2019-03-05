@@ -1,11 +1,13 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-import NavigateBefore from '@material-ui/icons/NavigateBefore'
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
-import Delete from '@material-ui/icons/Delete'
+
 import cssTips from '~src/utils/cssTips'
+
+import arrowLeftSVG from '~src/assets/icons/arrow-left.svg'
+import arrowUpSVG from '~src/assets/icons/arrow-up.svg'
+import arrowDownSVG from '~src/assets/icons/arrow-down.svg'
+import deleteSVG from '~src/assets/icons/delete.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   left: {
@@ -32,17 +34,19 @@ const ContactPageHeader: React.FC<Props> = React.memo(
     return (
       <>
         <div className={classes.left}>
-          <NavigateBefore onClick={onGoBack} />
-          <KeyboardArrowDown
+          <img src={arrowLeftSVG} onClick={onGoBack} />
+          <img src={arrowDownSVG}
             onClick={onGoNext}
+            // TODO::
             color={disableGoNext ? 'disabled' : undefined}
           />
-          <KeyboardArrowUp
+          <img src={arrowDownSVG}
             onClick={onGoPrevious}
+            // TODO::
             color={disableGoPrevious ? 'disabled' : undefined}
           />
         </div>
-        <Delete className={classes.delete} onClick={onDelete} />
+        <img src={deleteSVG} className={classes.delete} onClick={onDelete} />
       </>
     )
   },

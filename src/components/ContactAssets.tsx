@@ -6,16 +6,16 @@ import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import IconButton from '@material-ui/core/IconButton'
-
-import Assessment from '@material-ui/icons/Assessment'
-import CallSplit from '@material-ui/icons/CallSplit'
-import CloudDownload from '@material-ui/icons/CloudDownload'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
+
+import assessmentSVG from '~src/assets/icons/assessment.svg'
+import splitSVG from '~src/assets/icons/split.svg'
+import downloadSVG from '~src/assets/icons/download.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabsWrapper: {
@@ -157,7 +157,11 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
         <div>
           {waivers.map(waiver => (
             <div key={waiver.id} className={classes.entry}>
-              <Assessment className={classes.entryIcon} color="primary" />
+              <img
+                src={assessmentSVG}
+                className={classes.entryIcon}
+                color="primary"
+              />
               <span className={classes.entryContent}>{waiver.title}</span>
               <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
               <div className={classes.entryButtons}>
@@ -168,7 +172,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                   }}
                   onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
                 >
-                  <CallSplit fontSize="small" />
+                  // TODO:: fontSize="small"
+                  <img src={splitSVG} />
                 </IconButton>
                 <IconButton
                   className={classes.entryButton}
@@ -176,7 +181,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                     label: classes.entryButtonIcon,
                   }}
                 >
-                  <CloudDownload fontSize="small" />
+                  // TODO:: fontSize="small"
+                  <img src={downloadSVG} />
                 </IconButton>
               </div>
             </div>
@@ -186,17 +192,29 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       {currentTab === 1 && (
         <div>
           <div className={classes.entry}>
-            <Assessment className={classes.entryIcon} color="primary" />
+            <img
+              src={assessmentSVG}
+              className={classes.entryIcon}
+              color="primary"
+            />
             <span className={classes.entryContent}>agreement.pdf</span>
             <time className={classes.entryTime}>July 22, 2017, 6:30 pm</time>
           </div>
           <div className={classes.entry}>
-            <Assessment className={classes.entryIcon} color="primary" />
+            <img
+              src={assessmentSVG}
+              className={classes.entryIcon}
+              color="primary"
+            />
             <span className={classes.entryContent}>Customer_waiver.word</span>
             <time className={classes.entryTime}>July 22, 2017, 6:30 pm</time>
           </div>
           <div className={classes.entry}>
-            <Assessment className={classes.entryIcon} color="primary" />
+            <img
+              src={assessmentSVG}
+              className={classes.entryIcon}
+              color="primary"
+            />
             <span className={classes.entryContent}>Business_strategy.ppt</span>
             <time className={classes.entryTime}>July 22, 2017, 6:30 pm</time>
           </div>
