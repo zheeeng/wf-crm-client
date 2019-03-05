@@ -6,17 +6,20 @@ import Modal from '@material-ui/core/Modal'
 import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
 import Edit from '@material-ui/icons/Edit'
-import CheckCircle from '@material-ui/icons/CheckCircle'
 import Avatar from '@material-ui/core/Avatar'
-import CreditCard from '@material-ui/icons/CreditCard'
-import Email from '@material-ui/icons/Email'
-import Phone from '@material-ui/icons/Phone'
-import People from '@material-ui/icons/People'
-import Cake from '@material-ui/icons/Cake'
+
+import Check from '~src/units/check.svg'
+import Bookmark from '@material-ui/icons/bookmark.svg'
+
+import CreditCard from '~src/units/creditCard.svg'
+import Email from '~src/units/email.svg'
+import Phone from '~src/units/phone.svg'
+import People from '~src/units/people.svg'
+import Cake from '~src/units/cake.svg'
+import Location from '~src/units/location.svg'
+import Description from '~src/units/description.svg'
+
 import CircularProgress from '@material-ui/core/CircularProgress'
-import LocationOn from '@material-ui/icons/LocationOn'
-import Description from '@material-ui/icons/Description'
-import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
@@ -29,6 +32,17 @@ import ContactFieldInput,
 import useToggle from '~src/hooks/useToggle'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
+
+interface IconProp {
+  className?: string
+}
+const CreditCardIcon: React.FC<IconProp> = ({className}) => <img src={CreditCard} className={className}/>
+const EmailIcon: React.FC<IconProp> = ({className}) => <img src={Email} className={className}/>
+const PhoneIcon: React.FC<IconProp> = ({className}) => <img src={Phone} className={className} />
+const PeopleIcon: React.FC<IconProp> = ({className}) => <img src={People} className={className} />
+const CakeIcon: React.FC<IconProp> = ({className}) => <img src={Cake} className={className} />
+const LocationIcon: React.FC<IconProp> = ({className}) => <img src={Location} className={className} />
+const DescriptionIcon: React.FC<IconProp> = ({className}) => <img src={Description} className={className} />
 
 const useStyles = makeStyles((theme: Theme) => ({
   modelPaper: {
@@ -441,7 +455,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="name" name="name" editable={e}
         fieldName="Name"
         showName={showName}
-        Icon={CreditCard}
+        Icon={CreditCardIcon}
         hasTitle={false}
         expandable={true}
         fieldValues={names}
@@ -455,7 +469,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="email" name="email" editable={e}
         fieldName="Email"
         showName={showName}
-        Icon={Email}
+        Icon={EmailIcon}
         hasTitle={true}
         expandable={true}
         fieldValues={emails}
@@ -469,7 +483,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="phone" name="phone" editable={e}
         fieldName="Phone"
         showName={showName}
-        Icon={Phone}
+        Icon={PhoneIcon}
         hasTitle={true}
         expandable={true}
         fieldValues={phones}
@@ -483,7 +497,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="date" name="date" editable={e}
         fieldName="Birthday"
         showName={showName}
-        Icon={Cake}
+        Icon={CakeIcon}
         hasTitle={false}
         expandable={true}
         fieldValues={dates}
@@ -497,7 +511,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="gender" name="gender" editable={e}
         fieldName="Gender"
         showName={showName}
-        Icon={People}
+        Icon={PeopleIcon}
         hasTitle={false}
         value={gender || ''}
         options={['', 'Male', 'Female']}
@@ -507,7 +521,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="address" name="address" editable={e}
         fieldName="Address"
         showName={showName}
-        Icon={LocationOn}
+        Icon={LocationIcon}
         hasTitle={true}
         expandable={true}
         fieldValues={addresses}
@@ -520,7 +534,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       <ContactFieldInput
         key="other" name="other" editable={e}
         showName={showName}
-        Icon={Description}
+        Icon={DescriptionIcon}
         hasTitle={true}
         expandable={true}
         fieldValues={others}
@@ -551,7 +565,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             Profile
           </Typography>
           <IconButton onClick={toggleEditable}>
-            {editable ? <CheckCircle /> : <Edit />}
+            {editable ? <img src={Check} /> : <Edit />}
           </IconButton>
         </div>
         <div>
@@ -590,7 +604,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+                  startAdornment={<img src={Bookmark} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>
@@ -621,7 +635,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<BookmarkBorder className={classes.addTagIcon} />}
+                  startAdornment={<img src={Bookmark} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>

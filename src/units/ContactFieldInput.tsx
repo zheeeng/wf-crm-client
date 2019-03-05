@@ -7,10 +7,10 @@ import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
-import AddCircle from '@material-ui/icons/AddCircle'
-import RemoveCircle from '@material-ui/icons/RemoveCircle'
-import Eye from '@material-ui/icons/RemoveRedEye'
-import Reorder from '@material-ui/icons/Reorder'
+import AddCircle from '~src/units/add-circle.svg'
+import RemoveCircle from '~src/units/remove-circle.svg'
+import Eye from '~src/units/eye.svg'
+import Reorder from '~src/units/reorder.svg'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 
@@ -341,7 +341,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                   className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
                   onClick={handleEntryToggleHide(fieldValue.id!)}
                 >
-                  <Eye color={fieldValue.priority === 0 ? 'primary' : 'disabled'} />
+                  // TODO:: color=fieldValue.priority === 0 ? 'primary' : 'disabled'
+                  <img src={Eye} />
                 </IconButton>
                 <SortHandler
                   element={
@@ -352,7 +353,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                         classes.fieldDragIcon,
                       )}
                     >
-                      <Reorder color="disabled" />
+                      // TODO:: color="disabled"
+                      <img src={Reorder} />
                     </IconButton>
                   }
                 />
@@ -362,14 +364,16 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       className={classes.fieldControlIcon}
                       onClick={handleAddEntry}
                     >
-                      <AddCircle color="primary" />
+                      // TODO:: color="disabled"
+                      <img src={AddCircle} />
                     </IconButton>
                   )
                   : (
                     <IconButton
                       className={classes.fieldControlIcon}
                       onClick={handleEntryDelete(fieldValue.id!)}>
-                      <RemoveCircle color="disabled" />
+                      // TODO:: color="disabled"
+                      <img src={RemoveCircle} />
                     </IconButton>
                   )
                 )}
@@ -391,7 +395,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     <div className={classes.fieldBar} ref={containerRef}>
       {showName
         ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
+        : Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         <SortableList
           onSortEnd={onSortEnd}
@@ -455,7 +459,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
     <div className={classes.fieldBar}>
       {showName
         ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
+        : Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         <div
           className={classnames(
@@ -493,13 +497,13 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
           {editable && (
             <div className={classes.filedIconBox}>
               <IconButton className={classes.fieldControlIcon}>
-                <Eye className={classes.placeholderIcon} />
+                <img src={Eye} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <Reorder className={classes.placeholderIcon} />
+                <img src={Reorder} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <AddCircle className={classes.placeholderIcon} />
+                <img src={AddCircle} className={classes.placeholderIcon} />
               </IconButton>
             </div>
           )}
@@ -527,7 +531,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
     <div className={classes.fieldBar}>
       {showName
         ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} color="primary" />}
+        : Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         <div
           className={classnames(
@@ -568,13 +572,13 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
           {editable && (
             <div className={classes.filedIconBox}>
               <IconButton className={classes.fieldControlIcon}>
-                <Eye className={classes.placeholderIcon} />
+                <img src={Eye} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <Reorder className={classes.placeholderIcon} />
+                <img src={Reorder} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <AddCircle className={classes.placeholderIcon} />
+                <img src={AddCircle} className={classes.placeholderIcon} />
               </IconButton>
             </div>
           )}
@@ -602,7 +606,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 //     <div className={classes.fieldBar}>
 //       {showName
 //         ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
-//         : Icon && <Icon className={classes.fieldIcon} color="primary" />}
+//         : Icon && <Icon className={classes.fieldIcon} />}
 //       <div className={classes.fieldTextWrapper}>
 //         <div
 //           className={classnames(
@@ -649,7 +653,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 //                 <Reorder className={classes.placeholderIcon} />
 //               </IconButton>
 //               <IconButton className={classes.fieldControlIcon}>
-//                 <AddCircle className={classes.placeholderIcon} />
+//                 <AddCircleIcon className={classes.placeholderIcon} />
 //               </IconButton>
 //             </div>
 //           )}

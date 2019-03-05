@@ -30,6 +30,7 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 import ContactIcon from '~src/assets/icons/side-contact.svg'
 import PersonIcon from '~src/assets/icons/side-person.svg'
 import StarIcon from '~src/assets/icons/side-star.svg'
+import GroupIcon from '~src/assets/icons/side-group.svg'
 
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
@@ -74,8 +75,9 @@ const getIcon = (icon: string): JSX.Element => {
   switch (icon) {
     case 'StarBorder':
       return <img src={StarIcon} />
+    case 'Group':
+      return <img src={GroupIcon} />
     default:
-      //'Person', 'Group'
       return <img src={PersonIcon} />
   }
 }

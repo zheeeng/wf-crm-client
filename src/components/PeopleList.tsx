@@ -38,7 +38,7 @@ import AddContactToGroupForm from '~src/components/AddContactToGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
-import MaterialIcon from '~src/units/MaterialIcon'
+import DownloadIcon from '~src/units/download.svg'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -529,8 +529,8 @@ const PeopleList: React.FC<Props> = React.memo(({
             href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
             className={classes.download}
           >
-            <MaterialIcon
-              icon="CloudDownload"
+            <img
+              src={DownloadIcon}
               className={classes.downloadIcon}
             />
             Download Plugin
