@@ -27,9 +27,12 @@ import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
+import ContactIcon from '~src/assets/icons/side-contact.svg'
+import PersonIcon from '~src/assets/icons/side-person.svg'
+import StarIcon from '~src/assets/icons/side-star.svg'
+
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
-import MaterialIcon from '~src/units/MaterialIcon'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import muteClick from '~src/utils/muteClick'
@@ -66,6 +69,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 type FormType = '' | 'add' | 'update' | 'remove'
+
+const getIcon = (icon: string): JSX.Element => {
+  switch (icon) {
+    case 'StarBorder':
+      return <img src={StarIcon} />
+    default:
+      //'Person', 'Group'
+      return <img src={PersonIcon} />
+  }
+}
 
 export interface Props extends ComponentProps {
 }
@@ -199,7 +212,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
         button
       >
         <ListItemIcon>
-          <MaterialIcon icon={icon} />
+          {getIcon(icon)}
         </ListItemIcon>
         {renderLinkLabel(name)}
       </ListItem>
@@ -234,7 +247,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           <List component="nav" className={classes.flexHeight}>
             <ListItem component="div">
               <ListItemIcon>
-                <MaterialIcon icon={'PermContactCalendar'} />
+                <img src={ContactIcon} />
               </ListItemIcon>
               <ListItemText classes={{primary: classes.titleText}}>
                 Contacts
