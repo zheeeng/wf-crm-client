@@ -1,0 +1,10 @@
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="icon/hide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-26">
+            <rect id="Rectangle-2" x="0" y="0" width="24" height="24"></rect>
+            <path d="M12,19 C15.5726779,19 18.8379473,17.0724901 21.7958083,13.2174703 L21.7958076,13.2174697 C22.3468121,12.4993381 22.3468121,11.5006602 21.7958075,10.7825286 C18.8379467,6.92750953 15.5726775,5 12,5 C8.42732214,5 5.16205269,6.9275099 2.20419166,10.7825297 L2.20419245,10.7825303 C1.65318786,11.5006619 1.65318789,12.4993398 2.20419251,13.2174714 C5.16205332,17.0724905 8.42732248,19 12,19 Z" id="Oval-15" fill="#B0BCDE"></path>
+            <circle id="Oval-3" fill="#F0F2F5" cx="12" cy="12" r="5"></circle>
+            <circle id="Oval-3" fill="#B0BCDE" cx="12" cy="12" r="3"></circle>
+        </g>
+    </g>
+</svg>

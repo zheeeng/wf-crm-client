@@ -1,0 +1,11 @@
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="icon/note" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/add-activity">
+            <rect id="Rectangle-3-Copy-5" x="0" y="0" width="32" height="32"></rect>
+            <path d="M26,23 L26,27.7928932 C26,28.0690356 25.7761424,28.2928932 25.5,28.2928932 C25.3673918,28.2928932 25.2402148,28.2402148 25.1464466,28.1464466 L20,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,9 C4,7.8954305 4.8954305,7 6,7 L26,7 C27.1045695,7 28,7.8954305 28,9 L28,21 C28,22.1045695 27.1045695,23 26,23 Z" id="Combined-Shape" fill="#5D8DF8"></path>
+            <rect id="Rectangle-6" fill="#FFFFFF" x="9" y="10" width="14" height="2" rx="1"></rect>
+            <rect id="Rectangle-6-Copy" fill="#FFFFFF" x="9" y="14" width="11" height="2" rx="1"></rect>
+            <rect id="Rectangle-6-Copy-2" fill="#FFFFFF" x="9" y="18" width="14" height="2" rx="1"></rect>
+        </g>
+    </g>
+</svg>

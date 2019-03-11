@@ -1,0 +1,11 @@
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="icon/complete/light-blue" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-26">
+            <rect id="Rectangle" x="0" y="0" width="32" height="32"></rect>
+            <g id="Group-25" transform="translate(4.000000, 4.000000)">
+                <circle id="Oval-3" fill="#B0BCDE" cx="12" cy="12" r="12"></circle>
+                <path d="M6.46153846,13.3333333 L6.46153846,9.33333333 C6.46153846,8.59695367 5.91050431,8 5.23076923,8 C4.55103415,8 4,8.59695367 4,9.33333333 L4,14.6666667 C4,15.4030463 4.55103415,16 5.23076923,16 L18.7692308,16 C19.4489658,16 20,15.4030463 20,14.6666667 C20,13.930287 19.4489658,13.3333333 18.7692308,13.3333333 L6.46153846,13.3333333 Z" id="Path-2" fill="#F0F2F5" fill-rule="nonzero" transform="translate(12.000000, 12.000000) rotate(-45.000000) translate(-12.000000, -12.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

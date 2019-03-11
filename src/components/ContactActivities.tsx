@@ -11,12 +11,6 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Input from '@material-ui/core/Input'
 import StepContent from '@material-ui/core/StepContent'
 
-import addCircleSVG from '~src/assets/icons/add-circle.svg'
-import removeCircleSVG from '~src/assets/icons/remove-circle.svg'
-import calendarSVG from '~src/assets/icons/calendar.svg'
-import notesSVG from '~src/assets/icons/notes.svg'
-import playCircleSVG from '~src/assets/icons/play-circle.svg'
-
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
@@ -24,6 +18,12 @@ import AlertContainer from '~src/containers/Alert'
 import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 import useToggle from '~src/hooks/useToggle'
+
+import addCircleSVG from '~src/assets/icons/add-circle.svg'
+import removeCircleSVG from '~src/assets/icons/remove-circle.svg'
+import birthdaySVG from '~src/assets/icons/birthday.svg'
+import noteSVG from '~src/assets/icons/note.svg'
+import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -291,7 +291,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                       color="primary"
                       className={classes.noteSubmitter}
                     >
-                      <img src={playCircleSVG} />
+                      <PlayCircleFilled />
                     </IconButton>
                   </div>
                 )}
@@ -325,7 +325,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 label: classes.entryButtonIcon,
               }}
             >
-              <img src={calendarSVG} />
+              <img src={birthdaySVG} />
             </IconButton>
             <IconButton
               color={showAddNote ? 'primary' : 'default'}
@@ -333,7 +333,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 label: classes.entryButtonIcon,
               }}
             >
-              <img src={notesSVG} onClick={toggleOnAddNote} />
+              <img src={noteSVG} onClick={toggleOnAddNote} />
             </IconButton>
           </>
         )}

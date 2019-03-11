@@ -13,7 +13,7 @@ import useContact from '~src/containers/useContact'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
 
-import assessmentSVG from '~src/assets/icons/assessment.svg'
+import waiverSVG from '~src/assets/icons/waiver.svg'
 import splitSVG from '~src/assets/icons/split.svg'
 import downloadSVG from '~src/assets/icons/download.svg'
 
@@ -158,7 +158,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           {waivers.map(waiver => (
             <div key={waiver.id} className={classes.entry}>
               <img
-                src={assessmentSVG}
+                src={waiverSVG}
                 className={classes.entryIcon}
                 color="primary"
               />
@@ -193,7 +193,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
         <div>
           <div className={classes.entry}>
             <img
-              src={assessmentSVG}
+              src={waiverSVG}
               className={classes.entryIcon}
               color="primary"
             />
@@ -202,7 +202,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           </div>
           <div className={classes.entry}>
             <img
-              src={assessmentSVG}
+              src={waiverSVG}
               className={classes.entryIcon}
               color="primary"
             />
@@ -211,7 +211,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           </div>
           <div className={classes.entry}>
             <img
-              src={assessmentSVG}
+              src={waiverSVG}
               className={classes.entryIcon}
               color="primary"
             />

@@ -31,12 +31,12 @@ import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 
-import starBorderSVG from '~src/assets/icons/star-border.svg'
+import starStrokeSVG from '~src/assets/icons/star-stroke.svg'
 import starSVG from '~src/assets/icons/star.svg'
 import mergeSVG from '~src/assets/icons/merge.svg'
-import shareSVG from '~src/assets/icons/share.svg'
+import exportSVG from '~src/assets/icons/export.svg'
 import personAddSVG from '~src/assets/icons/person-add.svg'
-import checkBoxOutlinedSVG from '~src/assets/icons/check-box-outlined.svg'
+import checkedBox from '~src/assets/icons/checked-box.svg'
 import checkCircleSVG from '~src/assets/icons/check-circle.svg'
 import downloadSVG from '~src/assets/icons/download.svg'
 
@@ -370,7 +370,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<img src={checkBoxOutlinedSVG} />}
+            checkedIcon={<img src={checkedBox} />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -382,7 +382,7 @@ const PeopleList: React.FC<Props> = React.memo(({
             {contact.info.starred ? (
               <img src={starSVG} color="secondary" />
             ) : (
-              <img src={starBorderSVG} className={classes.star} />
+              <img src={starStrokeSVG} className={classes.star} />
             )}
           </IconButton>
         </TableCell>
@@ -436,7 +436,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnMergeContactsOpened}
       >
-        <img src={shareSVG} />
+        <img src={exportSVG} />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}

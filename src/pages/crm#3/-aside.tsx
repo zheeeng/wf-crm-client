@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback, useRef, useMemo } from 'react'
+import React, { useState, useContext, useEffect, useCallback, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
@@ -21,16 +21,16 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import addSVG from '~src/assets/icons/add.svg'
 import chevronRightSVG from '~src/assets/icons/chevron-right.svg'
-import expandMoreSVG from '~src/assets/icons/expand-more.svg'
-import borderColorSVG from '~src/assets/icons/border-color.svg'
-import screenShareSVG from '~src/assets/icons/share.svg'
+import chevronDownSVG from '~src/assets/icons/chevron-down.svg'
+import editSVG from '~src/assets/icons/edit.svg'
+import exportSVG from '~src/assets/icons/export.svg'
 import deleteSVG from '~src/assets/icons/delete.svg'
 import checkCircleSVG from '~src/assets/icons/check-circle.svg'
 
-import contactSVG from '~src/assets/icons/side-contact.svg'
-import personIconSVG from '~src/assets/icons/side-person.svg'
-import starSVG from '~src/assets/icons/side-star.svg'
-import groupSVG from '~src/assets/icons/side-group.svg'
+import contactSVG from '~src/assets/icons/contact.svg'
+import allSVG from '~src/assets/icons/all.svg'
+import starredSVG from '~src/assets/icons/starred.svg'
+import groupSVG from '~src/assets/icons/group.svg'
 
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
@@ -74,11 +74,11 @@ type FormType = '' | 'add' | 'update' | 'remove'
 const getIcon = (icon: string): JSX.Element => {
   switch (icon) {
     case 'StarBorder':
-      return <img src={starSVG} />
+      return <img src={starredSVG} />
     case 'Group':
       return <img src={groupSVG} />
     default:
-      return <img src={personIconSVG} />
+      return <img src={allSVG} />
   }
 }
 
@@ -186,7 +186,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           </ListItemText>
           <ListItemSecondaryAction>
             {groupsOpened
-              ? <img src={expandMoreSVG} />
+              ? <img src={chevronDownSVG} />
               : <img src={chevronRightSVG} />
             }
             <img src={addSVG} onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))} />
@@ -263,11 +263,11 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
             >
               <ListItem component="div">
                 <ListItemSecondaryAction className={classes.groupActions}>
-                  <img src={borderColorSVG}
+                  <img src={editSVG}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
                   />
-                  <img src={screenShareSVG}
+                  <img src={exportSVG}
                     className={classes.groupBtn}
                   />
                   <img src={deleteSVG}

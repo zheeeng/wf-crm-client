@@ -13,7 +13,7 @@ import GroupsContainer from '~src/containers/Groups'
 import useToggle from '~src/hooks/useToggle'
 
 import chevronRightSVG from '~src/assets/icons/chevron-right.svg'
-import expandMoreSVG from '~src/assets/icons/expand-more.svg'
+import chevronDownSVG from '~src/assets/icons/chevron-down.svg'
 import checkCircleSVG from '~src/assets/icons/check-circle.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -130,7 +130,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         <div className={classes.label} onClick={toggleGroupsOpened} >
           Existing group
           {groupsOpened
-            ? <img src={expandMoreSVG} />
+            ? <img src={chevronDownSVG} />
             : <img src={chevronRightSVG} />
           }
         </div>

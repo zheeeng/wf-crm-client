@@ -23,23 +23,23 @@ import cssTips from '~src/utils/cssTips'
 
 import editSVG from '~src/assets/icons/edit.svg'
 import checkSVG from '~src/assets/icons/check.svg'
-import bookmarkSVG from '~src/assets/icons/bookmark.svg'
+import tagSVG from '~src/assets/icons/tag.svg'
 
-import creditCardSVG from '~src/assets/icons/creditcard.svg'
+import nameSVG from '~src/assets/icons/name.svg'
 import emailSVG from '~src/assets/icons/email.svg'
 import phoneSVG from '~src/assets/icons/phone.svg'
-import peopleSVG from '~src/assets/icons/people.svg'
-import cakeSVG from '~src/assets/icons/cake.svg'
+import genderSVG from '~src/assets/icons/gender.svg'
+import birthdaySVG from '~src/assets/icons/birthday.svg'
 import locationSVG from '~src/assets/icons/location.svg'
 import descriptionSVG from '~src/assets/icons/description.svg'
 interface IconProp {
   className?: string
 }
-const CreditCardIcon: React.FC<IconProp> = ({className}) => <img src={creditCardSVG} className={className}/>
+const NameIcon: React.FC<IconProp> = ({className}) => <img src={nameSVG} className={className}/>
 const EmailIcon: React.FC<IconProp> = ({className}) => <img src={emailSVG} className={className}/>
 const PhoneIcon: React.FC<IconProp> = ({className}) => <img src={phoneSVG} className={className} />
-const PeopleIcon: React.FC<IconProp> = ({className}) => <img src={peopleSVG} className={className} />
-const CakeIcon: React.FC<IconProp> = ({className}) => <img src={cakeSVG} className={className} />
+const GenderIcon: React.FC<IconProp> = ({className}) => <img src={genderSVG} className={className} />
+const BirthdayIcon: React.FC<IconProp> = ({className}) => <img src={birthdaySVG} className={className} />
 const LocationIcon: React.FC<IconProp> = ({className}) => <img src={locationSVG} className={className} />
 const DescriptionIcon: React.FC<IconProp> = ({className}) => <img src={descriptionSVG} className={className} />
 
@@ -454,7 +454,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="name" name="name" editable={e}
         fieldName="Name"
         showName={showName}
-        Icon={CreditCardIcon}
+        Icon={NameIcon}
         hasTitle={false}
         expandable={true}
         fieldValues={names}
@@ -496,7 +496,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="date" name="date" editable={e}
         fieldName="Birthday"
         showName={showName}
-        Icon={CakeIcon}
+        Icon={BirthdayIcon}
         hasTitle={false}
         expandable={true}
         fieldValues={dates}
@@ -510,7 +510,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         key="gender" name="gender" editable={e}
         fieldName="Gender"
         showName={showName}
-        Icon={PeopleIcon}
+        Icon={GenderIcon}
         hasTitle={false}
         value={gender || ''}
         options={['', 'Male', 'Female']}
@@ -606,7 +606,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<img src={bookmarkSVG} className={classes.addTagIcon} />}
+                  startAdornment={<img src={tagSVG} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>
@@ -637,7 +637,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<img src={bookmarkSVG} className={classes.addTagIcon} />}
+                  startAdornment={<img src={tagSVG} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>

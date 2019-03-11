@@ -22,7 +22,7 @@ import AppContainer from '~src/containers/App'
 import AccountContainer from '~src/containers/Account'
 import AlertContainer from '~src/containers/Alert'
 
-import menuSVG from '~src/assets/icons/menu.svg'
+import MenuIcon from '@material-ui/icons/Menu'
 
 const useStyles = makeStyles((theme: Theme) => ({
   logo: {
@@ -155,7 +155,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
                 aria-label="Menu"
                 onClick={toggleDrawerExpanded}
               >
-                <img src={menuSVG} />
+                <MenuIcon />
               </IconButton>
             </Hidden>
             <nav className={classes.navList}>

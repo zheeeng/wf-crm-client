@@ -8,10 +8,10 @@ import IconButton from '@material-ui/core/IconButton'
 
 import BasicFormInput from '~src/units/BasicFormInput'
 
-import firstPageSVG from '~src/assets/icons/first-page.svg'
-import arrowLeftSVG from '~src/assets/icons/arrow-left.svg'
-import arrowRightSVG from '~src/assets/icons/arrow-right.svg'
-import lastPageSVG from '~src/assets/icons/last-page.svg'
+import FirstPageIcon from '@material-ui/icons/FirstPage'
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
+import LastPageIcon from '@material-ui/icons/LastPage'
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -78,7 +78,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
           disabled={page === 0}
           aria-label="First Page"
         >
-          <img src={firstPageSVG} />
+          <FirstPageIcon />
         </IconButton>
       </Hidden>
       <IconButton
@@ -86,7 +86,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         disabled={page === 0}
         aria-label="Previous Page"
       >
-        <img src={arrowLeftSVG} />
+        <KeyboardArrowLeft />
       </IconButton>
       <Hidden smDown>
         <BasicFormInput
@@ -106,7 +106,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="Next Page"
       >
-        <img src={arrowRightSVG} />
+        <KeyboardArrowRight />
       </IconButton>
       <Hidden smDown>
         <IconButton
@@ -114,7 +114,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="Last Page"
         >
-          <img src={lastPageSVG} />
+          <LastPageIcon />
         </IconButton>
       </Hidden>
     </div>

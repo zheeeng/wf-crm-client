@@ -4,9 +4,9 @@ import { Theme } from '@material-ui/core/styles'
 
 import cssTips from '~src/utils/cssTips'
 
-import arrowLeftSVG from '~src/assets/icons/arrow-left.svg'
-import arrowUpSVG from '~src/assets/icons/arrow-up.svg'
-import arrowDownSVG from '~src/assets/icons/arrow-down.svg'
+import NavigateBefore from '@material-ui/icons/NavigateBefore'
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
 import deleteSVG from '~src/assets/icons/delete.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,13 +34,13 @@ const ContactPageHeader: React.FC<Props> = React.memo(
     return (
       <>
         <div className={classes.left}>
-          <img src={arrowLeftSVG} onClick={onGoBack} />
-          <img src={arrowDownSVG}
+          <NavigateBefore onClick={onGoBack} />
+          <KeyboardArrowDown
             onClick={onGoNext}
             // TODO::
             color={disableGoNext ? 'disabled' : undefined}
           />
-          <img src={arrowDownSVG}
+          <KeyboardArrowUp
             onClick={onGoPrevious}
             // TODO::
             color={disableGoPrevious ? 'disabled' : undefined}
