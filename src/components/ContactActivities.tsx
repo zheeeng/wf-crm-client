@@ -19,11 +19,8 @@ import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 import useToggle from '~src/hooks/useToggle'
 
-import addCircleSVG from '~src/assets/icons/add-circle.svg'
-import removeCircleSVG from '~src/assets/icons/remove-circle.svg'
-import birthdaySVG from '~src/assets/icons/birthday.svg'
-import noteSVG from '~src/assets/icons/note.svg'
 import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -304,7 +301,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                         className={classes.noteRemover}
                         onClick={handleNoteRemove(note.id)}
                       >
-                        <img src={removeCircleSVG} />
+                        <Icon name={ICONS.Delete} />
                       </IconButton>
                     </div>
                     <time className={classes.entryTime}>
@@ -325,7 +322,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 label: classes.entryButtonIcon,
               }}
             >
-              <img src={birthdaySVG} />
+              <Icon name={ICONS.Birthday} />
             </IconButton>
             <IconButton
               color={showAddNote ? 'primary' : 'default'}
@@ -333,12 +330,12 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 label: classes.entryButtonIcon,
               }}
             >
-              <img src={noteSVG} onClick={toggleOnAddNote} />
+              <Icon name={ICONS.Note} onClick={toggleOnAddNote} />
             </IconButton>
           </>
         )}
         <IconButton color="primary" onClick={toggleShowButtons}>
-          <img src={addCircleSVG} />
+          <Icon name={ICONS.AddCircle} />
         </IconButton>
       </div>
     </ContactTableThemeProvider>

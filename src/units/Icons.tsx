@@ -24,6 +24,23 @@ import { ReactComponent as ChevronRightIcon } from '~src/assets/icons/chevron-ri
 import { ReactComponent as ChevronDownIcon } from '~src/assets/icons/chevron-down.svg'
 import { ReactComponent as EditIcon } from '~src/assets/icons/edit.svg'
 import { ReactComponent as DeleteIcon } from '~src/assets/icons/delete.svg'
+import { ReactComponent as AddCircleIcon } from '~src/assets/icons/add-circle.svg'
+import { ReactComponent as NoteIcon } from '~src/assets/icons/note.svg'
+import { ReactComponent as EyeIcon } from '~src/assets/icons/eye.svg'
+import { ReactComponent as ReorderIcon } from '~src/assets/icons/reorder.svg'
+import { ReactComponent as NameIcon } from '~src/assets/icons/name.svg'
+import { ReactComponent as EmailIcon } from '~src/assets/icons/email.svg'
+import { ReactComponent as PhoneIcon } from '~src/assets/icons/name.svg'
+import { ReactComponent as GenderIcon } from '~src/assets/icons/gender.svg'
+import { ReactComponent as BirthdayIcon } from '~src/assets/icons/birthday.svg'
+import { ReactComponent as LocationIcon } from '~src/assets/icons/location.svg'
+import { ReactComponent as DescriptionIcon } from '~src/assets/icons/description.svg'
+import { ReactComponent as WaiverIcon } from '~src/assets/icons/waiver.svg'
+import { ReactComponent as SplitIcon } from '~src/assets/icons/split.svg'
+import { ReactComponent as DownloadIcon } from '~src/assets/icons/download.svg'
+import { ReactComponent as TagIcon } from '~src/assets/icons/tag.svg'
+import { ReactComponent as SearchIcon } from '~src/assets/icons/search.svg'
+import { ReactComponent as CloseIcon } from '~src/assets/icons/close.svg'
 
 export enum ICONS {
   SideContact,
@@ -44,6 +61,23 @@ export enum ICONS {
   ChevronDown,
   Edit,
   Delete,
+  AddCircle,
+  Note,
+  Eye,
+  Reorder,
+  Name,
+  Email,
+  Phone,
+  Gender,
+  Birthday,
+  Location,
+  Description,
+  Waiver,
+  Split,
+  Download,
+  Tag,
+  Search,
+  Close,
 }
 
 const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>> => {
@@ -84,6 +118,40 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return EditIcon
     case ICONS.Delete:
       return DeleteIcon
+    case ICONS.AddCircle:
+      return AddCircleIcon
+    case ICONS.Note:
+      return NoteIcon
+    case ICONS.Eye:
+      return EyeIcon
+    case ICONS.Reorder:
+      return ReorderIcon
+    case ICONS.Name:
+      return NameIcon
+    case ICONS.Email:
+      return EmailIcon
+    case ICONS.Phone:
+      return PhoneIcon
+    case ICONS.Gender:
+      return GenderIcon
+    case ICONS.Birthday:
+      return BirthdayIcon
+    case ICONS.Location:
+      return LocationIcon
+    case ICONS.Description:
+      return DescriptionIcon
+    case ICONS.Waiver:
+      return WaiverIcon
+    case ICONS.Split:
+      return SplitIcon
+    case ICONS.Download:
+      return DownloadIcon
+    case ICONS.Tag:
+      return TagIcon
+    case ICONS.Search:
+      return SearchIcon
+    case ICONS.Close:
+      return CloseIcon
     default:
       return () => null
   }

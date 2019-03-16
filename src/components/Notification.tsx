@@ -3,7 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
 import NotificationContainer from '~src/containers/Notification'
 
-import closeSVG from '~src/assets/icons/close.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 export interface Props {
 }
@@ -38,7 +38,7 @@ const Notification: React.FC = () => {
             color="inherit"
             onClick={handleClose}
           >
-            <img src={closeSVG} />
+            <Icon name={ICONS.Close} />
           </IconButton>
         ),
       ]}

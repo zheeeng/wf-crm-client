@@ -12,9 +12,7 @@ import AlertContainer from '~src/containers/Alert'
 import GroupsContainer from '~src/containers/Groups'
 import useToggle from '~src/hooks/useToggle'
 
-import chevronRightSVG from '~src/assets/icons/chevron-right.svg'
-import chevronDownSVG from '~src/assets/icons/chevron-down.svg'
-import checkCircleSVG from '~src/assets/icons/check-circle.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -61,7 +59,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
 
   useEffect(
     () => {
-      addGroupError && fail(<><img src={checkCircleSVG} /> Add group failed</>)
+      addGroupError && fail(<><Icon name={ICONS.CheckCircle} /> Add group failed</>)
     },
     [addGroupError],
   )
@@ -130,8 +128,8 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         <div className={classes.label} onClick={toggleGroupsOpened} >
           Existing group
           {groupsOpened
-            ? <img src={chevronDownSVG} />
-            : <img src={chevronRightSVG} />
+            ? <Icon name={ICONS.ChevronDown} />
+            : <Icon name={ICONS.ChevronRight} />
           }
         </div>
         <GroupMenu

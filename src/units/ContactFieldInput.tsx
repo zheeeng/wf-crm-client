@@ -9,11 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
-
-import addCircleSVG from '~src/assets/icons/add-circle.svg'
-import removeCircleSVG from '~src/assets/icons/remove-circle.svg'
-import eyeSVG from '~src/assets/icons/eye.svg'
-import reorderSVG from '~src/assets/icons/reorder.svg'
+import SvgIcon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   hidden: {
@@ -342,10 +338,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                   className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
                   onClick={handleEntryToggleHide(fieldValue.id!)}
                 >
-                  <img
-                    src={eyeSVG}
-                    // TODO::
-                    color={fieldValue.priority === 0 ? 'primary' : 'disabled'}
+                  <SvgIcon
+                    name={ICONS.Eye}
+                    color={fieldValue.priority === 0 ? 'primary' : 'secondary'}
                   />
                 </IconButton>
                 <SortHandler
@@ -357,8 +352,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                         classes.fieldDragIcon,
                       )}
                     >
-                      // TODO::
-                      <img src={reorderSVG} color="disabled" />
+                      <SvgIcon name={ICONS.Reorder} color="secondary" />
                     </IconButton>
                   }
                 />
@@ -368,16 +362,14 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       className={classes.fieldControlIcon}
                       onClick={handleAddEntry}
                     >
-                      // TODO:: color="disabled"
-                      <img src={addCircleSVG} />
+                      <SvgIcon name={ICONS.AddCircle} color="secondary" />
                     </IconButton>
                   )
                   : (
                     <IconButton
                       className={classes.fieldControlIcon}
                       onClick={handleEntryDelete(fieldValue.id!)}>
-                      // TODO:: color="disabled"
-                      <img src={removeCircleSVG} />
+                      <SvgIcon name={ICONS.Delete} color="secondary" />
                     </IconButton>
                   )
                 )}
@@ -501,13 +493,13 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
           {editable && (
             <div className={classes.filedIconBox}>
               <IconButton className={classes.fieldControlIcon}>
-                <img src={eyeSVG} className={classes.placeholderIcon} />
+                <SvgIcon name={ICONS.Eye} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <img src={reorderSVG} className={classes.placeholderIcon} />
+                <SvgIcon name={ICONS.Reorder} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <img src={addCircleSVG} className={classes.placeholderIcon} />
+                <SvgIcon name={ICONS.AddCircle} className={classes.placeholderIcon} />
               </IconButton>
             </div>
           )}
@@ -576,13 +568,13 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
           {editable && (
             <div className={classes.filedIconBox}>
               <IconButton className={classes.fieldControlIcon}>
-                <img src={eyeSVG} className={classes.placeholderIcon} />
+                <SvgIcon name={ICONS.Eye} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <img src={reorderSVG} className={classes.placeholderIcon} />
+                <SvgIcon name={ICONS.Reorder} className={classes.placeholderIcon} />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <img src={addCircleSVG} className={classes.placeholderIcon} />
+                <SvgIcon name={ICONS.AddCircle} className={classes.placeholderIcon} />
               </IconButton>
             </div>
           )}

@@ -7,7 +7,7 @@ import cssTips from '~src/utils/cssTips'
 import NavigateBefore from '@material-ui/icons/NavigateBefore'
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
-import deleteSVG from '~src/assets/icons/delete.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   left: {
@@ -37,16 +37,14 @@ const ContactPageHeader: React.FC<Props> = React.memo(
           <NavigateBefore onClick={onGoBack} />
           <KeyboardArrowDown
             onClick={onGoNext}
-            // TODO::
             color={disableGoNext ? 'disabled' : undefined}
           />
           <KeyboardArrowUp
             onClick={onGoPrevious}
-            // TODO::
             color={disableGoPrevious ? 'disabled' : undefined}
           />
         </div>
-        <img src={deleteSVG} className={classes.delete} onClick={onDelete} />
+        <Icon name={ICONS.Delete} className={classes.delete} onClick={onDelete} />
       </>
     )
   },
