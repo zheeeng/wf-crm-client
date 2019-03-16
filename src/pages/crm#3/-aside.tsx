@@ -67,20 +67,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   groupBtn: {
     cursor: 'pointer',
   },
+  itemIcon: {
+    padding: 1,
+    width: theme.spacing.unit * 3,
+    height: theme.spacing.unit * 3,
+  },
 }))
 
 type FormType = '' | 'add' | 'update' | 'remove'
-
-const getIcon = (icon: string): JSX.Element => {
-  switch (icon) {
-    case 'StarBorder':
-      return <img src={starredSVG} />
-    case 'Group':
-      return <img src={groupSVG} />
-    default:
-      return <img src={allSVG} />
-  }
-}
 
 export interface Props extends ComponentProps {
 }
@@ -175,6 +169,17 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [removeGroup, changeGroupFormOpened],
   )
 
+  const renderIcon = (icon: string) => {
+    switch (icon) {
+      case 'StarBorder':
+        return <img src={starredSVG} className={classes.itemIcon} />
+      case 'Group':
+        return <img src={groupSVG} className={classes.itemIcon} />
+      default:
+        return <img src={allSVG} className={classes.itemIcon} />
+    }
+  }
+
   const renderLinkLabel = cond(
     [
       [equals('All'), name => <ListItemText>{name}({contactsCount})</ListItemText>],
@@ -214,7 +219,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
         button
       >
         <ListItemIcon>
-          {getIcon(icon)}
+          {renderIcon(icon)}
         </ListItemIcon>
         {renderLinkLabel(name)}
       </ListItem>
@@ -249,7 +254,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           <List component="nav" className={classes.flexHeight}>
             <ListItem component="div">
               <ListItemIcon>
-                <img src={contactSVG} />
+                <img src={contactSVG} className={classes.itemIcon} />
               </ListItemIcon>
               <ListItemText classes={{primary: classes.titleText}}>
                 Contacts

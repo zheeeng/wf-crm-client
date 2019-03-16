@@ -1,15 +1,1 @@
-<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/contacts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-15">
-            <rect id="Rectangle-3-Copy-2" x="0" y="0" width="32" height="32"></rect>
-            <g id="contact-icon" transform="translate(2.000000, 4.000000)">
-                <path d="M2,19 L1,19 C0.44771525,19 6.76353751e-17,18.5522847 0,18 C-6.76353751e-17,17.4477153 0.44771525,17 1,17 L2,17 L2,13 L1,13 C0.44771525,13 6.76353751e-17,12.5522847 0,12 C-6.76353751e-17,11.4477153 0.44771525,11 1,11 L2,11 L2,7 L1,7 C0.44771525,7 6.76353751e-17,6.55228475 0,6 C-6.76353751e-17,5.44771525 0.44771525,5 1,5 L2,5 L2,2 C2,0.8954305 2.8954305,2.02906125e-16 4,0 L24,0 C25.1045695,-2.02906125e-16 26,0.8954305 26,2 L26,22 C26,23.1045695 25.1045695,24 24,24 L4,24 C2.8954305,24 2,23.1045695 2,22 L2,19 Z" id="Combined-Shape" fill="#5D8DF8"></path>
-                <g id="Group-2-Copy-4" transform="translate(10.000000, 6.000000)" fill="#FFFFFF">
-                    <path d="M12,12 C12,8.6862915 9.3137085,6 6,6 C2.6862915,6 0,8.6862915 0,12 L12,12 Z" id="Oval-2"></path>
-                    <circle id="Oval" cx="6" cy="3" r="3"></circle>
-                </g>
-                <rect id="Rectangle-5" fill="#FFFFFF" x="5" y="0" width="2" height="24"></rect>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 32 32" width="32" height="32"><defs><clipPath id="_clipPath_WkE8vBWEZTQHgovBYiSbq9v5s6kZH71o"><rect width="32" height="32"/></clipPath></defs><g clip-path="url(#_clipPath_WkE8vBWEZTQHgovBYiSbq9v5s6kZH71o)"><g><rect x="-2.5" y="-4" width="40" height="40" transform="matrix(1,0,0,1,0,0)" fill="none"/><g><path d=" M 2.5 24.75 L 1.25 24.75 C 0.56 24.75 0 24.19 0 23.5 C 0 22.81 0.56 22.25 1.25 22.25 L 2.5 22.25 L 2.5 17.25 L 1.25 17.25 C 0.56 17.25 0 16.69 0 16 C 0 15.31 0.56 14.75 1.25 14.75 L 2.5 14.75 L 2.5 9.75 L 1.25 9.75 C 0.56 9.75 0 9.19 0 8.5 C 0 7.81 0.56 7.25 1.25 7.25 L 2.5 7.25 L 2.5 3.5 C 2.5 2.119 3.619 1 5 1 L 30 1 C 31.381 1 32.5 2.119 32.5 3.5 L 32.5 28.5 C 32.5 29.881 31.381 31 30 31 L 5 31 C 3.619 31 2.5 29.881 2.5 28.5 L 2.5 24.75 Z " fill-rule="evenodd" fill="rgb(93,141,248)"/><g><path d=" M 27.5 23.5 C 27.5 19.358 24.142 16 20 16 C 15.858 16 12.5 19.358 12.5 23.5 L 27.5 23.5 Z " fill-rule="evenodd" fill="rgb(255,255,255)"/><circle vector-effect="non-scaling-stroke" cx="20.000000000000004" cy="12.250000000000007" r="3.75" fill="rgb(255,255,255)"/></g><rect x="6.25" y="1" width="2.5" height="30" transform="matrix(1,0,0,1,0,0)" fill="rgb(255,255,255)"/></g></g></g></svg>

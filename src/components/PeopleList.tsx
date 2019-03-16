@@ -31,14 +31,15 @@ import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 
+import Check from '@material-ui/icons/Check'
 import starStrokeSVG from '~src/assets/icons/star-stroke.svg'
 import starSVG from '~src/assets/icons/star.svg'
 import mergeSVG from '~src/assets/icons/merge.svg'
 import exportSVG from '~src/assets/icons/export.svg'
 import personAddSVG from '~src/assets/icons/person-add.svg'
-import checkedBox from '~src/assets/icons/checked-box.svg'
 import checkCircleSVG from '~src/assets/icons/check-circle.svg'
-import downloadSVG from '~src/assets/icons/download.svg'
+import downloadPluginSVG from '~src/assets/icons/download-plugin.svg'
+import downloadPluginGraySVG from '~src/assets/icons/download-plugin-gray.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
@@ -76,9 +77,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   download: {
     color: theme.palette.text.secondary,
+    ...{
+      '&:hover $downloadIcon': {
+        backgroundImage: `url(${downloadPluginSVG})`,
+      },
+    },
   },
-  downloadSVG: {
+  downloadIcon: {
+    display: 'inline-block',
+    width: theme.spacing.unit * 3,
+    height: theme.spacing.unit * 3,
+    backgroundImage: `url(${downloadPluginGraySVG})`,
     marginRight: theme.spacing.unit,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
   },
   tableRow: {
     '&:hover': {
@@ -370,7 +383,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<img src={checkedBox} />}
+            checkedIcon={<Check />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -528,10 +541,7 @@ const PeopleList: React.FC<Props> = React.memo(({
             href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
             className={classes.download}
           >
-            <img
-              src={downloadSVG}
-              className={classes.downloadSVG}
-            />
+            <div className={classes.downloadIcon} />
             Download Plugin
           </Button>
         </div>
