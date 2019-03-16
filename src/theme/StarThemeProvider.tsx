@@ -7,10 +7,7 @@ import mergeOptions from '~src/utils/mergeOptions'
 export const themeOptions: ThemeOptions = createMuiTheme(mergeOptions(gThemeOptions, {
   palette: {
     primary: {
-      main: '#4173e3',
-    },
-    secondary: {
-      main: '#ffc84a',
+      main: '#aeb9ce',
     },
   },
   overrides: {
@@ -37,9 +34,11 @@ export const themeOptions: ThemeOptions = createMuiTheme(mergeOptions(gThemeOpti
         fontWeight: 400,
       },
     },
-    MuiCheckbox: {
-      checked: {
-        color: `${globalTheme.palette.grey.A200} !important`,
+    MuiIconButton: {
+      root: {
+        '&:hover': {
+          backgroundColor: 'unset',
+        },
       },
     },
   },

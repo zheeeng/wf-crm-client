@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing.unit,
-    ...cssTips(theme, { sizeFactor: 2 }).horizontallySpaced,
+    ...cssTips(theme, { sizeFactor: 2 }).horizontallySpaced(),
   },
   fieldName: {
     padding: theme.spacing.unit * 2.5,

@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
   },
   groupActions: {
-    ...cssTips(theme, { sizeFactor: 1 }).horizontallySpaced,
+    ...cssTips(theme, { sizeFactor: 1 }).horizontallySpaced(),
   },
   invisible: {
     visibility: 'hidden',

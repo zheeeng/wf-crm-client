@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonZone: {
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
-    ...cssTips(theme).horizontallySpaced,
+    ...cssTips(theme).horizontallySpaced(),
   },
   label: {
     display: 'flex',

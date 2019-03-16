@@ -11,7 +11,7 @@ import deleteSVG from '~src/assets/icons/delete.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   left: {
-    ...cssTips(theme).horizontallySpaced,
+    ...cssTips(theme).horizontallySpaced(),
   },
   delete: {
     cursor: 'pointer',

@@ -31,13 +31,18 @@ import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 
-import Check from '@material-ui/icons/Check'
 import starStrokeSVG from '~src/assets/icons/star-stroke.svg'
 import starSVG from '~src/assets/icons/star.svg'
 import mergeSVG from '~src/assets/icons/merge.svg'
+import mergeGraySVG from '~src/assets/icons/merge-gray.svg'
 import exportSVG from '~src/assets/icons/export.svg'
+import exportGraySVG from '~src/assets/icons/export-gray.svg'
 import personAddSVG from '~src/assets/icons/person-add.svg'
+import personAddGraySVG from '~src/assets/icons/person-add-gray.svg'
 import checkCircleSVG from '~src/assets/icons/check-circle.svg'
+import checkSVG from '~src/assets/icons/check.svg'
+import checkCheckedSVG from '~src/assets/icons/check-checked.svg'
+
 import downloadPluginSVG from '~src/assets/icons/download-plugin.svg'
 import downloadPluginGraySVG from '~src/assets/icons/download-plugin-gray.svg'
 
@@ -50,10 +55,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing.unit * 3,
     whiteSpace: 'nowrap',
     [theme.breakpoints.between('sm', 'md')]: {
-      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced,
+      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
     },
     [theme.breakpoints.up('md')]: {
-      ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+      ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced(),
     },
   },
   alignRight: {
@@ -84,14 +89,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   downloadIcon: {
-    display: 'inline-block',
-    width: theme.spacing.unit * 3,
-    height: theme.spacing.unit * 3,
+    ...cssTips(theme).iconBg(),
     backgroundImage: `url(${downloadPluginGraySVG})`,
     marginRight: theme.spacing.unit,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
   },
   tableRow: {
     '&:hover': {
@@ -124,6 +124,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   star: {
     color: theme.palette.grey.A200,
+  },
+  controlIcon: {
+    ...cssTips(theme, { iconBgFactor: 2.5 }).iconBg(),
+  },
+  mergeIcon: {
+    backgroundImage: `url(${mergeGraySVG})`,
+    ...{
+      '&:hover': {
+        backgroundImage: `url(${mergeSVG})`,
+      },
+    },
+  },
+  exportIcon: {
+    backgroundImage: `url(${exportGraySVG})`,
+    ...{
+      '&:hover': {
+        backgroundImage: `url(${exportSVG})`,
+      },
+    },
+  },
+  personAddIcon: {
+    backgroundImage: `url(${personAddGraySVG})`,
+    ...{
+      '&:hover': {
+        backgroundImage: `url(${personAddSVG})`,
+      },
+    },
   },
 }))
 
@@ -383,7 +410,8 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<Check />}
+            checkedIcon={<img src={checkCheckedSVG} />}
+            icon={<img src={checkSVG} />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -449,21 +477,21 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnMergeContactsOpened}
       >
-        <img src={exportSVG} />
+        <div className={classnames(classes.controlIcon, classes.exportIcon)} />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnExportContactsOpened}
       >
-        <img src={mergeSVG} />
+        <div className={classnames(classes.controlIcon, classes.mergeIcon)} />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'add to group')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnAddContactToGroupFormOpened}
       >
-        <img src={personAddSVG} />
+        <div className={classnames(classes.controlIcon, classes.personAddIcon)} />
       </IconButton>
       {/* <IconButton
         onMouseEnter={handlePopoverToggle(true, 'delete')}
@@ -561,6 +589,8 @@ const PeopleList: React.FC<Props> = React.memo(({
               <TableRow>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
+                    checkedIcon={<img src={checkCheckedSVG} />}
+                    icon={<img src={checkSVG} />}
                     checked={allChecked}
                     onClick={handleToggleAllChecked}
                   />

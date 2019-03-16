@@ -79,18 +79,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '30px',
     margin: '13px 0',
     overflow: 'hidden',
-    ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+    ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced(),
     [theme.breakpoints.down('md')]: {
       justifyContent: 'space-around',
       paddingRight: theme.spacing.unit * 4,
       paddingLeft: theme.spacing.unit * 4,
-      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced,
+      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
     },
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'space-around',
       paddingRight: 0,
       paddingLeft: 0,
-      ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced,
+      ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced(),
     },
   },
   navItem: {

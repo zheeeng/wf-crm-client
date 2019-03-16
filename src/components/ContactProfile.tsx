@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   modelButtonZone: {
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
-    ...cssTips(theme).horizontallySpaced,
+    ...cssTips(theme).horizontallySpaced(),
   },
   profileBar: {
     display: 'flex',
