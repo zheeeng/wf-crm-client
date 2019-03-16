@@ -69,6 +69,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   download: {
     color: theme.palette.text.secondary,
+    ...{
+      '&:hover $downloadIcon': {
+        color: theme.palette.text.primary,
+      }
+    }
   },
   downloadIcon: {
     marginRight: theme.spacing.unit,

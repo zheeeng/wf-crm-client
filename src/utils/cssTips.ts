@@ -7,7 +7,7 @@ export interface TipOption {
 
 export const getDefaultOption = (): TipOption => ({
   sizeFactor: 2,
-  svgIconFactor: 3,
+  svgIconFactor: 2.5,
 })
 
 const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {

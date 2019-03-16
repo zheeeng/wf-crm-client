@@ -340,7 +340,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 >
                   <SvgIcon
                     name={ICONS.Eye}
-                    color={fieldValue.priority === 0 ? 'primary' : 'secondary'}
+                    color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
+                    size="sm"
                   />
                 </IconButton>
                 <SortHandler
@@ -352,7 +353,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                         classes.fieldDragIcon,
                       )}
                     >
-                      <SvgIcon name={ICONS.Reorder} color="secondary" />
+                      <SvgIcon
+                        name={ICONS.Reorder}
+                        color="hoverLighten" size="sm"
+                      />
                     </IconButton>
                   }
                 />
@@ -362,14 +366,20 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       className={classes.fieldControlIcon}
                       onClick={handleAddEntry}
                     >
-                      <SvgIcon name={ICONS.AddCircle} color="secondary" />
+                      <SvgIcon
+                        name={ICONS.AddCircle}
+                        color="hoverLighten" size="sm"
+                      />
                     </IconButton>
                   )
                   : (
                     <IconButton
                       className={classes.fieldControlIcon}
                       onClick={handleEntryDelete(fieldValue.id!)}>
-                      <SvgIcon name={ICONS.Delete} color="secondary" />
+                      <SvgIcon
+                        name={ICONS.Delete}
+                        color="hoverLighten" size="sm"
+                      />
                     </IconButton>
                   )
                 )}
@@ -493,13 +503,25 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
           {editable && (
             <div className={classes.filedIconBox}>
               <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon name={ICONS.Eye} className={classes.placeholderIcon} />
+                <SvgIcon
+                  name={ICONS.Eye}
+                  className={classes.placeholderIcon}
+                  color="hoverLighten" size="sm"
+                />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon name={ICONS.Reorder} className={classes.placeholderIcon} />
+                <SvgIcon
+                  name={ICONS.Reorder}
+                  className={classes.placeholderIcon}
+                  color="hoverLighten" size="sm"
+                />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon name={ICONS.AddCircle} className={classes.placeholderIcon} />
+                <SvgIcon
+                  name={ICONS.AddCircle}
+                  className={classes.placeholderIcon}
+                  color="hoverLighten" size="sm"
+                />
               </IconButton>
             </div>
           )}
@@ -568,13 +590,25 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
           {editable && (
             <div className={classes.filedIconBox}>
               <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon name={ICONS.Eye} className={classes.placeholderIcon} />
+                <SvgIcon
+                  name={ICONS.Eye}
+                  className={classes.placeholderIcon}
+                  color="hoverLighten" size="sm"
+                />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon name={ICONS.Reorder} className={classes.placeholderIcon} />
+                <SvgIcon
+                  name={ICONS.Reorder}
+                  className={classes.placeholderIcon}
+                  color="hoverLighten" size="sm"
+                />
               </IconButton>
               <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon name={ICONS.AddCircle} className={classes.placeholderIcon} />
+                <SvgIcon
+                  name={ICONS.AddCircle}
+                  className={classes.placeholderIcon}
+                  color="hoverLighten" size="sm"
+                />
               </IconButton>
             </div>
           )}

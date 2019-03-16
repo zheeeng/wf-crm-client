@@ -21,10 +21,6 @@ import useToggle from '~src/hooks/useToggle'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
-import editSVG from '~src/assets/icons/edit.svg'
-import checkSVG from '~src/assets/icons/check.svg'
-import tagSVG from '~src/assets/icons/tag.svg'
-
 import Icon, { ICONS } from '~src/units/Icons'
 
 interface IconProp {
@@ -90,6 +86,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing.unit * 8,
     marginBottom: theme.spacing.unit * 2,
   },
+  avatarName: {
+    color: '#637694',
+    fontWeight: 600,
+    fontSize: 18,
+    lineHeight: theme.spacing.unit * 3,
+  },
   avatarIcon: {
     padding: theme.spacing.unit * 0.5,
     height: theme.spacing.unit * 8,
@@ -111,14 +113,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addTagIcon: {
     marginRight: theme.spacing.unit,
+    width: theme.spacing.unit * 3,
+    height: theme.spacing.unit * 3,
   },
   tags: {},
-  tag: {
+  tagChip: {
     fontSize: 14,
     padding: `${theme.spacing.unit * 0.5}px ${theme.spacing.unit}px`,
     marginRight: theme.spacing.unit * 0.5,
     marginBottom: theme.spacing.unit * 0.5,
     borderRadius: theme.spacing.unit,
+    backgroundColor: '#e8edf5',
     ...{
       '& svg': {
         display: 'none',
@@ -608,7 +613,12 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<Icon name={ICONS.Tag} className={classes.addTagIcon} />}
+                  startAdornment={
+                    <Icon
+                      name={ICONS.Tag}
+                      className={classes.addTagIcon}
+                    />
+                  }
                   onKeyDown={handleTagsAdd}
                 />
               </div>
@@ -617,7 +627,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                   <Chip
                     key={`${tag}-${index}`}
                     onDelete={handleTagDelete(tag)}
-                    className={classes.tag}
+                    className={classes.tagChip}
                     classes={{ label: classes.tagLabel }}
                     label={tag}
                   />
@@ -631,7 +641,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
               src={contact.info.avatar}
               className={classes.avatarIcon}
             />
-            <strong>{contact.info.name}</strong>
+            <span className={classes.avatarName}>{contact.info.name}</span>
           </div>
           <Hidden xlUp>
             <div className={classes.blockTagsWrapper}>
@@ -648,7 +658,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                   <Chip
                     key={`${tag}-${index}`}
                     onDelete={handleTagDelete(tag)}
-                    className={classes.tag}
+                    className={classes.tagChip}
                     classes={{ label: classes.tagLabel }}
                     label={tag}
                   />

@@ -42,6 +42,11 @@ import { ReactComponent as TagIcon } from '~src/assets/icons/tag.svg'
 import { ReactComponent as SearchIcon } from '~src/assets/icons/search.svg'
 import { ReactComponent as CloseIcon } from '~src/assets/icons/close.svg'
 
+import { ReactComponent as ArrowLeftIcon } from '~src/assets/icons/arrow-left.svg'
+import { ReactComponent as ArrowRightIcon } from '~src/assets/icons/arrow-right.svg'
+import { ReactComponent as ArrowUpIcon } from '~src/assets/icons/arrow-up.svg'
+import { ReactComponent as ArrowDownIcon } from '~src/assets/icons/arrow-down.svg'
+
 export enum ICONS {
   SideContact,
   SideAll,
@@ -78,6 +83,10 @@ export enum ICONS {
   Tag,
   Search,
   Close,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowDown,
 }
 
 const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>> => {
@@ -152,6 +161,14 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return SearchIcon
     case ICONS.Close:
       return CloseIcon
+    case ICONS.ArrowLeft:
+      return ArrowLeftIcon
+    case ICONS.ArrowRight:
+      return ArrowRightIcon
+    case ICONS.ArrowUp:
+      return ArrowUpIcon
+    case ICONS.ArrowDown:
+      return ArrowDownIcon
     default:
       return () => null
   }
@@ -160,6 +177,7 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
 const useStyles = makeStyles((theme: Theme) => ({
   svgIcon: {
     ...cssTips(theme, { svgIconFactor: 2.5 }).svgIcon(),
+    transition: 'color .3s',
   },
   primaryColorIcon: {
     color: theme.palette.primary.main,
@@ -167,9 +185,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   secondaryColorIcon: {
     color: theme.palette.secondary.main,
   },
+  disabledIcon: {
+    color: theme.palette.grey[700],
+  },
   hoverLightenIcon: {
     color: theme.palette.secondary.main,
-    transition: 'color all .3s',
     ...{
       '&:hover': {
         color: theme.palette.primary.main,
@@ -177,23 +197,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   mdIcon : {
-    width: theme.spacing.unit * 3,
-    height: theme.spacing.unit * 3,
-  },
-  smIcon : {
     width: theme.spacing.unit * 2.5,
     height: theme.spacing.unit * 2.5,
   },
-  xsIcon: {
+  smIcon : {
     width: theme.spacing.unit * 2,
     height: theme.spacing.unit * 2,
+  },
+  xsIcon: {
+    width: theme.spacing.unit * 1.5,
+    height: theme.spacing.unit * 1.5,
   }
 }))
 
 export interface Props {
   name: ICONS,
   className?: string,
-  color?: 'primary' | 'secondary' | 'hoverLighten',
+  color?: 'primary' | 'secondary' | 'disabled' | 'hoverLighten',
   size?: 'md' | 'sm' | 'xs',
   onClick?: React.MouseEventHandler<SVGSVGElement>,
 }
@@ -206,10 +226,12 @@ const SvgIcon: React.FC<Props> = React.memo(({ name, className, color = 'primary
     color === 'primary'
       ? classes.primaryColorIcon
       : color === 'secondary'
-        ?classes.secondaryColorIcon
-        : color === 'hoverLighten'
-          ? classes.hoverLightenIcon
-          : '',
+        ? classes.secondaryColorIcon
+        : color === 'disabled'
+          ? classes.disabledIcon
+          : color === 'hoverLighten'
+            ? classes.hoverLightenIcon
+            : '',
     size === 'md'
       ? classes.mdIcon
       : size === 'md'

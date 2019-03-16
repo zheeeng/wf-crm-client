@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `0 ${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit * 2,
   },
+  title: {
+    color: theme.palette.grey[800],
+    fontSize: 20,
+  },
   entry: {
     display: 'flex',
     alignItems: 'center',
@@ -30,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing.unit * 4,
     lineHeight: `${theme.spacing.unit * 4.5}px`,
     marginBottom: theme.spacing.unit,
+    fontSize: 14,
+    fontFamily: 'Helvetica',
+    color: theme.palette.grey[800],
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['200'],
@@ -59,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     color: theme.palette.text.hint,
+    whiteSpace: 'nowrap',
   },
   entryButtons: {
     display: 'none',
@@ -126,11 +134,13 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           onChange={handleCurrentTabChange}
         >
           <Tab
-            label={<Typography variant="h4">Waivers</Typography>}
+            label={<Typography variant="h4"
+            className={classes.title}
+          >Waivers</Typography>}
           />
-          <Tab
+          {/* <Tab
             label={<Typography variant="h4">Attachments</Typography>}
-          />
+          /> */}
         </Tabs>
         {currentTab === 1 && (
           <Button

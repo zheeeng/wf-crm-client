@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `0 ${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit * 2,
   },
+  title: {
+    color: theme.palette.grey[800],
+    fontSize: 20,
+  },
   manageButton: {
     paddingLeft: theme.spacing.unit * 4,
     paddingRight: theme.spacing.unit * 4,
@@ -95,6 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right',
     fontSize: '0.75rem',
     color: theme.palette.text.hint,
+    whiteSpace: 'nowrap',
   },
   buttonWrapper: {
     padding: `0 ${theme.spacing.unit * 4}px`,
@@ -240,7 +245,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
-        <Typography variant="h4">Activities</Typography>
+        <Typography variant="h4" className={classes.title}>Activities</Typography>
         <Button
           className={classes.manageButton}
           variant="outlined"
@@ -317,20 +322,20 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       <div className={classes.buttonWrapper}>
         {showCtlButtons && (
           <>
-            <IconButton
+            {/* <IconButton
               classes={{
                 label: classes.entryButtonIcon,
               }}
             >
               <Icon name={ICONS.Birthday} />
-            </IconButton>
+            </IconButton> */}
             <IconButton
-              color={showAddNote ? 'primary' : 'default'}
               classes={{
                 label: classes.entryButtonIcon,
               }}
+              onClick={toggleOnAddNote}
             >
-              <Icon name={ICONS.Note} onClick={toggleOnAddNote} />
+              <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
             </IconButton>
           </>
         )}

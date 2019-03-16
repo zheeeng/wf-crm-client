@@ -55,6 +55,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   groupBtn: {
     cursor: 'pointer',
   },
+  groupStatusIcon: {
+    padding: 2,
+    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+  },
+  groupAddIcon: {
+    padding: 2,
+    marginTop: theme.spacing.unit,
+  },
 }))
 
 type FormType = '' | 'add' | 'update' | 'remove'
@@ -174,12 +183,14 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           </ListItemText>
           <ListItemSecondaryAction>
             {groupsOpened
-              ? <Icon name={ICONS.ChevronDown} />
-              : <Icon name={ICONS.ChevronRight} />
+              ? <Icon name={ICONS.ChevronDown} className={classes.groupStatusIcon} size="sm" />
+              : <Icon name={ICONS.ChevronRight} className={classes.groupStatusIcon} size="sm" />
             }
             <Icon
               name={ICONS.Add}
               onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))}
+              className={classes.groupAddIcon}
+              size="sm"
             />
           </ListItemSecondaryAction>
         </>
@@ -198,7 +209,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     <React.Fragment key={routePath}>
       <ListItem
         component={renderLinkWrapper(
-          routePath,
+          (name === 'Groups' && location) ? location.pathname : routePath,
           name === 'Groups' ? toggleGroupsOpened : undefined,
         )}
         classes={{ button: (location && location.pathname.startsWith(routeFullPath)) ? 'active' : '' }}
