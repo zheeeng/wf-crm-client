@@ -1,5 +1,6 @@
 import { snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
+import clearEmpty from '~src/utils/clearEmpty'
 
 export interface Activity {
   id: string
@@ -185,13 +186,7 @@ export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
     address: output.info.address,
   }
 
-  for (const p in params) {
-    if (!params.hasOwnProperty(p)) continue
-
-    if (!params[p] || (Array.isArray(params[p]) && params[p].length === 0)) {
-      delete params[p]
-    }
-  }
+  clearEmpty(params)
 
   return params
 }
@@ -302,13 +297,13 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
     gender: gender || null as 'Male' | 'Female' | null,
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
     email: email || '',
-    emails: (emails || []).map(o => mapKeys(snake2pascal, o)),
+    emails: (emails || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
     address: address || '',
-    addresses: (addresses || []).map(o => mapKeys(snake2pascal, o)),
+    addresses: (addresses || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
     phone: phone || '',
-    phones: (phones || []).map(o => mapKeys(snake2pascal, o)),
-    dates: (dates || []).map(o => mapKeys(snake2pascal, o)),
-    others: (others || []).map(o => mapKeys(snake2pascal, o)),
+    phones: (phones || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
+    dates: (dates || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
+    others: (others || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
     tags, pictures, waivers,
     activities: activities ? activities.map(activityInputAdapter) : [],
     notes: notes ? notes.map(noteInputAdapter) : [],

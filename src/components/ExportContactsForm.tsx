@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
+import shallowEqual from '~src/utils/shallowEqual'
 
 import checkCircleSVG from '~src/assets/icons/check-circle.svg'
 
@@ -77,7 +78,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
       </Modal>
     )
   },
-  ({ contactIds: _, ...restP }, { contactIds: __, ...restN }) => Object.keys(restP).every(k => restP[k] === restN[k]),
+  ({ contactIds: _, ...restP }, { contactIds: __, ...restN }) => shallowEqual(restP, restN),
 )
 
 export default ExportContactsForm
