@@ -31,20 +31,7 @@ import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 
-import starStrokeSVG from '~src/assets/icons/star-stroke.svg'
-import starSVG from '~src/assets/icons/star.svg'
-import mergeSVG from '~src/assets/icons/merge.svg'
-import mergeGraySVG from '~src/assets/icons/merge-gray.svg'
-import exportSVG from '~src/assets/icons/export.svg'
-import exportGraySVG from '~src/assets/icons/export-gray.svg'
-import personAddSVG from '~src/assets/icons/person-add.svg'
-import personAddGraySVG from '~src/assets/icons/person-add-gray.svg'
-import checkCircleSVG from '~src/assets/icons/check-circle.svg'
-import checkSVG from '~src/assets/icons/check.svg'
-import checkCheckedSVG from '~src/assets/icons/check-checked.svg'
-
-import downloadPluginSVG from '~src/assets/icons/download-plugin.svg'
-import downloadPluginGraySVG from '~src/assets/icons/download-plugin-gray.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
@@ -82,15 +69,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   download: {
     color: theme.palette.text.secondary,
-    ...{
-      '&:hover $downloadIcon': {
-        backgroundImage: `url(${downloadPluginSVG})`,
-      },
-    },
   },
   downloadIcon: {
-    ...cssTips(theme).iconBg(),
-    backgroundImage: `url(${downloadPluginGraySVG})`,
     marginRight: theme.spacing.unit,
   },
   tableRow: {
@@ -125,32 +105,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   star: {
     color: theme.palette.grey.A200,
   },
-  controlIcon: {
-    ...cssTips(theme, { iconBgFactor: 2.5 }).iconBg(),
+  secondaryColor: {
+    color: theme.palette.secondary.main,
   },
-  mergeIcon: {
-    backgroundImage: `url(${mergeGraySVG})`,
-    ...{
-      '&:hover': {
-        backgroundImage: `url(${mergeSVG})`,
-      },
-    },
-  },
-  exportIcon: {
-    backgroundImage: `url(${exportGraySVG})`,
-    ...{
-      '&:hover': {
-        backgroundImage: `url(${exportSVG})`,
-      },
-    },
-  },
-  personAddIcon: {
-    backgroundImage: `url(${personAddGraySVG})`,
-    ...{
-      '&:hover': {
-        backgroundImage: `url(${personAddSVG})`,
-      },
-    },
+  svgIcon: {
+    ...cssTips(theme, { svgIconFactor: 2.5 }).svgIcon(),
   },
 }))
 
@@ -178,7 +137,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactError && fail(addContactError.message)
-      addContactData && success(<><img src={checkCircleSVG} /> Contact Created</>)
+      addContactData && success(<><Icon name={ICONS.CheckCircle} /> Contact Created</>)
     },
     [addContactError, addContactData],
   )
@@ -198,14 +157,14 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactToGroupError && fail('Add contacts failed')
-      addContactToGroupData && success(<><img src={checkCircleSVG} /> Contacts Added</>)
+      addContactToGroupData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Added</>)
     },
     [addContactToGroupError, addContactToGroupData],
   )
   useEffect(
     () => {
       mergeContactsError && fail('Merge contacts failed')
-      mergeContactsData && success(<><img src={checkCircleSVG} /> Contacts Merged</>)
+      mergeContactsData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Merged</>)
     },
     [mergeContactsError, mergeContactsData],
   )
@@ -410,8 +369,8 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<img src={checkCheckedSVG} />}
-            icon={<img src={checkSVG} />}
+            checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
+            icon={<Icon name={ICONS.Check} />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -421,9 +380,9 @@ const PeopleList: React.FC<Props> = React.memo(({
         <TableCell padding="none" className={classes.minCell}>
           <IconButton onClick={handleStarClick(id, !contact.info.starred)}>
             {contact.info.starred ? (
-              <img src={starSVG} color="secondary" />
+              <Icon name={ICONS.Star} size="sm" />
             ) : (
-              <img src={starStrokeSVG} className={classes.star} />
+              <Icon name={ICONS.StarStroke} size="sm" />
             )}
           </IconButton>
         </TableCell>
@@ -477,29 +436,22 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnMergeContactsOpened}
       >
-        <div className={classnames(classes.controlIcon, classes.exportIcon)} />
+        <Icon name={ICONS.Export} color="hoverLighten" />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnExportContactsOpened}
       >
-        <div className={classnames(classes.controlIcon, classes.mergeIcon)} />
+        <Icon name={ICONS.Merge} color="hoverLighten" />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'add to group')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnAddContactToGroupFormOpened}
       >
-        <div className={classnames(classes.controlIcon, classes.personAddIcon)} />
+        <Icon name={ICONS.PersonAdd} color="hoverLighten" />
       </IconButton>
-      {/* <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'delete')}
-        onMouseLeave={handlePopoverToggle(false)}
-        onClick={handleContactsRemove}
-      >
-        <Delete />
-      </IconButton> */}
       <Popover
         className={classes.popover}
         classes={{
@@ -569,7 +521,11 @@ const PeopleList: React.FC<Props> = React.memo(({
             href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
             className={classes.download}
           >
-            <div className={classes.downloadIcon} />
+            <Icon
+              name={ICONS.DownloadPlugin}
+              className={classes.downloadIcon}
+              color="hoverLighten"
+            />
             Download Plugin
           </Button>
         </div>
@@ -589,8 +545,8 @@ const PeopleList: React.FC<Props> = React.memo(({
               <TableRow>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
-                    checkedIcon={<img src={checkCheckedSVG} />}
-                    icon={<img src={checkSVG} />}
+                    checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
+                    icon={<Icon name={ICONS.Check} />}
                     checked={allChecked}
                     onClick={handleToggleAllChecked}
                   />

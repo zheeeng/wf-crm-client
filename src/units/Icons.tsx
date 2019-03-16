@@ -17,6 +17,13 @@ import { ReactComponent as PersonAddIcon } from '~src/assets/icons/person-add.sv
 import { ReactComponent as CheckCircleIcon } from '~src/assets/icons/check-circle.svg'
 import { ReactComponent as CheckIcon } from '~src/assets/icons/check.svg'
 import { ReactComponent as CheckCheckedIcon } from '~src/assets/icons/check-checked.svg'
+import { ReactComponent as DownloadPluginIcon } from '~src/assets/icons/download-plugin.svg'
+
+import { ReactComponent as AddIcon } from '~src/assets/icons/add.svg'
+import { ReactComponent as ChevronRightIcon } from '~src/assets/icons/chevron-right.svg'
+import { ReactComponent as ChevronDownIcon } from '~src/assets/icons/chevron-down.svg'
+import { ReactComponent as EditIcon } from '~src/assets/icons/edit.svg'
+import { ReactComponent as DeleteIcon } from '~src/assets/icons/delete.svg'
 
 export enum ICONS {
   SideContact,
@@ -31,6 +38,12 @@ export enum ICONS {
   Check,
   CheckChecked,
   CheckCircle,
+  DownloadPlugin,
+  Add,
+  ChevronRight,
+  ChevronDown,
+  Edit,
+  Delete,
 }
 
 const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>> => {
@@ -41,7 +54,7 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return AllIcon
     case ICONS.SideStarred:
       return StarredIcon
-    case ICONS.SideContact:
+    case ICONS.SideGroup:
       return GroupIcon
     case ICONS.StarStroke:
       return StarStrokeIcon
@@ -59,6 +72,18 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return CheckCheckedIcon
     case ICONS.CheckCircle:
       return CheckCircleIcon
+    case ICONS.DownloadPlugin:
+      return DownloadPluginIcon
+    case ICONS.Add:
+      return AddIcon
+    case ICONS.ChevronRight:
+      return ChevronRightIcon
+    case ICONS.ChevronDown:
+      return ChevronDownIcon
+    case ICONS.Edit:
+      return EditIcon
+    case ICONS.Delete:
+      return DeleteIcon
     default:
       return () => null
   }
@@ -105,7 +130,7 @@ export interface Props {
   onClick?: React.MouseEventHandler<SVGSVGElement>,
 }
 
-const SvgIcon: React.FC<Props> = React.memo(({ className, color = 'primary', size = 'md', onClick }) => {
+const SvgIcon: React.FC<Props> = React.memo(({ name, className, color = 'primary', size = 'md', onClick }) => {
   const classes = useStyles({})
 
   const clsName = classnames(

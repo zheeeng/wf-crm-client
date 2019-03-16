@@ -13,6 +13,9 @@ export const themeOptions: ThemeOptions = {
     primary: {
       main: '#4173e3',
     },
+    secondary: {
+      main: '#b0bcde',
+    },
     text: {
       primary: '#5d8df8',
       secondary: '#637694',
