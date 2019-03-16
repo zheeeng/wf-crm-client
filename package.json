@@ -7,7 +7,6 @@
     "@material-ui/icons": "^3.0.2",
     "@material-ui/styles": "^3.0.0-alpha.10",
     "@roundation/roundation": "^0.0.30",
-    "@roundation/store": "^0.0.13",
     "@types/classnames": "^2.2.7",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.11.3",
@@ -25,7 +24,7 @@
   },
   "scripts": {
     "preinstall": "unlink node_modules/~src || true",
-    "postinstall": "mkdir -p node_modules/@material-ui/core/node_modules/@types/jss && cp -r node_modules/@types/jss node_modules/@material-ui/core/node_modules/@types && ln -s `pwd`/src node_modules/~src",
+    "postinstall": "ln -s `pwd`/src node_modules/~src",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
