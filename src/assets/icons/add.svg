@@ -1,10 +1,1 @@
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="Rectangle-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect x="0" y="0" width="16" height="16"></rect>
-        <g id="Group--add" transform="translate(1.000000, 1.000000)" fill="#5D8DF8" fill-rule="nonzero">
-            <g id="icon/group-create">
-                <path d="M6,6 L6,1 C6,0.44771525 6.44771525,0 7,0 C7.55228475,0 8,0.44771525 8,1 L8,6 L13,6 C13.5522847,6 14,6.44771525 14,7 C14,7.55228475 13.5522847,8 13,8 L8,8 L8,13 C8,13.5522847 7.55228475,14 7,14 C6.44771525,14 6,13.5522847 6,13 L6,8 L1,8 C0.44771525,8 0,7.55228475 0,7 C0,6.44771525 0.44771525,6 1,6 L6,6 Z" id="Combined-Shape"></path>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 16 16" width="16" height="16"><g clip-path="url(#_clipPath_Ia3Z7dePxO6oVQMlIl87dj3gfHT3009t)"><path d=" M 6.875 6.875 L 6.875 1.25 C 6.875 0.629 7.379 0.125 8 0.125 C 8.621 0.125 9.125 0.629 9.125 1.25 L 9.125 6.875 L 14.75 6.875 C 15.371 6.875 15.875 7.379 15.875 8 C 15.875 8.621 15.371 9.125 14.75 9.125 L 9.125 9.125 L 9.125 14.75 C 9.125 15.371 8.621 15.875 8 15.875 C 7.379 15.875 6.875 15.371 6.875 14.75 L 6.875 9.125 L 1.25 9.125 C 0.629 9.125 0.125 8.621 0.125 8 C 0.125 7.379 0.629 6.875 1.25 6.875 L 6.875 6.875 Z "/></g></svg>

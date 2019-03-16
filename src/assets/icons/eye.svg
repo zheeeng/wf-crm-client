@@ -1,10 +1,1 @@
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/hide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-26">
-            <rect id="Rectangle-2" x="0" y="0" width="24" height="24"></rect>
-            <path d="M12,19 C15.5726779,19 18.8379473,17.0724901 21.7958083,13.2174703 L21.7958076,13.2174697 C22.3468121,12.4993381 22.3468121,11.5006602 21.7958075,10.7825286 C18.8379467,6.92750953 15.5726775,5 12,5 C8.42732214,5 5.16205269,6.9275099 2.20419166,10.7825297 L2.20419245,10.7825303 C1.65318786,11.5006619 1.65318789,12.4993398 2.20419251,13.2174714 C5.16205332,17.0724905 8.42732248,19 12,19 Z" id="Oval-15" fill="#B0BCDE"></path>
-            <circle id="Oval-3" fill="#F0F2F5" cx="12" cy="12" r="5"></circle>
-            <circle id="Oval-3" fill="#B0BCDE" cx="12" cy="12" r="3"></circle>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 24 24" width="24" height="24"><g clip-path="url(#_clipPath_NByV71HFkafqT80XMNcLt89GKiA18XHz)"><path d=" M 12 19.167 C 16.168 19.167 19.978 16.918 23.428 12.42 L 23.428 12.42 C 24.071 11.583 24.071 10.417 23.428 9.58 C 19.978 5.082 16.168 2.833 12 2.833 C 7.832 2.833 4.022 5.082 0.572 9.58 L 0.572 9.58 C -0.071 10.417 -0.071 11.583 0.572 12.42 C 4.022 16.918 7.832 19.167 12 19.167 Z " fill-rule="evenodd"/><circle vector-effect="non-scaling-stroke" cx="11.999999999999996" cy="10.999999999999996" r="5.833333333333333" fill="rgb(240,242,245)"/><circle vector-effect="non-scaling-stroke" cx="11.999999999999998" cy="10.999999999999998" r="3.5"/></g></svg>

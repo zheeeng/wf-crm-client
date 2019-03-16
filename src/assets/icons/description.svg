@@ -1,16 +1,1 @@
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/attachment" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-25">
-            <g id="Group-24">
-                <rect id="Rectangle-3-Copy-14" x="0" y="0" width="24" height="24"></rect>
-            </g>
-        </g>
-        <g id="Group-27" transform="translate(3.000000, 1.000000)" fill="#5D8DF8">
-            <polygon id="Path-2" points="7 1 7 7 1 7"></polygon>
-            <path d="M2,6.82842712 L2,20 L16,20 L16,2 L6.82842712,2 L2,6.82842712 Z M6,0 L16,0 C17.1045695,0 18,0.8954305 18,2 L18,20 C18,21.1045695 17.1045695,22 16,22 L2,22 C0.8954305,22 0,21.1045695 0,20 L0,6 L6,0 Z" id="Rectangle-6" fill-rule="nonzero"></path>
-            <rect id="Rectangle-7" x="4" y="9" width="10" height="1" rx="0.5"></rect>
-            <rect id="Rectangle-7-Copy" x="4" y="12" width="10" height="1" rx="0.5"></rect>
-            <rect id="Rectangle-7-Copy-2" x="4" y="15" width="10" height="1" rx="0.5"></rect>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 24 24" width="24" height="24"><g clip-path="url(#_clipPath_57jjJb4DJZ0ULw08c48Zq1EqWSGl3HjY)"><path d=" M 9.833 1.167 L 9.833 7.667 L 3.333 7.667 L 9.833 1.167 Z " fill-rule="evenodd"/><path d=" M 4.417 7.481 L 4.417 21.75 L 19.583 21.75 L 19.583 2.25 L 9.647 2.25 L 4.417 7.481 Z  M 8.75 0.083 L 19.583 0.083 C 20.78 0.083 21.75 1.053 21.75 2.25 L 21.75 21.75 C 21.75 22.947 20.78 23.917 19.583 23.917 L 4.417 23.917 C 3.22 23.917 2.25 22.947 2.25 21.75 L 2.25 6.583 L 8.75 0.083 Z "/><path d="M 7.125 9.833 L 16.875 9.833 C 17.174 9.833 17.417 10.076 17.417 10.375 L 17.417 10.375 C 17.417 10.674 17.174 10.917 16.875 10.917 L 7.125 10.917 C 6.826 10.917 6.583 10.674 6.583 10.375 L 6.583 10.375 C 6.583 10.076 6.826 9.833 7.125 9.833 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 7.125 13.083 L 16.875 13.083 C 17.174 13.083 17.417 13.326 17.417 13.625 L 17.417 13.625 C 17.417 13.924 17.174 14.167 16.875 14.167 L 7.125 14.167 C 6.826 14.167 6.583 13.924 6.583 13.625 L 6.583 13.625 C 6.583 13.326 6.826 13.083 7.125 13.083 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 7.125 16.333 L 16.875 16.333 C 17.174 16.333 17.417 16.576 17.417 16.875 L 17.417 16.875 C 17.417 17.174 17.174 17.417 16.875 17.417 L 7.125 17.417 C 6.826 17.417 6.583 17.174 6.583 16.875 L 6.583 16.875 C 6.583 16.576 6.826 16.333 7.125 16.333 Z" style="stroke:none;stroke-miterlimit:10;"/></g></svg>

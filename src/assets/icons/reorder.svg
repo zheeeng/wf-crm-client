@@ -1,10 +1,1 @@
-<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/move" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-12">
-            <rect id="Rectangle-3" x="0" y="0" width="18" height="18"></rect>
-            <rect id="Rectangle" fill="#B0BCDE" x="4" y="3" width="10" height="2" rx="1"></rect>
-            <rect id="Rectangle-Copy" fill="#B0BCDE" x="4" y="8" width="10" height="2" rx="1"></rect>
-            <rect id="Rectangle-Copy-2" fill="#B0BCDE" x="4" y="13" width="10" height="2" rx="1"></rect>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 18 18" width="18" height="18"><g clip-path="url(#_clipPath_WG0Fhvf0f7wqVBfTPn6GIYHfn4nHHuz6)"><g><path d="M 4.556 2.333 L 13.444 2.333 C 14.058 2.333 14.556 2.831 14.556 3.444 L 14.556 3.444 C 14.556 4.058 14.058 4.556 13.444 4.556 L 4.556 4.556 C 3.942 4.556 3.444 4.058 3.444 3.444 L 3.444 3.444 C 3.444 2.831 3.942 2.333 4.556 2.333 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 4.556 7.889 L 13.444 7.889 C 14.058 7.889 14.556 8.387 14.556 9 L 14.556 9 C 14.556 9.613 14.058 10.111 13.444 10.111 L 4.556 10.111 C 3.942 10.111 3.444 9.613 3.444 9 L 3.444 9 C 3.444 8.387 3.942 7.889 4.556 7.889 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 4.556 13.444 L 13.444 13.444 C 14.058 13.444 14.556 13.942 14.556 14.556 L 14.556 14.556 C 14.556 15.169 14.058 15.667 13.444 15.667 L 4.556 15.667 C 3.942 15.667 3.444 15.169 3.444 14.556 L 3.444 14.556 C 3.444 13.942 3.942 13.444 4.556 13.444 Z" style="stroke:none;stroke-miterlimit:10;"/></g></g></svg>

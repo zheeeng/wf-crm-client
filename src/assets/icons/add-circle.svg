@@ -1,11 +1,1 @@
-<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/add-activity/blue" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="icon/add-activity">
-            <g id="Group-25">
-                <rect id="Rectangle-3-Copy-5" x="0" y="0" width="32" height="32"></rect>
-                <path d="M16,29 C8.82029825,29 3,23.1797017 3,16 C3,8.82029825 8.82029825,3 16,3 C23.1797017,3 29,8.82029825 29,16 C29,23.1797017 23.1797017,29 16,29 Z" id="Oval-5" fill="#5D8DF8" fill-rule="nonzero"></path>
-                <path d="M15,15 L15,10 C15,9.44771525 15.4477153,9 16,9 C16.5522847,9 17,9.44771525 17,10 L17,15 L22,15 C22.5522847,15 23,15.4477153 23,16 C23,16.5522847 22.5522847,17 22,17 L17,17 L17,22 C17,22.5522847 16.5522847,23 16,23 C15.4477153,23 15,22.5522847 15,22 L15,17 L10,17 C9.44771525,17 9,16.5522847 9,16 C9,15.4477153 9.44771525,15 10,15 L15,15 Z" id="Combined-Shape" fill="#FFFFFF"></path>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 32 32" width="32" height="32"><g clip-path="url(#_clipPath_ZWtMU6NaURkrRqVrgxX4KGqGF3bnuoPd)"><path d=" M 16 32.25 C 7.025 32.25 -0.25 24.975 -0.25 16 C -0.25 7.025 7.025 -0.25 16 -0.25 C 24.975 -0.25 32.25 7.025 32.25 16 C 32.25 24.975 24.975 32.25 16 32.25 Z "/><path d=" M 14.75 14.75 L 14.75 8.5 C 14.75 7.81 15.31 7.25 16 7.25 C 16.69 7.25 17.25 7.81 17.25 8.5 L 17.25 14.75 L 23.5 14.75 C 24.19 14.75 24.75 15.31 24.75 16 C 24.75 16.69 24.19 17.25 23.5 17.25 L 17.25 17.25 L 17.25 23.5 C 17.25 24.19 16.69 24.75 16 24.75 C 15.31 24.75 14.75 24.19 14.75 23.5 L 14.75 17.25 L 8.5 17.25 C 7.81 17.25 7.25 16.69 7.25 16 C 7.25 15.31 7.81 14.75 8.5 14.75 L 14.75 14.75 Z " fill-rule="evenodd" fill="rgb(255,255,255)"/></g></svg>
