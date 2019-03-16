@@ -2,12 +2,12 @@ import { createStyles, Theme } from '@material-ui/core/styles'
 
 export interface TipOption {
   sizeFactor: number
-  iconBgFactor: number
+  svgIconFactor: number
 }
 
 export const getDefaultOption = (): TipOption => ({
   sizeFactor: 2,
-  iconBgFactor: 3,
+  svgIconFactor: 3,
 })
 
 const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
@@ -34,14 +34,12 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
         },
       },
     }).style,
-    iconBg: () => createStyles({
+    svgIcon: () => createStyles({
       style: {
         display: 'inline-block',
-        width: theme.spacing.unit * tipOption.iconBgFactor,
-        height: theme.spacing.unit * tipOption.iconBgFactor,
-        backgroundPosition: 'center',
-        backgroundSize: 'contain',
-        backgroundRepeat: 'no-repeat',
+        fill: 'currentColor',
+        width: theme.spacing.unit * tipOption.svgIconFactor,
+        height: theme.spacing.unit * tipOption.svgIconFactor,
       },
     }).style,
   }
