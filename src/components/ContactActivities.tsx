@@ -19,11 +19,8 @@ import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 import useToggle from '~src/hooks/useToggle'
 
-import addCircleSVG from '~src/assets/icons/add-circle.svg'
-import removeCircleSVG from '~src/assets/icons/remove-circle.svg'
-import birthdaySVG from '~src/assets/icons/birthday.svg'
-import noteSVG from '~src/assets/icons/note.svg'
 import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -32,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     padding: `0 ${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit * 2,
+  },
+  title: {
+    color: theme.palette.grey[800],
+    fontSize: 20,
   },
   manageButton: {
     paddingLeft: theme.spacing.unit * 4,
@@ -98,6 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right',
     fontSize: '0.75rem',
     color: theme.palette.text.hint,
+    whiteSpace: 'nowrap',
   },
   buttonWrapper: {
     padding: `0 ${theme.spacing.unit * 4}px`,
@@ -243,7 +245,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
-        <Typography variant="h4">Activities</Typography>
+        <Typography variant="h4" className={classes.title}>Activities</Typography>
         <Button
           className={classes.manageButton}
           variant="outlined"
@@ -304,7 +306,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                         className={classes.noteRemover}
                         onClick={handleNoteRemove(note.id)}
                       >
-                        <img src={removeCircleSVG} />
+                        <Icon name={ICONS.Delete} />
                       </IconButton>
                     </div>
                     <time className={classes.entryTime}>
@@ -320,25 +322,25 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       <div className={classes.buttonWrapper}>
         {showCtlButtons && (
           <>
-            <IconButton
+            {/* <IconButton
               classes={{
                 label: classes.entryButtonIcon,
               }}
             >
-              <img src={birthdaySVG} />
-            </IconButton>
+              <Icon name={ICONS.Birthday} />
+            </IconButton> */}
             <IconButton
-              color={showAddNote ? 'primary' : 'default'}
               classes={{
                 label: classes.entryButtonIcon,
               }}
+              onClick={toggleOnAddNote}
             >
-              <img src={noteSVG} onClick={toggleOnAddNote} />
+              <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
             </IconButton>
           </>
         )}
         <IconButton color="primary" onClick={toggleShowButtons}>
-          <img src={addCircleSVG} />
+          <Icon name={ICONS.AddCircle} />
         </IconButton>
       </div>
     </ContactTableThemeProvider>

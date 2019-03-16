@@ -1,11 +1,10 @@
-export default function mapKeys <T> (mapper: (key: string) => string, obj: object) {
-  const retObj = {}
+export default function mapKeys <T>(mapper: (i : string) => string, obj: object) {
+  return Object.entries(obj).reduce(
+    (acc, [k, v]) => {
+      (acc as any)[mapper(k)] = v
 
-  for (const k in obj) {
-    if (obj.hasOwnProperty(k)) {
-      retObj[mapper(k)] = obj[k]
-    }
-  }
-
-  return retObj as T
+      return acc
+    },
+    {} as T,
+  )
 }

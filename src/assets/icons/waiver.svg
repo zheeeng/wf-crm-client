@@ -1,14 +1,1 @@
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/waivers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-25">
-            <g id="Group-24">
-                <rect id="Rectangle-3-Copy-14" x="0" y="0" width="24" height="24"></rect>
-                <path d="M5,3 L5,21 L19,21 L19,3 L5,3 Z M5,1 L19,1 C20.1045695,1 21,1.8954305 21,3 L21,21 C21,22.1045695 20.1045695,23 19,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 Z" id="Rectangle-29" fill="#769CEE" fill-rule="nonzero"></path>
-            </g>
-            <rect id="Rectangle-31" fill="#769CEE" x="7" y="6" width="10" height="1" rx="0.5"></rect>
-            <rect id="Rectangle-31-Copy" fill="#769CEE" x="7" y="9" width="7" height="1" rx="0.5"></rect>
-            <rect id="Rectangle-31-Copy-2" fill="#769CEE" x="7" y="12" width="9" height="1" rx="0.5"></rect>
-            <rect id="Rectangle-31-Copy-3" fill="#769CEE" x="7" y="15" width="10" height="4" rx="0.5"></rect>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 24 24" width="24" height="24"><g clip-path="url(#_clipPath_lAwgfxHkzpkml1vu7hXFdGdkGkiHmKk2)"><path d=" M 4.222 2 L 4.222 22 L 19.778 22 L 19.778 2 L 4.222 2 Z  M 4.222 -0.222 L 19.778 -0.222 C 21.005 -0.222 22 0.773 22 2 L 22 22 C 22 23.227 21.005 24.222 19.778 24.222 L 4.222 24.222 C 2.995 24.222 2 23.227 2 22 L 2 2 C 2 0.773 2.995 -0.222 4.222 -0.222 Z " /><path d="M 7 5.333 L 17 5.333 C 17.307 5.333 17.556 5.582 17.556 5.889 L 17.556 5.889 C 17.556 6.196 17.307 6.444 17 6.444 L 7 6.444 C 6.693 6.444 6.444 6.196 6.444 5.889 L 6.444 5.889 C 6.444 5.582 6.693 5.333 7 5.333 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 7 8.667 L 13.667 8.667 C 13.973 8.667 14.222 8.916 14.222 9.222 L 14.222 9.222 C 14.222 9.529 13.973 9.778 13.667 9.778 L 7 9.778 C 6.693 9.778 6.444 9.529 6.444 9.222 L 6.444 9.222 C 6.444 8.916 6.693 8.667 7 8.667 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 7 12 L 15.889 12 C 16.196 12 16.444 12.249 16.444 12.556 L 16.444 12.556 C 16.444 12.862 16.196 13.111 15.889 13.111 L 7 13.111 C 6.693 13.111 6.444 12.862 6.444 12.556 L 6.444 12.556 C 6.444 12.249 6.693 12 7 12 Z" style="stroke:none;stroke-miterlimit:10;"/><path d="M 7 15.333 L 17 15.333 C 17.307 15.333 17.556 15.582 17.556 15.889 L 17.556 19.222 C 17.556 19.529 17.307 19.778 17 19.778 L 7 19.778 C 6.693 19.778 6.444 19.529 6.444 19.222 L 6.444 15.889 C 6.444 15.582 6.693 15.333 7 15.333 Z" style="stroke:none;stroke-miterlimit:10;"/></g></svg>

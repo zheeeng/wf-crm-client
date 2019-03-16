@@ -6,9 +6,9 @@ type Option = {
 }
 
 export const getQuery = (query: object): string => {
-  const search = Object.keys(query)
-    .filter(key => query[key])
-    .map(key => `${pascal2snake(key)}=${encodeURIComponent(query[key])}`).join('&')
+  const search = Object.entries(query)
+    .filter(([_, v]) => v)
+    .map(([k, v]) => `${pascal2snake(k)}=${encodeURIComponent(v)}`).join('&')
 
   return search ? `?${search}` : search
 }
@@ -30,7 +30,8 @@ export default async function fetchData<T = any> (url: string, option?: Option):
 
   const requestUrl = `https://crm-api-dev.waiverforeverk8s.com${url}`
   const query = (fetchOption.method && ['GET', 'HEAD'].includes(fetchOption.method || '') && fetchOption.params)
-    ? getQuery(fetchOption.params) : ''
+    ? getQuery(fetchOption.params)
+    : ''
   const method = fetchOption.method
   const headers = { Authorization }
   const body = (fetchOption.method !== 'GET' && fetchOption.params) ? JSON.stringify(fetchOption.params) : ''

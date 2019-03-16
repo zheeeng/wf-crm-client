@@ -5,8 +5,7 @@ import { Theme } from '@material-ui/core/styles'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 
-import searchSVG from '~src/assets/icons/search.svg'
-import closeSVG from '~src/assets/icons/close.svg'
+import Icon, { ICONS } from './Icons';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
@@ -77,13 +76,13 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       className={classNames(className, classes.searchBar)}
       startAdornment={(
         <InputAdornment position="start" className={classes.inputAdornment}>
-          <img src={searchSVG} />
+          <Icon name={ICONS.Search} />
         </InputAdornment>
       )}
       endAdornment={text
         ? (
           <InputAdornment position="end" className={classes.inputAdornment} onClick={handleClick}>
-            <img src={closeSVG} />
+            <Icon name={ICONS.Close} />
           </InputAdornment>
         )
         : undefined

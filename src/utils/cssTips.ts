@@ -2,33 +2,47 @@ import { createStyles, Theme } from '@material-ui/core/styles'
 
 export interface TipOption {
   sizeFactor: number
+  svgIconFactor: number
 }
 
 export const getDefaultOption = (): TipOption => ({
   sizeFactor: 2,
+  svgIconFactor: 2.5,
 })
 
 const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
   const tipOption: TipOption = { ...getDefaultOption(), ...option }
 
-  return createStyles({
-    horizontallySpaced: {
-      '& > *': {
-        marginRight: theme.spacing.unit * tipOption.sizeFactor,
+  return {
+    horizontallySpaced: () => createStyles({
+      style: {
+        '& > *': {
+          marginRight: theme.spacing.unit * tipOption.sizeFactor,
+        },
+        '& > *:last-child': {
+          marginRight: 0,
+        },
       },
-      '& > *:last-child': {
-        marginRight: 0,
+    }).style,
+    verticallySpaced: () => createStyles({
+      style: {
+        '& > *': {
+          marginBottom: theme.spacing.unit * tipOption.sizeFactor,
+        },
+        '& > *:last-child': {
+          marginBottom: 0,
+        },
       },
-    },
-    verticallySpaced: {
-      '& > *': {
-        marginBottom: theme.spacing.unit * tipOption.sizeFactor,
+    }).style,
+    svgIcon: () => createStyles({
+      style: {
+        display: 'inline-block',
+        fill: 'currentColor',
+        width: theme.spacing.unit * tipOption.svgIconFactor,
+        height: theme.spacing.unit * tipOption.svgIconFactor,
       },
-      '& > *:last-child': {
-        marginBottom: 0,
-      },
-    },
-  })
+    }).style,
+  }
 }
 
 export default cssTips

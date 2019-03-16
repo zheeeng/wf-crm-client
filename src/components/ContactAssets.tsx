@@ -13,9 +13,7 @@ import useContact from '~src/containers/useContact'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
 
-import waiverSVG from '~src/assets/icons/waiver.svg'
-import splitSVG from '~src/assets/icons/split.svg'
-import downloadSVG from '~src/assets/icons/download.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabsWrapper: {
@@ -25,6 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `0 ${theme.spacing.unit * 4}px`,
     marginBottom: theme.spacing.unit * 2,
   },
+  title: {
+    color: theme.palette.grey[800],
+    fontSize: 20,
+  },
   entry: {
     display: 'flex',
     alignItems: 'center',
@@ -32,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing.unit * 4,
     lineHeight: `${theme.spacing.unit * 4.5}px`,
     marginBottom: theme.spacing.unit,
+    fontSize: 14,
+    fontFamily: 'Helvetica',
+    color: theme.palette.grey[800],
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['200'],
@@ -61,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     color: theme.palette.text.hint,
+    whiteSpace: 'nowrap',
   },
   entryButtons: {
     display: 'none',
@@ -128,11 +134,13 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           onChange={handleCurrentTabChange}
         >
           <Tab
-            label={<Typography variant="h4">Waivers</Typography>}
+            label={<Typography variant="h4"
+            className={classes.title}
+          >Waivers</Typography>}
           />
-          <Tab
+          {/* <Tab
             label={<Typography variant="h4">Attachments</Typography>}
-          />
+          /> */}
         </Tabs>
         {currentTab === 1 && (
           <Button
@@ -157,10 +165,9 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
         <div>
           {waivers.map(waiver => (
             <div key={waiver.id} className={classes.entry}>
-              <img
-                src={waiverSVG}
+              <Icon
+                name={ICONS.Waiver}
                 className={classes.entryIcon}
-                color="primary"
               />
               <span className={classes.entryContent}>{waiver.title}</span>
               <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
@@ -172,8 +179,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                   }}
                   onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
                 >
-                  // TODO:: fontSize="small"
-                  <img src={splitSVG} />
+                  <Icon name={ICONS.Split} size="sm" />
                 </IconButton>
                 <IconButton
                   className={classes.entryButton}
@@ -181,8 +187,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                     label: classes.entryButtonIcon,
                   }}
                 >
-                  // TODO:: fontSize="small"
-                  <img src={downloadSVG} />
+                  <Icon name={ICONS.Download} size="sm" />
                 </IconButton>
               </div>
             </div>
@@ -192,8 +197,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       {currentTab === 1 && (
         <div>
           <div className={classes.entry}>
-            <img
-              src={waiverSVG}
+            <Icon
+              name={ICONS.Waiver}
               className={classes.entryIcon}
               color="primary"
             />
@@ -201,8 +206,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
             <time className={classes.entryTime}>July 22, 2017, 6:30 pm</time>
           </div>
           <div className={classes.entry}>
-            <img
-              src={waiverSVG}
+            <Icon
+              name={ICONS.Waiver}
               className={classes.entryIcon}
               color="primary"
             />
@@ -210,8 +215,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
             <time className={classes.entryTime}>July 22, 2017, 6:30 pm</time>
           </div>
           <div className={classes.entry}>
-            <img
-              src={waiverSVG}
+            <Icon
+              name={ICONS.Waiver}
               className={classes.entryIcon}
               color="primary"
             />

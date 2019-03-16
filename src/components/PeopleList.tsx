@@ -31,14 +31,7 @@ import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 
-import starStrokeSVG from '~src/assets/icons/star-stroke.svg'
-import starSVG from '~src/assets/icons/star.svg'
-import mergeSVG from '~src/assets/icons/merge.svg'
-import exportSVG from '~src/assets/icons/export.svg'
-import personAddSVG from '~src/assets/icons/person-add.svg'
-import checkedBox from '~src/assets/icons/checked-box.svg'
-import checkCircleSVG from '~src/assets/icons/check-circle.svg'
-import downloadSVG from '~src/assets/icons/download.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
@@ -49,10 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing.unit * 3,
     whiteSpace: 'nowrap',
     [theme.breakpoints.between('sm', 'md')]: {
-      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced,
+      ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
     },
     [theme.breakpoints.up('md')]: {
-      ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced,
+      ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced(),
     },
   },
   alignRight: {
@@ -76,8 +69,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   download: {
     color: theme.palette.text.secondary,
+    ...{
+      '&:hover $downloadIcon': {
+        color: theme.palette.text.primary,
+      }
+    }
   },
-  downloadSVG: {
+  downloadIcon: {
     marginRight: theme.spacing.unit,
   },
   tableRow: {
@@ -112,6 +110,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   star: {
     color: theme.palette.grey.A200,
   },
+  secondaryColor: {
+    color: theme.palette.secondary.main,
+  },
+  svgIcon: {
+    ...cssTips(theme, { svgIconFactor: 2.5 }).svgIcon(),
+  },
 }))
 
 export interface Props {
@@ -138,7 +142,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactError && fail(addContactError.message)
-      addContactData && success(<><img src={checkCircleSVG} /> Contact Created</>)
+      addContactData && success(<><Icon name={ICONS.CheckCircle} /> Contact Created</>)
     },
     [addContactError, addContactData],
   )
@@ -158,14 +162,14 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactToGroupError && fail('Add contacts failed')
-      addContactToGroupData && success(<><img src={checkCircleSVG} /> Contacts Added</>)
+      addContactToGroupData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Added</>)
     },
     [addContactToGroupError, addContactToGroupData],
   )
   useEffect(
     () => {
       mergeContactsError && fail('Merge contacts failed')
-      mergeContactsData && success(<><img src={checkCircleSVG} /> Contacts Merged</>)
+      mergeContactsData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Merged</>)
     },
     [mergeContactsError, mergeContactsData],
   )
@@ -370,7 +374,8 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<img src={checkedBox} />}
+            checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
+            icon={<Icon name={ICONS.Check} />}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -380,9 +385,9 @@ const PeopleList: React.FC<Props> = React.memo(({
         <TableCell padding="none" className={classes.minCell}>
           <IconButton onClick={handleStarClick(id, !contact.info.starred)}>
             {contact.info.starred ? (
-              <img src={starSVG} color="secondary" />
+              <Icon name={ICONS.Star} size="sm" />
             ) : (
-              <img src={starStrokeSVG} className={classes.star} />
+              <Icon name={ICONS.StarStroke} size="sm" />
             )}
           </IconButton>
         </TableCell>
@@ -436,29 +441,22 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnMergeContactsOpened}
       >
-        <img src={exportSVG} />
+        <Icon name={ICONS.Export} color="hoverLighten" />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnExportContactsOpened}
       >
-        <img src={mergeSVG} />
+        <Icon name={ICONS.Merge} color="hoverLighten" />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'add to group')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnAddContactToGroupFormOpened}
       >
-        <img src={personAddSVG} />
+        <Icon name={ICONS.PersonAdd} color="hoverLighten" />
       </IconButton>
-      {/* <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'delete')}
-        onMouseLeave={handlePopoverToggle(false)}
-        onClick={handleContactsRemove}
-      >
-        <Delete />
-      </IconButton> */}
       <Popover
         className={classes.popover}
         classes={{
@@ -528,9 +526,10 @@ const PeopleList: React.FC<Props> = React.memo(({
             href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
             className={classes.download}
           >
-            <img
-              src={downloadSVG}
-              className={classes.downloadSVG}
+            <Icon
+              name={ICONS.DownloadPlugin}
+              className={classes.downloadIcon}
+              color="hoverLighten"
             />
             Download Plugin
           </Button>
@@ -551,6 +550,8 @@ const PeopleList: React.FC<Props> = React.memo(({
               <TableRow>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
+                    checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
+                    icon={<Icon name={ICONS.Check} />}
                     checked={allChecked}
                     onClick={handleToggleAllChecked}
                   />

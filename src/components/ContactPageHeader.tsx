@@ -4,18 +4,18 @@ import { Theme } from '@material-ui/core/styles'
 
 import cssTips from '~src/utils/cssTips'
 
-import NavigateBefore from '@material-ui/icons/NavigateBefore'
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
-import deleteSVG from '~src/assets/icons/delete.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   left: {
-    ...cssTips(theme).horizontallySpaced,
+    ...cssTips(theme).horizontallySpaced(),
   },
   delete: {
     cursor: 'pointer',
   },
+  navIcon: {
+    cursor: 'pointer',
+  }
 }))
 
 export interface Props {
@@ -34,19 +34,30 @@ const ContactPageHeader: React.FC<Props> = React.memo(
     return (
       <>
         <div className={classes.left}>
-          <NavigateBefore onClick={onGoBack} />
-          <KeyboardArrowDown
-            onClick={onGoNext}
-            // TODO::
-            color={disableGoNext ? 'disabled' : undefined}
+          <Icon
+            name={ICONS.ArrowLeft}
+            onClick={onGoBack}
+            color="hoverLighten"
+            className={classes.navIcon}
           />
-          <KeyboardArrowUp
+          <Icon
+            name={ICONS.ArrowDown}
+            onClick={onGoNext}
+            color={disableGoNext ? 'disabled' : "hoverLighten"}
+            className={classes.navIcon}
+          />
+          <Icon name={ICONS.ArrowDown}
             onClick={onGoPrevious}
-            // TODO::
-            color={disableGoPrevious ? 'disabled' : undefined}
+            color={disableGoPrevious ? 'disabled' : "hoverLighten"}
+            className={classes.navIcon}
           />
         </div>
-        <img src={deleteSVG} className={classes.delete} onClick={onDelete} />
+        <Icon
+          name={ICONS.Delete}
+          className={classes.delete}
+          onClick={onDelete}
+          color="hoverLighten"
+        />
       </>
     )
   },

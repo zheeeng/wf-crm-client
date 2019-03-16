@@ -1,15 +1,1 @@
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/next" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-6">
-            <g id="Group-5">
-                <g id="box-copy-6">
-                    <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
-                </g>
-            </g>
-            <g id="Group-7" transform="translate(2.000000, 2.000000)">
-                <circle id="Oval-3" fill="#B0BCDE" cx="10" cy="10" r="10"></circle>
-                <path d="M6,7 C6,6.44771525 5.55228475,6 5,6 C4.44771525,6 4,6.44771525 4,7 L4,13 C4,13.5522847 4.44771525,14 5,14 L11,14 C11.5522847,14 12,13.5522847 12,13 C12,12.4477153 11.5522847,12 11,12 L6,12 L6,7 Z" id="group-drop-down" fill="#F0F2F5" fill-rule="nonzero" transform="translate(8.000000, 10.000000) rotate(-135.000000) translate(-8.000000, -10.000000) "></path>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 24 24" width="24" height="24"><g clip-path="url(#_clipPath_SALSBKwHK54noxP78VAzYhIUzC5icsRd)"><circle vector-effect="non-scaling-stroke" cx="11.999999999999998" cy="12.000000000000012" r="11.666666666666666"/><path d=" M 8.842 16.125 C 8.386 16.58 8.386 17.319 8.842 17.775 C 9.297 18.23 10.036 18.23 10.492 17.775 L 15.441 12.825 C 15.897 12.369 15.897 11.631 15.441 11.175 L 10.492 6.225 C 10.036 5.77 9.297 5.77 8.842 6.225 C 8.386 6.681 8.386 7.42 8.842 7.875 L 12.966 12 L 8.842 16.125 Z " fill="rgb(240,242,245)"/></g></svg>

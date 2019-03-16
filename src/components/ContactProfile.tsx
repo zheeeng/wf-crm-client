@@ -21,27 +21,25 @@ import useToggle from '~src/hooks/useToggle'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
-import editSVG from '~src/assets/icons/edit.svg'
-import checkSVG from '~src/assets/icons/check.svg'
-import tagSVG from '~src/assets/icons/tag.svg'
+import Icon, { ICONS } from '~src/units/Icons'
 
-import nameSVG from '~src/assets/icons/name.svg'
-import emailSVG from '~src/assets/icons/email.svg'
-import phoneSVG from '~src/assets/icons/phone.svg'
-import genderSVG from '~src/assets/icons/gender.svg'
-import birthdaySVG from '~src/assets/icons/birthday.svg'
-import locationSVG from '~src/assets/icons/location.svg'
-import descriptionSVG from '~src/assets/icons/description.svg'
 interface IconProp {
   className?: string
 }
-const NameIcon: React.FC<IconProp> = ({className}) => <img src={nameSVG} className={className}/>
-const EmailIcon: React.FC<IconProp> = ({className}) => <img src={emailSVG} className={className}/>
-const PhoneIcon: React.FC<IconProp> = ({className}) => <img src={phoneSVG} className={className} />
-const GenderIcon: React.FC<IconProp> = ({className}) => <img src={genderSVG} className={className} />
-const BirthdayIcon: React.FC<IconProp> = ({className}) => <img src={birthdaySVG} className={className} />
-const LocationIcon: React.FC<IconProp> = ({className}) => <img src={locationSVG} className={className} />
-const DescriptionIcon: React.FC<IconProp> = ({className}) => <img src={descriptionSVG} className={className} />
+const NameIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Name} className={className}/>
+const EmailIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Email} className={className}/>
+const PhoneIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Phone} className={className} />
+const GenderIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Gender} className={className} />
+const BirthdayIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Birthday} className={className} />
+const LocationIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Location} className={className} />
+const DescriptionIcon: React.FC<IconProp> = ({className}) =>
+  <Icon name={ICONS.Description} className={className} />
 
 const useStyles = makeStyles((theme: Theme) => ({
   modelPaper: {
@@ -70,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   modelButtonZone: {
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
-    ...cssTips(theme).horizontallySpaced,
+    ...cssTips(theme).horizontallySpaced(),
   },
   profileBar: {
     display: 'flex',
@@ -87,6 +85,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     height: theme.spacing.unit * 8,
     marginBottom: theme.spacing.unit * 2,
+  },
+  avatarName: {
+    color: '#637694',
+    fontWeight: 600,
+    fontSize: 18,
+    lineHeight: theme.spacing.unit * 3,
   },
   avatarIcon: {
     padding: theme.spacing.unit * 0.5,
@@ -109,14 +113,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addTagIcon: {
     marginRight: theme.spacing.unit,
+    width: theme.spacing.unit * 3,
+    height: theme.spacing.unit * 3,
   },
   tags: {},
-  tag: {
+  tagChip: {
     fontSize: 14,
     padding: `${theme.spacing.unit * 0.5}px ${theme.spacing.unit}px`,
     marginRight: theme.spacing.unit * 0.5,
     marginBottom: theme.spacing.unit * 0.5,
     borderRadius: theme.spacing.unit,
+    backgroundColor: '#e8edf5',
     ...{
       '& svg': {
         display: 'none',
@@ -565,8 +572,8 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
           </Typography>
           <IconButton onClick={toggleEditable}>
             {editable
-              ? <img src={checkSVG} />
-              : <img src={editSVG} />
+              ? <Icon name={ICONS.Check} />
+              : <Icon name={ICONS.Edit} />
             }
           </IconButton>
         </div>
@@ -606,7 +613,12 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<img src={tagSVG} className={classes.addTagIcon} />}
+                  startAdornment={
+                    <Icon
+                      name={ICONS.Tag}
+                      className={classes.addTagIcon}
+                    />
+                  }
                   onKeyDown={handleTagsAdd}
                 />
               </div>
@@ -615,7 +627,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                   <Chip
                     key={`${tag}-${index}`}
                     onDelete={handleTagDelete(tag)}
-                    className={classes.tag}
+                    className={classes.tagChip}
                     classes={{ label: classes.tagLabel }}
                     label={tag}
                   />
@@ -629,7 +641,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
               src={contact.info.avatar}
               className={classes.avatarIcon}
             />
-            <strong>{contact.info.name}</strong>
+            <span className={classes.avatarName}>{contact.info.name}</span>
           </div>
           <Hidden xlUp>
             <div className={classes.blockTagsWrapper}>
@@ -637,7 +649,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 <Input
                   placeholder="Click to add tag"
                   disableUnderline
-                  startAdornment={<img src={tagSVG} className={classes.addTagIcon} />}
+                  startAdornment={<Icon name={ICONS.Tag} className={classes.addTagIcon} />}
                   onKeyDown={handleTagsAdd}
                 />
               </div>
@@ -646,7 +658,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                   <Chip
                     key={`${tag}-${index}`}
                     onDelete={handleTagDelete(tag)}
-                    className={classes.tag}
+                    className={classes.tagChip}
                     classes={{ label: classes.tagLabel }}
                     label={tag}
                   />

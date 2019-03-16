@@ -1,10 +1,1 @@
-<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="icon/close" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-4-Copy" transform="translate(-1.000000, -1.000000)">
-            <rect id="Rectangle-17" x="2" y="2" width="18" height="18"></rect>
-            <g id="Group--add" transform="translate(10.000000, 10.000000) rotate(45.000000) translate(-10.000000, -10.000000) translate(3.000000, 3.000000)" fill="#5D8DF8" fill-rule="nonzero">
-                <path d="M6,6 L6,1 C6,0.44771525 6.44771525,0 7,0 C7.55228475,0 8,0.44771525 8,1 L8,6 L13,6 C13.5522847,6 14,6.44771525 14,7 C14,7.55228475 13.5522847,8 13,8 L8,8 L8,13 C8,13.5522847 7.55228475,14 7,14 C6.44771525,14 6,13.5522847 6,13 L6,8 L1,8 C0.44771525,8 0,7.55228475 0,7 C0,6.44771525 0.44771525,6 1,6 L6,6 Z" id="Combined-Shape"></path>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 18 18" width="18" height="18"><g clip-path="url(#_clipPath_08Z4RmzQZFlmFBN01Gl1Ysr7vMQvhhQ9)"><path d=" M 9.333 7.683 L 13.458 3.559 C 13.914 3.103 14.652 3.103 15.108 3.559 C 15.564 4.014 15.564 4.753 15.108 5.209 L 10.983 9.333 L 15.108 13.458 C 15.564 13.914 15.564 14.652 15.108 15.108 C 14.652 15.564 13.914 15.564 13.458 15.108 L 9.333 10.983 L 5.209 15.108 C 4.753 15.564 4.014 15.564 3.559 15.108 C 3.103 14.652 3.103 13.914 3.559 13.458 L 7.683 9.333 L 3.559 5.209 C 3.103 4.753 3.103 4.014 3.559 3.559 C 4.014 3.103 4.753 3.103 5.209 3.559 L 9.333 7.683 Z "/></g></svg>

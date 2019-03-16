@@ -19,19 +19,6 @@ import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
-import addSVG from '~src/assets/icons/add.svg'
-import chevronRightSVG from '~src/assets/icons/chevron-right.svg'
-import chevronDownSVG from '~src/assets/icons/chevron-down.svg'
-import editSVG from '~src/assets/icons/edit.svg'
-import exportSVG from '~src/assets/icons/export.svg'
-import deleteSVG from '~src/assets/icons/delete.svg'
-import checkCircleSVG from '~src/assets/icons/check-circle.svg'
-
-import contactSVG from '~src/assets/icons/contact.svg'
-import allSVG from '~src/assets/icons/all.svg'
-import starredSVG from '~src/assets/icons/starred.svg'
-import groupSVG from '~src/assets/icons/group.svg'
-
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
@@ -43,6 +30,7 @@ import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
 import { GroupFields } from '~src/types/Contact'
 import * as vars from '~src/theme/vars'
+import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
@@ -58,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
   },
   groupActions: {
-    ...cssTips(theme, { sizeFactor: 1 }).horizontallySpaced,
+    ...cssTips(theme, { sizeFactor: 1 }).horizontallySpaced(),
   },
   invisible: {
     visibility: 'hidden',
@@ -67,20 +55,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   groupBtn: {
     cursor: 'pointer',
   },
+  groupStatusIcon: {
+    padding: 2,
+    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+  },
+  groupAddIcon: {
+    padding: 2,
+    marginTop: theme.spacing.unit,
+  },
 }))
 
 type FormType = '' | 'add' | 'update' | 'remove'
-
-const getIcon = (icon: string): JSX.Element => {
-  switch (icon) {
-    case 'StarBorder':
-      return <img src={starredSVG} />
-    case 'Group':
-      return <img src={groupSVG} />
-    default:
-      return <img src={allSVG} />
-  }
-}
 
 export interface Props extends ComponentProps {
 }
@@ -94,7 +80,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   useEffect(
     () => {
-      removeGroupData && success(<><img src={checkCircleSVG} /> Contacts Removed</>)
+      removeGroupData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Removed</>)
     },
     [removeGroupData],
   )
@@ -175,6 +161,17 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [removeGroup, changeGroupFormOpened],
   )
 
+  const renderIcon = (icon: string) => {
+    switch (icon) {
+      case 'Starred':
+        return <Icon name={ICONS.SideStarred} />
+      case 'Group':
+        return <Icon name={ICONS.SideGroup} />
+      default:
+        return <Icon name={ICONS.SideAll} />
+    }
+  }
+
   const renderLinkLabel = cond(
     [
       [equals('All'), name => <ListItemText>{name}({contactsCount})</ListItemText>],
@@ -186,10 +183,15 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           </ListItemText>
           <ListItemSecondaryAction>
             {groupsOpened
-              ? <img src={chevronDownSVG} />
-              : <img src={chevronRightSVG} />
+              ? <Icon name={ICONS.ChevronDown} className={classes.groupStatusIcon} size="sm" />
+              : <Icon name={ICONS.ChevronRight} className={classes.groupStatusIcon} size="sm" />
             }
-            <img src={addSVG} onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))} />
+            <Icon
+              name={ICONS.Add}
+              onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))}
+              className={classes.groupAddIcon}
+              size="sm"
+            />
           </ListItemSecondaryAction>
         </>
       )],
@@ -207,14 +209,14 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     <React.Fragment key={routePath}>
       <ListItem
         component={renderLinkWrapper(
-          routePath,
+          (name === 'Groups' && location) ? location.pathname : routePath,
           name === 'Groups' ? toggleGroupsOpened : undefined,
         )}
         classes={{ button: (location && location.pathname.startsWith(routeFullPath)) ? 'active' : '' }}
         button
       >
         <ListItemIcon>
-          {getIcon(icon)}
+          {renderIcon(icon)}
         </ListItemIcon>
         {renderLinkLabel(name)}
       </ListItem>
@@ -249,7 +251,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           <List component="nav" className={classes.flexHeight}>
             <ListItem component="div">
               <ListItemIcon>
-                <img src={contactSVG} />
+                <Icon name={ICONS.SideContact}/>
               </ListItemIcon>
               <ListItemText classes={{primary: classes.titleText}}>
                 Contacts
@@ -263,14 +265,14 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
             >
               <ListItem component="div">
                 <ListItemSecondaryAction className={classes.groupActions}>
-                  <img src={editSVG}
+                  <Icon name={ICONS.Edit}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
                   />
-                  <img src={exportSVG}
+                  <Icon name={ICONS.Export}
                     className={classes.groupBtn}
                   />
-                  <img src={deleteSVG}
+                  <Icon name={ICONS.Delete}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
                   />

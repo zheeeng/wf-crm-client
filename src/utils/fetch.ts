@@ -46,11 +46,3 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
 
   return data
 }
-
-export const getQuery = (query: object): string => {
-  const search = Object.keys(query)
-    .filter(key => query[key])
-    .map(key => `${pascal2snake(key)}=${encodeURIComponent(query[key])}`).join('&')
-
-  return search ? `?${search}` : search
-}
