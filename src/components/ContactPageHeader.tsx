@@ -39,17 +39,20 @@ const ContactPageHeader: React.FC<Props> = React.memo(
             onClick={onGoBack}
             color="hoverLighten"
             className={classes.navIcon}
+            size="lg"
           />
           <Icon
             name={ICONS.ArrowDown}
             onClick={onGoNext}
             color={disableGoNext ? 'disabled' : "hoverLighten"}
             className={classes.navIcon}
+            size="lg"
           />
           <Icon name={ICONS.ArrowDown}
             onClick={onGoPrevious}
             color={disableGoPrevious ? 'disabled' : "hoverLighten"}
             className={classes.navIcon}
+            size="lg"
           />
         </div>
         <Icon
@@ -57,6 +60,7 @@ const ContactPageHeader: React.FC<Props> = React.memo(
           className={classes.delete}
           onClick={onDelete}
           color="hoverLighten"
+          size="lg"
         />
       </>
     )

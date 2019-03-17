@@ -196,6 +196,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  xlIcon : {
+    width: theme.spacing.unit * 3.5,
+    height: theme.spacing.unit * 3.5,
+  },
+  lgIcon : {
+    width: theme.spacing.unit * 3,
+    height: theme.spacing.unit * 3,
+  },
   mdIcon : {
     width: theme.spacing.unit * 2.5,
     height: theme.spacing.unit * 2.5,
@@ -214,7 +222,7 @@ export interface Props {
   name: ICONS,
   className?: string,
   color?: 'primary' | 'secondary' | 'disabled' | 'hoverLighten',
-  size?: 'md' | 'sm' | 'xs',
+  size?: 'md' | 'sm' | 'xs' | 'lg' | 'xl',
   onClick?: React.MouseEventHandler<SVGSVGElement>,
 }
 
@@ -223,22 +231,19 @@ const SvgIcon: React.FC<Props> = React.memo(({ name, className, color = 'primary
 
   const clsName = classnames(
     classes.svgIcon,
-    color === 'primary'
-      ? classes.primaryColorIcon
-      : color === 'secondary'
-        ? classes.secondaryColorIcon
-        : color === 'disabled'
-          ? classes.disabledIcon
-          : color === 'hoverLighten'
-            ? classes.hoverLightenIcon
-            : '',
-    size === 'md'
-      ? classes.mdIcon
-      : size === 'md'
-        ? classes.smIcon
-        : size === 'xs'
-          ? classes.xsIcon
-          : '',
+    ({
+      primary: classes.primaryColorIcon,
+      secondary: classes.secondaryColorIcon,
+      disabled: classes.disabledIcon,
+      hoverLighten: classes.hoverLightenIcon
+    } as any)[color] || '',
+    ({
+      xl: classes.xlIcon,
+      lg: classes.lgIcon,
+      md: classes.mdIcon,
+      sm: classes.smIcon,
+      xs: classes.xsIcon,
+    } as any)[size] || '',
      className
   )
 
