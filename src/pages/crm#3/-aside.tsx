@@ -269,9 +269,9 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
                   />
-                  <Icon name={ICONS.Export}
+                  {/* <Icon name={ICONS.Export}
                     className={classes.groupBtn}
-                  />
+                  /> */}
                   <Icon name={ICONS.Delete}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
