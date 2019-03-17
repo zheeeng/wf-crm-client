@@ -246,11 +246,11 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
         <Typography variant="h4" className={classes.title}>Activities</Typography>
-        <Button
+        {/* <Button
           className={classes.manageButton}
           variant="outlined"
           color="primary"
-        >Manage</Button>
+        >Manage</Button> */}
       </div>
       {isFetchingNotes
       ? (
