@@ -1,22 +1,22 @@
 {
     "name": "wf-crm-client",
     "env": {
-      "NODE_ENV": {
-        "value": "development"
-      },
-      "NPM_CONFIG_PRODUCTION": {
-        "value": "false"
-      },
-      "YARN_PRODUCTION": {
-        "value": "false"
-      },
+        "NODE_ENV": {
+            "value": "development"
+        },
+        "NPM_CONFIG_PRODUCTION": {
+            "value": "false"
+        },
+        "YARN_PRODUCTION": {
+            "value": "false"
+        },
     },
     "buildpacks": [
-      {
-        "url": "heroku/nodejs"
-      },
-      {
-          "url": "https://github.com/heroku/heroku-buildpack-static"
-      }
+        {
+            "url": "heroku/nodejs"
+        },
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-static"
+        }
     ]
-  }
+}
