@@ -9,7 +9,7 @@
         },
         "YARN_PRODUCTION": {
             "value": "false"
-        },
+        }
     },
     "buildpacks": [
         {
