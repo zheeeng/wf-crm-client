@@ -16,7 +16,6 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import * as vars from '~src/theme/vars'
 
-import { detect } from '~src/utils/qs3Login'
 import logIcon from '~src/assets/logo.svg'
 import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
@@ -144,9 +143,9 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
 
   useEffect(
     () => {
-      detect() && authored && login('a', '0cc175b9c0f1b6a831c399e269772661')
+      login('a', '0cc175b9c0f1b6a831c399e269772661')
     },
-    [authored]
+    []
   )
 
   const headers = locationInfo.list().map(({ name, routePath, routeFullPath }) => ({ name, routePath, routeFullPath }))

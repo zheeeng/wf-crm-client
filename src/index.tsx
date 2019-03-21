@@ -12,6 +12,11 @@ import AppContainer from '~src/containers/App'
 import NotificationContainer from '~src/containers/Notification'
 import AlertContainer from '~src/containers/Alert'
 import AccountContainer from '~src/containers/Account'
+import { detect } from '~src/utils/qs3Login'
+
+if (!detect()) {
+  document.location.href = '/'
+}
 
 const $mountEl = document.querySelector('#content')
 

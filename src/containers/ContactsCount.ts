@@ -1,11 +1,14 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import createContainer from 'constate'
 import { useGet } from '~src/hooks/useRequest'
 import { Pagination } from '~src/types/Pagination'
+import AccountContainer from './Account'
 
 const ContactsCountContainer = createContainer(() => {
   const { data: contactsData, request: getContactsData } = useGet<{ pagination: Pagination}>()
   const { data: starredData, request: getStarredData } = useGet<{ pagination: Pagination}>()
+
+  const { authored } = useContext(AccountContainer.Context)
 
   const refreshCounts = useCallback(
     () => {
@@ -15,7 +18,11 @@ const ContactsCountContainer = createContainer(() => {
     [],
   )
 
-  useEffect(refreshCounts, [])
+  useEffect(() => {
+      authored && refreshCounts()
+    },
+    [authored],
+  )
 
   return {
     contactsCount: contactsData ? contactsData.pagination.total : 0,
