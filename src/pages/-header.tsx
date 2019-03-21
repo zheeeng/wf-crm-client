@@ -169,19 +169,21 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
               </IconButton>
             </Hidden>
             <nav className={classes.navList}>
-              {headers.map(({ name, routePath, routeFullPath }) => (
-                <div key={name} className={classes.navItem}>
-                  <a
-                    href={routePath}
-                    className={classnames(
-                      classes.link,
-                      location && location.pathname.startsWith(routeFullPath) && 'active',
-                    )}
-                    >
-                      {name}
-                    </a>
-                </div>
-              ))}
+              <div className={classes.navItem}>
+                <a href="/welcome" className={classes.link}>
+                  Dashboard
+                </a>
+              </div>
+              <div className={classes.navItem}>
+                <a href="/templates" className={classes.link}>
+                  Waiver Templates
+                </a>
+              </div>
+              <div className={classes.navItem}>
+                <a href="/crm" className={classnames(classes.link, 'active')}>
+                  My Customers
+                </a>
+              </div>
             </nav>
             <div>
               <Button onClick={handleMenuToggle(true)}>

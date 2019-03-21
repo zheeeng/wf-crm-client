@@ -30,21 +30,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export interface Props extends ComponentProps<'header'> {
+
+import ContactsCountContainer from '~src/containers/ContactsCount'
+import GroupsContainer from '~src/containers/Groups'
+export interface Props extends
+  ComponentProps<'aside' | 'header'> {
 }
 
-const App: React.FC<Props> = React.memo(({ slots, children }) => {
+const AppLayout: React.FC<Props> = ({ slots, children }) => {
   const classes = useStyles({})
 
   return (
-    <div className={classes.root}>
-      {slots.header}
-      <div className={classes.main}>
-        <Toolbar variant="dense" />
-        {children}
-      </div>
+    <ContactsCountContainer.Provider>
+      <GroupsContainer.Provider>
+      <div className={classes.root}>
+        {slots.header}
+        <div className={classes.main}>
+          <Toolbar variant="dense" />
+          {slots.aside}
+          {children}
+        </div>
     </div>
+      </GroupsContainer.Provider>
+    </ContactsCountContainer.Provider>
   )
-})
+}
 
-export default App
+export default AppLayout

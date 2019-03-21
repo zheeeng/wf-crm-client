@@ -15,7 +15,9 @@ import AccountContainer from '~src/containers/Account'
 import { detect } from '~src/utils/qs3Login'
 
 if (!detect()) {
-  document.location.href = '/'
+  if (document.location.pathname !== '/auth/signin') {
+    document.location.pathname = '/auth/signin'
+  }
 } else {
   const $mountEl = document.querySelector('#content')
 
