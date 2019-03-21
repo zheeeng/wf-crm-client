@@ -16,29 +16,29 @@ import { detect } from '~src/utils/qs3Login'
 
 if (!detect()) {
   document.location.href = '/'
+} else {
+  const $mountEl = document.querySelector('#content')
+
+  if ($mountEl) {
+    const App = () => (
+      <GlobalThemeProvider>
+        <CssBaseline />
+        <InjectIntoGlobalStyles />
+        <AppContainer.Provider>
+        <AccountContainer.Provider>
+        <NotificationContainer.Provider>
+        <AlertContainer.Provider>
+          <Notification />
+          <Roundation />
+        </AlertContainer.Provider>
+        </NotificationContainer.Provider>
+        </AccountContainer.Provider>
+        </AppContainer.Provider>
+      </GlobalThemeProvider>
+    )
+
+    ReactDOM.render(App(), document.querySelector('#content'))
+  }
+
+  registerServiceWorker()
 }
-
-const $mountEl = document.querySelector('#content')
-
-if ($mountEl) {
-  const App = () => (
-    <GlobalThemeProvider>
-      <CssBaseline />
-      <InjectIntoGlobalStyles />
-      <AppContainer.Provider>
-      <AccountContainer.Provider>
-      <NotificationContainer.Provider>
-      <AlertContainer.Provider>
-        <Notification />
-        <Roundation />
-      </AlertContainer.Provider>
-      </NotificationContainer.Provider>
-      </AccountContainer.Provider>
-      </AppContainer.Provider>
-    </GlobalThemeProvider>
-  )
-
-  ReactDOM.render(App(), document.querySelector('#content'))
-}
-
-registerServiceWorker()
