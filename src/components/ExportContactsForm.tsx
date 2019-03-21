@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
 import shallowEqual from '~src/utils/shallowEqual'
 
 import Icon, { ICONS } from '~src/units/Icons'
+import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -73,7 +73,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
           <Typography variant="h6" align="center"  color="textSecondary">
             Generating file...
           </Typography>
-          <CircularProgress className={classes.progress} />
+          <ProgressLoading className={classes.progress} />
         </div>
       </Modal>
     )

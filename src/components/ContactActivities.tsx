@@ -10,7 +10,6 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Input from '@material-ui/core/Input'
 import StepContent from '@material-ui/core/StepContent'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import AlertContainer from '~src/containers/Alert'
@@ -20,6 +19,7 @@ import useToggle from '~src/hooks/useToggle'
 
 import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
 import Icon, { ICONS } from '~src/units/Icons'
+import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -254,7 +254,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       {isFetchingNotes
       ? (
         <div className={classes.progressWrapper}>
-          <CircularProgress className={classes.progress} size={64} />
+          <ProgressLoading className={classes.progress} size={64} />
         </div>
       )
       : fetchNotesError

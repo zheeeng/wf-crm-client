@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   spin: {
-    animation: '$spin'
-  }
+    animation: '$spin 1.5s linear infinite',
+  },
 }))
 
 interface Props extends Omit<IconProps, 'name' | 'size'> {
