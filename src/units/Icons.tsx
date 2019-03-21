@@ -47,6 +47,8 @@ import { ReactComponent as ArrowRightIcon } from '~src/assets/icons/arrow-right.
 import { ReactComponent as ArrowUpIcon } from '~src/assets/icons/arrow-up.svg'
 import { ReactComponent as ArrowDownIcon } from '~src/assets/icons/arrow-down.svg'
 
+import { ReactComponent as LoadingIcon } from '~src/assets/loading.svg'
+
 export enum ICONS {
   SideContact,
   SideAll,
@@ -87,6 +89,7 @@ export enum ICONS {
   ArrowRight,
   ArrowUp,
   ArrowDown,
+  Loading,
 }
 
 const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>> => {
@@ -169,6 +172,8 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return ArrowUpIcon
     case ICONS.ArrowDown:
       return ArrowDownIcon
+    case ICONS.Loading:
+      return LoadingIcon
     default:
       return () => null
   }
@@ -224,9 +229,10 @@ export interface Props {
   color?: 'primary' | 'secondary' | 'disabled' | 'hoverLighten',
   size?: 'md' | 'sm' | 'xs' | 'lg' | 'xl',
   onClick?: React.MouseEventHandler<SVGSVGElement>,
+  style?: React.CSSProperties,
 }
 
-const SvgIcon: React.FC<Props> = React.memo(({ name, className, color = 'primary', size = 'md', onClick }) => {
+const SvgIcon: React.FC<Props> = React.memo(({ name, style, className, color = 'primary', size = 'md', onClick }) => {
   const classes = useStyles({})
 
   const clsName = classnames(
@@ -250,7 +256,7 @@ const SvgIcon: React.FC<Props> = React.memo(({ name, className, color = 'primary
   const Comp = getIcon(name)
 
   return (
-    <Comp className={clsName} onClick={onClick} />
+    <Comp style={style} className={clsName} onClick={onClick} />
   )
 })
 
