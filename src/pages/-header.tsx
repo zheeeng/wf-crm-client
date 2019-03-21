@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext, useCallback } from 'react'
+import React, { useRef, useState, useEffect, useContext, useCallback } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
@@ -16,6 +16,7 @@ import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import * as vars from '~src/theme/vars'
 
+import { detect } from '~src/utils/qs3Login'
 import logIcon from '~src/assets/logo.svg'
 import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
@@ -112,6 +113,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  profileItem: {
+    color: 'white',
+  },
 }))
 
 export interface Props extends ComponentProps {}
@@ -138,6 +142,13 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
     [authored],
   )
 
+  useEffect(
+    () => {
+      detect() && authored && login('a', '0cc175b9c0f1b6a831c399e269772661')
+    },
+    [authored]
+  )
+
   const headers = locationInfo.list().map(({ name, routePath, routeFullPath }) => ({ name, routePath, routeFullPath }))
 
   return (
@@ -161,21 +172,21 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
             <nav className={classes.navList}>
               {headers.map(({ name, routePath, routeFullPath }) => (
                 <div key={name} className={classes.navItem}>
-                  <Link
-                    to={routePath}
+                  <a
+                    href={routePath}
                     className={classnames(
                       classes.link,
                       location && location.pathname.startsWith(routeFullPath) && 'active',
                     )}
                     >
                       {name}
-                    </Link>
+                    </a>
                 </div>
               ))}
             </nav>
             <div>
               <Button onClick={handleMenuToggle(true)}>
-                <Typography>Open</Typography>
+                <Typography className={classes.profileItem}>Open</Typography>
               </Button>
               <Menu
                 anchorEl={anchorEl}

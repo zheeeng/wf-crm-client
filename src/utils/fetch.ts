@@ -1,4 +1,5 @@
 import { pascal2snake } from '~src/utils/caseConvert'
+import { clean } from '~src/utils/qs3Login'
 
 type ArgumentsType<F> = F extends (...args: infer A) => any ? A : any
 
@@ -42,6 +43,8 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
     window.localStorage.removeItem('@id@')
     window.localStorage.removeItem('@token@')
     window.localStorage.removeItem('@username@')
+    // clean qs3 cookies
+    clean()
   }
 
   return data
