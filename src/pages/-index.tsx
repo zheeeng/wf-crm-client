@@ -1,5 +1,8 @@
 import React from 'react'
+import { Redirect } from '@roundation/roundation'
 
-const MyCustomersIndex: React.FC = React.memo(({ children }) => null)
+const Index: React.FC = React.memo(() => {
+  return <Redirect to="./all" noThrow />
+})
 
-export default MyCustomersIndex
+export default Index

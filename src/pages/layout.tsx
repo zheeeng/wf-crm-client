@@ -50,7 +50,7 @@ const AppLayout: React.FC<Props> = ({ slots, children }) => {
           {slots.aside}
           {children}
         </div>
-    </div>
+      </div>
       </GroupsContainer.Provider>
     </ContactsCountContainer.Provider>
   )
