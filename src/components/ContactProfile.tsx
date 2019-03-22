@@ -97,9 +97,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   avatarIcon: {
     padding: theme.spacing.unit * 0.5,
-    height: theme.spacing.unit * 8,
-    width: theme.spacing.unit * 8,
-    marginRight: theme.spacing.unit * 2.5,
+    height: theme.spacing.unit * 7,
+    width: theme.spacing.unit * 7,
+    marginRight: theme.spacing.unit * 3.5,
   },
   floatTagsWrapper: {
     float: 'right',

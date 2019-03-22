@@ -1,7 +1,7 @@
 import { snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
 import clearEmpty from '~src/utils/clearEmpty'
-
+import crateGravatar from '~src/utils/createGravatar'
 export interface Activity {
   id: string
   date: string
@@ -290,7 +290,7 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
   } = input
 
   const info: Contact['info'] = {
-    avatar: picture_url || '',
+    avatar: picture_url || crateGravatar(email || ''),
     starred: favourite || false,
     name: name || '',
     names: (names || []).map(o => mapKeys(snake2pascal, o)),
