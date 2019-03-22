@@ -970,13 +970,13 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@roundation/roundation@^0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.30.tgz#89914d1dbaa7efc29efff63e1f00c2a05445a993"
-  integrity sha512-a7zcqtHDgchsXXEs+5pHbpEgfNR0c3ZPEsm+qh/B8QqNREptdrisv7L+w1GKwy6Wur1wfaSnMg0rPLRF9xzl+g==
+"@roundation/roundation@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.31.tgz#a3fc94999323f7ed8211c6cca5e2fce170dac9bb"
+  integrity sha512-e5sge5CYIsRfQ9JbUnqK8UCTsi+GZTEc1Q4Ygf9ueflKHIcOkQPOVPjH/wjtbMnyufFJ6w8dWRsz1bHAo5qI1Q==
   dependencies:
     "@reach/router" "^1.2.1"
-    "@types/reach__router" "^1.2.1"
+    "@types/reach__router" "^1.2.3"
     "@types/react-loadable" "^5.4.1"
     react-loadable "^5.5.0"
 
@@ -1140,7 +1140,7 @@
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.51.tgz#d5421d0e190c56c64c112a761a85782fc971409d"
   integrity sha512-xcmtfHIgF9SYjhGdsZR1nQslxG4hu0cIpFfLQ4CWdw3KzHvl7ki1AzFLQUkbDTG42ZN3ZsQfdRzXRlkAvbIy5Q==
 
-"@types/reach__router@^1.2.1":
+"@types/reach__router@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@types/reach__router/-/reach__router-1.2.3.tgz#679fa6968aab0314dc4b967808a23fd11af2ccce"
   integrity sha512-Zp0AdVhoJXjwsgp8pDPVEMnAH5eHU64hi5EnPT1Jerddqwiy0O87KFrnZKd1DKdO87cU120n2d3SnKKPtf4wFA==
