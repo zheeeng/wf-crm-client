@@ -1,7 +1,8 @@
-import 'core-js/es6/set'
-import 'core-js/es6/map'
-import 'core-js/es7/array'
-import 'core-js/es7/object'
+
+import 'core-js/features/set'
+import 'core-js/features/map'
+import 'core-js/features/array'
+import 'core-js/features/object'
 import { install } from '@material-ui/styles'
 
 install()
