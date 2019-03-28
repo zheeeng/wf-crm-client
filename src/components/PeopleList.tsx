@@ -441,14 +441,14 @@ const PeopleList: React.FC<Props> = React.memo(({
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnMergeContactsOpened}
       >
-        <Icon name={ICONS.Export} color="hoverLighten" />
+        <Icon name={ICONS.Merge} color="hoverLighten" />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'export')}
         onMouseLeave={handlePopoverToggle(false)}
         onClick={toggleOnExportContactsOpened}
       >
-        <Icon name={ICONS.Merge} color="hoverLighten" />
+        <Icon name={ICONS.Export} color="hoverLighten" />
       </IconButton>
       <IconButton
         onMouseEnter={handlePopoverToggle(true, 'add to group')}

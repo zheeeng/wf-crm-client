@@ -7,7 +7,7 @@ import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
 import shallowEqual from '~src/utils/shallowEqual'
 
-import Icon, { ICONS } from '~src/units/Icons'
+import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,7 +48,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
       () => {
         if ((exportContactsStatus && exportContactsStatus.ready === true) || exportStatusError) {
           onClose()
-          success(<><Icon name={ICONS.CheckCircle} /> Contacts Exported</>)
+          success(<><CheckCircle /> Contacts Exported</>)
         }
         exportStatusError && fail('Exported contacts failed')
       },
