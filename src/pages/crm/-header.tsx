@@ -123,7 +123,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
   const classes = useStyles({})
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
-  const { message, dismiss } = useContext(AlertContainer.Context)
+  const { message, dismiss, reset } = useContext(AlertContainer.Context)
   const { authored, login, logout } = useContext(AccountContainer.Context)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
@@ -213,13 +213,16 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
         <Typography
           variant="h6"
           className={classnames(
-            message && classes.alertDisplay,
+            message.expand && classes.alertDisplay,
             classes.appAlert,
-            (message && (message.type === 'success')) ? classes.successAlert : classes.failAlert,
+            message.type === 'success'
+              ? classes.successAlert
+              : classes.failAlert,
           )}
           onClick={dismiss}
+          onTransitionEnd={reset}
         >
-          {message && message.content}
+          {message.content}
         </Typography>
       </div>
     </Portal>

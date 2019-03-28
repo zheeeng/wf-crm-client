@@ -3,25 +3,42 @@ import createContainer from 'constate'
 
 const defaultDismissTimeout = 4000
 
+const initialMessage: {
+  expand: boolean,
+  type: 'success' | 'fail',
+  content: React.ReactNode,
+} = {
+  expand: false,
+  type: 'success',
+  content: null,
+}
+
 const AlertContainer = createContainer(() => {
-  const [message, updateMessage] = useState<{
-    type: 'success' | 'fail',
-    content: React.ReactNode,
-  } | null>(null)
+  const [message, updateMessage] = useState(initialMessage)
 
   const timerRef = useRef(0)
 
   const success = useCallback(
-    (content: React.ReactNode) => {updateMessage({ type: 'success', content }) },
+    (content: React.ReactNode) => {
+      updateMessage({ expand: true, type: 'success', content })
+    },
     [],
   )
   const fail = useCallback(
-    (content: React.ReactNode) => {updateMessage({ type: 'fail', content }) },
+    (content: React.ReactNode) => {
+      updateMessage({ expand: true, type: 'fail', content })
+    },
     [],
   )
 
   const dismiss = useCallback(
-    () => { updateMessage(null) },
+    () => {
+      updateMessage(message => ({ ...message, expand: false }))
+    },
+    [],
+  )
+  const reset = useCallback(
+    () => { updateMessage(initialMessage) },
     [],
   )
 
@@ -42,6 +59,7 @@ const AlertContainer = createContainer(() => {
     success,
     fail,
     dismiss,
+    reset,
   }
 })
 
