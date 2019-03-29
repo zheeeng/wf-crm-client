@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       overflow: 'auto',
     },
   },
+  footerPlacer: {
+    marginBottom: theme.spacing.unit * 4,
+  },
   leftSider: {
     flex: 1,
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
@@ -101,6 +104,7 @@ const DetailsPaper: React.FC<Props> = React.memo(
             </section>
           </aside>
         </div>
+        <div className={classes.footerPlacer} />
       </main>
     )
   },
