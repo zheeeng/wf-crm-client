@@ -167,7 +167,9 @@ export interface PeopleAPI {
 }
 export interface ContactFields {
   'First name': string
+  'Middle name': string
   'Last name': string
+  'Gender': 'Male' | 'Female'
   'Email': string
   'Phone': string
 }
@@ -197,6 +199,8 @@ export const contactFieldAdapter = (field: ContactFields): Partial<PeopleAPI> =>
     phone: field.Phone || null,
     first_name: field['First name'] || null,
     last_name: field['Last name'] || null,
+    middle_name: field['Middle name'] || null,
+    gender: field['Gender'] || null,
   }
 
   return params

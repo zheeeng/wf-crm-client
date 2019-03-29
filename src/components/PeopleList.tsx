@@ -482,7 +482,10 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const newContactFormOption: CreateFormOption<keyof ContactFields> = {
     title: 'New Contact',
-    fields: ['First name', 'Last name', 'Email', 'Phone'],
+    fields: ['First name', 'Middle name', 'Last name', 'Gender', 'Email', 'Phone'],
+    enums: {
+      'Gender': ['Male', 'Female'],
+    },
     okText: 'Create',
   }
 

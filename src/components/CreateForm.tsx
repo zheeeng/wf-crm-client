@@ -5,6 +5,7 @@ import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
+import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,18 +35,21 @@ export interface CreateFormOption<F extends string> {
   title?: string,
   tip?: string,
   fields?: F[],
+  enums?: {
+    [key in F]?: string[]
+  },
   okText?: string,
   cancelText?: string
 }
 
-export interface Props {
+export interface Props<F extends string> {
   open: boolean
   onClose?: React.ReactEventHandler<{}>
   onOk?: (o: object) => Promise<any>
-  option?: CreateFormOption<any>
+  option?: CreateFormOption<F>
 }
 
-const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
+const CreateForm: React.FC<Props<any>> = React.memo(({ option, open, onClose, onOk }) => {
   const classes = useStyles({})
 
   const fieldValues = useRef<{ [key: string]: string }>({})
@@ -75,7 +79,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
     [onOk],
   )
 
-  const { title = 'title', tip = '', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
+  const { title = 'title', tip = '', fields = [], enums = {}, okText = 'Ok', cancelText = 'cancel' } = option || {}
 
   return (
     <Modal
@@ -91,14 +95,25 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
             {tip}
           </Typography>)
         }
-        {fields.map(field => (
-          <BasicFormInput
-            key={field}
-            placeholder={field}
-            onChange={handleCreateInfoChange(field)}
-            onEnterPress={handleEnterSubmit}
-          />
-        ))}
+        {fields.map(field => field in enums
+          ? (
+            <BasicFormInput
+              key={field}
+              placeholder={field}
+              onChange={handleCreateInfoChange(field)}
+              onEnterPress={handleEnterSubmit}
+            />
+          )
+          : (
+            null
+            // <BasicFormInputSelect
+            //   key={field}
+            //   options={(enums[field] as string[])}
+            //   placeholder={field}
+            //   onChange={handleCreateInfoChange(field)}
+            // />
+          )
+        )}
         <div className={classes.buttonZone}>
           <Button onClick={onClose}>{cancelText}</Button>
           <Button color="primary" onClick={handleOkClick}>{okText}</Button>
