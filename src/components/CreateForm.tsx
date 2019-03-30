@@ -4,6 +4,7 @@ import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import CreateFormThemeProvider from '~src/theme/CreateFormThemeProvider'
 import BasicFormInput from '~src/units/BasicFormInput'
 import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
 import cssTips from '~src/utils/cssTips'
@@ -121,56 +122,58 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
       open={open}
       onClose={onClose}
     >
-      <div className={classes.paper}>
-        <Typography variant="h6" align="center" color="textSecondary">
-          {title}
-        </Typography>
-        {tip && (
-          <Typography variant="body2" align="center">
-            {tip}
-          </Typography>)
-        }
-        {fields.map(field => field.type == 'text'
-          ? (
-            <BasicFormInput
-              key={field.name}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange(field.name)}
-              onEnterPress={handleEnterSubmit}
-            />
-          )
-          : field.type == 'combinedText'
-          ? (
-            <div
-              key={field.keyName}
-              className={classes.combinedFormRow}
-            >
-              {field.nameAndLabels.map(({ name, label, span }) => (
-                <BasicFormInput
-                  className={classes.formItem }
-                  key={name}
-                  placeholder={label}
-                  onChange={handleCreateInfoChange(name)}
-                  onEnterPress={handleEnterSubmit}
-                  style={{ flex: span }}
-                />
-              ))}
-            </div>
-          )
-          : (
-            <BasicFormInputSelect
-              key={field.name}
-              options={field.options.map(option => ({ label: option, value: option }))}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange(field.name)}
-            />
-          )
-        )}
-        <div className={classes.buttonZone}>
-          <Button onClick={onClose}>{cancelText}</Button>
-          <Button color="primary" onClick={handleOkClick}>{okText}</Button>
+      <CreateFormThemeProvider>
+        <div className={classes.paper}>
+          <Typography variant="h6" align="center" color="textSecondary">
+            {title}
+          </Typography>
+          {tip && (
+            <Typography variant="body2" align="center">
+              {tip}
+            </Typography>)
+          }
+          {fields.map(field => field.type == 'text'
+            ? (
+              <BasicFormInput
+                key={field.name}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange(field.name)}
+                onEnterPress={handleEnterSubmit}
+              />
+            )
+            : field.type == 'combinedText'
+            ? (
+              <div
+                key={field.keyName}
+                className={classes.combinedFormRow}
+              >
+                {field.nameAndLabels.map(({ name, label, span }) => (
+                  <BasicFormInput
+                    className={classes.formItem }
+                    key={name}
+                    placeholder={label}
+                    onChange={handleCreateInfoChange(name)}
+                    onEnterPress={handleEnterSubmit}
+                    style={{ flex: span }}
+                  />
+                ))}
+              </div>
+            )
+            : (
+              <BasicFormInputSelect
+                key={field.name}
+                options={field.options.map(option => ({ label: option, value: option }))}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange(field.name)}
+              />
+            )
+          )}
+          <div className={classes.buttonZone}>
+            <Button onClick={onClose}>{cancelText}</Button>
+            <Button color="primary" onClick={handleOkClick}>{okText}</Button>
+          </div>
         </div>
-      </div>
+      </CreateFormThemeProvider>
     </Modal>
   )
 })

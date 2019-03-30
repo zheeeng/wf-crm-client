@@ -33,7 +33,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     padding: 0,
-    fontWeight: 600,
+    fontWeight: 500,
     marginTop: theme.spacing.unit / 2,
     marginBottom: theme.spacing.unit / 2,
   },
