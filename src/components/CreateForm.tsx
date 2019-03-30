@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, useRef } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
@@ -23,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
+  },
+  paper2: {
+    width: Math.min(theme.breakpoints.values.sm, 388) - theme.spacing.unit * 8,
   },
   buttonZone: {
     textAlign: 'right',
@@ -81,11 +85,27 @@ export interface Props {
   onClose?: React.ReactEventHandler<{}>
   onOk?: (o: object) => Promise<any>
   option?: CreateFormOption
+  discardText?: string
 }
 
 
-const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
+const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, discardText }) => {
   const classes = useStyles({})
+
+  const [cancelationConfirmModalOpen, setCancelationConfirmModalOpen] = useState(false)
+
+  const openCancelationModal = useCallback(
+    () => {
+      setCancelationConfirmModalOpen(true)
+    },
+    [setCancelationConfirmModalOpen]
+  )
+  const closeCancelationModal = useCallback(
+    () => {
+      setCancelationConfirmModalOpen(false)
+    },
+    [setCancelationConfirmModalOpen]
+  )
 
   const [toFillFields, setToFillFields] = useState<string[]>([])
 
@@ -102,6 +122,18 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
       fieldValues.current[field] = value
     },
     [fieldValues],
+  )
+
+  const handleClose = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+
+      if (Object.keys(fieldValues.current).length > 0) {
+        openCancelationModal()
+      } else {
+        onClose && onClose(e)
+      }
+    },
+    [onClose, openCancelationModal]
   )
 
   const requiredFieldNames = useMemo(
@@ -149,62 +181,77 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
   const { title = 'title', tip = '', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-    >
-      <div className={classes.paper}>
-        <Typography variant="h6" align="center" color="textSecondary">
-          {title}
-        </Typography>
-        {tip && (
-          <Typography variant="body2" align="center">
-            {tip}
-          </Typography>)
-        }
-        {fields.map(field => field.type == 'text'
-          ? (
-            <BasicFormInput
-              error={toFillFields.includes(field.name)}
-              key={field.name}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange(field.name)}
-            />
-          )
-          : field.type == 'combinedText'
-          ? (
-            <div
-              key={field.keyName}
-              className={classes.combinedFormRow}
-            >
-              {field.nameAndLabels.map(({ name, label, span }) => (
-                <BasicFormInput
-                  error={toFillFields.includes(name)}
-                  className={classes.formItem }
-                  key={name}
-                  placeholder={label}
-                  onChange={handleCreateInfoChange(name)}
-                  style={{ flex: span }}
-                />
-              ))}
+    <>
+      {discardText && (
+        <Modal
+          open={cancelationConfirmModalOpen}
+        >
+          <div className={classnames(classes.paper, classes.paper2)}>
+            {discardText}
+            <div className={classes.buttonZone}>
+              <Button onClick={closeCancelationModal}>Continue Edit</Button>
+              <Button color="primary" onClick={onClose}>Discard</Button>
             </div>
-          )
-          : (
-            <BasicFormInputSelect
-              error={toFillFields.includes(field.name)}
-              key={field.name}
-              options={field.options.map(option => ({ label: option, value: option }))}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange2(field.name)}
-            />
-          )
-        )}
-        <div className={classes.buttonZone}>
-          <Button onClick={onClose}>{cancelText}</Button>
-          <Button color="primary" onClick={handleOkClick}>{okText}</Button>
+          </div>
+        </Modal>
+      )}
+      <Modal
+        open={open}
+        onClose={handleClose}
+      >
+        <div className={classes.paper}>
+          <Typography variant="h6" align="center" color="textSecondary">
+            {title}
+          </Typography>
+          {tip && (
+            <Typography variant="body2" align="center">
+              {tip}
+            </Typography>)
+          }
+          {fields.map(field => field.type == 'text'
+            ? (
+              <BasicFormInput
+                error={toFillFields.includes(field.name)}
+                key={field.name}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange(field.name)}
+              />
+            )
+            : field.type == 'combinedText'
+            ? (
+              <div
+                key={field.keyName}
+                className={classes.combinedFormRow}
+              >
+                {field.nameAndLabels.map(({ name, label, span }) => (
+                  <BasicFormInput
+                    error={toFillFields.includes(name)}
+                    className={classes.formItem }
+                    key={name}
+                    placeholder={label}
+                    onChange={handleCreateInfoChange(name)}
+                    style={{ flex: span }}
+                  />
+                ))}
+              </div>
+            )
+            : (
+              <BasicFormInputSelect
+                error={toFillFields.includes(field.name)}
+                key={field.name}
+                options={field.options.map(option => ({ label: option, value: option }))}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange2(field.name)}
+              />
+            )
+          )}
+          <div className={classes.buttonZone}>
+            <Button onClick={onClose}>{cancelText}</Button>
+            <Button color="primary" onClick={handleOkClick}>{okText}</Button>
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   )
 })
 

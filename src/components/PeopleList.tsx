@@ -518,6 +518,7 @@ const PeopleList: React.FC<Props> = React.memo(({
           open={createForm.opened}
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
+          discardText="Your contact information won't be created unless you save it"
         />}
         {mergeContactsOpened && <MergeContactsForm
           open={mergeContactsOpened}
