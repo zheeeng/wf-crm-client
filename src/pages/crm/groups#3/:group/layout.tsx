@@ -23,7 +23,11 @@ const Content: React.FC<Props> = React.memo(({ group, children }) => {
   )
 
   useEffect(
-    () => { setGroupId(group) },
+    () => {
+      setGroupId(group)
+
+      return () => setGroupId('')
+    },
     [group],
   )
 
