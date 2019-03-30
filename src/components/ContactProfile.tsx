@@ -569,7 +569,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     )
     : fetchContactError
     ? (
-      <Typography>Oops, an error occurred!</Typography>
+      <Typography align="center">Oops, an error occurred!</Typography>
     )
     : contact
     ? (

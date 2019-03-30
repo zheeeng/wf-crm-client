@@ -17,7 +17,6 @@ import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 import useToggle from '~src/hooks/useToggle'
 
-import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
 import Icon, { ICONS } from '~src/units/Icons'
 import ProgressLoading from '~src/units/ProgressLoading'
 
@@ -66,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing.unit,
     backgroundColor: theme.palette.grey['200'],
   },
+  entryInput: {
+    width: '100%',
+  },
   stepper: {
     padding: `0 ${theme.spacing.unit * 4}px`,
   },
@@ -84,13 +86,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: theme.spacing.unit / 2,
   },
   noteRemover: {
-    'position': 'absolute',
-    'padding': 0,
-    'right': theme.spacing.unit / 2,
-    'bottom': theme.spacing.unit / 2,
-    'visibility': 'hidden',
-    '$entryContent:hover &': {
-      visibility: 'visible',
+    position: 'absolute',
+    padding: 0,
+    right: theme.spacing.unit,
+    bottom: theme.spacing.unit * 1.5,
+    visibility: 'hidden',
+    width: theme.spacing.unit * 2,
+    height: theme.spacing.unit * 2,
+    ...{
+      '$entryContent:hover &': {
+        visibility: 'visible',
+      },
     },
   },
   entryTime: {
@@ -260,7 +266,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       )
       : fetchNotesError
       ? (
-        <Typography>Oops, an error occurred!</Typography>
+        <Typography align="center">Oops, an error occurred!</Typography>
       )
       : (
         <Stepper orientation="vertical" className={classes.stepper}>
@@ -284,16 +290,19 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 {showAddNote && gIndex === 0 && (
                   <div className={classnames(classes.entryContent, classes.entryInputContent)}>
                     <Input
+                      className={classes.entryInput}
                       placeholder="note"
                       disableUnderline
-                      onBlur={handleNoteUpdateByBlur}
+                      multiline
+                      rowsMax={4}
+                      // onBlur={handleNoteUpdateByBlur}
                       onKeyDown={handleNoteUpdateByKeydown}
                     />
                     <IconButton
                       color="primary"
                       className={classes.noteSubmitter}
                     >
-                      <PlayCircleFilled />
+                      <Icon name={ICONS.Enter} />
                     </IconButton>
                   </div>
                 )}

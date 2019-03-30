@@ -23,6 +23,8 @@ import { ReactComponent as AddIcon } from '~src/assets/icons/add.svg'
 import { ReactComponent as ChevronRightIcon } from '~src/assets/icons/chevron-right.svg'
 import { ReactComponent as ChevronDownIcon } from '~src/assets/icons/chevron-down.svg'
 import { ReactComponent as EditIcon } from '~src/assets/icons/edit.svg'
+import { ReactComponent as EnterIcon } from '~src/assets/icons/enter.svg'
+import { ReactComponent as NoteEditIcon } from '~src/assets/icons/note-edit.svg'
 import { ReactComponent as DeleteIcon } from '~src/assets/icons/delete.svg'
 import { ReactComponent as AddCircleIcon } from '~src/assets/icons/add-circle.svg'
 import { ReactComponent as NoteIcon } from '~src/assets/icons/note.svg'
@@ -67,6 +69,8 @@ export enum ICONS {
   ChevronRight,
   ChevronDown,
   Edit,
+  Enter,
+  NoteEdit,
   Delete,
   AddCircle,
   Note,
@@ -128,6 +132,10 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return ChevronDownIcon
     case ICONS.Edit:
       return EditIcon
+    case ICONS.Enter:
+      return EnterIcon
+    case ICONS.NoteEdit:
+      return NoteEditIcon
     case ICONS.Delete:
       return DeleteIcon
     case ICONS.AddCircle:

@@ -159,7 +159,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       )
       : fetchWaiversError
       ? (
-        <Typography>Oops, an error occurred!</Typography>
+        <Typography align="center">Oops, an error occurred!</Typography>
       )
       : (
         <div>
