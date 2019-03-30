@@ -55,6 +55,32 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'flex-end',
     },
   },
+  infoForePlaceholder: {
+    width: theme.spacing.unit * 24,
+  },
+  infoBar: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  infoText: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  creatingBtn: {
+    textTransform: 'none',
+    color: 'white',
+    borderColor: 'white',
+    marginRight: theme.spacing.unit * 2,
+    padding: `0 ${theme.spacing.unit * 2}px`,
+    ...{
+      '&:hover': {
+        color: 'white',
+        borderColor: 'white',
+      },
+    },
+  },
   popover: {
     pointerEvents: 'none',
   },
@@ -144,10 +170,24 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactError && fail(addContactError.message)
-      addContactData && success(<><CheckCircle /> Contact Created</>)
+      addContactData && success(
+        <div className={classes.infoBar}>
+          <div className={classes.infoForePlaceholder} />
+          <div className={classes.infoText}><CheckCircle /> Contact created!</div>
+          <Button
+            className={classes.creatingBtn}
+            variant="outlined"
+            color="primary"
+            onClick={handleShowProfile(addContactData.id)}
+          >
+            Continue editing
+          </Button>
+        </div>
+      )
     },
     [addContactError, addContactData],
   )
+
   useEffect(
     () => {
       starContactError && fail('Star contacts failed')
