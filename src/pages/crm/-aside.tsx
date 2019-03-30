@@ -25,7 +25,6 @@ import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import muteClick from '~src/utils/muteClick'
 import AlertContainer from '~src/containers/Alert'
-import ContactsContainer from '~src/containers/Contacts'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
@@ -83,7 +82,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   useEffect(
     () => {
-      removeGroupData && success(<><CheckCircle /> Contacts Removed</>)
+      removeGroupData && success(<><CheckCircle /> Group Removed</>)
     },
     [removeGroupData],
   )

@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper2: {
     width: Math.min(theme.breakpoints.values.sm, 388) - theme.spacing.unit * 8,
   },
+  tipText: {
+    marginTop: theme.spacing.unit * 2,
+  },
   buttonZone: {
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
@@ -204,7 +207,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
             {title}
           </Typography>
           {tip && (
-            <Typography variant="body2" align="center">
+            <Typography variant="body2" align="center" color="textSecondary" className={classes.tipText}>
               {tip}
             </Typography>)
           }
