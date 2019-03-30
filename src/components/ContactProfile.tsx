@@ -100,6 +100,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing.unit * 7,
     width: theme.spacing.unit * 7,
     marginRight: theme.spacing.unit * 3.5,
+    ...{
+      '& img': {
+        borderRadius: '50%',
+      },
+    },
   },
   floatTagsWrapper: {
     float: 'right',
