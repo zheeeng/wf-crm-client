@@ -180,9 +180,9 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
                 </a>
               </div>
               <div className={classes.navItem}>
-                <a href="/crm" className={classnames(classes.link, 'active')}>
+                <Link to="/crm" className={classnames(classes.link, 'active')}>
                   My Customers
-                </a>
+                </Link>
               </div>
             </nav>
             <div>

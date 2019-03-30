@@ -25,6 +25,7 @@ import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import muteClick from '~src/utils/muteClick'
 import AlertContainer from '~src/containers/Alert'
+import ContactsContainer from '~src/containers/Contacts'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
@@ -76,7 +77,7 @@ export interface Props extends ComponentProps {
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
   const { success } = useContext(AlertContainer.Context)
-  const { contactsCount, starredCount } = useContext(ContactsCountContainer.Context)
+  const { contactsCount, starredCount, refreshPage } = useContext(ContactsCountContainer.Context)
   const { groupId, groups, addGroup, updateGroup, removeGroupData, removeGroup } = useContext(GroupsContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
 
@@ -212,6 +213,11 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     ],
   )
 
+  const handleLinkClick = useCallback(
+    (name: string) => name === 'Groups' ? toggleGroupsOpened : refreshPage,
+    [refreshPage, toggleGroupsOpened],
+  )
+
   const renderLinkWrapper = (routePath: string, onClick?: () => void) => (props: ListItemProps) => (
     <Link to={routePath} {...props} onClick={onClick} />
   )
@@ -223,8 +229,10 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     <React.Fragment key={routePath}>
       <ListItem
         component={renderLinkWrapper(
-          (name === 'Groups' && location) ? location.pathname : routePath,
-          name === 'Groups' ? toggleGroupsOpened : undefined,
+          (name === 'Groups' && location)
+            ? location.pathname
+            : routePath,
+          handleLinkClick(name),
         )}
         classes={{ button: (location && location.pathname.startsWith(routeFullPath)) ? 'active' : '' }}
         button
