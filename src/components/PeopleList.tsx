@@ -181,10 +181,11 @@ const PeopleList: React.FC<Props> = React.memo(({
   })
   const [checked, setChecked] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [createForm, setCreateForm] = useState({
+  const [createForm, setCreateForm] = useState<{
+    opened: boolean
+    option?: CreateFormOption
+  }>({
     opened: false,
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    option: {} as CreateFormOption<any>,
   })
   const {
     value: addContactToGroupFormOpened,
@@ -276,14 +277,11 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const changeCreateContactFormOpened = useCallback<{
-    <F extends string>(opened: true, option: CreateFormOption<F>): () => void;
+    (opened: true, option: CreateFormOption): () => void;
     (opened: false): () => void;
   }>(
-    <F extends string>(opened: boolean, option?: CreateFormOption<F>) => () => {
-      setCreateForm({
-        opened,
-        option: opened ? option as CreateFormOption<F> : {},
-      })
+    (opened: boolean, option?: CreateFormOption) => () => {
+      setCreateForm({ opened, option: opened ? option : undefined })
     },
     [createForm],
   )
@@ -480,12 +478,33 @@ const PeopleList: React.FC<Props> = React.memo(({
     </>
   )
 
-  const newContactFormOption: CreateFormOption<keyof ContactFields> = {
+  const newContactFormOption: CreateFormOption = {
     title: 'New Contact',
-    fields: ['First name', 'Middle name', 'Last name', 'Gender', 'Email', 'Phone'],
-    enums: {
-      'Gender': ['Male', 'Female'],
-    },
+    fields: [
+      {
+        type: 'combinedText', nameAndLabels: [
+          { name: 'first_name', label: 'First Name', required: true },
+          { name: 'last_name', label: 'Last Name', required: true },
+        ],
+      },
+      { type: 'text', name: 'email', label: 'Email', required: false, },
+      {
+        type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female'], required: false,
+      },
+      { type: 'text', name: 'first_line', label: 'Address Line1', required: false, },
+      { type: 'text', name: 'second_line', label: 'Address Line2', required: false, },
+      {
+        type: 'enumText', name: 'country', label: 'Select Country', options: ['US', 'UK'], required: false,
+      },
+      { type: 'text', name: 'state', label: 'State' , required: false,},
+      { type: 'text', name: 'city', label: 'City' , required: false,},
+      {
+        type: 'combinedText', nameAndLabels: [
+          { name: 'zipcode', label: 'Zip', required: false },
+          { name: 'phone', label: 'Phone', required: false },
+        ],
+      },
+    ],
     okText: 'Create',
   }
 

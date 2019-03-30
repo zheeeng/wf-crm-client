@@ -97,22 +97,24 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [navigate],
   )
 
-  const [groupForm, setGroupForm] = useState({
-    type: '' as FormType,
+  const [groupForm, setGroupForm] = useState<{
+    type: FormType,
+    opened: boolean,
+    option?: CreateFormOption,
+  }>({
+    type: '',
     opened: false,
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    option: {} as CreateFormOption<any>,
   })
 
   const changeGroupFormOpened = useCallback<{
-    <F extends string>(opened: true, type: FormType, option: CreateFormOption<F>): () => void;
+    (opened: true, type: FormType, option: CreateFormOption): () => void;
     (opened: false): () => void;
   }>(
-    <F extends string>(opened: boolean, type?: FormType, option?: CreateFormOption<F>) => () => {
+    (opened: boolean, type?: FormType, option?: CreateFormOption) => () => {
       setGroupForm({
         type: type ? type : '',
         opened,
-        option: opened ? option as CreateFormOption<F> : {},
+        option: opened ? option : undefined,
       })
     },
     [groupForm],
@@ -126,19 +128,29 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [addGroup, changeGroupFormOpened],
   )
 
-  const newGroupFormOption: CreateFormOption<keyof GroupFields> = {
+  const newGroupFormOption: CreateFormOption = {
     title: 'New Group',
-    fields: ['Group name'],
+    fields: [{
+      type: 'text',
+      name: 'name',
+      label: 'Group Name',
+      required: true,
+    }],
     okText: 'Ok',
   }
 
-  const updateGroupFormOption: CreateFormOption<keyof GroupFields> = {
+  const updateGroupFormOption: CreateFormOption = {
     title: 'Update Group',
-    fields: ['Group name'],
+    fields: [{
+      type: 'text',
+      name: 'name',
+      label: 'Group Name',
+      required: true,
+    }],
     okText: 'Ok',
   }
 
-  const removeGroupFormOption: CreateFormOption<keyof GroupFields> = {
+  const removeGroupFormOption: CreateFormOption = {
     title: 'Remove Group',
     tip: 'Are you sure you want to remove the selected group?',
     fields: [],

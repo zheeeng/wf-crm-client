@@ -93,6 +93,8 @@ export interface OtherField extends ContactField {
   title?: string
 }
 
+export type ContactFields = Pick<PeopleAPI, 'first_name' | 'last_name' | 'country' | 'state' | 'city' | 'zipcode' | 'email' | 'phone'>
+
 export type CommonField = NameField | EmailField | PhoneField | AddressField | DateField | OtherField
 
 export interface Contact {
@@ -148,6 +150,10 @@ export interface PeopleAPI {
   middle_name: string | null
   last_name: string | null
   gender: 'Male' | 'Female' | null
+  country: string | null
+  state: string | null
+  city: string | null
+  zipcode: string | null
   dob_day: string | null
   dob_month: string | null
   dob_year: string | null
@@ -165,17 +171,8 @@ export interface PeopleAPI {
   activities: ActivityAPI[] | null,
   notes: NoteAPI[] | null,
 }
-export interface ContactFields {
-  'First name': string
-  'Middle name': string
-  'Last name': string
-  'Gender': 'Male' | 'Female'
-  'Email': string
-  'Phone': string
-}
-export interface GroupFields {
-  'Group name': string
-}
+
+export type GroupFields = Pick<GroupAPI, 'name'>
 
 export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
   const params = {
@@ -193,26 +190,11 @@ export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
   return params
 }
 
-export const contactFieldAdapter = (field: ContactFields): Partial<PeopleAPI> => {
-  const params = {
-    email: field.Email || null,
-    phone: field.Phone || null,
-    first_name: field['First name'] || null,
-    last_name: field['Last name'] || null,
-    middle_name: field['Middle name'] || null,
-    gender: field['Gender'] || null,
-  }
+export const contactFieldAdapter =
+  (fields: ContactFields): Partial<PeopleAPI> => fields
 
-  return params
-}
-
-export const groupFieldAdapter = (field: GroupFields): Partial<GroupAPI> => {
-  const params = {
-    name: field['Group name'] || '',
-  }
-
-  return params
-}
+export const groupFieldAdapter =
+  (fields: GroupFields): Partial<GroupAPI> => fields
 
 const monthTable = [
   'January', 'February', 'March',

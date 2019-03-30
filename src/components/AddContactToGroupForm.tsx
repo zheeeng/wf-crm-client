@@ -97,7 +97,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
     async () => {
       const newName = newGroupName.trim()
       if (newName) {
-        await addGroup({ 'Group name': newGroupName })
+        await addGroup({ name: newGroupName })
         toggleOnGroupsOpened()
       }
       setNewGroupName('')

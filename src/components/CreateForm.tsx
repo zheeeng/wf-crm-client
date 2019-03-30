@@ -29,27 +29,55 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing.unit * 4,
     ...cssTips(theme).horizontallySpaced(),
   },
+  combinedFormRow: {
+    display: 'flex',
+  },
+  formItem: {
+    flex: 1,
+  },
 }))
 
-export interface CreateFormOption<F extends string> {
+export type TextField = {
+  type: 'text'
+  name: string
+  label: string
+  required: boolean
+}
+
+export type CombinedTextField = {
+  type: 'combinedText'
+  nameAndLabels: Array<{
+    name: string
+    label: string
+    required: boolean
+  }>
+}
+
+export type EnumTextField = {
+  type: 'enumText'
+  name: string
+  label: string
+  options: string[]
+  required: boolean
+}
+
+export interface CreateFormOption {
   title?: string,
   tip?: string,
-  fields?: F[],
-  enums?: {
-    [key in F]?: string[]
-  },
+  fields: Array<TextField | CombinedTextField | EnumTextField>,
   okText?: string,
   cancelText?: string
 }
 
-export interface Props<F extends string> {
+export interface Props {
   open: boolean
   onClose?: React.ReactEventHandler<{}>
   onOk?: (o: object) => Promise<any>
-  option?: CreateFormOption<F>
+  option?: CreateFormOption
 }
 
-const CreateForm: React.FC<Props<any>> = React.memo(({ option, open, onClose, onOk }) => {
+
+const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk }) => {
   const classes = useStyles({})
 
   const fieldValues = useRef<{ [key: string]: string }>({})
@@ -79,7 +107,7 @@ const CreateForm: React.FC<Props<any>> = React.memo(({ option, open, onClose, on
     [onOk],
   )
 
-  const { title = 'title', tip = '', fields = [], enums = {}, okText = 'Ok', cancelText = 'cancel' } = option || {}
+  const { title = 'title', tip = '', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
 
   return (
     <Modal
@@ -95,23 +123,36 @@ const CreateForm: React.FC<Props<any>> = React.memo(({ option, open, onClose, on
             {tip}
           </Typography>)
         }
-        {fields.map(field => field in enums
+        {fields.map(field => field.type == 'text'
           ? (
             <BasicFormInput
-              key={field}
-              placeholder={field}
-              onChange={handleCreateInfoChange(field)}
+              key={field.name}
+              placeholder={field.label}
+              onChange={handleCreateInfoChange(field.name)}
               onEnterPress={handleEnterSubmit}
             />
           )
+          : field.type == 'combinedText'
+          ? (
+            <div className={classes.combinedFormRow}>
+              {field.nameAndLabels.map(({ name, label }) => (
+                <BasicFormInput
+                  className={classes.formItem }
+                  key={name}
+                  placeholder={label}
+                  onChange={handleCreateInfoChange(name)}
+                  onEnterPress={handleEnterSubmit}
+                />
+              ))}
+            </div>
+          )
           : (
-            null
-            // <BasicFormInputSelect
-            //   key={field}
-            //   options={(enums[field] as string[])}
-            //   placeholder={field}
-            //   onChange={handleCreateInfoChange(field)}
-            // />
+            <BasicFormInputSelect
+              key={field.name}
+              options={field.options.map(option => ({ label: option, value: option }))}
+              placeholder={field.label}
+              onChange={handleCreateInfoChange(field.name)}
+            />
           )
         )}
         <div className={classes.buttonZone}>
