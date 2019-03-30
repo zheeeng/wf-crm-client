@@ -39,7 +39,7 @@
     "react-app-rewired": "^2.1.1",
     "react-scripts": "^2.1.8",
     "tslint": "^5.12.1",
-    "typescript": "^3.3.4000"
+    "typescript": "^3.4.1"
   },
   "proxy": "https://crm-api-dev.waiverforeverk8s.com/",
   "browserslist": [
