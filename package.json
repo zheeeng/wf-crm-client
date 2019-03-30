@@ -15,6 +15,7 @@
     "@types/ramda": "^0.26.5",
     "@types/react": "^16.8.10",
     "@types/react-dom": "^16.8.3",
+    "@types/react-select": "^2.0.15",
     "classnames": "^2.2.6",
     "constate": "^1.0.0",
     "core-js": "^3.0.0",
@@ -23,6 +24,7 @@
     "ramda": "^0.26.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-select": "^2.4.2",
     "react-sortable-hoc": "^1.8.3"
   },
   "scripts": {

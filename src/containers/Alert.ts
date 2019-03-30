@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import createContainer from 'constate'
 
-const defaultDismissTimeout = 4000
+const defaultDismissTimeout = 5000
 
 const initialMessage: {
   expand: boolean,

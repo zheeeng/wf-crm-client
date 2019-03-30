@@ -30,6 +30,8 @@ import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
 import { GroupFields } from '~src/types/Contact'
 import * as vars from '~src/theme/vars'
+
+import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -80,7 +82,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   useEffect(
     () => {
-      removeGroupData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Removed</>)
+      removeGroupData && success(<><CheckCircle /> Contacts Removed</>)
     },
     [removeGroupData],
   )

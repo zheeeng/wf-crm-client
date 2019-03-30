@@ -220,7 +220,7 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
               : classes.failAlert,
           )}
           onClick={dismiss}
-          onTransitionEnd={reset}
+          // onTransitionEnd={reset}
         >
           {message.content}
         </Typography>

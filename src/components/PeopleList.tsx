@@ -32,6 +32,7 @@ import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
 import countries from '~src/meta/countries.json'
 
+import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -143,7 +144,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactError && fail(addContactError.message)
-      addContactData && success(<><Icon name={ICONS.CheckCircle} /> Contact Created</>)
+      addContactData && success(<><CheckCircle /> Contact Created</>)
     },
     [addContactError, addContactData],
   )
@@ -163,14 +164,14 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       addContactToGroupError && fail('Add contacts failed')
-      addContactToGroupData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Added</>)
+      addContactToGroupData && success(<><CheckCircle /> Contacts Added</>)
     },
     [addContactToGroupError, addContactToGroupData],
   )
   useEffect(
     () => {
       mergeContactsError && fail('Merge contacts failed')
-      mergeContactsData && success(<><Icon name={ICONS.CheckCircle} /> Contacts Merged</>)
+      mergeContactsData && success(<><CheckCircle /> Contacts Merged</>)
     },
     [mergeContactsError, mergeContactsData],
   )

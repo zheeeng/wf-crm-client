@@ -32,6 +32,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing.unit,
   },
   input: {
+    display: 'flex',
     padding: 0,
     fontWeight: 500,
     marginTop: theme.spacing.unit / 2,
@@ -47,6 +48,7 @@ export interface Props {
   className?: string,
   style?: React.CSSProperties,
   value?: string,
+  error?: boolean,
   onChange?: React.ChangeEventHandler<HTMLElement>,
   onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
   placeholder?: string,
@@ -57,7 +59,7 @@ export interface Props {
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', noLabel, className, style, value, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
+  placeholder = '', noLabel, className, style, value, error, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
 }) => {
   const classes = useStyles({})
 
@@ -72,6 +74,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 
   return (
     <TextField
+      error={error}
       style={style}
       classes={TextFieldClasses}
       className={classnames(classes.inputWrapper, className)}
