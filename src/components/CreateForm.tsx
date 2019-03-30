@@ -33,7 +33,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
   },
   formItem: {
-    flex: 1,
+    marginRight: theme.spacing.unit,
+    ...{
+      '&:last-child': {
+        marginRight: 0,
+      },
+    },
   },
 }))
 
@@ -46,10 +51,12 @@ export type TextField = {
 
 export type CombinedTextField = {
   type: 'combinedText'
+  keyName: string,
   nameAndLabels: Array<{
     name: string
     label: string
     required: boolean
+    span: number
   }>
 }
 
@@ -134,14 +141,18 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk })
           )
           : field.type == 'combinedText'
           ? (
-            <div className={classes.combinedFormRow}>
-              {field.nameAndLabels.map(({ name, label }) => (
+            <div
+              key={field.keyName}
+              className={classes.combinedFormRow}
+            >
+              {field.nameAndLabels.map(({ name, label, span }) => (
                 <BasicFormInput
                   className={classes.formItem }
                   key={name}
                   placeholder={label}
                   onChange={handleCreateInfoChange(name)}
                   onEnterPress={handleEnterSubmit}
+                  style={{ flex: span }}
                 />
               ))}
             </div>

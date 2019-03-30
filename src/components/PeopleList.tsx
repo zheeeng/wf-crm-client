@@ -30,6 +30,7 @@ import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
+import countries from '~src/meta/countries.json'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
@@ -482,9 +483,9 @@ const PeopleList: React.FC<Props> = React.memo(({
     title: 'New Contact',
     fields: [
       {
-        type: 'combinedText', nameAndLabels: [
-          { name: 'first_name', label: 'First Name', required: true },
-          { name: 'last_name', label: 'Last Name', required: true },
+        type: 'combinedText', keyName: 'name', nameAndLabels: [
+          { name: 'first_name', label: 'First Name', span: 1, required: true },
+          { name: 'last_name', label: 'Last Name', span: 1, required: true },
         ],
       },
       { type: 'text', name: 'email', label: 'Email', required: false, },
@@ -494,14 +495,14 @@ const PeopleList: React.FC<Props> = React.memo(({
       { type: 'text', name: 'first_line', label: 'Address Line1', required: false, },
       { type: 'text', name: 'second_line', label: 'Address Line2', required: false, },
       {
-        type: 'enumText', name: 'country', label: 'Select Country', options: ['US', 'UK'], required: false,
+        type: 'enumText', name: 'country', label: 'Select Country', options: countries, required: false,
       },
-      { type: 'text', name: 'state', label: 'State' , required: false,},
-      { type: 'text', name: 'city', label: 'City' , required: false,},
+      { type: 'text', name: 'state', label: 'State', required: false,},
+      { type: 'text', name: 'city', label: 'City', required: false,},
       {
-        type: 'combinedText', nameAndLabels: [
-          { name: 'zipcode', label: 'Zip', required: false },
-          { name: 'phone', label: 'Phone', required: false },
+        type: 'combinedText', keyName: 'communication', nameAndLabels: [
+          { name: 'zipcode', label: 'Zip', span: 1, required: false },
+          { name: 'phone', label: 'Phone', span: 2, required: false },
         ],
       },
     ],
@@ -511,27 +512,27 @@ const PeopleList: React.FC<Props> = React.memo(({
   return (
     <DisplayPaper>
       <ContactTableThemeProvider>
-        <CreateForm
+        {createForm.opened && <CreateForm
           option={createForm.option}
           open={createForm.opened}
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
-        />
-        <MergeContactsForm
+        />}
+        {mergeContactsOpened && <MergeContactsForm
           open={mergeContactsOpened}
           onClose={toggleOffMergeContactsOpened}
           onOk={handleMergeContacts}
-        />
-        <ExportContactsForm
+        />}
+        {exportContactsOpened && <ExportContactsForm
           open={exportContactsOpened}
           onClose={toggleOffExportContactsOpened}
           contactIds={checked}
-        />
-        <AddContactToGroupForm
+        />}
+        {addContactToGroupFormOpened && <AddContactToGroupForm
           open={addContactToGroupFormOpened}
           onClose={toggleOffAddContactToGroupFormOpened}
           onOk={handleAddContactToGroup}
-        />
+        />}
         <div className={classes.head}>
           <Button
             variant="outlined"

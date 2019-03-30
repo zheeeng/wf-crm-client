@@ -1,29 +1,17 @@
-import React, { useCallback } from 'react'
-import { Theme } from '@material-ui/core/styles'
-import { makeStyles } from '@material-ui/styles'
+import React, { useCallback, useState } from 'react'
+import classnames from 'classnames'
 import { ClassNameMap } from '@material-ui/core/styles/withStyles'
 import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'
 import { TextFieldClassKey } from '@material-ui/core/TextField/TextField'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
-
-const useStyles = makeStyles((theme: Theme) => ({
-  input: {
-    border: '1px solid rgba(163, 174, 173, 0.5)',
-    height: theme.spacing.unit * 4,
-    lineHeight: `${theme.spacing.unit * 4}px`,
-    borderRadius: 2,
-    padding: theme.spacing.unit,
-    margin: 0,
-    marginTop: theme.spacing.unit * 2,
-  },
-}))
+import { useStyles } from './BasicFormInput'
 
 export interface Props {
+  className?: string,
   value?: string,
   options: Array<{ label: string, value: string }>,
   onChange?: React.ChangeEventHandler<HTMLInputElement>,
-  onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
   placeholder?: string,
   fullWidth?: boolean,
   InputClasses?: Partial<ClassNameMap<FilledInputClassKey>>
@@ -31,34 +19,48 @@ export interface Props {
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', value = '', onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses, options,
+  placeholder = '', className, value = '', onChange, fullWidth = true, InputClasses, TextFieldClasses, options,
 }) => {
   const classes = useStyles({})
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!onEnterPress) return
+  const [selected, setSelected] = useState(value)
 
-      event.keyCode === 13 && onEnterPress(event)
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSelected(e.target.value)
+      onChange && onChange(e)
     },
-    [onEnterPress],
+    [onchange]
   )
 
   return (
     <TextField
       select
       classes={TextFieldClasses}
-      className={classes.input}
-      label={null}
+      className={classnames(classes.inputWrapper, className)}
+      label={placeholder}
       placeholder={placeholder}
-      value={value}
-      onChange={onChange}
+      value={selected}
+      onChange={handleChange}
       margin="normal"
       fullWidth={fullWidth}
       InputProps={{
-        onKeyDown: handleKeyDown,
         disableUnderline: true,
-        classes: InputClasses,
+        classes: {
+          ...InputClasses,
+          root: classnames(
+            classes.text,
+            classes.root,
+            InputClasses && InputClasses.root,
+          ),
+          input: classes.input,
+        },
+      }}
+      InputLabelProps={{
+        classes: {
+          formControl: classes.formLabel,
+          shrink: classes.shrink,
+        },
       }}
     >
       {options.map(option => (

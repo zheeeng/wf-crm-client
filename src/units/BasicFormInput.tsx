@@ -7,36 +7,47 @@ import { FilledInputClassKey } from '@material-ui/core/FilledInput/FilledInput'
 import { TextFieldClassKey } from '@material-ui/core/TextField/TextField'
 import TextField from '@material-ui/core/TextField'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   text: {
     color: theme.palette.text.secondary,
   },
-  input: {
+  root: {
+    '&&': {
+      marginTop: theme.spacing.unit * 1.5,
+    }
+  },
+  inputWrapper: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
-    height: theme.spacing.unit * 4,
-    lineHeight: `${theme.spacing.unit * 4}px`,
     borderRadius: 2,
-    padding: theme.spacing.unit,
-    margin: 0,
-    marginTop: theme.spacing.unit * 2,
-    overflow: 'hidden',
+    padding: `0 ${theme.spacing.unit}px`,
+  },
+  formItem: {
+    padding: theme.spacing.unit / 2,
   },
   formLabel: {
     fontSize: 14,
+    paddingTop: theme.spacing.unit / 2,
     color: theme.palette.grey.A400,
-    transform: 'translate(0, 8px) scale(1)',
+    transform: `translate(0, ${theme.spacing.unit}px) scale(1)`,
     paddingLeft: theme.spacing.unit,
   },
+  input: {
+    padding: 0,
+    fontWeight: 600,
+    marginTop: theme.spacing.unit / 2,
+    marginBottom: theme.spacing.unit / 2,
+  },
   shrink: {
-    fontSize: 6,
-    transform: 'translate(0, 4px) scale(1)',
+    fontSize: 8,
+    transform: `translate(0, 0) scale(1)`,
   },
 }))
 
 export interface Props {
   className?: string,
+  style?: React.CSSProperties,
   value?: string,
-  onChange?: React.ChangeEventHandler<HTMLInputElement>,
+  onChange?: React.ChangeEventHandler<HTMLElement>,
   onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
   placeholder?: string,
   noLabel?: boolean,
@@ -46,7 +57,7 @@ export interface Props {
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', noLabel, className, value, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
+  placeholder = '', noLabel, className, style, value, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
 }) => {
   const classes = useStyles({})
 
@@ -61,11 +72,12 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 
   return (
     <TextField
+      style={style}
       classes={TextFieldClasses}
-      className={classnames(classes.input, className)}
+      className={classnames(classes.inputWrapper, className)}
       label={noLabel ? undefined : placeholder}
       placeholder={noLabel ? placeholder : undefined}
-      value={value}
+      defaultValue={value}
       onChange={onChange}
       margin="normal"
       fullWidth={fullWidth}
@@ -74,7 +86,12 @@ const BasicFormInput: React.FC<Props> = React.memo(({
         disableUnderline: true,
         classes: {
           ...InputClasses,
-          root: classnames(classes.text, InputClasses && InputClasses.root),
+          root: classnames(
+            classes.text,
+            classes.root,
+            InputClasses && InputClasses.root,
+          ),
+          input: classes.input,
         },
       }}
       InputLabelProps={{

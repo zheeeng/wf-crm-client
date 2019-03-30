@@ -299,7 +299,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   return (
     <>
-      <CreateForm
+      {groupForm.opened && (
+        <CreateForm
         option={groupForm.option}
         open={groupForm.opened}
         onClose={changeGroupFormOpened(false)}
@@ -312,7 +313,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
                 ? handleRemoveGroup
                 : undefined
           }
-      />
+        />
+      )}
       <Hidden mdDown>
         <Portal container={$mountElRef.current}>
           {renderDrawer(false)}
