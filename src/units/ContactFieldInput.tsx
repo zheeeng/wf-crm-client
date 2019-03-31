@@ -13,12 +13,17 @@ import SvgIcon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   hidden: {
-    display: 'none',
+    '&&': {
+      display: 'none',
+    },
   },
   disabled: {
-    'cursor': 'not-allowed',
-    '& *': {
-      cursor: 'not-allowed',
+    cursor: 'not-allowed',
+    opacity: 0.3,
+    ...{
+      '& *': {
+        cursor: 'not-allowed',
+      },
     },
   },
   fieldBar: {
@@ -175,6 +180,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     async (id: string) => {
       if (!id) return
       const removedId = await onDeleteField(name, id)
+
       if (removedId) updateLocalFieldValues(values => values.filter(v => v.id !== removedId))
     },
     [onDeleteField, name],
@@ -302,7 +308,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                           defaultValue={segmentValue.value}
                           onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
                           onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
-                          disabled={fieldValue.priority === 0 || fieldValue.waiver}
+                          disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                         />
                       ))
                     }
