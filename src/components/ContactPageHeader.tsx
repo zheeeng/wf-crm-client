@@ -48,7 +48,7 @@ const ContactPageHeader: React.FC<Props> = React.memo(
             className={classes.navIcon}
             size="lg"
           />
-          <Icon name={ICONS.ArrowDown}
+          <Icon name={ICONS.ArrowUp}
             onClick={onGoPrevious}
             color={disableGoPrevious ? 'disabled' : "hoverLighten"}
             className={classes.navIcon}
