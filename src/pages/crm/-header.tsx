@@ -23,6 +23,7 @@ import AccountContainer from '~src/containers/Account'
 import AlertContainer from '~src/containers/Alert'
 
 import MenuIcon from '@material-ui/icons/Menu'
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   logo: {
@@ -119,26 +120,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends ComponentProps {}
 
-const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
+const Header: React.FC<Props> = React.memo(() => {
   const classes = useStyles({})
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
-  const { message, dismiss, reset } = useContext(AlertContainer.Context)
+  const { message, dismiss } = useContext(AlertContainer.Context)
   const { authored, login, logout } = useContext(AccountContainer.Context)
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const [ anchorEl, setAnchorEl ] = useState<HTMLElement | null>(null)
+  const [ openAccount, setOpenAccount ] = useState(false)
 
   const handleMenuToggle = useCallback(
-    (forOpen: boolean) => (event: React.MouseEvent<HTMLDivElement>) => {
-      setAnchorEl(forOpen ? event.currentTarget : null)
+    (forOpen: boolean) => (event: React.MouseEvent<HTMLElement>) => {
+      if (forOpen) {
+        setOpenAccount(true)
+        !anchorEl && setAnchorEl(event.currentTarget)
+      } else {
+        setOpenAccount(false)
+      }
     },
-    [anchorEl],
+    [anchorEl, openAccount],
   )
   const handleLogin = useCallback(
     () => {
       authored ? logout() : login('a', '0cc175b9c0f1b6a831c399e269772661')
-      setAnchorEl(null)
+      setOpenAccount(false)
     },
-    [authored],
+    [authored, openAccount],
   )
 
   useEffect(
@@ -147,8 +154,6 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
     },
     []
   )
-
-  const headers = locationInfo.list().map(({ name, routePath, routeFullPath }) => ({ name, routePath, routeFullPath }))
 
   return (
     <Portal container={mountElRef.current}>
@@ -186,7 +191,9 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
               </div>
             </nav>
             <div>
-              <Button onClick={handleMenuToggle(true)}>
+              <Button
+                onMouseEnter={handleMenuToggle(true)}
+              >
                 <Typography className={classes.profileItem}>Open</Typography>
               </Button>
               <Menu
@@ -199,12 +206,35 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={!!anchorEl}
+                open={openAccount}
                 onClose={handleMenuToggle(false)}
+                MenuListProps={{
+                  onMouseLeave: handleMenuToggle(false),
+                }}
               >
-                <MenuItem onClick={handleMenuToggle(false)}>Profile</MenuItem>
+                <MenuItem>
+                  Profile
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  Help Center
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  Archives
+                </MenuItem>
+                <MenuItem>
+                  Account Settings
+                </MenuItem>
+                <MenuItem>
+                  Plan & Billing
+                </MenuItem>
+                <MenuItem>
+                  Referral & Rewards
+                </MenuItem>
+                <Divider />
                 <MenuItem onClick={handleLogin}>
-                  {authored ? 'My account' : 'Log in'}
+                  Sign out
                 </MenuItem>
               </Menu>
             </div>
@@ -220,7 +250,6 @@ const Header: React.FC<Props> = React.memo(({ locationInfo, location }) => {
               : classes.failAlert,
           )}
           onClick={dismiss}
-          // onTransitionEnd={reset}
         >
           {message.content}
         </Typography>
