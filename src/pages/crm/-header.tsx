@@ -217,24 +217,55 @@ const Header: React.FC<Props> = React.memo(() => {
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                  Help Center
+                  <a className={classes.link} target="_blank"
+                    href="https://help.waiverforever.com/"
+                  >
+                    Help Center
+                  </a>
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                  Archives
+                  <a className={classes.link} target="_self"
+                    href="/archive"
+                  >
+                    Archives
+                  </a>
                 </MenuItem>
                 <MenuItem>
-                  Account Settings
+                  <a className={classes.link} target="_self"
+                    href="/settings/general"
+                  >
+                    Account Settings
+                  </a>
                 </MenuItem>
                 <MenuItem>
-                  Plan & Billing
+                  <a className={classes.link} target="_self"
+                    href="/devices"
+                  >
+                    Paired Devices
+                  </a>
                 </MenuItem>
                 <MenuItem>
-                  Referral & Rewards
+                  <a className={classes.link} target="_self"
+                      href="/plan_and_billing"
+                    >
+                    Plan & Billing
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a className={classes.link} target="_self"
+                      href="/plan_and_billing/referrals"
+                    >
+                    Referral & Rewards
+                  </a>
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleLogin}>
-                  Sign out
+                  <a className={classes.link} target="_self"
+                      href="/auth/signout"
+                    >
+                    Sign out
+                  </a>
                 </MenuItem>
               </Menu>
             </div>
