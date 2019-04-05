@@ -95,19 +95,19 @@ export interface Props {
 const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, discardText }) => {
   const classes = useStyles({})
 
-  const [cancelationConfirmModalOpen, setCancelationConfirmModalOpen] = useState(false)
+  const [cancellationConfirmModalOpen, setCancellationConfirmModalOpen] = useState(false)
 
-  const openCancelationModal = useCallback(
+  const openCancellationModal = useCallback(
     () => {
-      setCancelationConfirmModalOpen(true)
+      setCancellationConfirmModalOpen(true)
     },
-    [setCancelationConfirmModalOpen]
+    [setCancellationConfirmModalOpen]
   )
-  const closeCancelationModal = useCallback(
+  const closeCancellationModal = useCallback(
     () => {
-      setCancelationConfirmModalOpen(false)
+      setCancellationConfirmModalOpen(false)
     },
-    [setCancelationConfirmModalOpen]
+    [setCancellationConfirmModalOpen]
   )
 
   const [toFillFields, setToFillFields] = useState<string[]>([])
@@ -131,12 +131,12 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     (e: React.MouseEvent<HTMLDivElement>) => {
 
       if (Object.keys(fieldValues.current).length > 0) {
-        openCancelationModal()
+        openCancellationModal()
       } else {
         onClose && onClose(e)
       }
     },
-    [onClose, openCancelationModal]
+    [onClose, openCancellationModal]
   )
 
   const requiredFieldNames = useMemo(
@@ -187,12 +187,12 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     <>
       {discardText && (
         <Modal
-          open={cancelationConfirmModalOpen}
+          open={cancellationConfirmModalOpen}
         >
           <div className={classnames(classes.paper, classes.paper2)}>
             {discardText}
             <div className={classes.buttonZone}>
-              <Button onClick={closeCancelationModal}>Continue Edit</Button>
+              <Button onClick={closeCancellationModal}>Continue Edit</Button>
               <Button color="primary" onClick={onClose}>Discard</Button>
             </div>
           </div>
