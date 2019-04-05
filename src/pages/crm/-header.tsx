@@ -116,6 +116,97 @@ const useStyles = makeStyles((theme: Theme) => ({
   profileItem: {
     color: 'white',
   },
+  menuOffset: {
+    top: theme.spacing.unit * 4,
+  },
+  menuList: {
+    cursor: 'default',
+    backgroundColor: '#f9f9f9',
+    minWidth: 160,
+    boxShadow: '0 8px 16px 0 rgba(0,0,0,.2)',
+    padding: '5px 0',
+    borderRadius: 4,
+    marginTop: 0,
+    width: 200,
+    ...{
+      '&:after': {
+        content: '""',
+        position: 'absolute',
+        right: 6,
+        top: -8,
+        width: 0,
+        height: 0,
+        borderLeft: '20px solid transparent',
+        borderRight: '20px solid transparent',
+        borderBottom: '20px solid #f9f9f9',
+      },
+    },
+  },
+  menuPaper: {
+    overflow: 'visible',
+  },
+  menuDivider: {
+    margin: '6px 20px',
+    borderTop: '1px solid #d8dee8',
+  },
+  menuItem: {
+    fontSize: 14,
+    color: '#637694',
+    padding: '6px 20px',
+    wordWrap: 'break-word',
+    lineHeight: theme.spacing.unit * 2.5,
+    ...{
+      '&:hover': {
+        color: theme.palette.primary.main,
+        backgroundColor: 'unset',
+      },
+      '&:hover $menuIconArchive': {
+        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-archives-icon-hover.svg\')',
+      },
+      '&:hover $menuIconSettings': {
+        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-settings-icon-hover.svg\')',
+      },
+      '&:hover $menuIconPairedDevices': {
+        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-paired-devices-icon-hover.svg\')',
+      },
+      '&:hover $menuIconPlanAndBilling': {
+        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-plan-and-billing-icon-hover.svg\')',
+      },
+      '&:hover $menuIconReferAndReward': {
+        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-refer-and-reward-icon-hover.svg\')',
+      },
+      '&:hover $menuIconSignout': {
+        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-signout-icon-hover.svg\')',
+      },
+    },
+  },
+  menuIcon: {
+    position: 'relative',
+    display: 'inline-block',
+    height: 20,
+    width: 30,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center left',
+    verticalAlign: 'middle',
+  },
+  menuIconArchive: {
+    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-archives-icon.svg\')',
+  },
+  menuIconSettings: {
+    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-settings-icon.svg\')',
+  },
+  menuIconPairedDevices: {
+    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-paired-devices-icon.svg\')',
+  },
+  menuIconPlanAndBilling: {
+    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-plan-and-billing-icon.svg\')',
+  },
+  menuIconReferAndReward: {
+    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-refer-and-reward-icon.svg\')',
+  },
+  menuIconSignout: {
+    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-signout-icon.svg\')',
+  },
 }))
 
 export interface Props extends ComponentProps {}
@@ -197,73 +288,60 @@ const Header: React.FC<Props> = React.memo(() => {
                 <Typography className={classes.profileItem}>Open</Typography>
               </Button>
               <Menu
+                className={classes.menuOffset}
                 anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
                 open={openAccount}
                 onClose={handleMenuToggle(false)}
                 MenuListProps={{
-                  onMouseLeave: handleMenuToggle(false),
+                  // onMouseLeave: handleMenuToggle(false),
+                  className: classes.menuList,
+                }}
+                classes={{
+                  paper: classes.menuPaper,
                 }}
               >
-                <MenuItem>
+                <MenuItem className={classes.menuItem}>
                   Profile
                 </MenuItem>
-                <Divider />
-                <MenuItem>
-                  <a className={classes.link} target="_blank"
-                    href="https://help.waiverforever.com/"
-                  >
-                    Help Center
-                  </a>
+                <Divider className={classes.menuDivider}/>
+                <MenuItem className={classes.menuItem}>
+                  <a className={classes.link} target="_blank" href="https://help.waiverforever.com/"> Help Center</a>
                 </MenuItem>
-                <Divider />
-                <MenuItem>
-                  <a className={classes.link} target="_self"
-                    href="/archive"
-                  >
+                <Divider className={classes.menuDivider}/>
+                <MenuItem className={classes.menuItem}>
+                  <a className={classes.link} target="_self" href="/archive">
+                    <i className={classnames(classes.menuIcon, classes.menuIconArchive)} />
                     Archives
                   </a>
                 </MenuItem>
-                <MenuItem>
-                  <a className={classes.link} target="_self"
-                    href="/settings/general"
-                  >
+                <MenuItem className={classes.menuItem}>
+                  <a className={classes.link} target="_self" href="/settings/general">
+                    <i className={classnames(classes.menuIcon, classes.menuIconSettings)} />
                     Account Settings
                   </a>
                 </MenuItem>
-                <MenuItem>
-                  <a className={classes.link} target="_self"
-                    href="/devices"
-                  >
+                <MenuItem className={classes.menuItem}>
+                  <a className={classes.link} target="_self" href="/devices">
+                    <i className={classnames(classes.menuIcon, classes.menuIconPairedDevices)} />
                     Paired Devices
                   </a>
                 </MenuItem>
-                <MenuItem>
-                  <a className={classes.link} target="_self"
-                      href="/plan_and_billing"
-                    >
+                <MenuItem className={classes.menuItem}>
+                  <a className={classes.link} target="_self" href="/plan_and_billing">
+                    <i className={classnames(classes.menuIcon, classes.menuIconPlanAndBilling)} />
                     Plan & Billing
                   </a>
                 </MenuItem>
-                <MenuItem>
-                  <a className={classes.link} target="_self"
-                      href="/plan_and_billing/referrals"
-                    >
+                <MenuItem className={classes.menuItem}>
+                  <a className={classes.link} target="_self" href="/plan_and_billing/referrals">
+                    <i className={classnames(classes.menuIcon, classes.menuIconReferAndReward)} />
                     Referral & Rewards
                   </a>
                 </MenuItem>
-                <Divider />
-                <MenuItem onClick={handleLogin}>
-                  <a className={classes.link} target="_self"
-                      href="/auth/signout"
-                    >
+                <Divider className={classes.menuDivider}/>
+                <MenuItem className={classes.menuItem} onClick={handleLogin}>
+                  <a className={classes.link} target="_self" href="/auth/signout">
+                    <i className={classnames(classes.menuIcon, classes.menuIconSignout)} />
                     Sign out
                   </a>
                 </MenuItem>
