@@ -131,6 +131,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...{
       '&:after': {
         content: '""',
+        zIndex: -1,
         position: 'absolute',
         right: 6,
         top: -8,
