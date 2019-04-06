@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
+import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
@@ -11,10 +12,6 @@ import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
     width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
@@ -186,74 +183,77 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
   return (
     <>
       {discardText && (
-        <Modal
+        <Dialog
           open={cancellationConfirmModalOpen}
+          PaperProps={{
+            className: classnames(classes.paper, classes.paper2),
+          }}
         >
-          <div className={classnames(classes.paper, classes.paper2)}>
-            {discardText}
-            <div className={classes.buttonZone}>
-              <Button onClick={closeCancellationModal}>Continue Edit</Button>
-              <Button color="primary" onClick={onClose}>Discard</Button>
-            </div>
+          {discardText}
+          <div className={classes.buttonZone}>
+            <Button onClick={closeCancellationModal}>Continue Edit</Button>
+            <Button color="primary" onClick={onClose}>Discard</Button>
           </div>
-        </Modal>
+        </Dialog>
       )}
-      <Modal
+      <Dialog
         open={open}
         onClose={handleClose}
+        PaperProps={{
+          className: classes.paper,
+        }}
+        scroll="body"
       >
-        <div className={classes.paper}>
-          <Typography variant="h6" align="center" color="textSecondary">
-            {title}
-          </Typography>
-          {tip && (
-            <Typography variant="body2" align="center" color="textSecondary" className={classes.tipText}>
-              {tip}
-            </Typography>)
-          }
-          {fields.map(field => field.type == 'text'
-            ? (
-              <BasicFormInput
-                error={toFillFields.includes(field.name)}
-                key={field.name}
-                placeholder={field.label}
-                onChange={handleCreateInfoChange(field.name)}
-              />
-            )
-            : field.type == 'combinedText'
-            ? (
-              <div
-                key={field.keyName}
-                className={classes.combinedFormRow}
-              >
-                {field.nameAndLabels.map(({ name, label, span }) => (
-                  <BasicFormInput
-                    error={toFillFields.includes(name)}
-                    className={classes.formItem }
-                    key={name}
-                    placeholder={label}
-                    onChange={handleCreateInfoChange(name)}
-                    style={{ flex: span }}
-                  />
-                ))}
-              </div>
-            )
-            : (
-              <BasicFormInputSelect
-                error={toFillFields.includes(field.name)}
-                key={field.name}
-                options={field.options.map(option => ({ label: option, value: option }))}
-                placeholder={field.label}
-                onChange={handleCreateInfoChange2(field.name)}
-              />
-            )
-          )}
-          <div className={classes.buttonZone}>
-            <Button onClick={onClose}>{cancelText}</Button>
-            <Button color="primary" onClick={handleOkClick}>{okText}</Button>
-          </div>
+        <Typography variant="h6" align="center" color="textSecondary">
+          {title}
+        </Typography>
+        {tip && (
+          <Typography variant="body2" align="center" color="textSecondary" className={classes.tipText}>
+            {tip}
+          </Typography>)
+        }
+        {fields.map(field => field.type == 'text'
+          ? (
+            <BasicFormInput
+              error={toFillFields.includes(field.name)}
+              key={field.name}
+              placeholder={field.label}
+              onChange={handleCreateInfoChange(field.name)}
+            />
+          )
+          : field.type == 'combinedText'
+          ? (
+            <div
+              key={field.keyName}
+              className={classes.combinedFormRow}
+            >
+              {field.nameAndLabels.map(({ name, label, span }) => (
+                <BasicFormInput
+                  error={toFillFields.includes(name)}
+                  className={classes.formItem }
+                  key={name}
+                  placeholder={label}
+                  onChange={handleCreateInfoChange(name)}
+                  style={{ flex: span }}
+                />
+              ))}
+            </div>
+          )
+          : (
+            <BasicFormInputSelect
+              error={toFillFields.includes(field.name)}
+              key={field.name}
+              options={field.options.map(option => ({ label: option, value: option }))}
+              placeholder={field.label}
+              onChange={handleCreateInfoChange2(field.name)}
+            />
+          )
+        )}
+        <div className={classes.buttonZone}>
+          <Button onClick={onClose}>{cancelText}</Button>
+          <Button color="primary" onClick={handleOkClick}>{okText}</Button>
         </div>
-      </Modal>
+      </Dialog>
     </>
   )
 })
