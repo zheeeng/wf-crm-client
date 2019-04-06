@@ -237,7 +237,7 @@ const backupAddressField =
 const otherFieldMap = ({ id, content, title, priority, waiver }: OtherField): FieldValue =>
   ({
     values: [
-      { key: 'content', value: content || '', fieldType: 'other' },
+      { key: 'other', value: content || '', fieldType: 'other' },
       { key: 'title', value: title || '', fieldType: 'other' },
     ],
     id,
