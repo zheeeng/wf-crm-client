@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import Select from 'react-select'
+import Select, { createFilter } from 'react-select'
 import classnames from 'classnames'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
@@ -208,6 +208,13 @@ const components = {
   IndicatorsContainer,
 }
 
+const filterOption = createFilter({
+  ignoreCase: true,
+  ignoreAccents: true,
+  trim: true,
+  matchFrom: 'start',
+})
+
 const BasicFormInput: React.FC<Props> = React.memo(({
   placeholder = '', className, value = '', error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options,
 }) => {
@@ -238,6 +245,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
         placeholder,
         error,
       }}
+      filterOption={filterOption}
     />
   )
 })

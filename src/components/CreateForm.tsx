@@ -212,43 +212,45 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
             {tip}
           </Typography>)
         }
-        {fields.map(field => field.type == 'text'
-          ? (
-            <BasicFormInput
-              error={toFillFields.includes(field.name)}
-              key={field.name}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange(field.name)}
-            />
-          )
-          : field.type == 'combinedText'
-          ? (
-            <div
-              key={field.keyName}
-              className={classes.combinedFormRow}
-            >
-              {field.nameAndLabels.map(({ name, label, span }) => (
-                <BasicFormInput
-                  error={toFillFields.includes(name)}
-                  className={classes.formItem }
-                  key={name}
-                  placeholder={label}
-                  onChange={handleCreateInfoChange(name)}
-                  style={{ flex: span }}
-                />
-              ))}
-            </div>
-          )
-          : (
-            <BasicFormInputSelect
-              error={toFillFields.includes(field.name)}
-              key={field.name}
-              options={field.options.map(option => ({ label: option, value: option }))}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange2(field.name)}
-            />
-          )
-        )}
+        <form autoComplete="off">
+          {fields.map(field => field.type == 'text'
+            ? (
+              <BasicFormInput
+                error={toFillFields.includes(field.name)}
+                key={field.name}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange(field.name)}
+              />
+            )
+            : field.type == 'combinedText'
+            ? (
+              <div
+                key={field.keyName}
+                className={classes.combinedFormRow}
+              >
+                {field.nameAndLabels.map(({ name, label, span }) => (
+                  <BasicFormInput
+                    error={toFillFields.includes(name)}
+                    className={classes.formItem }
+                    key={name}
+                    placeholder={label}
+                    onChange={handleCreateInfoChange(name)}
+                    style={{ flex: span }}
+                  />
+                ))}
+              </div>
+            )
+            : (
+              <BasicFormInputSelect
+                error={toFillFields.includes(field.name)}
+                key={field.name}
+                options={field.options.map(option => ({ label: option, value: option }))}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange2(field.name)}
+              />
+            )
+          )}
+        </form>
         <div className={classes.buttonZone}>
           <Button onClick={onClose}>{cancelText}</Button>
           <Button color="primary" onClick={handleOkClick}>{okText}</Button>
