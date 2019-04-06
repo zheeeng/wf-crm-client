@@ -32,10 +32,10 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
   },
   placeholder: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.grey.A400,
     position: 'absolute',
     left: 2,
-    fontSize: 16,
+    fontSize: 14,
   },
   singleValue: {
     fontSize: 16,
