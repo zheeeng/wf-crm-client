@@ -481,6 +481,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="email" name="email" editable={e}
+        type="email"
         fieldName="Email"
         showName={showName}
         Icon={EmailIcon}
@@ -495,6 +496,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="phone" name="phone" editable={e}
+        type="number"
         fieldName="Phone"
         showName={showName}
         Icon={PhoneIcon}
@@ -509,6 +511,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="date" name="date" editable={e}
+        type="birthday"
         fieldName="Birthday"
         showName={showName}
         Icon={BirthdayIcon}

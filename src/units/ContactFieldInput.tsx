@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
+import { isEmail } from '~src/utils/validation'
 import SvgIcon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -109,6 +110,8 @@ const getEmptyFieldSegmentValue = (fieldType: string): FieldSegmentValue => ({
   fieldType,
 })
 
+const getFieldDefaultValue = (fieldValue: FieldValue) => fieldValue.values.find(sv => sv.key === 'title')!.value
+
 export interface FieldValue {
   values: FieldSegmentValue[]
   id?: string
@@ -123,6 +126,7 @@ export type InputProps = {
   name: string,
   hasTitle: boolean,
   editable?: boolean,
+  type?: string,
 }
 
 export type Props = InputProps & {
@@ -137,7 +141,7 @@ export type Props = InputProps & {
 
 const ContactFieldInput: React.FC<Props> = React.memo(
   ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
-     editable = false, hasTitle, expandable,
+     editable = false, type, hasTitle, expandable,
      onAddField, onUpdateField, onDeleteField, onChangePriority }) => {
 
   const classes = useStyles({})
@@ -214,12 +218,19 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [localFieldValues, name],
   )
 
+  const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
+
   const handleEntryUpdateByBlur = useCallback(
-    (key: string, id: string) =>
+    (key: string, id: string, defaultValue: string) =>
       (event: React.FocusEvent<HTMLInputElement>) => {
         const value = event.target.value.trim()
 
-        if (!value) return
+        if (!value || value == defaultValue) return
+
+        if (key !== 'title' && type == 'email' && !isEmail(value)) {
+          setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          return
+        }
 
         if (hasValues) {
           updateField({ key, value, fieldType: name }, id)
@@ -229,13 +240,21 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       },
     [localFieldValues, name],
   )
+
   const handleEntryUpdateByKeydown = useCallback(
-    (key: string, id: string) =>
+    (key: string, id: string, defaultValue: string) =>
       (event: React.KeyboardEvent<HTMLInputElement>) => {
+        key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
+
         if (event.keyCode !== 13) return
         const value = event.currentTarget.value.trim()
 
-        if (!value) return
+        if (!value || value === defaultValue) return
+
+        if (key !== 'title' && type == 'email' && !isEmail(value)) {
+          setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          return
+        }
 
         if (hasValues) {
           updateField({ key, value, fieldType: name }, id)
@@ -293,7 +312,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             )}>
               {(hasTitle && !editable) && (
                 <Typography variant="h6" className={classes.fieldTypeText}>
-                  {fieldValue.values.find(sv => sv.key === 'title')!.value}
+                  {getFieldDefaultValue(fieldValue)}
                 </Typography>
               )}
               {editable
@@ -303,11 +322,13 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       .map(segmentValue => (
                         <Input
                           key={segmentValue.key}
+                          type={type}
+                          error={hasErrorKeys.includes(fieldValue.id || '')}
                           className={classes.fieldInput}
                           placeholder={segmentValue.key}
                           defaultValue={segmentValue.value}
-                          onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!)}
-                          onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!)}
+                          onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                          onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
                           disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                         />
                       ))
@@ -315,9 +336,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     {hasTitle ? (
                       <Input
                         className={classes.fieldTypeText}
-                        defaultValue={fieldValue.values.find(sv => sv.key === 'title')!.value}
-                        onBlur={handleEntryUpdateByBlur('title', fieldValue.id!)}
-                        onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!)}
+                        defaultValue={getFieldDefaultValue(fieldValue)}
+                        onBlur={handleEntryUpdateByBlur('title', fieldValue.id!, '')}
+                        onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!, '')}
                         placeholder={'label'}
                         disabled={fieldValue.priority === 0}
                       />
@@ -397,7 +418,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       }),
     ),
     [
-      hasValues, localFieldValues, backupFieldValue, editable, hasTitle,
+      hasValues, localFieldValues, backupFieldValue, editable, hasTitle, hasErrorKeys,
       handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
       handleEntryToggleHide, handleEntryDelete,
     ],
@@ -441,15 +462,22 @@ export type DataInputProps = InputProps & {
 }
 
 export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
-  fieldName = '', showName = false, Icon, editable, hasTitle, name, value, updateField,
+  fieldName = '', showName = false, Icon, editable, type, hasTitle, name, value, updateField,
 }) => {
   const classes = useStyles({})
+
+  const [hasError, setHasError] = useState(true)
 
   const handleEntryUpdateByBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
       const val = event.target.value.trim()
 
-      if (!val) return
+      if (!val || val === value) return
+
+      if (type == 'email' && !isEmail(value)) {
+        setHasError(true)
+        return
+      }
 
       updateField(val)
     },
@@ -457,10 +485,17 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   )
   const handleEntryUpdateByKeydown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
+      setHasError(false)
+
       if (event.keyCode !== 13) return
       const val = event.currentTarget.value.trim()
 
-      if (!val) return
+      if (!val || val === value) return
+
+      if (type == 'email' && !isEmail(value)) {
+        setHasError(true)
+        return
+      }
 
       updateField(val)
     },
@@ -489,6 +524,8 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
               ? (
                 <Input
                   key={name}
+                  type={type}
+                  error={hasError}
                   className={classes.fieldInput}
                   placeholder={name}
                   defaultValue={value}
@@ -538,7 +575,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 })
 
 export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
+  fieldName = '', showName = false, Icon, editable, type, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
