@@ -308,7 +308,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                       disableUnderline
                       multiline
                       rowsMax={4}
-                      // onBlur={handleNoteUpdateByBlur}
+                      onBlur={handleNoteUpdateByBlur}
                       onKeyDown={handleNoteUpdateByKeydown}
                     />
                     <IconButton
