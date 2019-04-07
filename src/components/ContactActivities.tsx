@@ -72,6 +72,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   entryInput: {
     width: '100%',
   },
+  entryInputRoot: {
+    color: theme.palette.text.secondary,
+  },
   stepper: {
     padding: `0 ${theme.spacing.unit * 4}px`,
   },
@@ -98,7 +101,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     visibility: 'hidden',
     width: theme.spacing.unit * 2,
     height: theme.spacing.unit * 2,
+    color: theme.palette.text.hint,
     ...{
+      '&:hover': {
+        color: theme.palette.primary.main,
+      },
       '$entryContent:hover &': {
         visibility: 'visible',
       },
@@ -303,13 +310,14 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 {group.date}
               </StepLabel>
               <StepContent>
-                {!showAddNote && gIndex === 0 && (group.notes.length === 0) && (
+                {!showAddNote && !loading.show && loading.triggered && gIndex === 0 && (group.notes.length === 0) && (
                   <div>Add Note for today!</div>
                 )}
                 {showAddNote && gIndex === 0 && (
                   <div className={classnames(classes.entryContent, classes.entryInputContent)}>
                     <Input
                       className={classes.entryInput}
+                      classes={{ root: classes.entryInputRoot }}
                       placeholder="Click to add notes..."
                       disableUnderline
                       multiline
@@ -330,7 +338,6 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                     <div className={classes.entryContent}>
                       {note.content}
                       <IconButton
-                        color="primary"
                         className={classes.noteRemover}
                         onClick={handleNoteRemove(note.id)}
                       >
