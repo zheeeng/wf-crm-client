@@ -63,7 +63,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     padding: theme.spacing.unit,
-    backgroundColor: theme.palette.grey['200'],
+    ...{
+      '&:hover': {
+        backgroundColor: theme.palette.grey['200'],
+      }
+    },
   },
   entryInput: {
     width: '100%',
@@ -73,6 +77,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   entryInputContent: {
     marginBottom: theme.spacing.unit,
+    backgroundColor: theme.palette.grey['200'],
   },
   entryButtonIcon: {
     '&:hover': {
