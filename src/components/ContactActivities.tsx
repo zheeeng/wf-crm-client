@@ -310,7 +310,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                   <div className={classnames(classes.entryContent, classes.entryInputContent)}>
                     <Input
                       className={classes.entryInput}
-                      placeholder="note"
+                      placeholder="Click to add notes..."
                       disableUnderline
                       multiline
                       rowsMax={4}
