@@ -264,7 +264,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           <ProgressLoading className={classes.progress} size={64} />
         </div>
       )
-      : fetchNotesError
+      : !!fetchNotesError
       ? (
         <Typography align="center">Oops, an error occurred!</Typography>
       )
@@ -328,30 +328,32 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           ))}
         </Stepper>
       )}
-      <div className={classes.buttonWrapper}>
-        {showCtlButtons && (
-          <>
-            {/* <IconButton
-              classes={{
-                label: classes.entryButtonIcon,
-              }}
-            >
-              <Icon name={ICONS.Birthday} />
-            </IconButton> */}
-            <IconButton
-              classes={{
-                label: classes.entryButtonIcon,
-              }}
-              onClick={toggleOnAddNote}
-            >
-              <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
-            </IconButton>
-          </>
-        )}
-        <IconButton color="primary" onClick={toggleShowButtons}>
-          <Icon name={ICONS.AddCircle} />
-        </IconButton>
-      </div>
+      {!isFetchingNotes && !fetchNotesError &&
+        (<div className={classes.buttonWrapper}>
+          {showCtlButtons && (
+            <>
+              {/* <IconButton
+                classes={{
+                  label: classes.entryButtonIcon,
+                }}
+              >
+                <Icon name={ICONS.Birthday} />
+              </IconButton> */}
+              <IconButton
+                classes={{
+                  label: classes.entryButtonIcon,
+                }}
+                onClick={toggleOnAddNote}
+              >
+                <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
+              </IconButton>
+            </>
+          )}
+          <IconButton color="primary" onClick={toggleShowButtons}>
+            <Icon name={ICONS.AddCircle} />
+          </IconButton>
+        </div>
+      )}
     </ContactTableThemeProvider>
   )
 })
