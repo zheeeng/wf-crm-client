@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
-import { isEmail } from '~src/utils/validation'
+import { isEmail, isValidDate } from '~src/utils/validation'
 import SvgIcon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -235,6 +235,27 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           return
         }
 
+        if (type == 'calendar') {
+          const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+          const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+          const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+
+          if (key === 'year' && !isValidDate(+day, +month, +value)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          if (key === 'month' && !isValidDate(+day, +value, +year)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          if (key === 'day' && !isValidDate(+value, +month, +year)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+        }
+
         if (hasValues) {
           updateField({ key, value, fieldType: name }, id)
         } else {
@@ -259,13 +280,34 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           return
         }
 
+        if (type == 'calendar') {
+          const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+          const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+          const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+
+          if (key === 'year' && !isValidDate(+day, +month, +value)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          if (key === 'month' && !isValidDate(+day, +value, +year)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          if (key === 'day' && !isValidDate(+value, +month, +year)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+        }
+
         if (hasValues) {
           updateField({ key, value, fieldType: name }, id)
         } else {
           addField({ key, value, fieldType: name })
         }
       },
-    [localFieldValues, name],
+    [localFieldValues, name, type],
   )
 
   const handleEntryDelete = useCallback(
@@ -325,7 +367,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       .map(segmentValue => (
                         <Input
                           key={segmentValue.key}
-                          type={type}
+                          type={type === 'calendar' ? 'number' : type}
                           error={hasErrorKeys.includes(fieldValue.id || '')}
                           className={classes.fieldInput}
                           classes={{disabled: classes.fieldDisabled}}

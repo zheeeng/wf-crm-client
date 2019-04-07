@@ -511,7 +511,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="date" name="date" editable={e}
-        type="birthday"
+        type="calendar"
         fieldName="Birthday"
         showName={showName}
         Icon={BirthdayIcon}
