@@ -9,6 +9,7 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import Input from '@material-ui/core/Input'
 import StepContent from '@material-ui/core/StepContent'
+import Popover from '@material-ui/core/Popover'
 
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
@@ -128,6 +129,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  popover: {
+    pointerEvents: 'none',
+  },
+  popoverPaper: {
+    padding: theme.spacing.unit,
+    backgroundColor: theme.palette.background.paper,
   },
   progress: {
     margin: theme.spacing.unit * 2,
@@ -273,6 +281,27 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [loading, isFetchingNotes],
   )
 
+  const [popover, setPopover] = useState({
+    anchorEl: null as HTMLElement | null,
+    text: '',
+  })
+
+  const togglePopoverOpen = useCallback<{
+    (opened: true, text: string): (event: React.MouseEvent<Element>) => void;
+    (opened: false): (event: React.MouseEvent<Element>) => void;
+  }> (
+    (opened: boolean, text?: string) => (event: React.MouseEvent<Element>) => {
+      const currentTarget = event.currentTarget as HTMLElement
+      requestAnimationFrame(() => {
+        setPopover({
+          anchorEl: opened ? currentTarget : null,
+          text: text || popover.text,
+        })
+      })
+    },
+    [popover],
+  )
+
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
@@ -329,7 +358,12 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                       color="primary"
                       className={classes.noteSubmitter}
                     >
-                      <Icon name={ICONS.Enter} />
+                      <Icon
+                        name={ICONS.Enter}
+                        color={'hoverLighten'}
+                        onMouseEnter={togglePopoverOpen(true, 'submit')}
+                        onMouseLeave={togglePopoverOpen(false)}
+                      />
                     </IconButton>
                   </div>
                 )}
@@ -340,8 +374,10 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                       <IconButton
                         className={classes.noteRemover}
                         onClick={handleNoteRemove(note.id)}
+                        onMouseEnter={togglePopoverOpen(true, 'remove')}
+                        onMouseLeave={togglePopoverOpen(false)}
                       >
-                        <Icon name={ICONS.Delete} />
+                        <Icon name={ICONS.Delete} color={'hoverLighten'}/>
                       </IconButton>
                     </div>
                     <time className={classes.entryTime}>
@@ -370,14 +406,41 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                   label: classes.entryButtonIcon,
                 }}
                 onClick={toggleOnAddNote}
+                onMouseEnter={togglePopoverOpen(true, 'add note')}
+                onMouseLeave={togglePopoverOpen(false)}
               >
                 <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
               </IconButton>
             </>
           )}
-          <IconButton color="primary" onClick={toggleShowButtons}>
+          <IconButton
+            color="primary"
+            onClick={toggleShowButtons}
+            onMouseEnter={togglePopoverOpen(true, 'note')}
+            onMouseLeave={togglePopoverOpen(false)}
+          >
             <Icon name={ICONS.AddCircle} />
           </IconButton>
+          <Popover
+            className={classes.popover}
+            classes={{
+              paper: classes.popoverPaper,
+            }}
+            open={!!popover.anchorEl}
+            anchorEl={popover.anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            onClose={togglePopoverOpen(false)}
+            disableRestoreFocus
+          >
+            <Typography>{popover.text}</Typography>
+          </Popover>
         </div>
       )}
     </ContactTableThemeProvider>

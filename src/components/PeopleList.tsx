@@ -259,7 +259,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         requestAnimationFrame(() => {
           setPopover({
             anchorEl: opened ? currentTarget : null,
-            text: opened ? text as string : '',
+            text: text || popover.text,
           })
         })
       },
