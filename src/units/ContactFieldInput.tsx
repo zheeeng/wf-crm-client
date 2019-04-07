@@ -100,6 +100,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: '1px 1px 0px 2px lightgrey',
   },
+  fieldDisabled: {
+    cursor: 'not-allowed',
+  },
 }))
 
 export interface FieldSegmentValue { key: string, value: string, fieldType: string }
@@ -325,6 +328,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                           type={type}
                           error={hasErrorKeys.includes(fieldValue.id || '')}
                           className={classes.fieldInput}
+                          classes={{disabled: classes.fieldDisabled}}
                           placeholder={segmentValue.key}
                           defaultValue={segmentValue.value}
                           onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
@@ -336,11 +340,12 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     {hasTitle ? (
                       <Input
                         className={classes.fieldTypeText}
+                        classes={{disabled: classes.fieldDisabled}}
                         defaultValue={getFieldDefaultValue(fieldValue)}
                         onBlur={handleEntryUpdateByBlur('title', fieldValue.id!, '')}
                         onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!, '')}
                         placeholder={'label'}
-                        disabled={fieldValue.priority === 0}
+                        disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                       />
                     ) : undefined}
                   </>
