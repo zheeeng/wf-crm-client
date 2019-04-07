@@ -247,6 +247,19 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [notes],
   )
 
+  const [loading, setLoading] = useState({ show: false, triggered: false })
+
+  useEffect(
+    () => {
+      if (!loading.show && !loading.triggered && isFetchingNotes) {
+        setLoading({ show: true, triggered: true })
+      } else if (loading.show && !isFetchingNotes) {
+        setLoading({ ...loading, show: false })
+      }
+    },
+    [loading, isFetchingNotes],
+  )
+
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
@@ -258,7 +271,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           color="primary"
         >Manage</Button> */}
       </div>
-      {isFetchingNotes
+      {loading.show
       ? (
         <div className={classes.progressWrapper}>
           <ProgressLoading className={classes.progress} size={64} />
@@ -328,7 +341,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           ))}
         </Stepper>
       )}
-      {!isFetchingNotes && !fetchNotesError &&
+      {!loading.show && !fetchNotesError &&
         (<div className={classes.buttonWrapper}>
           {showCtlButtons && (
             <>
