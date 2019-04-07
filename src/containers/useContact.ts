@@ -125,8 +125,11 @@ const useContact = (contactId: string) => {
     [contactId],
   )
   const removeField = useCallback(
-    async (field: CommonField) =>
-      deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field)).then(() => field.id || null),
+    async (field: CommonField) => {
+      const result = await deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
+
+      return result && (field.id || null)
+    },
     [contactId],
   )
 
