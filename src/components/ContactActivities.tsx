@@ -202,7 +202,8 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   )
   const handleNoteUpdateByKeydown = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.keyCode !== 13) return
+      if (event.keyCode !== 13 || !event.metaKey) return
+      event.preventDefault()
       const value = event.currentTarget.value.trim()
 
       toggleOffShowAddNote()
