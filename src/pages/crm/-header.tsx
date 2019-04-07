@@ -294,7 +294,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 open={openAccount}
                 onClose={handleMenuToggle(false)}
                 MenuListProps={{
-                  // onMouseLeave: handleMenuToggle(false),
+                  onMouseLeave: handleMenuToggle(false),
                   className: classes.menuList,
                 }}
                 classes={{
