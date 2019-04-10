@@ -203,14 +203,14 @@ const PeopleList: React.FC<Props> = React.memo(({
   // )
   useEffect(
     () => {
-      addContactToGroupError && fail('Add contacts failed')
+      addContactToGroupError && fail(addContactToGroupError.message)
       addContactToGroupData && success(<><CheckCircle /> Contacts Added</>)
     },
     [addContactToGroupError, addContactToGroupData],
   )
   useEffect(
     () => {
-      mergeContactsError && fail('Merge contacts failed')
+      mergeContactsError && fail(mergeContactsError.message)
       mergeContactsData && success(<><CheckCircle /> Contacts Merged</>)
     },
     [mergeContactsError, mergeContactsData],
@@ -536,7 +536,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       { type: 'text', name: 'first_line', label: 'Address Line1', required: false, },
       { type: 'text', name: 'second_line', label: 'Address Line2', required: false, },
       {
-        type: 'enumText', name: 'country', label: 'Select Country', options: countries, required: false,
+        type: 'country', name: 'country', label: 'Select Country', options: countries, required: false,
       },
       { type: 'text', name: 'state', label: 'State', required: false,},
       { type: 'text', name: 'city', label: 'City', required: false,},

@@ -2,7 +2,6 @@ import React, { useCallback, useState, useMemo, useRef } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
 import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -72,10 +71,18 @@ export type EnumTextField = {
   required: boolean
 }
 
+export type CountryField = {
+  type: 'country'
+  name: string
+  label: string
+  options: string[]
+  required: boolean
+}
+
 export interface CreateFormOption {
   title?: string,
   tip?: string,
-  fields: Array<TextField | CombinedTextField | EnumTextField>,
+  fields: Array<TextField | CombinedTextField | EnumTextField | CountryField>,
   okText?: string,
   cancelText?: string
 }
@@ -222,7 +229,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
                 onChange={handleCreateInfoChange(field.name)}
               />
             )
-            : field.type == 'combinedText'
+            : field.type === 'combinedText'
             ? (
               <div
                 key={field.keyName}
