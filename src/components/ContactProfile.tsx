@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Modal from '@material-ui/core/Modal'
+import Dialog from '@material-ui/core/Dialog'
 import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
 import Avatar from '@material-ui/core/Avatar'
@@ -42,30 +43,23 @@ const DescriptionIcon: React.FC<IconProp> = ({className}) =>
   <Icon name={ICONS.Description} className={className} />
 
 const useStyles = makeStyles((theme: Theme) => ({
-  modelPaper: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: theme.breakpoints.values.md,
-    maxHeight: '90%',
-    overflow: 'auto',
+  paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
     border: 'none',
     outline: '#efefef inset 1px',
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      width: '90%',
-    },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      height: '100%',
-      maxHeight: '100%',
+      ...{
+        '&&': {
+          marginLeft: 0,
+          marginRight: 0,
+        }
+      }
     },
   },
-  modelButtonZone: {
+  dialogButtonZone: {
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
     ...cssTips(theme).horizontallySpaced(),
@@ -219,12 +213,18 @@ const dateFieldMap = ({ id, year, month, day, title, priority, waiver }: DateFie
 const backupDateField =
   dateFieldMap({ id: '', year: 0, month: 0, day: 0, fieldType: 'date', priority: 100 })
 
-const addressFieldMap = ({ id, firstLine, secondLine, title, priority, waiver }: AddressField): FieldValue =>
+const addressFieldMap = ({ id, firstLine, secondLine, country, state, city, zipcode, title, priority, waiver }: AddressField): FieldValue =>
   ({
     values: [
       { key: 'firstLine', value: firstLine || '', fieldType: 'address' },
       { key: 'secondLine', value: secondLine || '', fieldType: 'address' },
       { key: 'title', value: title || '', fieldType: 'address' },
+    ],
+    appendValues: [
+      { key: 'country', value: country || '', fieldType: 'address' },
+      { key: 'state', value: state || '', fieldType: 'address' },
+      { key: 'city', value: city || '', fieldType: 'address' },
+      { key: 'zipcode', value: zipcode || '', fieldType: 'address' },
     ],
     id,
     priority,
@@ -445,17 +445,17 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [contact],
   )
 
-  const [splitModelOpened, setSplitModelOpened] = useState(false)
+  const [splitDialogOpened, setSplitDialogOpened] = useState(false)
 
   useEffect(
     () => {
       (async () => {
         if (!toSplitWaiver.id) {
-          setSplitModelOpened(false)
+          setSplitDialogOpened(false)
           toggleOffEditable()
         } else {
           await fetchFields()
-          setSplitModelOpened(true)
+          setSplitDialogOpened(true)
         }
       })()
 
@@ -463,10 +463,10 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [toSplitWaiver.id],
   )
 
-  const renderFields = (showName: boolean, e: boolean) => (
+  const renderFields = (showName: boolean, isEditable: boolean) => (
     <>
       <ContactFieldInput
-        key="name" name="name" editable={e}
+        key="name" name="name" editable={isEditable}
         fieldName="Name"
         showName={showName}
         Icon={NameIcon}
@@ -480,7 +480,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onChangePriority={handleFieldPriorityChange}
       />
       <ContactFieldInput
-        key="email" name="email" editable={e}
+        key="email" name="email" editable={isEditable}
         type="email"
         fieldName="Email"
         showName={showName}
@@ -495,7 +495,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onChangePriority={handleFieldPriorityChange}
       />
       <ContactFieldInput
-        key="phone" name="phone" editable={e}
+        key="phone" name="phone" editable={isEditable}
         type="number"
         fieldName="Phone"
         showName={showName}
@@ -510,7 +510,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onChangePriority={handleFieldPriorityChange}
       />
       <ContactFieldInput
-        key="date" name="date" editable={e}
+        key="date" name="date" editable={isEditable}
         type="calendar"
         fieldName="Birthday"
         showName={showName}
@@ -525,7 +525,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onChangePriority={handleFieldPriorityChange}
       />
       <ContactSelectedFieldInput
-        key="gender" name="gender" editable={e}
+        key="gender" name="gender" editable={isEditable}
         fieldName="Gender"
         showName={showName}
         Icon={GenderIcon}
@@ -535,7 +535,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         updateField={handleUpdateContactGender}
       />
       <ContactFieldInput
-        key="address" name="address" editable={e}
+        key="address" name="address" editable={isEditable}
         fieldName="Address"
         showName={showName}
         Icon={LocationIcon}
@@ -549,7 +549,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onChangePriority={handleFieldPriorityChange}
       />
       <ContactFieldInput
-        key="other" name="other" editable={e}
+        key="other" name="other" editable={isEditable}
         showName={showName}
         Icon={DescriptionIcon}
         hasTitle={true}
@@ -589,35 +589,23 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
           </IconButton>
         </div>
         <div>
-          <Modal
-            open={splitModelOpened}
+          <Dialog
+            open={splitDialogOpened}
             onClose={cancelSplitWaiver}
+            PaperProps={{
+              className: classes.paper,
+            }}
+            scroll="body"
           >
-            {splitModelOpened
-              ? (
-                <div className={classes.modelPaper}>
-                  <Typography variant="h5" align="center">
-                    {toSplitWaiver.title}
-                  </Typography>
-                  {renderFields(true, false)}
-                  <div className={classes.modelButtonZone}>
-                    <Button
-                      onClick={cancelSplitWaiver}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      color="primary"
-                      onClick={handleWaiverSplit}
-                    >
-                      Split
-                    </Button>
-                  </div>
-                </div>
-              )
-              : null
-            }
-          </Modal>
+            <Typography variant="h5" align="center">
+              {toSplitWaiver.title}
+            </Typography>
+            {renderFields(true, false)}
+            <div className={classes.dialogButtonZone}>
+              <Button onClick={cancelSplitWaiver}>Cancel</Button>
+              <Button color="primary" onClick={handleWaiverSplit}>Split</Button>
+            </div>
+          </Dialog>
           <Hidden lgDown>
             <div className={classes.floatTagsWrapper}>
               <div className={classes.tagsBar}>

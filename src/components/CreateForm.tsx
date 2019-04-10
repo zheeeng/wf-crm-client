@@ -11,7 +11,6 @@ import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -19,15 +18,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
+      ...{
+        '&&': {
+          marginLeft: 0,
+          marginRight: 0,
+        }
+      }
     },
   },
   paper2: {
-    width: Math.min(theme.breakpoints.values.sm, 388) - theme.spacing.unit * 8,
+    width: 352,
   },
   tipText: {
     marginTop: theme.spacing.unit * 2,
   },
-  buttonZone: {
+  dialogButtonZone: {
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4,
     ...cssTips(theme).horizontallySpaced(),
@@ -197,7 +202,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           }}
         >
           {discardText}
-          <div className={classes.buttonZone}>
+          <div className={classes.dialogButtonZone}>
             <Button onClick={closeCancellationModal}>Continue Edit</Button>
             <Button color="primary" onClick={onClose}>Discard</Button>
           </div>
@@ -258,7 +263,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
             )
           )}
         </form>
-        <div className={classes.buttonZone}>
+        <div className={classes.dialogButtonZone}>
           <Button onClick={onClose}>{cancelText}</Button>
           <Button color="primary" onClick={handleOkClick}>{okText}</Button>
         </div>

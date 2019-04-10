@@ -117,6 +117,7 @@ const getFieldDefaultValue = (fieldValue: FieldValue) => fieldValue.values.find(
 
 export interface FieldValue {
   values: FieldSegmentValue[]
+  appendValues?: FieldSegmentValue[]
   id?: string
   priority: number
   waiver?: any
