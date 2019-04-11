@@ -117,6 +117,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   contactName: {
     fontWeight: 600,
   },
+  tableControlRow: {
+    height: theme.spacing(8),
+  },
   minCell: {
     width: '1%',
   },
@@ -152,6 +155,37 @@ export interface Props {
   total: number
   onSearch: (search: { page: number, size: number, searchTerm: string}) => void
   navigateToProfile: (id: string) => void
+}
+
+
+const newContactFormOption: CreateFormOption = {
+  title: 'New Contact',
+  fields: [
+    {
+      type: 'combinedText', keyName: 'name', nameAndLabels: [
+        { name: 'first_name', label: 'First Name', span: 1, required: true },
+        { name: 'last_name', label: 'Last Name', span: 1, required: true },
+      ],
+    },
+    { type: 'text', name: 'email', label: 'Email', required: false, },
+    {
+      type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female'], required: false,
+    },
+    { type: 'text', name: 'first_line', label: 'Address Line1', required: false, },
+    { type: 'text', name: 'second_line', label: 'Address Line2', required: false, },
+    {
+      type: 'country', name: 'country', label: 'Select Country', options: countries, required: false,
+    },
+    { type: 'text', name: 'state', label: 'State', required: false,},
+    { type: 'text', name: 'city', label: 'City', required: false,},
+    {
+      type: 'combinedText', keyName: 'communication', nameAndLabels: [
+        { isNumber: true, name: 'zipcode', label: 'Zip', span: 1, required: false },
+        { isNumber: true, name: 'phone', label: 'Phone', span: 2, required: false },
+      ],
+    },
+  ],
+  okText: 'Create',
 }
 
 const PeopleList: React.FC<Props> = React.memo(({
@@ -520,36 +554,6 @@ const PeopleList: React.FC<Props> = React.memo(({
     </>
   )
 
-  const newContactFormOption: CreateFormOption = {
-    title: 'New Contact',
-    fields: [
-      {
-        type: 'combinedText', keyName: 'name', nameAndLabels: [
-          { name: 'first_name', label: 'First Name', span: 1, required: true },
-          { name: 'last_name', label: 'Last Name', span: 1, required: true },
-        ],
-      },
-      { type: 'text', name: 'email', label: 'Email', required: false, },
-      {
-        type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female'], required: false,
-      },
-      { type: 'text', name: 'first_line', label: 'Address Line1', required: false, },
-      { type: 'text', name: 'second_line', label: 'Address Line2', required: false, },
-      {
-        type: 'country', name: 'country', label: 'Select Country', options: countries, required: false,
-      },
-      { type: 'text', name: 'state', label: 'State', required: false,},
-      { type: 'text', name: 'city', label: 'City', required: false,},
-      {
-        type: 'combinedText', keyName: 'communication', nameAndLabels: [
-          { isNumber: true, name: 'zipcode', label: 'Zip', span: 1, required: false },
-          { isNumber: true, name: 'phone', label: 'Phone', span: 2, required: false },
-        ],
-      },
-    ],
-    okText: 'Create',
-  }
-
   return (
     <DisplayPaper>
       <ContactTableThemeProvider>
@@ -612,7 +616,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         <div className={classes.table}>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow className={classes.tableControlRow}>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
                     checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
