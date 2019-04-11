@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext, useMemo } from 'react'
+import React, { useState, useCallback, useEffect, useContext, useRef, useMemo } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -57,13 +57,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: theme.spacing(1),
   },
+  noteForToday: {
+    color: theme.palette.primary.main,
+    margin: theme.spacing(1, 0, 2),
+    fontSize: 16,
+  },
   entryContent: {
     position: 'relative',
     flex: 1,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    padding: theme.spacing(0.5, 1),
+    padding: theme.spacing(0.5, 3, 0.5, 1),
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['200'],
@@ -207,9 +212,18 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [showCtlButtons],
   )
 
+  const inputtingNoteRef = useRef('')
+
   const handleNoteUpdateByBlur = useCallback(
     async (event: React.FocusEvent<HTMLInputElement>) => {
-      const value = event.target.value.trim()
+      inputtingNoteRef.current = event.target.value
+    },
+    [],
+  )
+
+  const handleSubmitUpdate = useCallback(
+    async () => {
+      const value = inputtingNoteRef.current.trim()
 
       toggleOffShowAddNote()
 
@@ -220,6 +234,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     },
     [addNote],
   )
+
   const handleNoteUpdateByKeydown = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.keyCode !== 13 || !event.metaKey) return
@@ -337,7 +352,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               </StepLabel>
               <StepContent>
                 {!showAddNote && !loading.show && loading.triggered && gIndex === 0 && (group.notes.length === 0) && (
-                  <div>Add Note for today!</div>
+                  <div className={classes.noteForToday}>Add Note for today!</div>
                 )}
                 {showAddNote && gIndex === 0 && (
                   <div className={classnames(classes.entryContent, classes.entryInputContent)}>
@@ -354,12 +369,13 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                     <IconButton
                       color="primary"
                       className={classes.noteSubmitter}
+                      onClick={handleSubmitUpdate}
+                      onMouseEnter={togglePopoverOpen(true, 'submit')}
+                      onMouseLeave={togglePopoverOpen(false)}
                     >
                       <Icon
                         name={ICONS.Enter}
                         color={'hoverLighten'}
-                        onMouseEnter={togglePopoverOpen(true, 'submit')}
-                        onMouseLeave={togglePopoverOpen(false)}
                       />
                     </IconButton>
                   </div>
