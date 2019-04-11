@@ -92,6 +92,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     overflowY: 'auto',
   },
+  outlinedButton: {
+    borderRadius: theme.spacing(3),
+  },
   search: {
     flex: 1,
   },
@@ -583,6 +586,9 @@ const PeopleList: React.FC<Props> = React.memo(({
           <Button
             variant="outlined"
             color="primary"
+            classes={{
+              outlined: classes.outlinedButton,
+            }}
             onClick={changeCreateContactFormOpened(true, newContactFormOption)}
           >
             New contact

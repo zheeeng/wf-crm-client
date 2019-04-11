@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputAdornment: {
     fontSize: '0.87rem',
   },
+  notchedOutline: {
+    borderRadius: theme.spacing(3),
+  },
 }))
 
 export interface Props {
@@ -73,6 +76,9 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
     <OutlinedInput
       labelWidth={0}
       notched
+      classes={{
+        notchedOutline: classes.notchedOutline,
+      }}
       className={classNames(className, classes.searchBar)}
       startAdornment={(
         <InputAdornment position="start" className={classes.inputAdornment}>
