@@ -29,8 +29,16 @@ const useStyles = makeStyles(
       padding: 0,
     },
     textFieldInput: {
+      textAlign: 'center',
+    },
+    textFieldInputRoot: {
       padding: '0 8px',
       fontSize: '12px',
+      ...{
+        '&&': {
+          marginTop: theme.spacing(0.5),
+        },
+      },
     },
   }),
 )
@@ -97,7 +105,8 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
             root: classes.textField,
           }}
           InputClasses={{
-            root: classes.textFieldInput,
+            root: classes.textFieldInputRoot,
+            input: classes.textFieldInput,
           }}
         />
       </Hidden>

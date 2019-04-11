@@ -98,7 +98,10 @@ const BasicFormInput: React.FC<Props> = React.memo(({
             classes.root,
             InputClasses && InputClasses.root,
           ),
-          input: classes.input,
+          input: classnames(
+            classes.input,
+            InputClasses && InputClasses.input,
+          ),
         },
       }}
       InputLabelProps={{
