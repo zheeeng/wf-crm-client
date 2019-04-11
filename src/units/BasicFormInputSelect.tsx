@@ -48,8 +48,6 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     color: theme.palette.text.secondary,
     fontWeight: 500,
-    marginTop: theme.spacing(0.5),
-    marginBottom: theme.spacing(0.5),
   },
   option: {
     backgroundColor: 'white',

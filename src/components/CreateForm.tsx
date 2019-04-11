@@ -219,9 +219,9 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
             className: classnames(classes.paper, classes.paper2),
           }}
         >
-          {discardText}
+          <Typography variant="body2" color="textSecondary">{discardText}</Typography>
           <div className={classes.dialogButtonZone}>
-            <Button onClick={closeCancellationModal}>Continue Edit</Button>
+            <Button onClick={closeCancellationModal}>Continue editing</Button>
             <Button color="primary" onClick={onClose}>Discard</Button>
           </div>
         </Dialog>
