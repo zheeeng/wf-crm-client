@@ -584,7 +584,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
           <IconButton onClick={toggleEditable} className={classes.editIconBox}>
             {editable
               ? <Icon name={ICONS.CheckCircle} size="lg" color="hoverLighten" />
-              : <Icon name={ICONS.Edit} size="lg" />
+              : <Icon name={ICONS.Edit} size="lg" color="hoverLighten" />
             }
           </IconButton>
         </div>

@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.grey[800],
     ...{
       '&:hover': {
-        backgroundColor: theme.palette.grey['200'],
+        backgroundColor: theme.palette.grey[900],
       },
     },
   },

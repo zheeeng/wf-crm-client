@@ -97,6 +97,13 @@ export const themeOptions: ThemeOptions = {
         borderRadius: defaultTheme.spacing(2),
       },
     },
+    MuiIconButton: {
+      root: {
+        '&&': {
+          backgroundColor: 'unset',
+        },
+      },
+    },
   },
 }
 
