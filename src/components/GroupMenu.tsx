@@ -22,11 +22,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   selectedId?: string
+  className?: string
   groupsOpened: boolean
   onClickGroup: (id: string) => void
 }
 
-const GroupMenu: React.FC<Props> = ({ selectedId, groupsOpened, onClickGroup }) => {
+const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onClickGroup }) => {
   const classes = useStyles({})
 
   const { groupId, groups } = useContext(GroupsContainer.Context)
@@ -53,7 +54,12 @@ const GroupMenu: React.FC<Props> = ({ selectedId, groupsOpened, onClickGroup }) 
   )
 
   return (
-    <Collapse in={groupsOpened} timeout="auto" unmountOnExit>
+    <Collapse
+      className={className}
+      in={groupsOpened}
+      timeout="auto"
+      unmountOnExit
+    >
       <List disablePadding>
         <ListItem>
           <Searcher

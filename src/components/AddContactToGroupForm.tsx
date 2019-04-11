@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
   },
+  groupMenu: {
+    overflow: 'auto',
+  },
   buttonZone: {
     textAlign: 'right',
     marginTop: theme.spacing(4),
@@ -137,6 +140,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         }
       </div>
       <GroupMenu
+        className={classes.groupMenu}
         selectedId={selectedGroupId}
         groupsOpened={groupsOpened}
         onClickGroup={handleGroupClick}
