@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(0.5, 3, 0.5, 1),
     ...{
       '&:hover': {
-        backgroundColor: theme.palette.grey['200'],
+        backgroundColor: theme.palette.grey['900'],
       }
     },
   },
@@ -261,11 +261,12 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [],
   )
 
-  const NoteGroups = useMemo(
+  const noteGroups = useMemo(
     () => {
       const sortedNotes = notes.slice()
         .sort((p, c) => p.timestamp - c.timestamp)
         .map(note => ({ ...note, date: getDate(note.timestamp)}))
+
       const groupedMap = sortedNotes.reduce<{ [key: string]: Note[] }>(
         (m, note) => {
           const date = getDate(note.timestamp)
@@ -337,12 +338,14 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       )
       : !!fetchNotesError
       ? (
-        <Typography align="center">Oops, an error occurred!</Typography>
+        <Typography align="center">
+          Oops, an error occurred!
+        </Typography>
       )
       : (
         <Stepper orientation="vertical" className={classes.stepper}>
-          {NoteGroups.map((group, gIndex) => (
-            <Step key={group.date}>
+          {noteGroups.map((group, gIndex) => (
+            <Step key={group.date} active>
               <StepLabel
                 classes={{
                   label: classes.activityLabel,
@@ -352,35 +355,42 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 {group.date}
               </StepLabel>
               <StepContent>
-                {!showAddNote && !loading.show && loading.triggered && gIndex === 0 && (group.notes.length === 0) && (
-                  <div className={classes.noteForToday}>Add Note for today!</div>
-                )}
-                {showAddNote && gIndex === 0 && (
-                  <div className={classnames(classes.entryContent, classes.entryInputContent)}>
-                    <Input
-                      className={classes.entryInput}
-                      classes={{ root: classes.entryInputRoot }}
-                      placeholder="Click to add notes..."
-                      disableUnderline
-                      multiline
-                      rowsMax={4}
-                      onBlur={handleNoteUpdateByBlur}
-                      onKeyDown={handleNoteUpdateByKeydown}
-                    />
-                    <IconButton
-                      color="primary"
-                      className={classes.noteSubmitter}
-                      onClick={handleSubmitUpdate}
-                      onMouseEnter={togglePopoverOpen(true, 'submit')}
-                      onMouseLeave={togglePopoverOpen(false)}
-                    >
-                      <Icon
-                        name={ICONS.Enter}
-                        color={'hoverLighten'}
+                {!showAddNote
+                  && !loading.show
+                  && loading.triggered
+                  && gIndex === 0
+                  && (group.notes.length === 0)
+                  && (<div className={classes.noteForToday}>Add Note for today!</div>)
+                }
+                {showAddNote
+                  && gIndex === 0
+                  && (
+                    <div className={classnames(classes.entryContent, classes.entryInputContent)}>
+                      <Input
+                        className={classes.entryInput}
+                        classes={{ root: classes.entryInputRoot }}
+                        placeholder="Click to add notes..."
+                        disableUnderline
+                        multiline
+                        rowsMax={4}
+                        onBlur={handleNoteUpdateByBlur}
+                        onKeyDown={handleNoteUpdateByKeydown}
                       />
-                    </IconButton>
-                  </div>
-                )}
+                      <IconButton
+                        color="primary"
+                        className={classes.noteSubmitter}
+                        onClick={handleSubmitUpdate}
+                        onMouseEnter={togglePopoverOpen(true, 'submit')}
+                        onMouseLeave={togglePopoverOpen(false)}
+                      >
+                        <Icon
+                          name={ICONS.Enter}
+                          color={'hoverLighten'}
+                        />
+                      </IconButton>
+                    </div>
+                  )
+                }
                 {group.notes.map(note => (
                   <div className={classes.entry} key={note.id}>
                     <div className={classes.entryContent}>
