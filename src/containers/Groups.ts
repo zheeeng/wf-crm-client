@@ -22,8 +22,9 @@ const GroupsContainer = createContainer(() => {
 
   const [addGroup, addGroupMutation] = useInfoCallback(
     async (group: GroupFields) => {
-      await postGroup('/api/group')(groupFieldAdapter(group))
+      const { id } = await postGroup('/api/group')(groupFieldAdapter(group))
       await refreshGroupCounts()
+      return id as string
     },
     [],
   )

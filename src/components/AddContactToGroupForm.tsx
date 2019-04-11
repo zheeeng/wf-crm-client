@@ -102,19 +102,15 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
     async () => {
       const newName = newGroupName.trim()
       if (newName) {
-        await addGroup({ name: newGroupName })
+        const gid = await addGroup({ name: newGroupName })
+        setSelectedGroupId(gid)
+        onOk && await onOk(gid)
+
         toggleOnGroupsOpened()
       }
       setNewGroupName('')
     },
-    [newGroupName],
-  )
-
-  const handleOkClick = useCallback(
-    async () => {
-      onOk && onOk(selectedGroupId)
-    },
-    [selectedGroupId],
+    [newGroupName, selectedGroupId],
   )
 
   return (
@@ -147,29 +143,19 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       />
       <div className={classes.buttonZone}>
         <Button onClick={onClose}>Cancel</Button>
-        {newGroupName
-          ? (groups.some(group => group.info.name == newGroupName)
-            ? (
-              <Button disabled>
-                Group existed
-              </Button>
-            ) : (
-              <Button
-                color="primary"
-                onClick={handleCreateGroupClick}
-              >
-                Create and add
-              </Button>
-            )
-          )
-          : (
+        {newGroupName && groups.some(group => group.info.name == newGroupName)
+          ? (
+            <Button disabled>
+              Group existed
+            </Button>
+          ) : (
             <Button
               color="primary"
-              onClick={handleOkClick}
-              disabled={!selectedGroupId}
+              onClick={handleCreateGroupClick}
             >
-              Ok
-            </Button>)
+              Create and add
+            </Button>
+          )
         }
       </div>
     </Dialog>
