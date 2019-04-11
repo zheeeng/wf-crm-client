@@ -70,7 +70,7 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
           <Typography>Merging...</Typography>
         )
         : (
-          <Typography>Are you sure you want to merge the selected contact?</Typography>
+          <Typography variant="body2" color="textSecondary">Are you sure you want to merge the selected contact?</Typography>
         )
       }
       <div className={classes.buttonZone}>

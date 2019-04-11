@@ -46,6 +46,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   className?: string,
+  type?: string,
   style?: React.CSSProperties,
   value?: string,
   error?: boolean,
@@ -60,7 +61,7 @@ export interface Props {
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  autoFocus = false, placeholder = '', noLabel, className, style, value, error, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
+  autoFocus = false, placeholder = '', noLabel, className, style, value, type, error, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
 }) => {
   const classes = useStyles({})
 
@@ -76,6 +77,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
   return (
     <TextField
       autoFocus={autoFocus}
+      type={type}
       error={error}
       style={style}
       classes={TextFieldClasses}

@@ -542,8 +542,8 @@ const PeopleList: React.FC<Props> = React.memo(({
       { type: 'text', name: 'city', label: 'City', required: false,},
       {
         type: 'combinedText', keyName: 'communication', nameAndLabels: [
-          { name: 'zipcode', label: 'Zip', span: 1, required: false },
-          { name: 'phone', label: 'Phone', span: 2, required: false },
+          { isNumber: true, name: 'zipcode', label: 'Zip', span: 1, required: false },
+          { isNumber: true, name: 'phone', label: 'Phone', span: 2, required: false },
         ],
       },
     ],

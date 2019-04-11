@@ -62,6 +62,7 @@ export type CombinedTextField = {
   type: 'combinedText'
   keyName: string,
   nameAndLabels: Array<{
+    isNumber?: boolean,
     name: string
     label: string
     required: boolean
@@ -259,8 +260,9 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
                 key={field.keyName}
                 className={classes.combinedFormRow}
               >
-                {field.nameAndLabels.map(({ name, label, span }) => (
+                {field.nameAndLabels.map(({ name, label, span, isNumber }) => (
                   <BasicFormInput
+                    type={isNumber ? 'number' : 'text'}
                     error={toFillFields.includes(name)}
                     className={classes.formItem }
                     key={name}
