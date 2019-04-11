@@ -12,7 +12,7 @@ import GroupsContainer from '~src/containers/Groups'
 
 const useStyles = makeStyles((theme: Theme) => ({
   nestedItem: {
-    paddingLeft: theme.spacing.unit * 6,
+    paddingLeft: theme.spacing(6),
   },
   activeItem: {
     color: theme.palette.primary.main,

@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
-import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     border: 'none',
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
@@ -61,39 +60,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   dialogButtonZone: {
     textAlign: 'right',
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing(4),
     ...cssTips(theme).horizontallySpaced(),
   },
   profileBar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   profileTitle: {
     color: theme.palette.grey[800],
     fontSize: 20,
   },
   editIconBox: {
-    transform: `translateX(${theme.spacing.unit * 1.5})`,
+    transform: `translateX(${theme.spacing(1.5)})`,
   },
   avatarBar: {
     display: 'flex',
     alignItems: 'center',
-    height: theme.spacing.unit * 8,
-    marginBottom: theme.spacing.unit * 2,
+    height: theme.spacing(8),
+    marginBottom: theme.spacing(2),
   },
   avatarName: {
     color: '#637694',
     fontWeight: 600,
     fontSize: 18,
-    lineHeight: theme.spacing.unit * 3,
+    lineHeight: `${theme.spacing(3)}px`,
   },
   avatarIcon: {
-    padding: theme.spacing.unit * 0.5,
-    height: theme.spacing.unit * 7,
-    width: theme.spacing.unit * 7,
-    marginRight: theme.spacing.unit * 3.5,
+    padding: theme.spacing(0.5),
+    height: theme.spacing(7),
+    width: theme.spacing(7),
+    marginRight: theme.spacing(3.5),
     ...{
       '& img': {
         borderRadius: '50%',
@@ -105,33 +104,33 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 280,
   },
   blockTagsWrapper: {
-    paddingLeft: theme.spacing.unit * 2.5,
-    marginBottom: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing(2.5),
+    marginBottom: theme.spacing(2),
   },
   tagsBar: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
   },
   addTagIcon: {
-    marginRight: theme.spacing.unit,
-    width: theme.spacing.unit * 3,
-    height: theme.spacing.unit * 3,
+    marginRight: theme.spacing(1),
+    width: theme.spacing(3),
+    height: theme.spacing(3),
   },
   tags: {},
   tagChip: {
     fontSize: 14,
-    padding: `${theme.spacing.unit * 0.5}px ${theme.spacing.unit}px`,
-    marginRight: theme.spacing.unit * 0.5,
-    marginBottom: theme.spacing.unit * 0.5,
-    borderRadius: theme.spacing.unit,
+    padding: theme.spacing(0.5, 1),
+    marginRight: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
+    borderRadius: theme.spacing(1),
     backgroundColor: '#e8edf5',
     ...{
       '& svg': {
         display: 'none',
       },
       '&:hover $tagLabel': {
-        paddingRight: theme.spacing.unit * 1.5,
+        paddingRight: theme.spacing(1.5),
       },
       '&:hover svg': {
         display: 'block',
@@ -149,7 +148,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
   },
 }))
 
@@ -536,6 +535,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <ContactFieldInput
         key="address" name="address" editable={isEditable}
+        type="address"
         fieldName="Address"
         showName={showName}
         Icon={LocationIcon}
@@ -595,7 +595,6 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             PaperProps={{
               className: classes.paper,
             }}
-            scroll="body"
           >
             <Typography variant="h5" align="center">
               {toSplitWaiver.title}

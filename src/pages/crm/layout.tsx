@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 0,
     },
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     paddingBottom: 0,
     minWidth: 0,
     height: '100vh',

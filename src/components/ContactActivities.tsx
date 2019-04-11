@@ -26,36 +26,36 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: `0 ${theme.spacing.unit * 4}px`,
-    marginBottom: theme.spacing.unit * 2,
+    padding: `0 ${theme.spacing(4)}px`,
+    marginBottom: theme.spacing(2),
   },
   title: {
     color: theme.palette.grey[800],
     fontSize: 20,
   },
   manageButton: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
   },
   activityLabel: {
-    'fontSize': theme.spacing.unit * 2,
+    'fontSize': theme.spacing(2),
     '&&': {
       fontWeight: 600,
     },
   },
   dot: {
-    width: theme.spacing.unit,
-    height: theme.spacing.unit,
+    width: theme.spacing(1),
+    height: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
-    boxShadow: `0 0 ${theme.spacing.unit * 0.5}px ${theme.spacing.unit * 0.25}px ${theme.palette.primary.light}`,
+    boxShadow: `0 0 2px 2px ${theme.palette.primary.light}`,
     borderRadius: '50%',
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 3,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(3),
   },
   entry: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
   },
   entryContent: {
     position: 'relative',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    padding: theme.spacing.unit,
+    padding: theme.spacing(0.5, 1),
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['200'],
@@ -77,10 +77,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.secondary,
   },
   stepper: {
-    padding: `0 ${theme.spacing.unit * 4}px`,
+    padding: `0 ${theme.spacing(4)}px`,
   },
   entryInputContent: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     backgroundColor: theme.palette.grey['200'],
   },
   entryButtonIcon: {
@@ -91,17 +91,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   noteSubmitter: {
     position: 'absolute',
     padding: 0,
-    right: theme.spacing.unit / 2,
-    bottom: theme.spacing.unit / 2,
+    right: theme.spacing(0.5),
+    bottom: theme.spacing(0.5),
   },
   noteRemover: {
     position: 'absolute',
     padding: 0,
-    right: theme.spacing.unit,
-    bottom: theme.spacing.unit * 1.5,
+    right: theme.spacing(1),
+    bottom: theme.spacing(1),
     visibility: 'hidden',
-    width: theme.spacing.unit * 2,
-    height: theme.spacing.unit * 2,
+    width: theme.spacing(2),
+    height: theme.spacing(2),
     color: theme.palette.text.hint,
     ...{
       '&:hover': {
@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   buttonWrapper: {
-    padding: `0 ${theme.spacing.unit * 4}px`,
+    padding: `0 ${theme.spacing(4)}px`,
     textAlign: 'right',
   },
   progressWrapper: {
@@ -134,11 +134,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     pointerEvents: 'none',
   },
   popoverPaper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
   },
 }))
 
@@ -326,10 +326,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       : (
         <Stepper orientation="vertical" className={classes.stepper}>
           {NoteGroups.map((group, gIndex) => (
-            <Step
-              key={group.date}
-              active
-            >
+            <Step key={group.date}>
               <StepLabel
                 classes={{
                   label: classes.activityLabel,

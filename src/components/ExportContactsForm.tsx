@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
+import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
@@ -12,23 +12,22 @@ import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
     width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     border: 'none',
     outline: '#efefef inset 1px',
     textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(4, 2),
   },
 }))
 
@@ -65,17 +64,18 @@ const ExportContactsForm: React.FC<Props> = React.memo(
     )
 
     return (
-      <Modal
+      <Dialog
         open={open}
         onClose={onClose}
+        PaperProps={{
+          className: classes.paper,
+        }}
       >
-        <div className={classes.paper}>
-          <Typography variant="h6" align="center"  color="textSecondary">
-            Generating file...
-          </Typography>
-          <ProgressLoading className={classes.progress} />
-        </div>
-      </Modal>
+        <Typography variant="h6" align="center"  color="textSecondary">
+          Generating file...
+        </Typography>
+        <ProgressLoading className={classes.progress} />
+      </Dialog>
     )
   },
   ({ contactIds: _, ...restP }, { contactIds: __, ...restN }) => shallowEqual(restP, restN),

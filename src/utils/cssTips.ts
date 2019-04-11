@@ -17,7 +17,7 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
     horizontallySpaced: () => createStyles({
       style: {
         '& > *': {
-          marginRight: theme.spacing.unit * tipOption.sizeFactor,
+          marginRight: theme.spacing(tipOption.sizeFactor),
         },
         '& > *:last-child': {
           marginRight: 0,
@@ -27,7 +27,7 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
     verticallySpaced: () => createStyles({
       style: {
         '& > *': {
-          marginBottom: theme.spacing.unit * tipOption.sizeFactor,
+          marginBottom: theme.spacing(tipOption.sizeFactor),
         },
         '& > *:last-child': {
           marginBottom: 0,
@@ -38,8 +38,8 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
       style: {
         display: 'inline-block',
         fill: 'currentColor',
-        width: theme.spacing.unit * tipOption.svgIconFactor,
-        height: theme.spacing.unit * tipOption.svgIconFactor,
+        width: theme.spacing(tipOption.svgIconFactor),
+        height: theme.spacing(tipOption.svgIconFactor),
       },
     }).style,
   }

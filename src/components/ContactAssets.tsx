@@ -7,6 +7,9 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import IconButton from '@material-ui/core/IconButton'
 
+import useToggle from '~src/hooks/useToggle'
+
+import ExportContactsForm from '~src/components/ExportContactsForm'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
@@ -20,8 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: `0 ${theme.spacing.unit * 4}px`,
-    marginBottom: theme.spacing.unit * 2,
+    padding: theme.spacing(0, 4),
+    marginBottom: theme.spacing(2),
   },
   title: {
     color: theme.palette.grey[800],
@@ -30,10 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   entry: {
     display: 'flex',
     alignItems: 'center',
-    padding: `0 ${theme.spacing.unit * 4.5}px`,
-    height: theme.spacing.unit * 4,
-    lineHeight: `${theme.spacing.unit * 4.5}px`,
-    marginBottom: theme.spacing.unit,
+    padding: theme.spacing(0, 4.5),
+    height: theme.spacing(4),
+    lineHeight: `${theme.spacing(4.5)}px`,
+    marginBottom: theme.spacing(1),
     fontSize: 14,
     fontFamily: 'Helvetica',
     color: theme.palette.grey[800],
@@ -44,11 +47,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   uploadButton: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
   },
   entryIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   entryContent: {
     flex: 1,
@@ -77,8 +80,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   entryButton: {
-    padding: theme.spacing.unit / 2,
-    marginLeft: theme.spacing.unit / 2,
+    padding: theme.spacing(0.5),
+    marginLeft: theme.spacing(0.5),
   },
   entryButtonIcon: {
     '&:hover': {
@@ -93,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
   },
 }))
 
@@ -124,8 +127,19 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     [],
   )
 
+  const {
+    value: exportContactsOpened,
+    toggleOn: toggleOnExportContactsOpened,
+    toggleOff: toggleOffExportContactsOpened,
+  } = useToggle(false)
+
   return (
     <ContactTableThemeProvider>
+      <ExportContactsForm
+        open={exportContactsOpened}
+        onClose={toggleOffExportContactsOpened}
+        contactIds={[contactId]}
+      />
       <div className={classes.tabsWrapper}>
         <Tabs
           value={currentTab}
@@ -179,15 +193,16 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                   }}
                   onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
                 >
-                  <Icon name={ICONS.Split} size="sm" />
+                  <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
                 </IconButton>
                 <IconButton
                   className={classes.entryButton}
                   classes={{
                     label: classes.entryButtonIcon,
                   }}
+                  onClick={toggleOnExportContactsOpened}
                 >
-                  <Icon name={ICONS.Download} size="sm" />
+                  <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
                 </IconButton>
               </div>
             </div>

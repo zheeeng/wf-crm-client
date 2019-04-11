@@ -33,6 +33,7 @@ import * as vars from '~src/theme/vars'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
+import { LinkProps } from '@reach/router';
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
@@ -59,12 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   groupStatusIcon: {
     padding: 2,
-    marginRight: theme.spacing.unit,
-    marginTop: theme.spacing.unit,
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
   groupAddIcon: {
     padding: 2,
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
   },
 }))
 
@@ -217,9 +218,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [refreshPage, toggleGroupsOpened],
   )
 
-  const renderLinkWrapper = (routePath: string, onClick?: () => void) => (props: ListItemProps) => (
-    <Link to={routePath} {...props} onClick={onClick} />
-  )
+  const renderLinkWrapper = (routePath: string, onClick?: () => void) =>
+    React.forwardRef((props: ListItemProps<any, any>, ref) => <Link {...props} ref={ref} to={routePath} onClick={onClick}/>)
 
   const renderLink = (
     { routePath, routeFullPath, name, icon }:

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing(3),
     whiteSpace: 'nowrap',
     [theme.breakpoints.between('sm', 'md')]: {
       ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   infoForePlaceholder: {
-    width: theme.spacing.unit * 24,
+    width: theme.spacing(24),
   },
   infoBar: {
     width: '100%',
@@ -72,8 +72,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     color: 'white',
     borderColor: 'white',
-    marginRight: theme.spacing.unit * 2,
-    padding: `0 ${theme.spacing.unit * 2}px`,
+    marginRight: theme.spacing(2),
+    padding: `0 ${theme.spacing(2)}px`,
     ...{
       '&:hover': {
         color: 'white',
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     pointerEvents: 'none',
   },
   popoverPaper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
   },
   table: {
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   downloadIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   tableRow: {
     '&:hover': {
@@ -250,11 +250,11 @@ const PeopleList: React.FC<Props> = React.memo(({
   const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 
   const handlePopoverToggle = useCallback<{
-    (opened: true, text: string): (event: React.MouseEvent<HTMLDivElement>) => void;
-    (opened: false): (event: React.MouseEvent<HTMLDivElement>) => void;
+    (opened: true, text: string): (event: React.MouseEvent<HTMLButtonElement>) => void;
+    (opened: false): (event: React.MouseEvent<HTMLButtonElement>) => void;
   }> (
     (opened: boolean, text?: string) =>
-      (event: React.MouseEvent<HTMLDivElement>) => {
+      (event: React.MouseEvent<HTMLButtonElement>) => {
         const currentTarget = event.currentTarget
         requestAnimationFrame(() => {
           setPopover({

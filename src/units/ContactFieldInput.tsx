@@ -11,6 +11,15 @@ import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 import { isEmail, isValidDate } from '~src/utils/validation'
 import SvgIcon, { ICONS } from '~src/units/Icons'
+import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
+import countries from '~src/meta/countries.json'
+
+const countryOptions= countries.map(option => ({ label: option, value: option }))
+
+const joinSegmentFieldValues = (values: FieldSegmentValue[]) => values
+  .filter(value => value.key !== 'title')
+  .map(value => value.value)
+  .join(' ')
 
 const useStyles = makeStyles((theme: Theme) => ({
   hidden: {
@@ -27,46 +36,57 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  breaker: {
+    width: '100%',
+  },
+  takePlace: {
+    '&&': {
+      visibility: 'hidden',
+      pointerEvents: 'none',
+    },
+  },
   fieldBar: {
     display: 'flex',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   fieldTextWrapper: {
     flex: 1,
-    paddingTop: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
   },
   fieldTextBarWrapper: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: `0 ${theme.spacing.unit}px`,
+    flexDirection: 'column',
+    padding: theme.spacing(0, 1),
   },
   fieldTextBar: {
     flex: 1,
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     ...cssTips(theme, { sizeFactor: 2 }).horizontallySpaced(),
   },
   fieldName: {
-    padding: theme.spacing.unit * 2.5,
-    height: theme.spacing.unit * 8,
-    width: theme.spacing.unit * 16,
-    marginRight: theme.spacing.unit * 2.5,
+    padding: theme.spacing(2.5),
+    height: theme.spacing(8),
+    width: theme.spacing(16),
+    marginRight: theme.spacing(2.5),
     textAlign: 'left',
   },
   fieldIcon: {
-    padding: theme.spacing.unit * 2.5,
-    height: theme.spacing.unit * 8,
-    width: theme.spacing.unit * 8,
-    marginRight: theme.spacing.unit * 2.5,
+    padding: theme.spacing(2.5),
+    height: theme.spacing(8),
+    width: theme.spacing(8),
+    marginRight: theme.spacing(2.5),
   },
   filedIconBox: {
     display: 'flex',
     margin: 0,
   },
   fieldControlIcon: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     marginRight: 0,
     padding: 0,
   },
@@ -78,23 +98,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     '$fieldTextBarWrapper:hover &': {
       visibility: 'visible',
     },
+    '$fieldTextBarWrapper:hover $takePlace &': {
+      visibility: 'hidden',
+    },
   },
   fieldDragIcon: {
     cursor: 'move',
   },
   fieldTypeText: {
     flex: 0.5,
-    padding: `${theme.spacing.unit}px 0`,
+    padding: theme.spacing(1, 0),
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
+  takeQuarter: {
+    flex: 0.25,
+  },
   fieldInput: {
     flex: 1,
-    padding: `${theme.spacing.unit}px 0`,
+    padding: theme.spacing(1, 0),
     color: theme.palette.text.secondary,
   },
   addTagIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   dragged: {
     backgroundColor: theme.palette.background.paper,
@@ -113,7 +139,7 @@ const getEmptyFieldSegmentValue = (fieldType: string): FieldSegmentValue => ({
   fieldType,
 })
 
-const getFieldDefaultValue = (fieldValue: FieldValue) => fieldValue.values.find(sv => sv.key === 'title')!.value
+const getFieldDefaultTitle = (fieldValue: FieldValue) => fieldValue.values.find(sv => sv.key === 'title')!.value
 
 export interface FieldValue {
   values: FieldSegmentValue[]
@@ -311,6 +337,15 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [localFieldValues, name, type],
   )
 
+  const handleEntryUpdate = useCallback(
+    (key: string, id: string, defaultValue: string) =>
+      (value: string) => {
+
+      updateField({ key, value, fieldType: name }, id)
+    },
+    [],
+  )
+
   const handleEntryDelete = useCallback(
     (id: string) => () => removeField(id),
     [localFieldValues],
@@ -342,134 +377,147 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [localFieldValues],
   )
 
+  const renderField = useCallback(
+    (values: FieldSegmentValue[], fieldValue: FieldValue, isFirst: boolean, isAppend: boolean) => (
+      <div className={classnames(
+        classes.fieldTextBar,
+        !editable && !joinSegmentFieldValues(values).trim() && classes.hidden,
+        editable && fieldValue.priority === 0 && classes.disabled,
+      )}>
+        {(hasTitle && !editable) && (
+          <Typography variant="h6" className={classes.fieldTypeText}>
+            {getFieldDefaultTitle(fieldValue)}
+          </Typography>
+        )}
+        {editable
+          ? (
+            <>
+              {values.filter(segmentValue => segmentValue.key !== 'title')
+                .map(segmentValue => (type === 'address' && segmentValue.key === 'country')
+                  ? (
+                    <BasicFormInputSelect
+                      className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
+                      onChange={handleEntryUpdate(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                      placeholder="country"
+                      disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                      options={countryOptions}
+                    />
+                  ) : (
+                    <Input
+                      key={segmentValue.key}
+                      type={type === 'calendar' ? 'number' : type}
+                      error={hasErrorKeys.includes(fieldValue.id || '')}
+                      className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
+                      classes={{disabled: classes.fieldDisabled}}
+                      placeholder={segmentValue.key}
+                      defaultValue={segmentValue.value}
+                      onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                      onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                      disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                    />
+                  )
+                )
+              }
+              {!isAppend && hasTitle &&(
+                <Input
+                  className={classes.fieldTypeText}
+                  classes={{disabled: classes.fieldDisabled}}
+                  defaultValue={getFieldDefaultTitle(fieldValue)}
+                  onBlur={handleEntryUpdateByBlur('title', fieldValue.id!, '')}
+                  onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!, '')}
+                  placeholder={'label'}
+                  disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                />
+              )}
+            </>
+          )
+          : (
+            <Input
+              disabled={true}
+              disableUnderline={true}
+              className={classes.fieldInput}
+              value={joinSegmentFieldValues(values)}
+            />
+          )
+        }
+        {editable && (
+          <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
+            <IconButton
+              className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+              onClick={handleEntryToggleHide(fieldValue.id!)}
+            >
+              <SvgIcon
+                name={ICONS.Eye}
+                color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
+                size="sm"
+              />
+            </IconButton>
+            <SortHandler
+              element={
+                <IconButton
+                  className={classnames(
+                    classes.fieldControlIcon,
+                    classes.fieldHoverShowingIcon,
+                    classes.fieldDragIcon,
+                  )}
+                >
+                  <SvgIcon
+                    name={ICONS.Reorder}
+                    color="hoverLighten" size="sm"
+                  />
+                </IconButton>
+              }
+            />
+            {expandable && (isFirst
+              ? (
+                <IconButton
+                  className={classes.fieldControlIcon}
+                  onClick={handleAddEntry}
+                >
+                  <SvgIcon
+                    name={ICONS.AddCircle}
+                    color="hoverLighten" size="sm"
+                  />
+                </IconButton>
+              )
+              : (
+                <IconButton
+                  className={classes.fieldControlIcon}
+                  onClick={handleEntryDelete(fieldValue.id!)}>
+                  <SvgIcon
+                    name={ICONS.Delete}
+                    color="hoverLighten" size="sm"
+                  />
+                </IconButton>
+              )
+            )}
+          </div>
+        )}
+      </div>
+    ),
+    [editable, hasTitle, hasErrorKeys,
+      handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
+      handleEntryToggleHide, handleEntryDelete]
+  )
+
   const sortableItems = useMemo(
     () => (hasValues ? localFieldValues : [backupFieldValue]).map(
       (fieldValue, index) => ({
         element: (
-          <div
-            className={classnames(
-              classes.fieldTextBarWrapper,
-              !editable && fieldValue.priority === 0 && classes.hidden,
-            )}
-          >
-            <div className={classnames(
-              classes.fieldTextBar,
-              editable && fieldValue.priority === 0 && classes.disabled,
-            )}>
-              {(hasTitle && !editable) && (
-                <Typography variant="h6" className={classes.fieldTypeText}>
-                  {getFieldDefaultValue(fieldValue)}
-                </Typography>
-              )}
-              {editable
-                ? (
-                  <>
-                    {fieldValue.values.filter(segmentValue => segmentValue.key !== 'title')
-                      .map(segmentValue => (
-                        <Input
-                          key={segmentValue.key}
-                          type={type === 'calendar' ? 'number' : type}
-                          error={hasErrorKeys.includes(fieldValue.id || '')}
-                          className={classes.fieldInput}
-                          classes={{disabled: classes.fieldDisabled}}
-                          placeholder={segmentValue.key}
-                          defaultValue={segmentValue.value}
-                          onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
-                          onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
-                          disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                        />
-                      ))
-                    }
-                    {hasTitle ? (
-                      <Input
-                        className={classes.fieldTypeText}
-                        classes={{disabled: classes.fieldDisabled}}
-                        defaultValue={getFieldDefaultValue(fieldValue)}
-                        onBlur={handleEntryUpdateByBlur('title', fieldValue.id!, '')}
-                        onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!, '')}
-                        placeholder={'label'}
-                        disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                      />
-                    ) : undefined}
-                  </>
-                )
-                : (
-                  <Input
-                    disabled={true}
-                    disableUnderline={true}
-                    className={classes.fieldInput}
-                    value={fieldValue.values
-                      .filter(sv => sv.key !== 'title')
-                      .map(sv => sv.value)
-                      .join(' ')
-                    }
-                  />
-                )
-              }
-            </div>
-            {editable && (
-              <div className={classes.filedIconBox}>
-                <IconButton
-                  className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                  onClick={handleEntryToggleHide(fieldValue.id!)}
-                >
-                  <SvgIcon
-                    name={ICONS.Eye}
-                    color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
-                    size="sm"
-                  />
-                </IconButton>
-                <SortHandler
-                  element={
-                    <IconButton
-                      className={classnames(
-                        classes.fieldControlIcon,
-                        classes.fieldHoverShowingIcon,
-                        classes.fieldDragIcon,
-                      )}
-                    >
-                      <SvgIcon
-                        name={ICONS.Reorder}
-                        color="hoverLighten" size="sm"
-                      />
-                    </IconButton>
-                  }
-                />
-                {expandable && (index === 0
-                  ? (
-                    <IconButton
-                      className={classes.fieldControlIcon}
-                      onClick={handleAddEntry}
-                    >
-                      <SvgIcon
-                        name={ICONS.AddCircle}
-                        color="hoverLighten" size="sm"
-                      />
-                    </IconButton>
-                  )
-                  : (
-                    <IconButton
-                      className={classes.fieldControlIcon}
-                      onClick={handleEntryDelete(fieldValue.id!)}>
-                      <SvgIcon
-                        name={ICONS.Delete}
-                        color="hoverLighten" size="sm"
-                      />
-                    </IconButton>
-                  )
-                )}
-              </div>
-            )}
+          <div className={classnames(
+            classes.fieldTextBarWrapper,
+            !editable && fieldValue.priority === 0 && classes.hidden
+          )}>
+            {renderField(fieldValue.values, fieldValue, index === 0, false)}
+            {fieldValue.appendValues
+              && fieldValue.appendValues.length
+              && renderField(fieldValue.appendValues, fieldValue, index === 0, true)}
           </div>
         ),
         id: fieldValue.id,
       }),
     ),
-    [
-      hasValues, localFieldValues, backupFieldValue, editable, hasTitle, hasErrorKeys,
-      handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
-      handleEntryToggleHide, handleEntryDelete,
-    ],
+    [hasValues, localFieldValues, backupFieldValue, editable],
   )
 
   return (

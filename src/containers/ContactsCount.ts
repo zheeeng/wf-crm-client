@@ -8,7 +8,7 @@ import useInfoCallback from '~src/hooks/useInfoCallback'
 const ContactsCountContainer = createContainer(() => {
   const { data: contactsData, request: getContactsData } = useGet<{ pagination: Pagination}>()
   const { data: starredData, request: getStarredData } = useGet<{ pagination: Pagination}>()
-  const [refreshPage, refreshPageMutation] = useInfoCallback(() => Promise.resolve(), [])
+  const [ refreshPage, refreshPageMutation ] = useInfoCallback(() => Promise.resolve(), [])
 
   const { authored } = useContext(AccountContainer.Context)
 

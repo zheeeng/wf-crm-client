@@ -13,30 +13,30 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     '&&': {
-      marginTop: theme.spacing.unit * 1.5,
+      marginTop: theme.spacing(1.5),
     }
   },
   inputWrapper: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
     borderRadius: 2,
-    padding: `0 ${theme.spacing.unit}px`,
+    padding: theme.spacing(0, 1),
   },
   formItem: {
-    padding: theme.spacing.unit / 2,
+    padding: theme.spacing(0.5),
   },
   formLabel: {
     fontSize: 14,
-    paddingTop: theme.spacing.unit / 2,
+    paddingTop: theme.spacing(0.5),
     color: theme.palette.grey.A400,
-    transform: `translate(0, ${theme.spacing.unit}px) scale(1)`,
-    paddingLeft: theme.spacing.unit,
+    transform: `translate(0, ${theme.spacing(1)}px) scale(1)`,
+    paddingLeft: theme.spacing(1),
   },
   input: {
     display: 'flex',
     padding: 0,
     fontWeight: 500,
-    marginTop: theme.spacing.unit / 2,
-    marginBottom: theme.spacing.unit / 2,
+    marginTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
   },
   shrink: {
     fontSize: 8,

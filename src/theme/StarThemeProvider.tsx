@@ -1,5 +1,6 @@
 import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 import { globalTheme, themeOptions as gThemeOptions } from './GlobalThemeProvider'
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 import mergeOptions from '~src/utils/mergeOptions'
@@ -47,9 +48,9 @@ export const themeOptions: ThemeOptions = createMuiTheme(mergeOptions(gThemeOpti
 export const starTheme = createMuiTheme(themeOptions)
 
 const starThemeProvider: React.FC = (props) => (
-  <MuiThemeProvider theme={starTheme}>
+  <ThemeProvider theme={starTheme}>
     {props.children}
-  </MuiThemeProvider>
+  </ThemeProvider>
 )
 
 export default starThemeProvider

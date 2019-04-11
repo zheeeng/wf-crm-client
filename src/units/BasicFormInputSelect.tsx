@@ -16,20 +16,20 @@ import { useStyles } from './BasicFormInput'
 
 export const useStyles2 = makeStyles((theme: Theme) => ({
   select: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
   paper: {
     position: 'absolute',
     zIndex: 1,
     left: 0,
     right: 0,
-    maxHeight: theme.spacing.unit * 20,
+    maxHeight: theme.spacing(20),
     overflow: 'auto',
   },
   noOptionsMessage: {
     fontSize: 14,
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: theme.spacing(1, 2),
   },
   placeholder: {
     color: theme.palette.grey.A400,
@@ -48,13 +48,13 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     color: theme.palette.text.secondary,
     fontWeight: 500,
-    marginTop: theme.spacing.unit / 2,
-    marginBottom: theme.spacing.unit / 2,
+    marginTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
   },
   option: {
     backgroundColor: 'white',
     fontSize: 14,
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     margin: 0,
     color: theme.palette.text.secondary,
   },
@@ -70,6 +70,7 @@ export interface Props {
   fullWidth?: boolean,
   InputClasses?: Partial<ClassNameMap<FilledInputClassKey>>
   TextFieldClasses?: Partial<ClassNameMap<TextFieldClassKey>>
+  disabled?: boolean,
 }
 
 
@@ -197,7 +198,7 @@ const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, isFocuse
     )
   }
 
-const components = {
+export const components = {
   Control,
   Menu,
   NoOptionsMessage,
@@ -208,15 +209,15 @@ const components = {
   IndicatorsContainer,
 }
 
-const filterOption = createFilter({
+export const filterOption = createFilter({
   ignoreCase: true,
   ignoreAccents: true,
   trim: true,
   matchFrom: 'start',
 })
 
-const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', className, value = '', error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options,
+const BasicFormInputSelect: React.FC<Props> = React.memo(({
+  placeholder = '', className, value = '', error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
 }) => {
   const classes = useStyles({})
   const classes2 = useStyles2({})
@@ -231,7 +232,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 
   return (
     <Select
-      className={classes2.select}
+      className={classnames(classes2.select, className)}
       classes={classes}
       options={options}
       components={components}
@@ -240,14 +241,14 @@ const BasicFormInput: React.FC<Props> = React.memo(({
       props={{
         TextFieldClasses,
         fullWidth,
-        className,
         InputClasses,
         placeholder,
         error,
       }}
       filterOption={filterOption}
+      isDisabled={disabled}
     />
   )
 })
 
-export default BasicFormInput
+export default BasicFormInputSelect

@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
-    marginBottom: theme.spacing.unit * 4,
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
+    marginBottom: theme.spacing(4),
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
   },
   content: {
     display: 'flex',
@@ -26,18 +26,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   footerPlacer: {
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing(4),
   },
   leftSider: {
     flex: 1,
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4}px`,
-    marginRight: theme.spacing.unit * 4,
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    marginRight: theme.spacing(4),
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
       marginRight: 0,
-      marginBottom: theme.spacing.unit * 4,
+      marginBottom: theme.spacing(4),
     },
   },
   rightSider: {
@@ -45,10 +45,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   rightPart1: {
-    padding: `${theme.spacing.unit * 2}px 0`,
+    padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing(4),
     overflow: 'auto',
     width: 408,
     maxHeight: '50%',
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart2: {
     flex: 1,
-    padding: `${theme.spacing.unit * 2}px 0`,
+    padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0 0 5px 1px lightgrey',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',

@@ -10,7 +10,7 @@ const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
   const { pagination, fetchContacts } = useContext(ContactsContainer.Context)
 
   const searchContacts = useCallback(
-    ({page = 0, size = 30, searchTerm = ''}) => fetchContacts({ page: page + 1, size, searchTerm }),
+    ({ page = 0, size = 30, searchTerm = '' }) => fetchContacts({ page: page + 1, size, searchTerm }),
     [],
   )
 

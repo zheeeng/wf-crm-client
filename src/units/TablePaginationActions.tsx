@@ -18,13 +18,13 @@ const useStyles = makeStyles(
     root: {
       flexShrink: 0,
       color: theme.palette.text.secondary,
-      marginLeft: theme.spacing.unit * 2.5,
+      marginLeft: theme.spacing(2.5),
     },
     textField: {
       display: 'inline-block',
       margin: '8px 4px',
-      width: theme.spacing.unit * 7,
-      height: theme.spacing.unit * 4,
+      width: theme.spacing(7),
+      height: theme.spacing(4),
       fontSize: 0,
       padding: 0,
     },

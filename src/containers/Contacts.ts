@@ -30,7 +30,7 @@ const convertPagination = pipe<
   Pagination
 >(
   head,
-  defaultTo({ pagination: { page: 0, size: 0, total: 0 }, result: [] }),
+  defaultTo({ pagination: { page: 1, size: 0, total: 0 }, result: [] }),
   prop('pagination'),
 )
 
@@ -42,7 +42,7 @@ const convertContacts = pipe<
   Contact[]
 >(
   head,
-  defaultTo({ pagination: { page: 0, size: 0, total: 0 }, result: [] }),
+  defaultTo({ pagination: { page: 1, size: 0, total: 0 }, result: [] }),
   prop('result'),
   map(contactInputAdapter),
 )

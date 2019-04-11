@@ -9,7 +9,7 @@ import Icon, { ICONS } from './Icons';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: theme.spacing(1, 2),
   },
   input: {
     color: theme.palette.text.secondary,

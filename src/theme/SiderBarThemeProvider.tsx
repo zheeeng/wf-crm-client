@@ -1,5 +1,6 @@
 import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 import { globalTheme, themeOptions } from './GlobalThemeProvider'
 import mergeOptions from '~src/utils/mergeOptions'
 
@@ -47,13 +48,13 @@ export const siderBarTheme = createMuiTheme(mergeOptions(themeOptions, {
     MuiListItemSecondaryAction: {
       root: {
         color: globalTheme.palette.primary.main,
-        paddingRight: globalTheme.spacing.unit * 2,
+        paddingRight: globalTheme.spacing(2),
       },
     },
     MuiDivider: {
       root: {
-        marginRight: globalTheme.spacing.unit * 3,
-        marginLeft: globalTheme.spacing.unit * 3,
+        marginRight: globalTheme.spacing(3),
+        marginLeft: globalTheme.spacing(3),
         height: 2,
         borderRadius: 1,
         backgroundColor: globalTheme.palette.primary.main,
@@ -64,9 +65,9 @@ export const siderBarTheme = createMuiTheme(mergeOptions(themeOptions, {
 }))
 
 const SiderBarThemeProvider: React.FC = (props) => (
-  <MuiThemeProvider theme={siderBarTheme}>
+  <ThemeProvider theme={siderBarTheme}>
     {props.children}
-  </MuiThemeProvider>
+  </ThemeProvider>
 )
 
 export default SiderBarThemeProvider

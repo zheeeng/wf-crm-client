@@ -211,24 +211,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   xlIcon : {
-    width: theme.spacing.unit * 3.5,
-    height: theme.spacing.unit * 3.5,
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
   },
   lgIcon : {
-    width: theme.spacing.unit * 3,
-    height: theme.spacing.unit * 3,
+    width: theme.spacing(3),
+    height: theme.spacing(3),
   },
   mdIcon : {
-    width: theme.spacing.unit * 2.5,
-    height: theme.spacing.unit * 2.5,
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
   },
   smIcon : {
-    width: theme.spacing.unit * 2,
-    height: theme.spacing.unit * 2,
+    width: theme.spacing(2),
+    height: theme.spacing(2),
   },
   xsIcon: {
-    width: theme.spacing.unit * 1.5,
-    height: theme.spacing.unit * 1.5,
+    width: theme.spacing(1.5),
+    height: theme.spacing(1.5),
   }
 }))
 

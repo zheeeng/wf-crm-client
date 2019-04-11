@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   main: {
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     backgroundColor: theme.palette.background.paper,
     boxShadow: '0 0 5px 1px lightgrey',
     flex: 1,

@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     marginTop: vars.HeaderHeight,
     width: '100%',
-    height: theme.spacing.unit * 6,
-    lineHeight: `${theme.spacing.unit * 6}px`,
+    height: theme.spacing(6),
+    lineHeight: `${theme.spacing(6)}px`,
     color: theme.palette.grey['50'],
     opacity: 0.6,
     display: 'flex',
@@ -83,8 +83,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced(),
     [theme.breakpoints.down('md')]: {
       justifyContent: 'space-around',
-      paddingRight: theme.spacing.unit * 4,
-      paddingLeft: theme.spacing.unit * 4,
+      paddingRight: theme.spacing(4),
+      paddingLeft: theme.spacing(4),
       ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
     },
     [theme.breakpoints.down('sm')]: {
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   menuOffset: {
-    top: theme.spacing.unit * 4,
+    top: theme.spacing(4),
   },
   menuList: {
     cursor: 'default',
@@ -155,7 +155,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#637694',
     padding: '6px 20px',
     wordWrap: 'break-word',
-    lineHeight: theme.spacing.unit * 2.5,
+    lineHeight: `${theme.spacing(2.5)}px`,
     ...{
       '&:hover': {
         color: theme.palette.primary.main,

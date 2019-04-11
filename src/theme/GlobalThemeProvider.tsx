@@ -1,11 +1,9 @@
 import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 
 export const defaultTheme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
 })
 
 export const themeOptions: ThemeOptions = {
@@ -43,7 +41,6 @@ export const themeOptions: ThemeOptions = {
     // },
   },
   typography: {
-    useNextVariants: true,
     fontFamily: [
       '"Open sans"',
       '"Helvetica Neue"',
@@ -92,12 +89,12 @@ export const themeOptions: ThemeOptions = {
     },
     MuiButton: {
       root: {
-        borderRadius: defaultTheme.spacing.unit * 2,
+        borderRadius: defaultTheme.spacing(2),
       },
     },
     MuiOutlinedInput: {
       notchedOutline: {
-        borderRadius: defaultTheme.spacing.unit * 2,
+        borderRadius: defaultTheme.spacing(2),
       },
     },
   },
@@ -106,9 +103,9 @@ export const themeOptions: ThemeOptions = {
 export const globalTheme = createMuiTheme(themeOptions)
 
 const GlobalThemeProvider: React.FC = (props) => (
-  <MuiThemeProvider theme={globalTheme}>
+  <ThemeProvider theme={globalTheme}>
     {props.children}
-  </MuiThemeProvider>
+  </ThemeProvider>
 )
 
 export default GlobalThemeProvider

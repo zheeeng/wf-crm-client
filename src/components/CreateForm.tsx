@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     border: 'none',
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
@@ -30,18 +30,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 352,
   },
   tipText: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
   dialogButtonZone: {
     textAlign: 'right',
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing(4),
     ...cssTips(theme).horizontallySpaced(),
   },
   combinedFormRow: {
     display: 'flex',
   },
   formItem: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     ...{
       '&:last-child': {
         marginRight: 0,
@@ -200,6 +200,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           PaperProps={{
             className: classnames(classes.paper, classes.paper2),
           }}
+          scroll="body"
         >
           {discardText}
           <div className={classes.dialogButtonZone}>

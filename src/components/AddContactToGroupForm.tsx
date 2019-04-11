@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     border: 'none',
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
@@ -32,16 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonZone: {
     textAlign: 'right',
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing(4),
     ...cssTips(theme).horizontallySpaced(),
   },
   label: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    lineHeight: `${theme.spacing.unit * 4}px`,
-    height: theme.spacing.unit * 4,
-    padding: theme.spacing.unit,
+    lineHeight: `${theme.spacing(4)}px`,
+    height: theme.spacing(4),
+    padding: theme.spacing(1),
     color: theme.palette.primary.main,
   },
 }))
