@@ -55,7 +55,7 @@ const GroupMenu: React.FC<Props> = ({ selectedId, groupsOpened, onClickGroup }) 
   return (
     <Collapse in={groupsOpened} timeout="auto" unmountOnExit>
       <List disablePadding>
-        <ListItem button>
+        <ListItem>
           <Searcher
             placeholder="Type a group name"
             value={searchTerm}

@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
+import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
@@ -16,11 +16,6 @@ import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
@@ -28,6 +23,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
+      ...{
+        '&&': {
+          marginLeft: 0,
+          marginRight: 0,
+        }
+      }
     },
   },
   buttonZone: {
@@ -113,52 +114,53 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
   )
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={onClose}
+      PaperProps={{
+        className: classes.paper,
+      }}
     >
-      <div className={classes.paper}>
-        <Typography variant="h6" align="center" color="textSecondary">
-          Add contact to
-        </Typography>
-        <BasicFormInput
-          placeholder="New Group"
-          onChange={handleNewGroupNameChange}
-        />
-        <div className={classes.label} onClick={toggleGroupsOpened} >
-          Existing group
-          {groupsOpened
-            ? <Icon name={ICONS.ChevronDown} />
-            : <Icon name={ICONS.ChevronRight} />
-          }
-        </div>
-        <GroupMenu
-          selectedId={selectedGroupId}
-          groupsOpened={groupsOpened}
-          onClickGroup={handleGroupClick}
-        />
-        <div className={classes.buttonZone}>
-          <Button onClick={onClose}>Cancel</Button>
-          {newGroupName
-            ? (
-              <Button
-                color="primary"
-                onClick={handleCreateGroupClick}
-              >
-                Create
-              </Button>)
-            : (
-              <Button
-                color="primary"
-                onClick={handleOkClick}
-                disabled={!selectedGroupId}
-              >
-                Ok
-              </Button>)
-          }
-        </div>
+      <Typography variant="h6" align="center" color="textSecondary">
+        Add contact to
+      </Typography>
+      <BasicFormInput
+        placeholder="New Group"
+        onChange={handleNewGroupNameChange}
+      />
+      <div className={classes.label} onClick={toggleGroupsOpened} >
+        Existing group
+        {groupsOpened
+          ? <Icon name={ICONS.ChevronDown} />
+          : <Icon name={ICONS.ChevronRight} />
+        }
       </div>
-    </Modal>
+      <GroupMenu
+        selectedId={selectedGroupId}
+        groupsOpened={groupsOpened}
+        onClickGroup={handleGroupClick}
+      />
+      <div className={classes.buttonZone}>
+        <Button onClick={onClose}>Cancel</Button>
+        {newGroupName
+          ? (
+            <Button
+              color="primary"
+              onClick={handleCreateGroupClick}
+            >
+              Create
+            </Button>)
+          : (
+            <Button
+              color="primary"
+              onClick={handleOkClick}
+              disabled={!selectedGroupId}
+            >
+              Ok
+            </Button>)
+        }
+      </div>
+    </Dialog>
   )
 })
 
