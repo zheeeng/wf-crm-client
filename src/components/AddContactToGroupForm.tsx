@@ -16,6 +16,7 @@ import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
+    width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
@@ -55,7 +56,7 @@ export interface Props {
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
   const { fail } = useContext(AlertContainer.Context)
-  const { addGroup, addGroupError } = useContext(GroupsContainer.Context)
+  const { addGroup, addGroupError, groups } = useContext(GroupsContainer.Context)
   const classes = useStyles({})
 
   useEffect(
@@ -143,13 +144,20 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       <div className={classes.buttonZone}>
         <Button onClick={onClose}>Cancel</Button>
         {newGroupName
-          ? (
-            <Button
-              color="primary"
-              onClick={handleCreateGroupClick}
-            >
-              Create
-            </Button>)
+          ? (groups.some(group => group.info.name == newGroupName)
+            ? (
+              <Button disabled>
+                Group existed
+              </Button>
+            ) : (
+              <Button
+                color="primary"
+                onClick={handleCreateGroupClick}
+              >
+                Create and add
+              </Button>
+            )
+          )
           : (
             <Button
               color="primary"

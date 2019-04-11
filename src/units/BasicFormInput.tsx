@@ -51,6 +51,7 @@ export interface Props {
   error?: boolean,
   onChange?: React.ChangeEventHandler<HTMLElement>,
   onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
+  autoFocus?: boolean,
   placeholder?: string,
   noLabel?: boolean,
   fullWidth?: boolean,
@@ -59,7 +60,7 @@ export interface Props {
 }
 
 const BasicFormInput: React.FC<Props> = React.memo(({
-  placeholder = '', noLabel, className, style, value, error, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
+  autoFocus = false, placeholder = '', noLabel, className, style, value, error, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
 }) => {
   const classes = useStyles({})
 
@@ -74,6 +75,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 
   return (
     <TextField
+      autoFocus={autoFocus}
       error={error}
       style={style}
       classes={TextFieldClasses}

@@ -11,6 +11,7 @@ import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
+    width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
@@ -84,12 +85,16 @@ export type CountryField = {
   required: boolean
 }
 
+export type OkColor = 'inherit' | 'primary' | 'secondary' | 'default' | undefined
+
 export interface CreateFormOption {
   title?: string,
   tip?: string,
   fields: Array<TextField | CombinedTextField | EnumTextField | CountryField>,
-  okText?: string,
-  cancelText?: string
+  okTextWatch?: string,
+  okText?: string | ((text: string) => string),
+  okColor?: OkColor | ((text: string) => OkColor),
+  cancelText?: string,
 }
 
 export interface Props {
@@ -103,6 +108,11 @@ export interface Props {
 
 const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, discardText }) => {
   const classes = useStyles({})
+
+  const {
+    title = 'title', tip = '', fields = [],
+    okTextWatch = '', okColor = 'primary', okText = 'Ok', cancelText = 'cancel',
+  } = option || {}
 
   const [cancellationConfirmModalOpen, setCancellationConfirmModalOpen] = useState(false)
 
@@ -123,17 +133,27 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
 
   const fieldValues = useRef<{ [key: string]: string }>({})
 
+  const [watchValue, setWatchValue] = useState(fieldValues.current[okTextWatch] || '')
+
   const handleCreateInfoChange = useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      fieldValues.current[field] = e.target.value
+      const value = e.target.value
+      fieldValues.current[field] = value
+      if (field === okTextWatch) {
+        setWatchValue(value)
+      }
     },
-    [fieldValues],
+    [fieldValues, watchValue],
   )
+
   const handleCreateInfoChange2 = useCallback(
     (field: string) => (value: string) => {
       fieldValues.current[field] = value
+      if (field === okTextWatch) {
+        setWatchValue(value)
+      }
     },
-    [fieldValues],
+    [fieldValues, watchValue],
   )
 
   const handleClose = useCallback(
@@ -190,8 +210,6 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     [onOk],
   )
 
-  const { title = 'title', tip = '', fields = [], okText = 'Ok', cancelText = 'cancel' } = option || {}
-
   return (
     <>
       {discardText && (
@@ -200,7 +218,6 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           PaperProps={{
             className: classnames(classes.paper, classes.paper2),
           }}
-          scroll="body"
         >
           {discardText}
           <div className={classes.dialogButtonZone}>
@@ -215,7 +232,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         PaperProps={{
           className: classes.paper,
         }}
-        scroll="body"
+        scroll={fields.length > 5 ? 'body' : 'paper'}
       >
         <Typography variant="h6" align="center" color="textSecondary">
           {title}
@@ -226,9 +243,10 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           </Typography>)
         }
         <form autoComplete="off">
-          {fields.map(field => field.type == 'text'
+          {fields.map((field, index) => field.type == 'text'
             ? (
               <BasicFormInput
+                autoFocus={index === 0}
                 error={toFillFields.includes(field.name)}
                 key={field.name}
                 placeholder={field.label}
@@ -266,7 +284,13 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         </form>
         <div className={classes.dialogButtonZone}>
           <Button onClick={onClose}>{cancelText}</Button>
-          <Button color="primary" onClick={handleOkClick}>{okText}</Button>
+          <Button
+            disabled={typeof okColor === 'function' && okColor(watchValue) === 'default' ? true : false}
+            color={typeof okColor === 'function' ? okColor(watchValue) : okColor}
+            onClick={handleOkClick}
+          >
+            {typeof okText === 'function' ? okText(watchValue) : okText}
+          </Button>
         </div>
       </Dialog>
     </>

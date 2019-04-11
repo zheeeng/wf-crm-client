@@ -33,7 +33,6 @@ import * as vars from '~src/theme/vars'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
-import { LinkProps } from '@reach/router';
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
@@ -125,6 +124,9 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   const handleAddNewGroup = useCallback(
     async (group: object) => {
+      if (groups.some(g => g.info.name === (group as GroupFields).name)) {
+        return
+      }
       addGroup(group as GroupFields)
       changeGroupFormOpened(false)()
     },
@@ -139,7 +141,11 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
       label: 'Group Name',
       required: true,
     }],
-    okText: 'Ok',
+    okTextWatch: 'name',
+    okText: (name: string) =>
+      groups.some(group => group.info.name === name) ? 'Group existed' : 'Ok',
+    okColor: (name: string) =>
+      groups.some(group => group.info.name === name) ? 'default' : 'primary',
   }
 
   const updateGroupFormOption: CreateFormOption = {
@@ -310,18 +316,18 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     <>
       {groupForm.opened && (
         <CreateForm
-        option={groupForm.option}
-        open={groupForm.opened}
-        onClose={changeGroupFormOpened(false)}
-        onOk={
-          groupForm.type === 'add'
-            ? handleAddNewGroup
-            : groupForm.type === 'update'
-              ? handleUpdateGroup
-              : groupForm.type === 'remove'
-                ? handleRemoveGroup
-                : undefined
-          }
+          option={groupForm.option}
+          open={groupForm.opened}
+          onClose={changeGroupFormOpened(false)}
+          onOk={
+            groupForm.type === 'add'
+              ? handleAddNewGroup
+              : groupForm.type === 'update'
+                ? handleUpdateGroup
+                : groupForm.type === 'remove'
+                  ? handleRemoveGroup
+                  : undefined
+            }
         />
       )}
       <Hidden mdDown>
