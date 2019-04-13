@@ -451,8 +451,18 @@ const PeopleList: React.FC<Props> = React.memo(({
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
-            checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
-            icon={<Icon name={ICONS.Check} />}
+            checkedIcon={
+              <Icon
+                name={ICONS.CheckChecked}
+                size="sm"
+              />
+            }
+            icon={
+              <Icon
+                name={ICONS.Check}
+                size="sm"
+              />
+            }
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -625,8 +635,18 @@ const PeopleList: React.FC<Props> = React.memo(({
               <TableRow className={classes.tableControlRow}>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
-                    checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
-                    icon={<Icon name={ICONS.Check} />}
+                    checkedIcon={
+                      <Icon
+                        name={ICONS.CheckChecked}
+                        size="sm"
+                      />
+                    }
+                    icon={
+                      <Icon
+                        name={ICONS.Check}
+                        size="sm"
+                      />
+                    }
                     checked={allChecked}
                     onClick={handleToggleAllChecked}
                   />
