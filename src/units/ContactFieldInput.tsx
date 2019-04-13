@@ -111,6 +111,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
+  fieldLabelText: {
+    lineHeight: '1.1875em',
+    padding: '14px 0 15px 0',
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+    fontStyle: 'italic',
+  },
   takeQuarter: {
     flex: 0.25,
   },
@@ -118,6 +125,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     padding: theme.spacing(1, 0),
     color: theme.palette.text.secondary,
+  },
+  fieldDisplayText: {
+    lineHeight: '1.1875em',
+    padding: '14px 0 15px 0',
+    color: theme.palette.text.secondary,
+    fontWeight: 600,
   },
   addTagIcon: {
     marginRight: theme.spacing(1),
@@ -140,6 +153,15 @@ const getEmptyFieldSegmentValue = (fieldType: string): FieldSegmentValue => ({
 })
 
 const getFieldDefaultTitle = (fieldValue: FieldValue) => fieldValue.values.find(sv => sv.key === 'title')!.value
+
+const getFieldDefaultTitleWidthDec = (fieldValue: FieldValue) => {
+  const defaultTitle = getFieldDefaultTitle(fieldValue).trim()
+  if (defaultTitle) {
+    return '• ' + defaultTitle
+  }
+
+  return
+}
 
 export interface FieldValue {
   values: FieldSegmentValue[]
@@ -384,11 +406,6 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         !editable && !joinSegmentFieldValues(values).trim() && classes.hidden,
         editable && fieldValue.priority === 0 && classes.disabled,
       )}>
-        {(hasTitle && !editable) && (
-          <Typography variant="h6" className={classes.fieldTypeText}>
-            {getFieldDefaultTitle(fieldValue)}
-          </Typography>
-        )}
         {editable
           ? (
             <>
@@ -432,14 +449,16 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             </>
           )
           : (
-            <Input
-              disabled={true}
-              disableUnderline={true}
-              className={classes.fieldInput}
-              value={joinSegmentFieldValues(values)}
-            />
+            <span className={classes.fieldDisplayText}>
+              {joinSegmentFieldValues(values)}
+            </span>
           )
         }
+        {(hasTitle && !editable) && (
+          <Typography variant="body2" className={classes.fieldLabelText}>
+            {getFieldDefaultTitleWidthDec(fieldValue)}
+          </Typography>
+        )}
         {editable && (
           <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
             <IconButton
