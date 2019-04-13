@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right',
     marginTop: theme.spacing(4),
     ...cssTips(theme).horizontallySpaced(),
+    ...{
+      '& button': {
+        fontWeight: 600,
+      },
+    },
   },
 }))
 
