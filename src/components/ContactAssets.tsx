@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'none',
       },
     },
-    color: theme.palette.text.hint,
+    color: theme.palette.grey[800],
     whiteSpace: 'nowrap',
   },
   entryButtons: {

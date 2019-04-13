@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 80,
     textAlign: 'right',
     fontSize: '0.75rem',
-    color: theme.palette.text.hint,
+    color: theme.palette.grey[800],
     whiteSpace: 'nowrap',
   },
   buttonWrapper: {
