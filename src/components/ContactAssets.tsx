@@ -26,6 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(0, 4),
     marginBottom: theme.spacing(2),
   },
+  tabIndicator: {
+    height: 2,
+    borderRadius: 4,
+    boxShadow: '0 0 2px 2px',
+  },
   title: {
     color: theme.palette.grey[800],
     fontSize: 20,
@@ -146,6 +151,9 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           indicatorColor="primary"
           textColor="primary"
           onChange={handleCurrentTabChange}
+          classes={{
+             indicator: classes.tabIndicator,
+          }}
         >
           <Tab
             label={<Typography variant="h4"
