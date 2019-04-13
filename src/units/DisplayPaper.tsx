@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     padding: theme.spacing(4),
     backgroundColor: theme.palette.background.paper,
-    boxShadow: '0 0 5px 1px lightgrey',
+    boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     flex: 1,
   },
 }))

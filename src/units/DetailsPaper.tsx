@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    boxShadow: '0 0 5px 1px lightgrey',
+    boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing(4),
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
     marginRight: theme.spacing(4),
-    boxShadow: '0 0 5px 1px lightgrey',
+    boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart1: {
     padding: `${theme.spacing(2)}px 0`,
-    boxShadow: '0 0 5px 1px lightgrey',
+    boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing(4),
     overflow: 'auto',
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   rightPart2: {
     flex: 1,
     padding: `${theme.spacing(2)}px 0`,
-    boxShadow: '0 0 5px 1px lightgrey',
+    boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
     width: 408,
