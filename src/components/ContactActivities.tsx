@@ -200,6 +200,27 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [removeNoteError],
   )
 
+  const [popover, setPopover] = useState({
+    anchorEl: null as HTMLElement | null,
+    text: '',
+  })
+
+  const togglePopoverOpen = useCallback<{
+    (opened: true, text: string): (event: React.MouseEvent<Element>) => void;
+    (opened: false): (event: React.MouseEvent<Element>) => void;
+  }> (
+    (opened: boolean, text?: string) => (event: React.MouseEvent<Element>) => {
+      const currentTarget = event.currentTarget as HTMLElement
+      requestAnimationFrame(() => {
+        setPopover({
+          anchorEl: opened ? currentTarget : null,
+          text: text || popover.text,
+        })
+      })
+    },
+    [popover],
+  )
+
   const {value: showCtlButtons, toggleOn: toggleOnShowCtlButtons, toggleOff: toggleOffShowCtlButtons} = useToggle(false)
   // const {value: editActivity, toggle: toggleEditActivity, toggleOff: toggleOffEditActivity} = useToggle(false)
   const {value: showAddNote, toggleOn: toggleOnAddNote, toggleOff: toggleOffShowAddNote} = useToggle(false)
@@ -214,7 +235,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
         toggleOnShowCtlButtons()
       }
     },
-    [showCtlButtons],
+    [toggleOffShowAddNote, showCtlButtons],
   )
 
   const inputtingNoteRef = useRef('')
@@ -230,6 +251,11 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     async () => {
       const value = inputtingNoteRef.current.trim()
 
+      setPopover({
+        anchorEl: null,
+        text: '',
+      })
+
       toggleOffShowAddNote()
 
       if (!value) return
@@ -237,13 +263,20 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       await addNote(value)
       await freshNotes()
     },
-    [addNote],
+    [addNote, freshNotes, toggleOffShowAddNote, setPopover],
   )
 
   const handleNoteUpdateByKeydown = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
+
+      if (event.keyCode === 27) {
+        toggleOffShowAddNote()
+        return
+      }
+
       if (event.keyCode !== 13 || !event.metaKey) return
       event.preventDefault()
+
       const value = event.currentTarget.value.trim()
 
       toggleOffShowAddNote()
@@ -253,7 +286,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       await addNote(value)
       await freshNotes()
     },
-    [addNote],
+    [addNote, freshNotes, toggleOffShowAddNote],
   )
 
   const handleNoteRemove = useCallback(
@@ -262,7 +295,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
         await removeNote(id)
         await freshNotes()
       },
-    [],
+    [removeNote, freshNotes],
   )
 
   const noteGroups = useMemo(
@@ -300,27 +333,6 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       }
     },
     [loading, isFetchingNotes],
-  )
-
-  const [popover, setPopover] = useState({
-    anchorEl: null as HTMLElement | null,
-    text: '',
-  })
-
-  const togglePopoverOpen = useCallback<{
-    (opened: true, text: string): (event: React.MouseEvent<Element>) => void;
-    (opened: false): (event: React.MouseEvent<Element>) => void;
-  }> (
-    (opened: boolean, text?: string) => (event: React.MouseEvent<Element>) => {
-      const currentTarget = event.currentTarget as HTMLElement
-      requestAnimationFrame(() => {
-        setPopover({
-          anchorEl: opened ? currentTarget : null,
-          text: text || popover.text,
-        })
-      })
-    },
-    [popover],
   )
 
   const isLoading = useMemo(
