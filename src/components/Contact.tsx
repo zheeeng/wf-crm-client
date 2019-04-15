@@ -107,11 +107,9 @@ const ContactIndex: React.FC<Props> = React.memo(
           renderRightPart1={renderRightPart1}
           renderRightPart2={renderRightPart2}
         >
-          {contact && (
-            <ContactProfile
-              contactId={contactId}
-            />
-          )}
+          <ContactProfile
+            contactId={contactId}
+          />
         </DetailsPaper>
       </WaiverSplitterContainer.Provider>
     )
