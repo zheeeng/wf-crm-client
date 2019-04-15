@@ -19,7 +19,7 @@ import getDate, { getTime } from '~src/utils/getDate'
 import useToggle from '~src/hooks/useToggle'
 
 import Icon, { ICONS } from '~src/units/Icons'
-import ProgressLoading from '~src/units/ProgressLoading'
+import Skeleton from 'react-skeleton-loader'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -84,6 +84,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   stepper: {
     padding: `0 ${theme.spacing(4)}px`,
+  },
+  skeletonContent: {
+    margin: theme.spacing(1, 0, 0, 1.5),
+    padding: theme.spacing(1),
   },
   entryInputContent: {
     marginBottom: theme.spacing(1),
@@ -319,6 +323,11 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [popover],
   )
 
+  const isLoading = useMemo(
+    () => !showAddNote && !loading.show && loading.triggered,
+    [showAddNote, loading],
+  )
+
   return (
     <ContactTableThemeProvider>
       <div className={classes.headWrapper}>
@@ -332,8 +341,12 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       </div>
       {loading.show
       ? (
-        <div className={classes.progressWrapper}>
-          <ProgressLoading className={classes.progress} size={64} />
+        <div className={classes.stepper}>
+          {Array.from(({ length: 5 }), (_, index) => (
+            <div key={index} className={classes.skeletonContent}>
+              <Skeleton/>
+            </div>
+          ))}
         </div>
       )
       : !!fetchNotesError
@@ -351,17 +364,13 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                   label: classes.activityLabel,
                 }}
                 icon={<div className={classes.dot} />}
-              >
+                >
                 {group.date}
               </StepLabel>
               <StepContent>
-                {!showAddNote
-                  && !loading.show
-                  && loading.triggered
-                  && gIndex === 0
-                  && (group.notes.length === 0)
-                  && (<div className={classes.noteForToday}>Add Note for today!</div>)
-                }
+                {isLoading && gIndex === 0 && group.notes.length === 0 && (
+                  <div className={classes.noteForToday}>Add Note for today!</div>
+                )}
                 {showAddNote
                   && gIndex === 0
                   && (

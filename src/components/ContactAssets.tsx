@@ -16,7 +16,7 @@ import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
 
 import Icon, { ICONS } from '~src/units/Icons'
-import ProgressLoading from '~src/units/ProgressLoading'
+import Skeleton from 'react-skeleton-loader'
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabsWrapper: {
@@ -175,8 +175,12 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       {currentTab === 0
       && isFetchingWaivers
       ? (
-        <div className={classes.progressWrapper}>
-          <ProgressLoading className={classes.progress} size={64} />
+        <div>
+          {Array.from(({ length: 3 }), (_, index) => (
+            <div className={classes.entry} key={index} >
+              <Skeleton/>
+            </div>
+          ))}
         </div>
       )
       : fetchWaiversError
