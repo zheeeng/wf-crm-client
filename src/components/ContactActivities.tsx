@@ -369,7 +369,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               </StepLabel>
               <StepContent>
                 {isLoading && gIndex === 0 && group.notes.length === 0 && (
-                  <div className={classes.noteForToday}>Add Note for today!</div>
+                  <div className={classes.noteForToday} onClick={toggleOnAddNote}>Add Note for today!</div>
                 )}
                 {showAddNote
                   && gIndex === 0
@@ -425,7 +425,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       )}
       {!loading.show && !fetchNotesError &&
         (<div className={classes.buttonWrapper}>
-          {showCtlButtons && (
+          {false && showCtlButtons && (
             <>
               {/* <IconButton
                 classes={{
@@ -448,7 +448,8 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           )}
           <IconButton
             color="primary"
-            onClick={toggleShowButtons}
+            onClick={toggleOnAddNote}
+            // onClick={toggleShowButtons}
             onMouseEnter={togglePopoverOpen(true, 'note')}
             onMouseLeave={togglePopoverOpen(false)}
           >
