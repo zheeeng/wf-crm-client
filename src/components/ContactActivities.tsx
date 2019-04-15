@@ -344,7 +344,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
         <div className={classes.stepper}>
           {Array.from(({ length: 5 }), (_, index) => (
             <div key={index} className={classes.skeletonContent}>
-              <Skeleton/>
+              <Skeleton widthRandomness={0} width="100%"/>
             </div>
           ))}
         </div>

@@ -598,12 +598,12 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       <>
         <div className={classes.skeletonProfileBar}>
           <Typography variant="h4" className={classes.profileTitle}>
-            <Skeleton  widthRandomness={0} height={`100%`} />
+            <Skeleton widthRandomness={0} height={`100%`} />
           </Typography>
         </div>
         <div className={classes.skeletonAvatarBar}>
           <div className={classes.skeletonAvatarIcon}><Skeleton widthRandomness={0} width={`${theme.spacing(7)}px`} height={`${theme.spacing(7)}px`} borderRadius="50%" /></div>
-          <span className={classes.skeletonAvatarName}><Skeleton  widthRandomness={0} height={`${theme.spacing(3)}px`}/></span>
+          <span className={classes.skeletonAvatarName}><Skeleton widthRandomness={0} height={`${theme.spacing(3)}px`}/></span>
         </div>
         <div>
           {Array.from(({ length: 6 }), (_, index) => (

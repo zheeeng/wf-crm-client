@@ -178,7 +178,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
         <div>
           {Array.from(({ length: 3 }), (_, index) => (
             <div className={classes.entry} key={index} >
-              <Skeleton/>
+              <Skeleton widthRandomness={0} />
             </div>
           ))}
         </div>
