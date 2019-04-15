@@ -30,8 +30,8 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
         marginRight: globalTheme.spacing(2),
       },
       indicator: {
-        transform: 'scale(0.3)',
-        transformOrigin: '25%',
+        transform: 'scale(0.5)',
+        transformOrigin: '45%',
       },
     },
     MuiTab: {
