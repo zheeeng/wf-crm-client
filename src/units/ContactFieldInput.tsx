@@ -11,7 +11,7 @@ import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 import { isEmail, isValidDate } from '~src/utils/validation'
 import SvgIcon, { ICONS } from '~src/units/Icons'
-import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
+import { SimpleFormInputSelect } from '~src/units/BasicFormInputSelect'
 import countries from '~src/meta/countries.json'
 
 const countryOptions= countries.map(option => ({ label: option, value: option }))
@@ -412,7 +412,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               {values.filter(segmentValue => segmentValue.key !== 'title')
                 .map(segmentValue => (type === 'address' && segmentValue.key === 'country')
                   ? (
-                    <BasicFormInputSelect
+                    <SimpleFormInputSelect
                       key={segmentValue.key}
                       className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
                       onChange={handleEntryUpdate(segmentValue.key, fieldValue.id!, segmentValue.value)}

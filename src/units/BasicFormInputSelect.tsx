@@ -68,6 +68,15 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
   },
 }))
 
+const useStyles3 = makeStyles((theme: Theme) => ({
+  root: {
+    '&&': {
+      marginTop: theme.spacing(0.5),
+      marginBottom: theme.spacing(1),
+    },
+  },
+}))
+
 export interface Props {
   className?: string,
   value?: string,
@@ -88,16 +97,17 @@ const InputComponent: React.FC<{ inputRef: React.LegacyRef<HTMLDivElement> }>
 const Control: React.FC<{
   hasValue: boolean,
   innerRef: React.Ref<HTMLDivElement>,
-  selectProps: { props: Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> },
+  selectProps: { props: Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> & { isSimple?: boolean } },
   innerProps: any,
 }>
   = React.memo(({
     innerRef,
-    selectProps: { props: { className, placeholder, InputClasses, error, fullWidth = true, TextFieldClasses } },
+    selectProps: { props: { className, placeholder, InputClasses, error, fullWidth = true, TextFieldClasses, isSimple = false } },
     innerProps,
     children,
   }) => {
     const classes = useStyles({})
+    const classes3 = useStyles3({})
 
     return (
       <TextField
@@ -117,7 +127,7 @@ const Control: React.FC<{
             ...InputClasses,
             root: classnames(
               classes.text,
-              classes.root,
+              isSimple ? classes3.root : classes.root,
               InputClasses && InputClasses.root,
             ),
             input: classes.input,
@@ -256,6 +266,42 @@ const BasicFormInputSelect: React.FC<Props> = React.memo(({
         InputClasses,
         placeholder,
         error,
+      }}
+      filterOption={filterOption}
+      isDisabled={disabled}
+    />
+  )
+})
+
+
+export const SimpleFormInputSelect: React.FC<Props> = React.memo(({
+  placeholder = '', className, value = '', error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
+}) => {
+  const classes = useStyles({})
+  const classes2 = useStyles2({})
+
+  const handleChange = useCallback(
+    (input: any) => {
+
+      onChange && input && input.value && onChange((input as { value: string, label: string }).value)
+    },
+    [onchange]
+  )
+
+  return (
+    <Select
+      className={classnames(classes2.select, className)}
+      classes={classes}
+      options={options}
+      components={components}
+      onChange={handleChange}
+      placeholder={placeholder}
+      props={{
+        TextFieldClasses,
+        fullWidth,
+        InputClasses,
+        error,
+        isSimple: true,
       }}
       filterOption={filterOption}
       isDisabled={disabled}
