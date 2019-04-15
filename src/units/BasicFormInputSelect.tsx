@@ -50,11 +50,21 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     fontWeight: 500,
   },
   option: {
-    backgroundColor: 'white',
     fontSize: 14,
     padding: theme.spacing(1),
     margin: 0,
     color: theme.palette.text.secondary,
+
+  },
+  optionButtonHover: {
+    '&&:hover': {
+      backgroundColor: theme.palette.grey.A100,
+    },
+  },
+  optionButtonSelected: {
+    '&&': {
+      backgroundColor: theme.palette.grey.A100,
+    },
   },
 }))
 
@@ -186,6 +196,10 @@ const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, isFocuse
         selected={isFocused}
         component="div"
         className={classes.option}
+        classes={{
+            root: classes.optionButtonHover,
+            selected: classes.optionButtonSelected,
+        }}
         style={{
           fontWeight: isSelected ? 500 : 400,
         }}
