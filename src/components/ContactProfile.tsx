@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles, useTheme } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Dialog from '@material-ui/core/Dialog'
@@ -21,7 +21,7 @@ import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField 
 import cssTips from '~src/utils/cssTips'
 
 import Icon, { ICONS } from '~src/units/Icons'
-import ProgressLoading from '~src/units/ProgressLoading'
+import Skeleton from 'react-skeleton-loader'
 
 interface IconProp {
   className?: string
@@ -69,6 +69,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: theme.spacing(2),
   },
+  skeletonProfileBar: {
+    height: theme.spacing(6),
+    paddingTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
   profileTitle: {
     color: theme.palette.grey[800],
     fontSize: 20,
@@ -82,11 +87,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing(8),
     marginBottom: theme.spacing(2),
   },
+  skeletonAvatarBar: {
+    display: 'flex',
+    alignItems: 'center',
+    height: theme.spacing(8),
+    marginBottom: theme.spacing(2),
+  },
   avatarName: {
     color: '#637694',
     fontWeight: 600,
     fontSize: 18,
     lineHeight: `${theme.spacing(3)}px`,
+  },
+  skeletonAvatarName: {
   },
   avatarIcon: {
     padding: theme.spacing(0.5),
@@ -99,6 +112,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  skeletonAvatarIcon: {
+    padding: theme.spacing(0.5),
+    marginRight: theme.spacing(3.5),
+  },
   floatTagsWrapper: {
     float: 'right',
     maxWidth: 280,
@@ -106,6 +123,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   blockTagsWrapper: {
     paddingLeft: theme.spacing(2.5),
     marginBottom: theme.spacing(2),
+  },
+  skeletonContent: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  skeletonContentIcon: {
+    padding: theme.spacing(2.5),
+    marginRight: theme.spacing(2.5),
+  },
+  skeletonContentText: {
+    flex: 1,
   },
   tagsBar: {
     display: 'flex',
@@ -284,6 +312,7 @@ export interface Props {
 }
 
 const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
+  const theme = useTheme<Theme>()
   const { fail } = useContext(AlertContainer.Context)
   const { toSplitWaiver, cancelSplitWaiver, splitDone } = useContext(WaiverSplitterContainer.Context)
 
@@ -566,9 +595,27 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   return isFetchingContact
     ? (
-      <div className={classes.progressWrapper}>
-        <ProgressLoading className={classes.progress} size={64} />
-      </div>
+      <>
+        <div className={classes.skeletonProfileBar}>
+          <Typography variant="h4" className={classes.profileTitle}>
+            <Skeleton  widthRandomness={0} height={`100%`} />
+          </Typography>
+        </div>
+        <div className={classes.skeletonAvatarBar}>
+          <div className={classes.skeletonAvatarIcon}><Skeleton widthRandomness={0} width={`${theme.spacing(7)}px`} height={`${theme.spacing(7)}px`} borderRadius="50%" /></div>
+          <span className={classes.skeletonAvatarName}><Skeleton  widthRandomness={0} height={`${theme.spacing(3)}px`}/></span>
+        </div>
+        <div>
+          {Array.from(({ length: 6 }), (_, index) => (
+            <div className={classes.skeletonContent} key={index}>
+              <div className={classes.skeletonContentIcon}>
+                <Skeleton widthRandomness={0} width={`${theme.spacing(3)}px`} height={`${theme.spacing(3)}px`} borderRadius="50%" />
+              </div>
+              <div className={classes.skeletonContentText}><Skeleton widthRandomness={0} width="100%" height={`${theme.spacing(3)}px`} /></div>
+            </div>
+          ))}
+        </div>
+      </>
     )
     : fetchContactError
     ? (
