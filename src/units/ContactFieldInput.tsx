@@ -413,6 +413,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 .map(segmentValue => (type === 'address' && segmentValue.key === 'country')
                   ? (
                     <BasicFormInputSelect
+                      key={segmentValue.key}
                       className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
                       onChange={handleEntryUpdate(segmentValue.key, fieldValue.id!, segmentValue.value)}
                       placeholder="country"
