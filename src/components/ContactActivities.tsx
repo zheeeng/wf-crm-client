@@ -301,7 +301,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const noteGroups = useMemo(
     () => {
       const sortedNotes = notes.slice()
-        .sort((p, c) => p.timestamp - c.timestamp)
+        .sort((p, c) => c.timestamp - p.timestamp)
         .map(note => ({ ...note, date: getDate(note.timestamp)}))
 
       const groupedMap = sortedNotes.reduce<{ [key: string]: Note[] }>(
