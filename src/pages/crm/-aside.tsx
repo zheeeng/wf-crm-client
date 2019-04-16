@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   flexHeight: {
     flex: 1,
+    height: theme.spacing(7),
+    minHeight: theme.spacing(7),
   },
   groupActions: {
     ...cssTips(theme, { sizeFactor: 1 }).horizontallySpaced(),
@@ -275,7 +277,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
       >
         <ToolBar variant="dense" />
         <SiderBarThemeProvider>
-          <List component="nav" className={classes.flexHeight}>
+          <List component="nav" className={classes.flexHeight} disablePadding>
             <ListItem component="div">
               <ListItemIcon>
                 <Icon name={ICONS.SideContact}/>

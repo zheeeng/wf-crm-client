@@ -72,6 +72,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
           <ListItem
             key={group.id}
             button
+            component="li"
             className={classes.nestedItem}
             onClick={handleOnClick(group.id)}
           >
