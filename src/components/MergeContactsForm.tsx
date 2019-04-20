@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  text: {
+    marginTop: theme.spacing(2),
+  },
 }))
 
 export interface Props {
@@ -72,10 +75,10 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
       </Typography>
       {isLoading
         ? (
-          <Typography>Merging...</Typography>
+          <Typography className={classes.text}>Merging...</Typography>
         )
         : (
-          <Typography variant="body2" color="textSecondary">Are you sure you want to merge the selected contact?</Typography>
+          <Typography color="textSecondary" className={classes.text}>Are you sure you want to merge the selected contact?</Typography>
         )
       }
       <div className={classes.buttonZone}>
