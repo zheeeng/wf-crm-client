@@ -140,6 +140,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checkbox: {
     color: theme.palette.grey.A200,
+    marginLeft: theme.spacing(1),
+    ...{
+      '&&&': {
+        backgroundColor: 'unset',
+      },
+    },
   },
   star: {
     color: theme.palette.grey.A200,
@@ -649,6 +655,7 @@ const PeopleList: React.FC<Props> = React.memo(({
                     }
                     checked={allChecked}
                     onClick={handleToggleAllChecked}
+                    className={classes.checkbox}
                   />
                 </TableCell>
                 <TableCell colSpan={3} padding="none">
