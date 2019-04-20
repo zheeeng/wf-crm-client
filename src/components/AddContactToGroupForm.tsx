@@ -136,8 +136,8 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       <div className={classes.label} onClick={toggleGroupsOpened} >
         Existing group
         {groupsOpened
-          ? <Icon name={ICONS.ChevronDown} />
-          : <Icon name={ICONS.ChevronRight} />
+          ? <Icon name={ICONS.ChevronDown} size="sm" />
+          : <Icon name={ICONS.ChevronRight} size="sm" />
         }
       </div>
       <GroupMenu
@@ -145,6 +145,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         selectedId={selectedGroupId}
         groupsOpened={groupsOpened}
         onClickGroup={handleGroupClick}
+        theme="simple"
       />
       <div className={classes.buttonZone}>
         <Button onClick={onClose}>Cancel</Button>

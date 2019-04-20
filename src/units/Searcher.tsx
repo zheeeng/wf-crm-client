@@ -10,6 +10,11 @@ import Icon, { ICONS } from './Icons';
 const useStyles = makeStyles((theme: Theme) => ({
   searchBar: {
     padding: theme.spacing(1, 2),
+    width: '100%',
+  },
+  searchBarSimple: {
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
   },
   input: {
     color: theme.palette.text.secondary,
@@ -18,8 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputAdornment: {
     fontSize: '0.87rem',
   },
+  closeIcon: {
+    cursor: 'pointer',
+  },
   notchedOutline: {
     borderRadius: theme.spacing(3),
+  },
+  notchedOutlineSimple: {
+    border: 'none',
   },
 }))
 
@@ -29,9 +40,10 @@ export interface Props {
   onChange?: (v: string) => void
   placeholder?: string
   onKeyDown?: (v: string) => void
+  theme?: 'simple'
 }
 
-const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, onChange, onKeyDown }) => {
+const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, onChange, onKeyDown, theme }) => {
   const classes = useStyles({})
 
   const [text, setText] = useState(value)
@@ -77,9 +89,9 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       labelWidth={0}
       notched
       classes={{
-        notchedOutline: classes.notchedOutline,
+        notchedOutline: classNames(classes.notchedOutline, theme == 'simple' && classes.notchedOutlineSimple),
       }}
-      className={classNames(className, classes.searchBar)}
+      className={classNames(className, classes.searchBar, theme == 'simple' && classes.searchBarSimple)}
       startAdornment={(
         <InputAdornment position="start" className={classes.inputAdornment}>
           <Icon name={ICONS.Search} />
@@ -88,7 +100,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       endAdornment={text
         ? (
           <InputAdornment position="end" className={classes.inputAdornment} onClick={handleClick}>
-            <Icon name={ICONS.Close} />
+            <Icon name={ICONS.Close} className={classes.closeIcon} size="sm" />
           </InputAdornment>
         )
         : undefined

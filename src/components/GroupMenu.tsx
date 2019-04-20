@@ -1,4 +1,5 @@
 import React, { useState, useContext, useCallback, useMemo } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 
@@ -11,12 +12,31 @@ import Searcher from '~src/units/Searcher'
 import GroupsContainer from '~src/containers/Groups'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  searchItem: {
+    padding: theme.spacing(1.5, 4, 1.5, 3),
+  },
+  searchItemSimple: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
   nestedItem: {
-    paddingLeft: theme.spacing(6),
+    padding: theme.spacing(1.5, 1, 1.5, 7),
   },
   activeItem: {
-    color: theme.palette.primary.main,
-    fontWeight: 600,
+    ...{
+      '&&': {
+        color: theme.palette.primary.main,
+        fontWeight: 600,
+      },
+    },
+  },
+  text: {
+    color: theme.palette.text.hint,
+    ...{
+      '&&:hover': {
+        backgroundColor: theme.palette.grey.A100,
+      },
+    },
   },
 }))
 
@@ -25,9 +45,10 @@ export interface Props {
   className?: string
   groupsOpened: boolean
   onClickGroup: (id: string) => void
+  theme?: 'simple'
 }
 
-const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onClickGroup }) => {
+const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onClickGroup, theme }) => {
   const classes = useStyles({})
 
   const { groupId, groups } = useContext(GroupsContainer.Context)
@@ -62,11 +83,12 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
       unmountOnExit
     >
       <List disablePadding>
-        <ListItem>
+        <ListItem className={classnames(classes.searchItem, theme === 'simple' && classes.searchItemSimple)}>
           <Searcher
             placeholder="Type a group name"
             value={searchTerm}
             onChange={setSearchTerm}
+            theme={theme}
           />
         </ListItem>
         {filteredGroups.map(group => (
@@ -74,7 +96,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
             key={group.id}
             button
             component="li"
-            className={classes.nestedItem}
+            className={classnames(classes.nestedItem, theme === 'simple' && classes.text)}
             onClick={handleOnClick(group.id)}
           >
             <ListItemText
