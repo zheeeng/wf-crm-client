@@ -49,17 +49,17 @@ const ExportContactsForm: React.FC<Props> = React.memo(
           onClose()
           success(<><CheckCircle /> Contacts Exported</>)
         }
-        exportStatusError && fail('Exported contacts failed')
       },
-      [exportContactsStatus, exportStatusError],
+      [exportContactsStatus],
     )
 
     useEffect(
-      () => {
-        if (open && contactIds.length) {
-          exportContacts(contactIds)
-        }
-      },
+      () => { exportStatusError && fail(exportStatusError.message) },
+      [exportStatusError],
+    )
+
+    useEffect(
+      () => { open && contactIds.length && exportContacts(contactIds) },
       [open],
     )
 

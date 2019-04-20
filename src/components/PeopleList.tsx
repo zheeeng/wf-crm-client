@@ -212,7 +212,6 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   useEffect(
     () => {
-      addContactError && fail(addContactError.message)
       addContactData && success(
         <div className={classes.infoBar}>
           <div className={classes.infoForePlaceholder} />
@@ -228,35 +227,41 @@ const PeopleList: React.FC<Props> = React.memo(({
         </div>
       )
     },
-    [addContactError, addContactData],
+    [addContactData],
   )
 
   useEffect(
-    () => {
-      starContactError && fail('Star contacts failed')
-    },
+    () => { addContactError && fail(addContactError.message) },
+    [addContactError],
+  )
+
+  useEffect(
+    () => { starContactError && fail(starContactError.message) },
     [starContactError],
   )
   // useEffect(
-  //   () => {
-  //     removeContactError && fail('Remove contact failed')
-  //     removeContactData && success(<><CheckCircle /> Contacts Removed</>)
-  //   },
-  //   [removeContactError, removeContactData],
+  //   () => { removeContactData && success(<><CheckCircle /> Contacts Removed</>) },
+  //   [removeContactData],
+  // )
+  // useEffect(
+  //   () => { removeContactError && fail(removeContactError.message) },
+  //   [removeContactError],
   // )
   useEffect(
-    () => {
-      addContactToGroupError && fail(addContactToGroupError.message)
-      addContactToGroupData && success(<><CheckCircle /> Contacts Added</>)
-    },
-    [addContactToGroupError, addContactToGroupData],
+    () => { addContactToGroupData && success(<><CheckCircle /> Contacts Added</>) },
+    [addContactToGroupData],
   )
   useEffect(
-    () => {
-      mergeContactsError && fail(mergeContactsError.message)
-      mergeContactsData && success(<><CheckCircle /> Contacts Merged</>)
-    },
-    [mergeContactsError, mergeContactsData],
+    () => { addContactToGroupError && fail(addContactToGroupError.message) },
+    [addContactToGroupError],
+  )
+  useEffect(
+    () => { mergeContactsData && success(<><CheckCircle /> Contacts Merged</>) },
+    [mergeContactsData],
+  )
+  useEffect(
+    () => { mergeContactsError && fail(mergeContactsError.message) },
+    [mergeContactsError],
   )
 
   const classes = useStyles({})

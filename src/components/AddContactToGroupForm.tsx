@@ -68,9 +68,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
   const classes = useStyles({})
 
   useEffect(
-    () => {
-      addGroupError && fail(<><Icon name={ICONS.CheckCircle} /> Add group failed</>)
-    },
+    () => { addGroupError && fail(addGroupError.message) },
     [addGroupError],
   )
 

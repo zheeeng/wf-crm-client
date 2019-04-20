@@ -335,28 +335,20 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   useEffect(
-    () => {
-      addFieldError && fail(addFieldError.message)
-    },
+    () => { addFieldError && fail(addFieldError.message) },
     [addFieldError],
   )
   useEffect(
-    () => {
-      updateFieldError && fail(updateFieldError.message)
-    },
+    () => { updateFieldError && fail(updateFieldError.message) },
     [updateFieldError],
   )
   useEffect(
-    () => {
-      removeFieldError && fail(removeFieldError.message)
-    },
+    () => { removeFieldError && fail(removeFieldError.message) },
     [removeFieldError],
   )
 
   useEffect(
-    () => {
-      splitWaiverError && fail(splitWaiverError.message)
-    },
+    () => { splitWaiverError && fail(splitWaiverError.message) },
     [splitWaiverError],
   )
 

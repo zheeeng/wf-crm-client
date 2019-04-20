@@ -182,21 +182,15 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   useEffect(() => { freshNotes() }, [contactId])
 
   useEffect(
-    () => {
-      addNoteError && fail(addNoteError.message)
-    },
+    () => { addNoteError && fail(addNoteError.message) },
     [addNoteError],
   )
   // useEffect(
-  //   () => {
-  //     updateNoteError && fail(updateNoteError.message)
-  //   },
+  //   () => { updateNoteError && fail(updateNoteError.message) },
   //   [updateNoteError],
   // )
   useEffect(
-    () => {
-      removeNoteError && fail(removeNoteError.message)
-    },
+    () => { removeNoteError && fail(removeNoteError.message) },
     [removeNoteError],
   )
 

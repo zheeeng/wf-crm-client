@@ -27,9 +27,7 @@ const ContactIndex: React.FC<Props> = React.memo(
     )
 
     useEffect(
-      () => {
-        removeContactError && fail('Remove contact failed')
-      },
+      () => { removeContactError && fail(removeContactError.message) },
       [removeContactError],
     )
 
