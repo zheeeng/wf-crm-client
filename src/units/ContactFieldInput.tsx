@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     marginBottom: theme.spacing(2),
   },
+  fieldSimpleBar: {
+    marginBottom: 0,
+  },
   fieldTextWrapper: {
     flex: 1,
     paddingTop: theme.spacing(1),
@@ -131,6 +134,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '14px 0 15px 0',
     color: theme.palette.text.secondary,
     fontWeight: 600,
+  },
+  fieldSimpleDisplayText: {
+    fontWeight: 500,
   },
   addTagIcon: {
     marginRight: theme.spacing(1),
@@ -450,7 +456,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             </>
           )
           : (
-            <span className={classes.fieldDisplayText}>
+            <span className={classnames(classes.fieldDisplayText, showName && classes.fieldSimpleDisplayText)}>
               {joinSegmentFieldValues(values)}
             </span>
           )
@@ -541,9 +547,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
 
   return (
-    <div className={classes.fieldBar} ref={containerRef}>
+    <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)} ref={containerRef}>
       {showName
-        ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
+        ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         <SortableList
@@ -619,9 +625,9 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   )
 
   return (
-    <div className={classes.fieldBar}>
+    <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
       {showName
-        ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
+        ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         <div
@@ -705,9 +711,9 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
   )
 
   return (
-    <div className={classes.fieldBar}>
+    <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
       {showName
-        ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
+        ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
         : Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         <div
@@ -792,9 +798,9 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 //   )
 
 //   return (
-//     <div className={classes.fieldBar}>
+//     <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
 //       {showName
-//         ? <Typography variant="h5" className={classes.fieldName}>{fieldName}</Typography>
+//         ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
 //         : Icon && <Icon className={classes.fieldIcon} />}
 //       <div className={classes.fieldTextWrapper}>
 //         <div

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import createContainer from 'constate'
 
 const WaiverSplitterContainer = createContainer(() => {
-  const [ toSplitWaiver, setToSplitWaiver ] = useState({
+  const [toSplitWaiver, setToSplitWaiver] = useState({
     id: '',
     title: '',
   })

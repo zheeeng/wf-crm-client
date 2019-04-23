@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
+import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -11,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 
+import SplitWaiverThemeProvider from '~src/theme/SplitWaiverThemeProvider'
 import AlertContainer from '~src/containers/Alert'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import useContact from '~src/containers/useContact'
@@ -57,6 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
       }
     },
+  },
+  splitPaper: {
+    width: 618,
   },
   dialogButtonZone: {
     textAlign: 'right',
@@ -177,6 +182,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   progress: {
     margin: theme.spacing(2),
+  },
+  splitTitle: {
+    marginBottom: theme.spacing(2),
   },
 }))
 
@@ -483,6 +491,22 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [toSplitWaiver.id],
   )
 
+  const [splitWaiverTitle, setSplitWaiverTitle] = useState('')
+
+  useEffect(
+    () => {
+      if (toSplitWaiver.title) {
+        setSplitWaiverTitle(toSplitWaiver.title)
+      }
+    },
+    [toSplitWaiver.title]
+  )
+
+  const clearSplitWaiverTitle= useCallback(
+    () => { setSplitWaiverTitle('') },
+    [setSplitWaiverTitle]
+  )
+
   const renderFields = (showName: boolean, isEditable: boolean) => (
     <>
       <ContactFieldInput
@@ -628,22 +652,25 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
           </IconButton>
         </div>
         <div>
-          <Dialog
-            open={splitDialogOpened}
-            onClose={cancelSplitWaiver}
-            PaperProps={{
-              className: classes.paper,
-            }}
-          >
-            <Typography variant="h5" align="center">
-              {toSplitWaiver.title}
-            </Typography>
-            {renderFields(true, false)}
-            <div className={classes.dialogButtonZone}>
-              <Button onClick={cancelSplitWaiver}>Cancel</Button>
-              <Button color="primary" onClick={handleWaiverSplit}>Split</Button>
-            </div>
-          </Dialog>
+          <SplitWaiverThemeProvider>
+            <Dialog
+              open={splitDialogOpened}
+              onClose={cancelSplitWaiver}
+              PaperProps={{
+                className: classnames(classes.paper, classes.splitPaper),
+              }}
+              onAnimationEnd={clearSplitWaiverTitle}
+            >
+              <Typography variant="h6" align="center" color="textSecondary" className={classes.splitTitle}>
+                {splitWaiverTitle}
+              </Typography>
+              {renderFields(true, false)}
+              <div className={classes.dialogButtonZone}>
+                <Button onClick={cancelSplitWaiver}>Cancel</Button>
+                <Button color="primary" onClick={handleWaiverSplit}>Split</Button>
+              </div>
+            </Dialog>
+          </SplitWaiverThemeProvider>
           <Hidden lgDown>
             <div className={classes.floatTagsWrapper}>
               <div className={classes.tagsBar}>
