@@ -3,11 +3,9 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
-import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
 import shallowEqual from '~src/utils/shallowEqual'
 
-import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,28 +37,21 @@ export interface Props {
 
 const ExportContactsForm: React.FC<Props> = React.memo(
   ({ open, onClose, contactIds }) => {
-    const { success, fail } = useContext(AlertContainer.Context)
-    const { exportContacts, exportContactsStatus, exportStatusError } = useContext(ContactsContainer.Context)
+    const { exportContacts, exportContactsStatus } = useContext(ContactsContainer.Context)
     const classes = useStyles({})
 
     useEffect(
       () => {
-        if ((exportContactsStatus && exportContactsStatus.ready === true) || exportStatusError) {
+        if (exportContactsStatus && exportContactsStatus.ready === true) {
           onClose()
-          success(<><CheckCircle /> Contacts Exported</>)
         }
       },
       [exportContactsStatus],
     )
 
     useEffect(
-      () => { exportStatusError && fail(exportStatusError.message) },
-      [exportStatusError],
-    )
-
-    useEffect(
       () => { open && contactIds.length && exportContacts(contactIds) },
-      [open],
+      [open, contactIds],
     )
 
     return (

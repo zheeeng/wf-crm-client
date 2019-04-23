@@ -1,3 +1,6 @@
+import React from 'react'
+import CheckCircle from '@material-ui/icons/CheckCircleOutline'
+
 import { useCallback, useContext, useMemo, useEffect } from 'react'
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
@@ -11,6 +14,7 @@ import head from 'ramda/es/head'
 import map from 'ramda/es/map'
 import defaultTo from 'ramda/es/defaultTo'
 import ContactsCountContainer from './ContactsCount'
+import AlertContainer from './Alert'
 import sleep from '~src/utils/sleep'
 import downloadFile from '~src/utils/downloadFile'
 
@@ -181,6 +185,25 @@ const ContactsContainer = createContainer(() => {
     },
     [postExportContacts],
   )
+
+  // alter effects
+  {
+    const { success, fail } = useContext(AlertContainer.Context)
+
+    useEffect(
+      () => {
+        if (exportContactsStatus && exportContactsStatus.ready === true) {
+          success(<><CheckCircle /> Contacts Exported</>)
+        }
+      },
+      [exportContactsStatus],
+    )
+
+    useEffect(
+      () => { getExportStatusError && fail(getExportStatusError.message) },
+      [getExportStatusError],
+    )
+  }
 
   return {
     pagination,
