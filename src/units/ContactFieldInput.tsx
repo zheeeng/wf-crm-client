@@ -165,6 +165,18 @@ const getFieldDefaultTitleWidthDec = (fieldValue: FieldValue) => {
   return
 }
 
+const getLabelExample = (fieldType?: string) => {
+  switch (fieldType) {
+    case 'email':
+      return 'Person'
+    case 'number':
+      return 'Person'
+    case 'address':
+      return 'Home'
+    default:
+      return 'label'
+  }
+}
 export interface FieldValue {
   values: FieldSegmentValue[]
   appendValues?: FieldSegmentValue[]
@@ -437,7 +449,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                   defaultValue={getFieldDefaultTitle(fieldValue)}
                   onBlur={handleEntryUpdateByBlur('title', fieldValue.id!, '')}
                   onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!, '')}
-                  placeholder={'label'}
+                  placeholder={getLabelExample(type)}
                   disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                 />
               )}
