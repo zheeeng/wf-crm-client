@@ -76,6 +76,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
 
   return (
     <TextField
+      autoComplete="no"
       autoFocus={autoFocus}
       type={type}
       error={error}
