@@ -415,7 +415,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 .map(segmentValue => (
                   <Input
                     key={segmentValue.key}
-                    type={type === 'calendar' ? 'number' : type}
+                    type={(type === 'calendar' || (type === 'address' && segmentValue.key === 'zipcode'))
+                      ? 'number'
+                      : type
+                    }
                     error={hasErrorKeys.includes(fieldValue.id || '')}
                     className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
                     classes={{disabled: classes.fieldDisabled}}
