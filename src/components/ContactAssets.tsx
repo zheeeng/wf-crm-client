@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import IconButton from '@material-ui/core/IconButton'
-import Popover from '@material-ui/core/Popover'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import useToggle from '~src/hooks/useToggle'
 
@@ -104,12 +104,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   progress: {
     margin: theme.spacing(2),
   },
-  popover: {
-    pointerEvents: 'none',
-  },
-  popoverPaper: {
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.background.paper,
+  tooltip: {
+    fontSize: 12,
+    color: 'white',
+    backgroundColor: 'black',
   },
 }))
 
@@ -145,27 +143,6 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     toggleOn: toggleOnExportContactsOpened,
     toggleOff: toggleOffExportContactsOpened,
   } = useToggle(false)
-
-  const [popover, setPopover] = useState({
-    anchorEl: null as HTMLElement | null,
-    text: '',
-  })
-
-  const togglePopoverOpen = useCallback<{
-    (opened: true, text: string): (event: React.MouseEvent<Element>) => void;
-    (opened: false): (event: React.MouseEvent<Element>) => void;
-  }> (
-    (opened: boolean, text?: string) => (event: React.MouseEvent<Element>) => {
-      const currentTarget = event.currentTarget as HTMLElement
-      requestAnimationFrame(() => {
-        setPopover({
-          anchorEl: opened ? currentTarget : null,
-          text: text || popover.text,
-        })
-      })
-    },
-    [popover],
-  )
 
   return (
     <ContactTableThemeProvider>
@@ -227,28 +204,28 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
               <span className={classes.entryContent}>{waiver.title}</span>
               <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
               <div className={classes.entryButtons}>
-                <IconButton
-                  className={classes.entryButton}
-                  classes={{
-                    label: classes.entryButtonIcon,
-                  }}
-                  onMouseEnter={togglePopoverOpen(true, 'split')}
-                  onMouseLeave={togglePopoverOpen(false)}
-                  onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
-                >
-                  <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
-                </IconButton>
-                <IconButton
-                  className={classes.entryButton}
-                  classes={{
-                    label: classes.entryButtonIcon,
-                  }}
-                  onMouseEnter={togglePopoverOpen(true, 'export')}
-                  onMouseLeave={togglePopoverOpen(false)}
-                  onClick={toggleOnExportContactsOpened}
-                >
-                  <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
-                </IconButton>
+                <Tooltip title="split" classes={{ tooltip: classes.tooltip }}>
+                  <IconButton
+                    className={classes.entryButton}
+                    classes={{
+                      label: classes.entryButtonIcon,
+                    }}
+                    onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
+                  >
+                    <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="export" classes={{ tooltip: classes.tooltip }}>
+                  <IconButton
+                    className={classes.entryButton}
+                    classes={{
+                      label: classes.entryButtonIcon,
+                    }}
+                    onClick={toggleOnExportContactsOpened}
+                  >
+                    <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
+                  </IconButton>
+                </Tooltip>
               </div>
             </div>
           ))}
@@ -285,26 +262,6 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           </div>
         </div>
       )}
-      <Popover
-        className={classes.popover}
-        classes={{
-          paper: classes.popoverPaper,
-        }}
-        open={!!popover.anchorEl}
-        anchorEl={popover.anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        onClose={togglePopoverOpen(false)}
-        disableRestoreFocus
-      >
-        <Typography>{popover.text}</Typography>
-      </Popover>
     </ContactTableThemeProvider>
   )
 })

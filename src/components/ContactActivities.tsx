@@ -9,7 +9,7 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import Input from '@material-ui/core/Input'
 import StepContent from '@material-ui/core/StepContent'
-import Popover from '@material-ui/core/Popover'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
@@ -140,12 +140,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  popover: {
-    pointerEvents: 'none',
-  },
-  popoverPaper: {
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.background.paper,
+  tooltip: {
+    fontSize: 12,
+    color: 'white',
+    backgroundColor: 'black',
   },
   progress: {
     margin: theme.spacing(2),
@@ -194,27 +192,6 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [removeNoteError],
   )
 
-  const [popover, setPopover] = useState({
-    anchorEl: null as HTMLElement | null,
-    text: '',
-  })
-
-  const togglePopoverOpen = useCallback<{
-    (opened: true, text: string): (event: React.MouseEvent<Element>) => void;
-    (opened: false): (event: React.MouseEvent<Element>) => void;
-  }> (
-    (opened: boolean, text?: string) => (event: React.MouseEvent<Element>) => {
-      const currentTarget = event.currentTarget as HTMLElement
-      requestAnimationFrame(() => {
-        setPopover({
-          anchorEl: opened ? currentTarget : null,
-          text: text || popover.text,
-        })
-      })
-    },
-    [popover],
-  )
-
   const {value: showCtlButtons, toggleOn: toggleOnShowCtlButtons, toggleOff: toggleOffShowCtlButtons} = useToggle(false)
   // const {value: editActivity, toggle: toggleEditActivity, toggleOff: toggleOffEditActivity} = useToggle(false)
   const {value: showAddNote, toggleOn: toggleOnAddNote, toggleOff: toggleOffShowAddNote} = useToggle(false)
@@ -245,11 +222,6 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     async () => {
       const value = inputtingNoteRef.current.trim()
 
-      setPopover({
-        anchorEl: null,
-        text: '',
-      })
-
       toggleOffShowAddNote()
 
       if (!value) return
@@ -257,7 +229,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       await addNote(value)
       await freshNotes()
     },
-    [addNote, freshNotes, toggleOffShowAddNote, setPopover],
+    [addNote, freshNotes, toggleOffShowAddNote],
   )
 
   const handleNoteUpdateByKeydown = useCallback(
@@ -390,19 +362,13 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                         rowsMax={4}
                         onBlur={handleNoteUpdateByBlur}
                         onKeyDown={handleNoteUpdateByKeydown}
+                        autoFocus
                       />
-                      <IconButton
-                        color="primary"
-                        className={classes.noteSubmitter}
-                        onClick={handleSubmitUpdate}
-                        onMouseEnter={togglePopoverOpen(true, 'submit')}
-                        onMouseLeave={togglePopoverOpen(false)}
-                      >
-                        <Icon
-                          name={ICONS.Enter}
-                          color={'hoverLighten'}
-                        />
-                      </IconButton>
+                      <Tooltip title="submit" classes={{ tooltip: classes.tooltip }}>
+                        <IconButton color="primary" className={classes.noteSubmitter} onClick={handleSubmitUpdate}>
+                          <Icon name={ICONS.Enter} color={'hoverLighten'}/>
+                        </IconButton>
+                      </Tooltip>
                     </div>
                   )
                 }
@@ -410,14 +376,11 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                   <div className={classes.entry} key={note.id}>
                     <div className={classes.entryContent}>
                       {note.content}
-                      <IconButton
-                        className={classes.noteRemover}
-                        onClick={handleNoteRemove(note.id)}
-                        onMouseEnter={togglePopoverOpen(true, 'remove')}
-                        onMouseLeave={togglePopoverOpen(false)}
-                      >
-                        <Icon name={ICONS.Delete} color={'hoverLighten'}/>
-                      </IconButton>
+                      <Tooltip title="remove" classes={{ tooltip: classes.tooltip }}>
+                        <IconButton className={classes.noteRemover} onClick={handleNoteRemove(note.id)}>
+                          <Icon name={ICONS.Delete} color={'hoverLighten'}/>
+                        </IconButton>
+                      </Tooltip>
                     </div>
                     <time className={classes.entryTime}>
                       {getTime(note.timestamp)}
@@ -440,47 +403,20 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               >
                 <Icon name={ICONS.Birthday} />
               </IconButton> */}
-              <IconButton
-                classes={{
-                  label: classes.entryButtonIcon,
-                }}
-                onClick={toggleOnAddNote}
-                onMouseEnter={togglePopoverOpen(true, 'add note')}
-                onMouseLeave={togglePopoverOpen(false)}
-              >
-                <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
-              </IconButton>
+              <Tooltip title="add note" classes={{ tooltip: classes.tooltip }}>
+                <IconButton classes={{ label: classes.entryButtonIcon }} onClick={toggleOnAddNote}>
+                  <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
+                </IconButton>
+              </Tooltip>
             </>
           )}
-          <IconButton
-            color="primary"
-            onClick={toggleOnAddNote}
-            // onClick={toggleShowButtons}
-            onMouseEnter={togglePopoverOpen(true, 'note')}
-            onMouseLeave={togglePopoverOpen(false)}
-          >
-            <Icon name={ICONS.AddCircle} />
-          </IconButton>
-          <Popover
-            className={classes.popover}
-            classes={{
-              paper: classes.popoverPaper,
-            }}
-            open={!!popover.anchorEl}
-            anchorEl={popover.anchorEl}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
-            }}
-            onClose={togglePopoverOpen(false)}
-            disableRestoreFocus
-          >
-            <Typography>{popover.text}</Typography>
-          </Popover>
+          <Tooltip title="note" classes={{ tooltip: classes.tooltip }}>
+            <IconButton color="primary" onClick={toggleOnAddNote}
+              // onClick={toggleShowButtons}
+            >
+              <Icon name={ICONS.AddCircle} />
+            </IconButton>
+          </Tooltip>
         </div>
       )}
     </ContactTableThemeProvider>

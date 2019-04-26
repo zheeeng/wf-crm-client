@@ -14,7 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Avatar from '@material-ui/core/Avatar'
 import Hidden from '@material-ui/core/Hidden'
 import Typography from '@material-ui/core/Typography'
-import Popover from '@material-ui/core/Popover'
+import Tooltip from '@material-ui/core/Tooltip'
 import cssTips from '~src/utils/cssTips'
 import { Contact, ContactFields } from '~src/types/Contact'
 
@@ -30,7 +30,6 @@ import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
 import StarThemeProvider from '~src/theme/StarThemeProvider'
-import countries from '~src/meta/countries.json'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
@@ -81,12 +80,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  popover: {
-    pointerEvents: 'none',
-  },
-  popoverPaper: {
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.background.paper,
+  tooltip: {
+    fontSize: 12,
+    color: 'white',
+    backgroundColor: 'black',
   },
   table: {
     flex: 1,
@@ -177,9 +174,7 @@ const newContactFormOption: CreateFormOption = {
       ],
     },
     { type: 'text', name: 'email', label: 'Email', required: false },
-    {
-      type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female'], required: false,
-    },
+    { type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female'], required: false },
     { type: 'text', name: 'first_line', label: 'Address Line1', required: false },
     { type: 'text', name: 'second_line', label: 'Address Line2', required: false },
     { type: 'text', name: 'country', label: 'Country', required: false },
@@ -263,10 +258,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const classes = useStyles({})
-  const [popover, setPopover] = useState({
-    anchorEl: null as HTMLElement | null,
-    text: '',
-  })
+
   const [checked, setChecked] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [createForm, setCreateForm] = useState<{
@@ -294,23 +286,6 @@ const PeopleList: React.FC<Props> = React.memo(({
   } = useToggle(false)
 
   const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
-
-  const handlePopoverToggle = useCallback<{
-    (opened: true, text: string): (event: React.MouseEvent<HTMLButtonElement>) => void;
-    (opened: false): (event: React.MouseEvent<HTMLButtonElement>) => void;
-  }> (
-    (opened: boolean, text?: string) =>
-      (event: React.MouseEvent<HTMLButtonElement>) => {
-        const currentTarget = event.currentTarget
-        requestAnimationFrame(() => {
-          setPopover({
-            anchorEl: opened ? currentTarget : null,
-            text: text || popover.text,
-          })
-        })
-      },
-    [popover],
-  )
 
   const search = useCallback(
     (term: string) => {
@@ -532,47 +507,21 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderControls = () => (
     <>
-      <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'merge')}
-        onMouseLeave={handlePopoverToggle(false)}
-        onClick={toggleOnMergeContactsOpened}
-      >
-        <Icon name={ICONS.Merge} color="hoverLighten" />
-      </IconButton>
-      <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'export')}
-        onMouseLeave={handlePopoverToggle(false)}
-        onClick={toggleOnExportContactsOpened}
-      >
-        <Icon name={ICONS.Export} color="hoverLighten" />
-      </IconButton>
-      <IconButton
-        onMouseEnter={handlePopoverToggle(true, 'add to group')}
-        onMouseLeave={handlePopoverToggle(false)}
-        onClick={toggleOnAddContactToGroupFormOpened}
-      >
-        <Icon name={ICONS.PersonAdd} color="hoverLighten" />
-      </IconButton>
-      <Popover
-        className={classes.popover}
-        classes={{
-          paper: classes.popoverPaper,
-        }}
-        open={!!popover.anchorEl}
-        anchorEl={popover.anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        onClose={handlePopoverToggle(false)}
-        disableRestoreFocus
-      >
-        <Typography>{popover.text}</Typography>
-      </Popover>
+      <Tooltip classes={{ tooltip: classes.tooltip }} title="merge">
+        <IconButton onClick={toggleOnMergeContactsOpened}>
+          <Icon name={ICONS.Merge} color="hoverLighten" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip classes={{ tooltip: classes.tooltip }} title="export">
+        <IconButton onClick={toggleOnExportContactsOpened}>
+          <Icon name={ICONS.Export} color="hoverLighten" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip classes={{ tooltip: classes.tooltip }} title="add to group">
+        <IconButton onClick={toggleOnAddContactToGroupFormOpened}>
+          <Icon name={ICONS.PersonAdd} color="hoverLighten" />
+        </IconButton>
+      </Tooltip>
     </>
   )
 
