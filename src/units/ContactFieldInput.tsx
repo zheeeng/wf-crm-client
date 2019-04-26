@@ -11,10 +11,6 @@ import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 import { isEmail, isValidDate } from '~src/utils/validation'
 import SvgIcon, { ICONS } from '~src/units/Icons'
-import { SimpleFormInputSelect } from '~src/units/BasicFormInputSelect'
-import countries from '~src/meta/countries.json'
-
-const countryOptions= countries.map(option => ({ label: option, value: option }))
 
 const joinSegmentFieldValues = (values: FieldSegmentValue[]) => values
   .filter(value => value.key !== 'title')
@@ -416,31 +412,20 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           ? (
             <>
               {values.filter(segmentValue => segmentValue.key !== 'title')
-                .map(segmentValue => (type === 'address' && segmentValue.key === 'country')
-                  ? (
-                    <SimpleFormInputSelect
-                      key={segmentValue.key}
-                      className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
-                      onChange={handleEntryUpdate(segmentValue.key, fieldValue.id!, segmentValue.value)}
-                      placeholder="country"
-                      disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                      options={countryOptions}
-                    />
-                  ) : (
-                    <Input
-                      key={segmentValue.key}
-                      type={type === 'calendar' ? 'number' : type}
-                      error={hasErrorKeys.includes(fieldValue.id || '')}
-                      className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
-                      classes={{disabled: classes.fieldDisabled}}
-                      placeholder={segmentValue.key}
-                      defaultValue={segmentValue.value}
-                      onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
-                      onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
-                      disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                    />
-                  )
-                )
+                .map(segmentValue => (
+                  <Input
+                    key={segmentValue.key}
+                    type={type === 'calendar' ? 'number' : type}
+                    error={hasErrorKeys.includes(fieldValue.id || '')}
+                    className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
+                    classes={{disabled: classes.fieldDisabled}}
+                    placeholder={segmentValue.key}
+                    defaultValue={segmentValue.value}
+                    onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                    onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                    disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                  />
+                ))
               }
               {!isAppend && hasTitle &&(
                 <Input
