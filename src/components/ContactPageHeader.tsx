@@ -1,21 +1,17 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-
-import cssTips from '~src/utils/cssTips'
+import ToolTip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  left: {
-    ...cssTips(theme).horizontallySpaced(),
+  tooltip: {
+    fontSize: 12,
+    color: 'white',
+    backgroundColor: 'black',
   },
-  delete: {
-    cursor: 'pointer',
-  },
-  navIcon: {
-    cursor: 'pointer',
-  }
 }))
 
 export interface Props {
@@ -33,35 +29,28 @@ const ContactPageHeader: React.FC<Props> = React.memo(
 
     return (
       <>
-        <div className={classes.left}>
-          <Icon
-            name={ICONS.ArrowLeft}
-            onClick={onGoBack}
-            color="hoverLighten"
-            className={classes.navIcon}
-            size="lg"
-          />
-          <Icon
-            name={ICONS.ArrowDown}
-            onClick={onGoNext}
-            color={disableGoNext ? 'disabled' : "hoverLighten"}
-            className={classes.navIcon}
-            size="lg"
-          />
-          <Icon name={ICONS.ArrowUp}
-            onClick={onGoPrevious}
-            color={disableGoPrevious ? 'disabled' : "hoverLighten"}
-            className={classes.navIcon}
-            size="lg"
-          />
+        <div>
+          <ToolTip title="go back" classes={{ tooltip: classes.tooltip }}>
+            <IconButton onClick={onGoBack}>
+              <Icon name={ICONS.ArrowLeft} color="hoverLighten" size="lg" />
+            </IconButton>
+          </ToolTip>
+          <ToolTip title={disableGoNext ? "" : "next"} classes={{ tooltip: classes.tooltip }}>
+            <IconButton onClick={onGoNext}>
+              <Icon name={ICONS.ArrowDown} color={disableGoNext ? 'disabled' : "hoverLighten"} size="lg" />
+            </IconButton>
+          </ToolTip>
+          <ToolTip title={disableGoPrevious ? "" : "previous"} classes={{ tooltip: classes.tooltip }}>
+            <IconButton onClick={onGoPrevious}>
+              <Icon name={ICONS.ArrowUp} color={disableGoPrevious ? 'disabled' : "hoverLighten"} size="lg" />
+            </IconButton>
+          </ToolTip>
         </div>
-        <Icon
-          name={ICONS.Delete}
-          className={classes.delete}
-          onClick={onDelete}
-          color="hoverLighten"
-          size="lg"
-        />
+        <ToolTip title="delete contact" classes={{ tooltip: classes.tooltip }}>
+          <IconButton onClick={onDelete}>
+            <Icon name={ICONS.Delete} color="hoverLighten" size="lg" />
+          </IconButton>
+        </ToolTip>
       </>
     )
   },

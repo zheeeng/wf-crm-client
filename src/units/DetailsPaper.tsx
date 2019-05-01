@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing(4),
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(0.5)}px ${theme.spacing(2.5)}px`,
   },
   content: {
     display: 'flex',
