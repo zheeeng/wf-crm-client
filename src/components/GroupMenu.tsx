@@ -61,11 +61,19 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
 
   const [searchTerm, setSearchTerm] = useState('')
 
+  const handleChangeSearchTerm = useCallback(
+    (value: string) => {
+      setSearchTerm(value)
+      onClickGroup('')
+    },
+    [setSearchTerm, onClickGroup],
+  )
+
   const handleOnClick = useCallback(
     (id: string) => () => {
       onClickGroup(id)
     },
-    [],
+    [onClickGroup],
   )
 
   const filteredGroups = useMemo(
@@ -75,8 +83,6 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
         .filter(
           group => group.info.name.toLowerCase()
               .includes(searchTerm.toLowerCase())
-            || (group.id && group.id === selectedId)
-            || (group.id && group.id === groupId),
         ),
     [groups, searchTerm],
   )
@@ -93,7 +99,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
           <Searcher
             placeholder="Type a group name"
             value={searchTerm}
-            onChange={setSearchTerm}
+            onChange={handleChangeSearchTerm}
             theme={theme}
           />
         </ListItem>
