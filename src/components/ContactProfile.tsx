@@ -7,6 +7,7 @@ import Dialog from '@material-ui/core/Dialog'
 import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
 import Avatar from '@material-ui/core/Avatar'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
@@ -670,12 +671,14 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
           <Typography variant="h4" className={classes.profileTitle}>
             Profile
           </Typography>
-          <IconButton onClick={toggleEditable} className={classes.editIconBox}>
-            {editable
-              ? <Icon name={ICONS.CheckCircle} size="lg" color="hoverLighten" />
-              : <Icon name={ICONS.Edit} size="lg" color="hoverLighten" />
-            }
-          </IconButton>
+          <Tooltip title={editable ? 'display' : 'edit'}>
+            <IconButton onClick={toggleEditable} className={classes.editIconBox}>
+              {editable
+                ? <Icon name={ICONS.CheckCircle} size="lg" color="hoverLighten" />
+                : <Icon name={ICONS.Edit} size="lg" color="hoverLighten" />
+              }
+            </IconButton>
+          </Tooltip>
         </div>
         <div>
           <SplitWaiverThemeProvider>
