@@ -227,6 +227,7 @@ const getFieldDate = (values: FieldSegmentValue[]) => {
   const month = values.find(v => v.key === 'month')
   const day = values.find(v => v.key === 'day')
   if (!year || !month || !day) return null
+  if (!isValidDate(+day.value, +month.value, +year.value)) return null
 
   const d = new Date()
   d.setFullYear(+year.value)

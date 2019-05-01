@@ -7,6 +7,7 @@ export const isYear = (year: number) => year > 1900 && year < 2100
 export const isMonth = (month: number) => (month > 0) && (month <= 12)
 
 export const isValidDate = (day: number, month: number, year: number) => {
+  if (year < 1900 || year > 2100) return false
   if (!isYear(year)) return false
   if (!isMonth(month)) return false
 
