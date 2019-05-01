@@ -610,9 +610,22 @@ const PeopleList: React.FC<Props> = React.memo(({
                     className={classes.checkbox}
                   />
                 </TableCell>
-                <TableCell colSpan={3} padding="none">
-                  {checked.length > 0 && searchTerm === '' && renderControls()}
-                </TableCell>
+
+                <Hidden lgDown>
+                  <TableCell colSpan={4} padding="none">
+                    {checked.length > 0 && searchTerm === '' && renderControls()}
+                  </TableCell>
+                </Hidden>
+                <Hidden xlUp smDown>
+                  <TableCell colSpan={3} padding="none">
+                    {checked.length > 0 && searchTerm === '' && renderControls()}
+                  </TableCell>
+                </Hidden>
+                <Hidden mdUp>
+                  <TableCell colSpan={4} padding="none">
+                    {checked.length > 0 && searchTerm === '' && renderControls()}
+                  </TableCell>
+                </Hidden>
                 <Hidden smDown>
                   {renderPagination(true)}
                 </Hidden>
