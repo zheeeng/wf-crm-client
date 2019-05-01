@@ -22,7 +22,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   nestedItem: {
     padding: theme.spacing(1.5, 1, 1.5, 7),
   },
+  selectedItem: {
+    backgroundColor: theme.palette.grey[200],
+  },
   activeItem: {
+    backgroundColor: theme.palette.grey[100],
+  },
+  activeItemText: {
     ...{
       '&&': {
         color: theme.palette.primary.main,
@@ -96,13 +102,13 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
             key={group.id}
             button
             component="li"
-            className={classnames(classes.nestedItem, theme === 'simple' && classes.text)}
+            className={classnames(classes.nestedItem, theme === 'simple' && classes.text, group.id === groupId && classes.activeItem, group.id === selectedId && classes.selectedItem)}
             onClick={handleOnClick(group.id)}
           >
             <ListItemText
               classes={{
                 primary: (group.id === groupId || group.id === selectedId)
-                  ? classes.activeItem
+                  ? classes.activeItemText
                   : undefined,
               }}
             >
