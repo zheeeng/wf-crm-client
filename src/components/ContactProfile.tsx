@@ -387,7 +387,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   const handleUpdateContactGender = useCallback(
     (value: string) => {
-      if (value !== 'Male' && value !== 'Female') return
+      if (value !== 'Male' && value !== 'Female' && value !== 'Other') return
 
       updateContactGender(value)
     },
@@ -602,7 +602,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         Icon={GenderIcon}
         hasTitle={false}
         value={gender || ''}
-        options={['', 'Male', 'Female']}
+        options={['', 'Male', 'Female', 'Other']}
         updateField={handleUpdateContactGender}
       />
       <ContactFieldInput

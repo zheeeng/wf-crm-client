@@ -104,7 +104,7 @@ export interface Contact {
     starred: boolean,
     name: string,
     names: NameField[],
-    gender: 'Male' | 'Female' | null,
+    gender: 'Male' | 'Female' | 'Other' | null,
     birthDay: string,
     dates: any[],
     email: string,
@@ -149,7 +149,7 @@ export interface PeopleAPI {
   first_name: string | null
   middle_name: string | null
   last_name: string | null
-  gender: 'Male' | 'Female' | null
+  gender: 'Male' | 'Female' | 'Other' | null
   country: string | null
   state: string | null
   city: string | null
@@ -280,7 +280,7 @@ export const contactInputAdapter = (input: PeopleAPI): Contact => {
     starred: favourite || false,
     name: name || '',
     names: (names || []).map(o => mapKeys(snake2pascal, o)),
-    gender: gender || null as 'Male' | 'Female' | null,
+    gender: gender || null as 'Male' | 'Female' | 'Other' | null,
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
     email: email || '',
     emails: (emails || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),

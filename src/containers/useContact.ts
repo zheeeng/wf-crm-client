@@ -74,7 +74,7 @@ const useContact = (contactId: string) => {
     afterRemovedTags,
   ) || []
 
-  const gender = useLatest<'Male' | 'Female' | ''>(
+  const gender = useLatest<'Male' | 'Female' | 'Other' | ''>(
     latestContact && latestContact.info.gender || '',
     putContactFiledData && putContactFiledData.gender || '',
   )
@@ -142,7 +142,7 @@ const useContact = (contactId: string) => {
   )
 
   const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
-    async (newGender: 'Male' | 'Female') => {
+    async (newGender: 'Male' | 'Female' | 'Other') => {
       await putContactFiled(`/api/people/${contactId}`)({ gender: newGender })
     },
     [contactId],

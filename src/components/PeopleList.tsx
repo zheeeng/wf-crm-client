@@ -169,7 +169,7 @@ const newContactFormOption: CreateFormOption = {
       ],
     },
     { type: 'text', name: 'email', label: 'Email', required: false },
-    { type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female'], required: false },
+    { type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'], required: false },
     { type: 'text', name: 'first_line', label: 'Address Line1', required: false },
     { type: 'text', name: 'second_line', label: 'Address Line2', required: false },
     { type: 'text', name: 'country', label: 'Country', required: false },
