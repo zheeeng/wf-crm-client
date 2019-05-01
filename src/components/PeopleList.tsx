@@ -196,7 +196,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const { success, fail } = useContext(AlertContainer.Context)
   const {
     contacts,
-    addContactData, addContact, addContactError,
+    addContactData, showAddContactMessage, addContact, addContactError,
     starContact, starContactError,
     // removeContacts, removeContactError,
     addContactToGroupData, addContactToGroup, addContactToGroupError,
@@ -205,7 +205,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   useEffect(
     () => {
-      addContactData && success(
+      showAddContactMessage && addContactData && success(
         <div className={classes.infoBar}>
           <div className={classes.infoForePlaceholder} />
           <div className={classes.infoText}><CheckCircle /> Contact created!</div>
@@ -220,7 +220,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         </div>
       )
     },
-    [addContactData],
+    [addContactData, showAddContactMessage],
   )
 
   useEffect(

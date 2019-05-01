@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react'
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 
-import { useCallback, useContext, useMemo, useEffect } from 'react'
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
@@ -205,11 +204,21 @@ const ContactsContainer = createContainer(() => {
     )
   }
 
+  const [showAddContactMessage, setShowAddContactMessage] = useState(false)
+
+  useEffect(
+    () => {
+      setShowAddContactMessage(true)
+      setTimeout(() => setShowAddContactMessage(false), 5000)
+    },
+    [postContactData],
+  )
+
   return {
     pagination,
     contacts,
     fetchContacts, fetchContactsError: getContactsError,
-    addContactData: postContactData, addContact, addMutation, addContactError: postContactError,
+    addContactData: postContactData, showAddContactMessage, addContact, addMutation, addContactError: postContactError,
     starContact, starMutation, starContactError: putContactError,
     removeContacts, removeMutation, removeContactError,
     addContactToGroupData: postContactToGroupData, addContactToGroup, addContactToGroupError: postContactToGroupError,

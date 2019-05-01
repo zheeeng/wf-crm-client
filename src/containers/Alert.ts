@@ -31,14 +31,16 @@ const AlertContainer = createContainer(() => {
     [],
   )
 
-  const dismiss = useCallback(
-    () => {
-      updateMessage(message => ({ ...message, expand: false }))
-    },
+  const reset = useCallback(
+    () => updateMessage(initialMessage),
     [],
   )
-  const reset = useCallback(
-    () => { updateMessage(initialMessage) },
+
+  const dismiss = useCallback(
+    () =>  {
+      updateMessage(message => ({ ...message, expand: false }))
+      setTimeout(reset, 1000)
+    },
     [],
   )
 
