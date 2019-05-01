@@ -7,11 +7,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  tooltip: {
-    fontSize: 12,
-    color: 'white',
-    backgroundColor: 'black',
-  },
 }))
 
 export interface Props {
@@ -25,28 +20,26 @@ export interface Props {
 
 const ContactPageHeader: React.FC<Props> = React.memo(
   ({ onGoBack, onGoPrevious, onGoNext,  onDelete, disableGoPrevious, disableGoNext }) => {
-    const classes = useStyles({})
-
     return (
       <>
         <div>
-          <ToolTip title="go back" classes={{ tooltip: classes.tooltip }}>
+          <ToolTip title="go back">
             <IconButton onClick={onGoBack}>
               <Icon name={ICONS.ArrowLeft} color="hoverLighten" size="lg" />
             </IconButton>
           </ToolTip>
-          <ToolTip title={disableGoNext ? "" : "next"} classes={{ tooltip: classes.tooltip }}>
+          <ToolTip title={disableGoNext ? "" : "next"}>
             <IconButton onClick={onGoNext}>
               <Icon name={ICONS.ArrowDown} color={disableGoNext ? 'disabled' : "hoverLighten"} size="lg" />
             </IconButton>
           </ToolTip>
-          <ToolTip title={disableGoPrevious ? "" : "previous"} classes={{ tooltip: classes.tooltip }}>
+          <ToolTip title={disableGoPrevious ? "" : "previous"}>
             <IconButton onClick={onGoPrevious}>
               <Icon name={ICONS.ArrowUp} color={disableGoPrevious ? 'disabled' : "hoverLighten"} size="lg" />
             </IconButton>
           </ToolTip>
         </div>
-        <ToolTip title="delete contact" classes={{ tooltip: classes.tooltip }}>
+        <ToolTip title="delete contact">
           <IconButton onClick={onDelete}>
             <Icon name={ICONS.Delete} color="hoverLighten" size="lg" />
           </IconButton>

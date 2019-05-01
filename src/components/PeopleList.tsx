@@ -80,11 +80,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  tooltip: {
-    fontSize: 12,
-    color: 'white',
-    backgroundColor: 'black',
-  },
   table: {
     flex: 1,
     overflowY: 'auto',
@@ -507,17 +502,17 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderControls = () => (
     <>
-      <Tooltip classes={{ tooltip: classes.tooltip }} title="merge">
+      <Tooltip title="merge">
         <IconButton onClick={toggleOnMergeContactsOpened}>
           <Icon name={ICONS.Merge} color="hoverLighten" />
         </IconButton>
       </Tooltip>
-      <Tooltip classes={{ tooltip: classes.tooltip }} title="export">
+      <Tooltip title="export">
         <IconButton onClick={toggleOnExportContactsOpened}>
           <Icon name={ICONS.Export} color="hoverLighten" />
         </IconButton>
       </Tooltip>
-      <Tooltip classes={{ tooltip: classes.tooltip }} title="add to group">
+      <Tooltip title="add to group">
         <IconButton onClick={toggleOnAddContactToGroupFormOpened}>
           <Icon name={ICONS.PersonAdd} color="hoverLighten" />
         </IconButton>

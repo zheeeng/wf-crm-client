@@ -104,11 +104,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   progress: {
     margin: theme.spacing(2),
   },
-  tooltip: {
-    fontSize: 12,
-    color: 'white',
-    backgroundColor: 'black',
-  },
 }))
 
 export interface Props {
@@ -204,7 +199,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
               <span className={classes.entryContent}>{waiver.title}</span>
               <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
               <div className={classes.entryButtons}>
-                <Tooltip title="split" classes={{ tooltip: classes.tooltip }}>
+                <Tooltip title="split">
                   <IconButton
                     className={classes.entryButton}
                     classes={{
@@ -215,7 +210,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                     <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="export" classes={{ tooltip: classes.tooltip }}>
+                <Tooltip title="export">
                   <IconButton
                     className={classes.entryButton}
                     classes={{

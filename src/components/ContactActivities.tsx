@@ -140,11 +140,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tooltip: {
-    fontSize: 12,
-    color: 'white',
-    backgroundColor: 'black',
-  },
   progress: {
     margin: theme.spacing(2),
   },
@@ -364,7 +359,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                         onKeyDown={handleNoteUpdateByKeydown}
                         autoFocus
                       />
-                      <Tooltip title="submit" classes={{ tooltip: classes.tooltip }}>
+                      <Tooltip title="submit">
                         <IconButton color="primary" className={classes.noteSubmitter} onClick={handleSubmitUpdate}>
                           <Icon name={ICONS.Enter} color={'hoverLighten'}/>
                         </IconButton>
@@ -376,7 +371,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                   <div className={classes.entry} key={note.id}>
                     <div className={classes.entryContent}>
                       {note.content}
-                      <Tooltip title="remove" classes={{ tooltip: classes.tooltip }}>
+                      <Tooltip title="remove">
                         <IconButton className={classes.noteRemover} onClick={handleNoteRemove(note.id)}>
                           <Icon name={ICONS.Delete} color={'hoverLighten'}/>
                         </IconButton>
@@ -403,14 +398,14 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               >
                 <Icon name={ICONS.Birthday} />
               </IconButton> */}
-              <Tooltip title="add note" classes={{ tooltip: classes.tooltip }}>
+              <Tooltip title="add note">
                 <IconButton classes={{ label: classes.entryButtonIcon }} onClick={toggleOnAddNote}>
                   <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
                 </IconButton>
               </Tooltip>
             </>
           )}
-          <Tooltip title="note" classes={{ tooltip: classes.tooltip }}>
+          <Tooltip title="note">
             <IconButton color="primary" onClick={toggleOnAddNote}
               // onClick={toggleShowButtons}
             >

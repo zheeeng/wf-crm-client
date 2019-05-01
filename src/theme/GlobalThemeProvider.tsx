@@ -104,6 +104,13 @@ export const themeOptions: ThemeOptions = {
         },
       },
     },
+    MuiTooltip: {
+      tooltip: {
+        fontSize: 12,
+        color: 'white',
+        backgroundColor: 'black',
+      },
+    },
   },
 }
 
