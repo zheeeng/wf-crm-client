@@ -8,7 +8,7 @@ export const splitWaiverTheme = createMuiTheme(mergeOptions(themeOptions, {
   overrides: {
     MuiButton: {
       root: {
-        textTransform: 'capitalize',
+        textTransform: 'initial',
         color: globalTheme.palette.text.secondary,
       },
       textPrimary: {

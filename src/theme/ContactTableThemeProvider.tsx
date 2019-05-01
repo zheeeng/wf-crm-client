@@ -47,7 +47,7 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
     },
     MuiButton: {
       root: {
-        textTransform: 'capitalize',
+        textTransform: 'initial',
         color: globalTheme.palette.text.secondary,
       },
       textPrimary: {
