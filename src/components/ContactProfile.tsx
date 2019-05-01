@@ -416,6 +416,30 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       } as any).then(specificFieldToInputField(name)),
     [updateField],
   )
+  const handleAddDateField = useCallback(
+    ({ year, month, day }: { year: number, month: number, day: number }, priority: number) =>
+      addField({
+        fieldType: 'date',
+        year,
+        month,
+        day,
+        priority,
+      } as any).then(specificFieldToInputField('date')),
+      [addField],
+  )
+  const handleUpdateDateField = useCallback(
+    ({ year, month, day }: { year: number, month: number, day: number }, id: string, priority: number,
+  ) =>
+    updateField({
+      id,
+      fieldType: 'date',
+      year: year,
+      month: month,
+      day: day,
+      priority,
+    } as any).then(specificFieldToInputField('date')),
+    [updateField],
+  )
   const handleFieldRemove = useCallback(
     (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other', id: string) =>
       removeField({
@@ -559,12 +583,14 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldName="Birthday"
         showName={showName}
         Icon={BirthdayIcon}
-        hasTitle={false}
+        hasTitle={true}
         expandable={true}
         fieldValues={dates}
         backupFieldValue={backupDateField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
+        onUpdateDateField={handleUpdateDateField}
+        onAddDateField={handleAddDateField}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />

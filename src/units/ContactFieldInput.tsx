@@ -7,15 +7,26 @@ import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
+import BasicDateInput from '~src/units/BasicDateInput'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 import { isEmail, isValidDate } from '~src/utils/validation'
 import SvgIcon, { ICONS } from '~src/units/Icons'
 
-const joinSegmentFieldValues = (values: FieldSegmentValue[]) => values
-  .filter(value => value.key !== 'title')
-  .map(value => value.value)
-  .join(' ')
+const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
+  if (values[0].fieldType === 'date') {
+    return [
+      values.find(v => v.key === 'month')!.value.padStart(2, '0'),
+      values.find(v => v.key === 'day')!.value.padStart(2, '0'),
+      values.find(v => v.key === 'year')!.value.padStart(4, '0'),
+    ].join('/')
+  }
+
+  return values
+    .filter(value => value.key !== 'title')
+    .map(value => value.value)
+    .join(' ')
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   hidden: {
@@ -106,9 +117,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldTypeText: {
     flex: 0.5,
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1, 0, 0, 0),
     textAlign: 'left',
     color: theme.palette.text.secondary,
+    marginTop: 0,
+    marginBottom: 0,
   },
   fieldLabelText: {
     lineHeight: '1.1875em',
@@ -126,7 +139,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.secondary,
   },
   fieldDisplayText: {
-    lineHeight: '1.1875em',
+    lineHeight: '1.875em',
     padding: '14px 0 15px 0',
     color: theme.palette.text.secondary,
     fontWeight: 600,
@@ -167,6 +180,8 @@ const getFieldDefaultTitleWidthDec = (fieldValue: FieldValue) => {
 
 const getLabelExample = (fieldType?: string) => {
   switch (fieldType) {
+    case 'calendar':
+      return 'Birthday'
     case 'email':
       return 'Person'
     case 'number':
@@ -201,21 +216,36 @@ export type Props = InputProps & {
   expandable: boolean,
   onAddField (name: string, value: FieldSegmentValue, priority: number): Promise<FieldValue | null>,
   onUpdateField (name: string, value: FieldSegmentValue, id: string,  priority: number): Promise<FieldValue | null>
+  onUpdateDateField?: (date: { year: number, month: number, day: number }, id: string,  priority: number) => Promise<FieldValue | null>
+  onAddDateField?: (date: { year: number, month: number, day: number }, priority: number) => Promise<FieldValue | null>
   onDeleteField (name: string, id: string): Promise<string | null>
   onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>,
+}
+
+const getFieldDate = (values: FieldSegmentValue[]) => {
+  const year = values.find(v => v.key === 'year')
+  const month = values.find(v => v.key === 'month')
+  const day = values.find(v => v.key === 'day')
+  if (!year || !month || !day) return null
+
+  const d = new Date()
+  d.setFullYear(+year.value)
+  d.setMonth(+month.value - 1)
+  d.setDate(+day.value)
+  return d
 }
 
 const ContactFieldInput: React.FC<Props> = React.memo(
   ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
      editable = false, type, hasTitle, expandable,
-     onAddField, onUpdateField, onDeleteField, onChangePriority }) => {
+     onAddField, onUpdateField, onUpdateDateField, onAddDateField, onDeleteField, onChangePriority }) => {
 
   const classes = useStyles({})
 
-  const [ localFieldValues, updateLocalFieldValues ] = useState(fieldValues)
+  const [ localFieldValues, setLocalFieldValues ] = useState(fieldValues)
 
   useEffect(
-    () => updateLocalFieldValues(fieldValues),
+    () => setLocalFieldValues(fieldValues),
     [fieldValues],
   )
 
@@ -230,7 +260,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     async (segmentValue: FieldSegmentValue) => {
       const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
       const field = await onAddField(name, segmentValue, newPriority)
-      if (field) updateLocalFieldValues(values => values.concat(field))
+      if (field) setLocalFieldValues(values => values.concat(field))
     },
     [localFieldValues, onAddField, name],
   )
@@ -242,16 +272,39 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const priority = fieldValue.priority
 
       const field = await onUpdateField(name, segmentValue, id, priority)
-      if (field) updateLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+      if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
     },
     [localFieldValues, onUpdateField, name],
+  )
+
+  const addDateField = useCallback(
+    async (year: number, month: number, day: number) => {
+      if (!onAddDateField) return
+      const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
+      const field = await onAddDateField({ year, month, day }, newPriority)
+      if (field) setLocalFieldValues(values => values.concat(field))
+    },
+    [localFieldValues, onAddDateField],
+  )
+  const updateDateField = useCallback(
+    async (year: number, month: number, day: number, id: string) => {
+      if (!onUpdateDateField) return
+      if (!id) return
+      const fieldValue = localFieldValues.find(value => value.id === id)
+      if (!fieldValue) return
+      const priority = fieldValue.priority
+
+      const field = await onUpdateDateField({ year, month, day }, id, priority)
+      if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+    },
+    [localFieldValues, onUpdateDateField]
   )
   const removeField = useCallback(
     async (id: string) => {
       if (!id) return
       const removedId = await onDeleteField(name, id)
 
-      if (removedId) updateLocalFieldValues(values => values.filter(v => v.id !== removedId))
+      if (removedId) setLocalFieldValues(values => values.filter(v => v.id !== removedId))
     },
     [onDeleteField, name],
   )
@@ -269,7 +322,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )
       const field = await onChangePriority(name, id, newPriority)
       if (field) {
-        updateLocalFieldValues(
+        setLocalFieldValues(
           values => values
             .map(v => v.id === id ? field : v)
             .sort((p, c) => c.priority - p.priority),
@@ -298,26 +351,26 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           return
         }
 
-        if (type == 'calendar') {
-          const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
-          const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
-          const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+        // if (type == 'calendar') {
+        //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+        //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+        //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
 
-          if (key === 'year' && !isValidDate(+day, +month, +value)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
+        //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
+        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+        //     return
+        //   }
 
-          if (key === 'month' && !isValidDate(+day, +value, +year)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
+        //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
+        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+        //     return
+        //   }
 
-          if (key === 'day' && !isValidDate(+value, +month, +year)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
-        }
+        //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
+        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+        //     return
+        //   }
+        // }
 
         if (hasValues) {
           updateField({ key, value, fieldType: name }, id)
@@ -343,26 +396,26 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           return
         }
 
-        if (type == 'calendar') {
-          const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
-          const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
-          const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+        // if (type == 'calendar') {
+        //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+        //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+        //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
 
-          if (key === 'year' && !isValidDate(+day, +month, +value)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
+        //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
+        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+        //     return
+        //   }
 
-          if (key === 'month' && !isValidDate(+day, +value, +year)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
+        //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
+        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+        //     return
+        //   }
 
-          if (key === 'day' && !isValidDate(+value, +month, +year)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
-        }
+        //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
+        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+        //     return
+        //   }
+        // }
 
         if (hasValues) {
           updateField({ key, value, fieldType: name }, id)
@@ -396,14 +449,14 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const valueOfOld = localFieldValues[oldIndex]
       const valueOfNew = localFieldValues[newIndex]
       const previousValueOfNew = localFieldValues[newIndex - 1]
-      updateLocalFieldValues(values => arrayMove(values, oldIndex, newIndex))
+      setLocalFieldValues(values => arrayMove(values, oldIndex, newIndex))
       const newPriority = !previousValueOfNew
         ? valueOfNew.priority + 1
         : (valueOfNew.priority + previousValueOfNew.priority) / 2
 
       const field = await onChangePriority(name, valueOfOld.id!, newPriority)
       if (field) {
-        updateLocalFieldValues(
+        setLocalFieldValues(
           values => values
             .map(v => v.id === valueOfOld.id ? field : v)
             .sort((p, c) => c.priority - p.priority),
@@ -411,6 +464,28 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       }
     },
     [localFieldValues],
+  )
+
+  const onDateChange = useCallback(
+    (id?: string) => (date: Date | null) => {
+      if (!date) {
+        if (hasValues && id) {
+          updateDateField(0, 0 , 0, id)
+        }
+        return
+      }
+
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+
+      if (hasValues && id) {
+        updateDateField(year, month, day, id)
+      } else {
+        addDateField(year, month, day)
+      }
+    },
+    [updateDateField, addDateField],
   )
 
   const renderField = useCallback(
@@ -423,11 +498,20 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         {editable
           ? (
             <>
-              {values.filter(segmentValue => segmentValue.key !== 'title')
+              {type === 'calendar' && (
+                <BasicDateInput
+                  className={classes.fieldTypeText}
+                  date={getFieldDate(values)}
+                  onDateChange={onDateChange(fieldValue.id)}
+                  disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                  placeholder="date"
+                />
+              )}
+              {type !== 'calendar' && values.filter(segmentValue => segmentValue.key !== 'title')
                 .map(segmentValue => (
                   <Input
                     key={segmentValue.key}
-                    type={(type === 'calendar' || (type === 'address' && segmentValue.key === 'zipcode'))
+                    type={(type === 'address' && segmentValue.key === 'zipcode')
                       ? 'number'
                       : type
                     }
