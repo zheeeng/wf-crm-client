@@ -5,12 +5,12 @@ import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
+import Avatar from '@material-ui/core/Avatar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Hidden from '@material-ui/core/Hidden'
-import Button from '@material-ui/core/Button'
+import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
@@ -21,6 +21,7 @@ import cssTips from '~src/utils/cssTips'
 import AppContainer from '~src/containers/App'
 import AccountContainer from '~src/containers/Account'
 import AlertContainer from '~src/containers/Alert'
+import crateGravatar from '~src/utils/createGravatar'
 
 import MenuIcon from '@material-ui/icons/Menu'
 import { Divider } from '@material-ui/core';
@@ -72,6 +73,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 12,
     marginRight: 20,
   },
+  dropdownButton: {
+    display: 'flex',
+    margin: '13px 40px',
+    cursor: 'pointer',
+    ...{
+      '&:hover $menuList': {
+        display: 'block',
+      }
+    }
+  },
+  avatarRoot: {
+    height: 30,
+    width: 30,
+    margin: '0 10px',
+  },
+  arrowDown: {
+    display: 'inline-block',
+    margin: '10px 0',
+    width: 0,
+    height: 0,
+    borderLeft: '6px solid transparent',
+    borderRight: '6px solid transparent',
+    borderTop: '8px solid #fff',
+    opacity: .6,
+    verticalAlign: 'middle',
+  },
   navList: {
     display: 'flex',
     flex: 1,
@@ -116,17 +143,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   profileItem: {
     color: 'white',
   },
-  menuOffset: {
-    top: theme.spacing(4),
-  },
   menuList: {
+    display: 'none',
+    right: theme.spacing(4),
+    top: '100%',
+    position: 'absolute',
+    marginTop: theme.spacing(-2),
     cursor: 'default',
     backgroundColor: '#f9f9f9',
     minWidth: 160,
     boxShadow: '0 8px 16px 0 rgba(0,0,0,.2)',
     padding: '5px 0',
     borderRadius: 4,
-    marginTop: 0,
     width: 200,
     ...{
       '&:after': {
@@ -152,10 +180,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuItem: {
     fontSize: 14,
-    color: '#637694',
+    color: theme.palette.text.secondary,
     padding: '6px 20px',
     wordWrap: 'break-word',
     lineHeight: `${theme.spacing(2.5)}px`,
+    minHeight: theme.spacing(4),
     ...{
       '&:hover': {
         color: theme.palette.primary.main,
@@ -250,7 +279,11 @@ const Header: React.FC<Props> = React.memo(() => {
   return (
     <Portal container={mountElRef.current}>
       <div>
-        <AppBar position="absolute" className={classes.appBar} classes={{root: classes.appBarRoot}}>
+        <AppBar
+          position="absolute"
+          className={classes.appBar}
+          classes={{root: classes.appBarRoot}}
+        >
           <Toolbar variant="dense" className={classes.toolBar}>
             <Hidden mdDown>
               <div className={classes.logo} />
@@ -282,24 +315,11 @@ const Header: React.FC<Props> = React.memo(() => {
                 </Link>
               </div>
             </nav>
-            <div>
-              <Button
-                onMouseEnter={handleMenuToggle(true)}
-              >
-                <Typography className={classes.profileItem}>Open</Typography>
-              </Button>
-              <Menu
-                className={classes.menuOffset}
-                anchorEl={anchorEl}
-                open={openAccount}
-                onClose={handleMenuToggle(false)}
-                MenuListProps={{
-                  onMouseLeave: handleMenuToggle(false),
-                  className: classes.menuList,
-                }}
-                classes={{
-                  paper: classes.menuPaper,
-                }}
+            <div className={classes.dropdownButton}>
+              <Avatar src={crateGravatar('a')} classes={{root: classes.avatarRoot}} />
+              <div className={classes.arrowDown} />
+              <MenuList
+                className={classes.menuList}
               >
                 <MenuItem className={classes.menuItem}>
                   Profile
@@ -346,7 +366,7 @@ const Header: React.FC<Props> = React.memo(() => {
                     Sign out
                   </a>
                 </MenuItem>
-              </Menu>
+              </MenuList>
             </div>
           </Toolbar>
         </AppBar>
