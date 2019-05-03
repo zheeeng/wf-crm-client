@@ -133,6 +133,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   takeQuarter: {
     flex: 0.25,
   },
+  fieldTitle: {
+    display: 'flex',
+  },
+  fieldTitleIcon: {
+    paddingLeft: 0,
+    marginRight: 0,
+  },
+  fieldTitleName: {
+    paddingLeft: 0,
+  },
   fieldInput: {
     flex: 1,
     padding: theme.spacing(1, 0),
@@ -633,10 +643,16 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
   return (
     <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)} ref={containerRef}>
-      {showName
-        ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} />}
+      {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
+        {showName
+          && (
+            <div className={classes.fieldTitle}>
+              {Icon && <Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} />}
+              <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
+            </div>
+          )
+        }
         <SortableList
           onSortEnd={onSortEnd}
           useDragHandle
@@ -711,11 +727,18 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
   return (
     <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
-      {showName
-        ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} />}
+      {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
-        <div
+        {showName
+            && (
+              <>
+                {Icon && <Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} />}
+                <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
+              </>
+            )
+          }
+        }
+                <div
           className={classnames(
             classes.fieldTextBarWrapper,
             !editable && classes.hidden,
@@ -797,10 +820,16 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 
   return (
     <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
-      {showName
-        ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
-        : Icon && <Icon className={classes.fieldIcon} />}
+      {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
+        {showName
+          && (
+            <div className={classes.fieldTitle}>
+              {Icon && <Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} />}
+              <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
+            </div>
+          )
+        }
         <div
           className={classnames(
             classes.fieldTextBarWrapper,
@@ -885,7 +914,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
 //   return (
 //     <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
 //       {showName
-//         ? <Typography variant="h6" className={classes.fieldName} color="textSecondary">{fieldName}</Typography>
+//         ? <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
 //         : Icon && <Icon className={classes.fieldIcon} />}
 //       <div className={classes.fieldTextWrapper}>
 //         <div
