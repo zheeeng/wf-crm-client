@@ -24,7 +24,7 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     zIndex: 1,
     left: 0,
     right: 0,
-    maxHeight: theme.spacing(20),
+    maxHeight: theme.spacing(24),
     overflow: 'auto',
   },
   noOptionsMessage: {
@@ -51,10 +51,9 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
   },
   option: {
     fontSize: 14,
-    padding: theme.spacing(1),
+    padding: theme.spacing(0.5, 1),
     margin: 0,
     color: theme.palette.text.secondary,
-
   },
   optionButtonHover: {
     '&&:hover': {
@@ -97,7 +96,7 @@ const InputComponent: React.FC<{ inputRef: React.LegacyRef<HTMLDivElement> }>
 const Control: React.FC<{
   hasValue: boolean,
   innerRef: React.Ref<HTMLDivElement>,
-  selectProps: { props: Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> & { isSimple?: boolean } },
+  selectProps: { props: Partial<Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> & { isSimple: boolean }> },
   innerProps: any,
 }>
   = React.memo(({

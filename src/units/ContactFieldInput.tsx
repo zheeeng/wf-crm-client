@@ -5,8 +5,8 @@ import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import Select from 'react-select'
+import { components } from '~src/units/BasicFormInputSelect'
 import BasicDateInput from '~src/units/BasicDateInput'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
@@ -804,18 +804,25 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   )
 })
 
+const mapOption2SelectOption = (option: string) => option == ''
+  ? ({ value: '', label: 'None' })
+  : ({ value: option, label: option })
+
 export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
   fieldName = '', showName = false, Icon, editable, type, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
   const handleEntryUpdate = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const val = event.target.value.trim()
-
-      updateField(val)
+    (input: any) => {
+      updateField(input.value)
     },
-    [],
+    [updateField],
+  )
+
+  const selectOptions = useMemo(
+    () => options.map(mapOption2SelectOption),
+    [options]
   )
 
   return (
@@ -846,15 +853,17 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
               ? (
                 <Select
                   className={classes.fieldInput}
-                  value={value}
+                  classes={classes}
+                  components={components}
+                  props={{
+                    placeholder: fieldName,
+                  }}
+                  isSearchable={false}
+                  isClearable={false}
+                  options={selectOptions}
                   onChange={handleEntryUpdate}
-                >
-                  {options.map(option => (
-                    <MenuItem value={option} key={option}>
-                      <em>{option || 'None'}</em>
-                    </MenuItem>
-                  ))}
-                </Select>
+                  value={mapOption2SelectOption(value)}
+                />
               )
               : (
                 <Input
@@ -866,31 +875,6 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
               )
             }
           </div>
-          {editable && (
-            <div className={classes.filedIconBox}>
-              <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon
-                  name={ICONS.Eye}
-                  className={classes.placeholderIcon}
-                  color="hoverLighten" size="sm"
-                />
-              </IconButton>
-              <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon
-                  name={ICONS.Reorder}
-                  className={classes.placeholderIcon}
-                  color="hoverLighten" size="sm"
-                />
-              </IconButton>
-              <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon
-                  name={ICONS.AddCircle}
-                  className={classes.placeholderIcon}
-                  color="hoverLighten" size="sm"
-                />
-              </IconButton>
-            </div>
-          )}
         </div>
       </div>
     </div>
