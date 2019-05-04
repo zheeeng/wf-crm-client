@@ -24,6 +24,7 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, group }) => {
       total={pagination.total}
       onSearch={searchContacts}
       navigateToProfile={navigateToProfile}
+      isGroupPage={true}
     />
   )
 })

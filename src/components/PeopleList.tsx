@@ -26,6 +26,7 @@ import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import ExportContactsForm from '~src/components/ExportContactsForm'
 import MergeContactsForm from '~src/components/MergeContactsForm'
 import AddContactToGroupForm from '~src/components/AddContactToGroupForm'
+import RemoveContactsFromGroupForm from '~src/components/RemoveContactsFromGroupForm'
 import TablePaginationActions from '~src/units/TablePaginationActions'
 import DisplayPaper from '~src/units/DisplayPaper'
 import Searcher from '~src/units/Searcher'
@@ -156,6 +157,7 @@ export interface Props {
   total: number
   onSearch: (search: { page: number, size: number, searchTerm: string}) => void
   navigateToProfile: (id: string) => void
+  isGroupPage?: boolean
 }
 
 
@@ -186,16 +188,13 @@ const newContactFormOption: CreateFormOption = {
 }
 
 const PeopleList: React.FC<Props> = React.memo(({
-  total, page, size, onSearch, navigateToProfile,
+  total, page, size, onSearch, navigateToProfile, isGroupPage = false,
 }) => {
   const { success, fail } = useContext(AlertContainer.Context)
   const {
     contacts,
-    addContactData, showAddContactMessage, addContact, addContactError,
-    starContact, starContactError,
-    // removeContacts, removeContactError,
-    addContactToGroupData, addContactToGroup, addContactToGroupError,
-    mergeContactsData, mergeContacts, mergeContactsError,
+    addContactData, showAddContactMessage, addContact,
+    starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
   } = useContext(ContactsContainer.Context)
 
   useEffect(
@@ -218,40 +217,6 @@ const PeopleList: React.FC<Props> = React.memo(({
     [addContactData, showAddContactMessage],
   )
 
-  useEffect(
-    () => { addContactError && fail(addContactError.message) },
-    [addContactError],
-  )
-
-  useEffect(
-    () => { starContactError && fail(starContactError.message) },
-    [starContactError],
-  )
-  // useEffect(
-  //   () => { removeContactData && success(<><CheckCircle /> Contacts Removed</>) },
-  //   [removeContactData],
-  // )
-  // useEffect(
-  //   () => { removeContactError && fail(removeContactError.message) },
-  //   [removeContactError],
-  // )
-  useEffect(
-    () => { addContactToGroupData && success(<><CheckCircle /> Contacts Added</>) },
-    [addContactToGroupData],
-  )
-  useEffect(
-    () => { addContactToGroupError && fail(addContactToGroupError.message) },
-    [addContactToGroupError],
-  )
-  useEffect(
-    () => { mergeContactsData && success(<><CheckCircle /> Contacts Merged</>) },
-    [mergeContactsData],
-  )
-  useEffect(
-    () => { mergeContactsError && fail(mergeContactsError.message) },
-    [mergeContactsError],
-  )
-
   const classes = useStyles({})
 
   const [checked, setChecked] = useState<string[]>([])
@@ -272,6 +237,12 @@ const PeopleList: React.FC<Props> = React.memo(({
     value: mergeContactsOpened,
     toggleOn: toggleOnMergeContactsOpened,
     toggleOff: toggleOffMergeContactsOpened,
+  } = useToggle(false)
+
+  const {
+    value: removeContactFromGroupOpened,
+    toggleOn: toggleOnRemoveContactFromGroupOpened,
+    toggleOff: toggleOffRemoveContactFromGroupOpened,
   } = useToggle(false)
 
   const {
@@ -363,6 +334,16 @@ const PeopleList: React.FC<Props> = React.memo(({
       toggleOffAddContactToGroupFormOpened()
     },
     [checked],
+  )
+
+  const handleRemoveContactsFromGroup = useCallback(
+    async (groupId: string) => {
+      if (checked.length < 1) return
+
+      await removeContactsFromGroup(groupId, checked)
+      onSearch({ page, size, searchTerm })
+    },
+    [checked, page, size, searchTerm],
   )
 
   // const handleContactsRemove = useCallback(
@@ -517,6 +498,13 @@ const PeopleList: React.FC<Props> = React.memo(({
           <Icon name={ICONS.PersonAdd} color="hoverLighten" />
         </IconButton>
       </Tooltip>
+      {isGroupPage && (
+        <Tooltip title="remove from group">
+          <IconButton onClick={toggleOnRemoveContactFromGroupOpened}>
+            <Icon name={ICONS.Delete} color="hoverLighten" />
+          </IconButton>
+        </Tooltip>
+      )}
     </>
   )
 
@@ -544,6 +532,11 @@ const PeopleList: React.FC<Props> = React.memo(({
           open={addContactToGroupFormOpened}
           onClose={toggleOffAddContactToGroupFormOpened}
           onOk={handleAddContactToGroup}
+        />}
+        {removeContactFromGroupOpened && <RemoveContactsFromGroupForm
+          open={removeContactFromGroupOpened}
+          onClose={toggleOffRemoveContactFromGroupOpened}
+          onOk={handleRemoveContactsFromGroup}
         />}
         <div className={classes.head}>
           <Button

@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react'
-import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
@@ -12,6 +11,9 @@ import prop from 'ramda/es/prop'
 import head from 'ramda/es/head'
 import map from 'ramda/es/map'
 import defaultTo from 'ramda/es/defaultTo'
+
+import CheckCircle from '@material-ui/icons/CheckCircleOutline'
+
 import ContactsCountContainer from './ContactsCount'
 import AlertContainer from './Alert'
 import sleep from '~src/utils/sleep'
@@ -65,6 +67,12 @@ const ContactsContainer = createContainer(() => {
     request: postMergeContacts,
     error: postMergeContactsError,
   } = usePost<PeopleAPI>()
+
+  const {
+    request: deleteContactsFromGroup,
+    error: deleteContactsFromGroupError,
+  } = useDelete<PeopleAPI>()
+
   const { request: postExportContacts } = usePost<{ task_id: string }>()
   const { request: getExportStatus, data: exportContactsStatus, error: getExportStatusError } = useGet<{
     id: string,
@@ -132,6 +140,15 @@ const ContactsContainer = createContainer(() => {
       })
     },
     [postContactToGroup],
+  )
+
+  const removeContactsFromGroup = useCallback(
+    async (groupId: string, contactIds: string[]) => {
+      await deleteContactsFromGroup(`/api/group/${groupId}/people`)({
+        people: contactIds,
+      })
+    },
+    [deleteContactsFromGroup],
   )
 
   const mergeContacts = useCallback(
@@ -202,6 +219,44 @@ const ContactsContainer = createContainer(() => {
       () => { getExportStatusError && fail(getExportStatusError.message) },
       [getExportStatusError],
     )
+
+    useEffect(
+      () => { postContactError && fail(postContactError.message) },
+      [postContactError],
+    )
+
+    useEffect(
+      () => { putContactError && fail(putContactError.message) },
+      [putContactError],
+    )
+    // useEffect(
+    //   () => { removeContactData && success(<><CheckCircle /> Contacts Removed</>) },
+    //   [removeContactData],
+    // )
+    // useEffect(
+    //   () => { removeContactError && fail(removeContactError.message) },
+    //   [removeContactError],
+    // )
+    useEffect(
+      () => { postContactToGroupError && success(<><CheckCircle /> Contacts Added</>) },
+      [postContactToGroupError],
+    )
+    useEffect(
+      () => { postContactToGroupError && fail(postContactToGroupError.message) },
+      [postContactToGroupError],
+    )
+    useEffect(
+      () => { postMergeContactsData && success(<><CheckCircle /> Contacts Merged</>) },
+      [postMergeContactsData],
+    )
+    useEffect(
+      () => { postMergeContactsError && fail(postMergeContactsError.message) },
+      [postMergeContactsError],
+    )
+    useEffect(
+      () => { deleteContactsFromGroupError && fail(deleteContactsFromGroupError.message) },
+      [deleteContactsFromGroupError]
+    )
   }
 
   const [showAddContactMessage, setShowAddContactMessage] = useState(false)
@@ -224,6 +279,7 @@ const ContactsContainer = createContainer(() => {
     addContactToGroupData: postContactToGroupData, addContactToGroup, addContactToGroupError: postContactToGroupError,
     exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
     mergeContactsData: postMergeContactsData, mergeContacts, mergeContactsError: postMergeContactsError,
+    removeContactsFromGroup, removeContactsFromGroupError: deleteContactsFromGroupError,
   }
 })
 
