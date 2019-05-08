@@ -13,6 +13,8 @@ export const getQuery = (query: object): string => {
   return search ? `?${search}` : search
 }
 
+const base = process.env.NODE_ENV === 'development' ? 'https://crm-api-dev.waiverforeverk8s.com' : 'https://crm-api.waiverforeverk8s.com'
+
 export default async function fetchData<T = any> (url: string, option?: Option): Promise<T> {
   const fetchOption = Object.assign({ method: 'GET' }, option)
 
@@ -28,7 +30,7 @@ export default async function fetchData<T = any> (url: string, option?: Option):
     throw Error('Auth failed.')
   }
 
-  const requestUrl = `https://crm-api-dev.waiverforeverk8s.com${url}`
+  const requestUrl = `${base}${url}`
   const query = (fetchOption.method && ['GET', 'HEAD'].includes(fetchOption.method || '') && fetchOption.params)
     ? getQuery(fetchOption.params)
     : ''

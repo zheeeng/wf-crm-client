@@ -246,7 +246,7 @@ const Header: React.FC<Props> = React.memo(() => {
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
   const { message, dismiss } = useContext(AlertContainer.Context)
-  const { authored, username, login, logout } = useContext(AccountContainer.Context)
+  const { authored, username, login } = useContext(AccountContainer.Context)
   const [ anchorEl, setAnchorEl ] = useState<HTMLElement | null>(null)
   const [ openAccount, setOpenAccount ] = useState(false)
 
@@ -260,13 +260,6 @@ const Header: React.FC<Props> = React.memo(() => {
       }
     },
     [anchorEl, openAccount],
-  )
-  const handleLogin = useCallback(
-    () => {
-      authored ? logout() : login()
-      setOpenAccount(false)
-    },
-    [authored, openAccount],
   )
 
   useEffect(() => { login() }, [])
@@ -293,6 +286,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 <MenuIcon />
               </IconButton>
             </Hidden>
+            <Hidden xsDown>
             <nav className={classes.navList}>
               <div className={classes.navItem}>
                 <a href="/welcome" className={classes.link}>
@@ -310,6 +304,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 </Link>
               </div>
             </nav>
+            </Hidden>
             <div className={classes.dropdownButton}>
               <Avatar src={crateGravatar(username)} classes={{root: classes.avatarRoot}} />
               <div className={classes.arrowDown} />
@@ -355,7 +350,7 @@ const Header: React.FC<Props> = React.memo(() => {
                   </a>
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
-                <MenuItem className={classes.menuItem} onClick={handleLogin}>
+                <MenuItem className={classes.menuItem}>
                   <a className={classes.link} target="_self" href="/auth/signout">
                     <i className={classnames(classes.menuIcon, classes.menuIconSignout)} />
                     Sign out
