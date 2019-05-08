@@ -5,6 +5,8 @@ import useLatest from '~src/hooks/useLatest'
 import merge from 'ramda/es/merge'
 import pick from 'ramda/es/pick'
 
+import { getLoginParams } from '~src/utils/qs3Login'
+
 type AuthData = { id: string, username: string }
 
 const getDefaultAuthData = (): AuthData => ({ id: '', username: '' })
@@ -18,7 +20,7 @@ const AccountContainer = createContainer(() => {
     [tmpLogoutData],
   )
 
-  const login = useCallback((email: string, password: string) => postLogin('/api/auth/login')({ email, password }), [])
+  const login = useCallback(() => postLogin('/api/auth/login')(getLoginParams()), [])
   const logout = useCallback(postLogout('/api/auth/invalidateToken'), [])
 
   const { id, username } = useLatest<AuthData | null>(authData, loginData, logoutData) || getDefaultAuthData()

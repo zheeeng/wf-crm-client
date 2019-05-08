@@ -1,5 +1,6 @@
-import { pascal2snake } from '~src/utils/caseConvert'
 import { clean } from '~src/utils/qs3Login'
+
+const base = process.env.NODE_ENV === 'production' ? 'https://crm-api.waiverforeverk8s.com' : 'https://crm-api-dev.waiverforeverk8s.com'
 
 type ArgumentsType<F> = F extends (...args: infer A) => any ? A : any
 
@@ -18,7 +19,7 @@ export default async function fetchData<T> (...args: ArgumentsType<typeof fetch>
   }
 
   const response = await fetch(
-    `https://crm-api-dev.waiverforeverk8s.com${first}`,
+    `${base}${first}`,
     {
       ...second,
       headers: {

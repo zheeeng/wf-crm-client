@@ -246,7 +246,7 @@ const Header: React.FC<Props> = React.memo(() => {
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
   const { message, dismiss } = useContext(AlertContainer.Context)
-  const { authored, login, logout } = useContext(AccountContainer.Context)
+  const { authored, username, login, logout } = useContext(AccountContainer.Context)
   const [ anchorEl, setAnchorEl ] = useState<HTMLElement | null>(null)
   const [ openAccount, setOpenAccount ] = useState(false)
 
@@ -263,18 +263,13 @@ const Header: React.FC<Props> = React.memo(() => {
   )
   const handleLogin = useCallback(
     () => {
-      authored ? logout() : login('a', '0cc175b9c0f1b6a831c399e269772661')
+      authored ? logout() : login()
       setOpenAccount(false)
     },
     [authored, openAccount],
   )
 
-  useEffect(
-    () => {
-      login('a', '0cc175b9c0f1b6a831c399e269772661')
-    },
-    []
-  )
+  useEffect(() => { login() }, [])
 
   return (
     <Portal container={mountElRef.current}>
@@ -316,13 +311,13 @@ const Header: React.FC<Props> = React.memo(() => {
               </div>
             </nav>
             <div className={classes.dropdownButton}>
-              <Avatar src={crateGravatar('a')} classes={{root: classes.avatarRoot}} />
+              <Avatar src={crateGravatar(username)} classes={{root: classes.avatarRoot}} />
               <div className={classes.arrowDown} />
               <MenuList
                 className={classes.menuList}
               >
                 <MenuItem className={classes.menuItem}>
-                  Profile
+                  {username}
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
                 <MenuItem className={classes.menuItem}>

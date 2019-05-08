@@ -1,24 +1,45 @@
-const key1_ = 'authKey'
-const key2_ = 'rememberMe'
+import cookie from 'js-cookie'
 
-function getCookieKey (key: string) {
-  const cookiePair = document.cookie.split(';').map(item => item.split('=')).find(pair => pair[0].includes(key))
+const apiKeyKey = 'apiKey'
+const authKeyKey = 'authKey'
+const accountNameKey = 'rememberMe'
 
-  return cookiePair !== undefined ? cookiePair[0] : ''
-}
+const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
 
-export function detect () {
-  return getCookieKey(key1_) !== ''
+export async function exchangeAPIKey () {
+  const authKey = cookie.get(authKeyKey)
+  if (!authKey) throw Error('No authKey')
+  const response = await fetch(API_KEY_URL,
+    {
+      headers: {
+        Authorization: `Bearer ${authKey}`,
+      },
+    },
+  )
+
+  if (!response.ok) throw Error(response.statusText)
+
+  const data = await response.json()
+
+  const { success, result } = data
+
+  if (result != true || !success || !success.apiKey) {
+    throw Error('Some errors happened')
+  }
+
+  cookie.set(apiKeyKey, success.apiKey)
 }
 
 export function clean () {
-  const cookieKey1 = getCookieKey(key1_)
-  const cookieKey2 = getCookieKey(key2_)
+  cookie.remove(apiKeyKey)
+  cookie.remove(authKeyKey)
+  cookie.remove(accountNameKey)
+}
 
-  if (cookieKey1 !== '') {
-    document.cookie = cookieKey1 + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  }
-  if (cookieKey2 !== '') {
-    document.cookie = cookieKey2 + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+export function getLoginParams () {
+  return {
+    email: cookie.get(accountNameKey),
+    api_key: cookie.get(apiKeyKey),
+    password: '',
   }
 }

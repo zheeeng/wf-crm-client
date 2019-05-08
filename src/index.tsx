@@ -12,13 +12,18 @@ import AppContainer from '~src/containers/App'
 import NotificationContainer from '~src/containers/Notification'
 import AlertContainer from '~src/containers/Alert'
 import AccountContainer from '~src/containers/Account'
-import { detect } from '~src/utils/qs3Login'
+import { exchangeAPIKey } from '~src/utils/qs3Login'
 
-if (!detect()) {
-  if (document.location.pathname !== '/auth/signin') {
-    document.location.pathname = '/auth/signin'
+async function main () {
+  try {
+    await exchangeAPIKey()
+  } catch {
+    if (document.location.pathname !== '/auth/signin') {
+      document.location.pathname = '/auth/signin'
+    }
+    return
   }
-} else {
+
   const $mountEl = document.querySelector('#content')
 
   if ($mountEl) {
@@ -41,6 +46,8 @@ if (!detect()) {
 
     ReactDOM.render(App(), document.querySelector('#content'))
   }
-
-  registerServiceWorker()
 }
+
+main()
+
+registerServiceWorker()
