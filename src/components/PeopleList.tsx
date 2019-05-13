@@ -151,6 +151,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   svgIcon: {
     ...cssTips(theme, { svgIconFactor: 2.5 }).svgIcon(),
   },
+  emptyText: {
+    fontSize: `${theme.spacing(2)}px`,
+    padding: theme.spacing(3, 0),
+  },
 }))
 
 export interface Props {
@@ -649,6 +653,15 @@ const PeopleList: React.FC<Props> = React.memo(({
             <TableBody>
               <StarThemeProvider>
                 {contacts.map(renderTableRows)}
+                {contacts.length == 0 && (
+                  <TableRow>
+                    <TableCell colSpan={1000} padding="none">
+                      <Typography align={"center"} variant="body1" className={classes.emptyText}>
+                        There are no results that match your search
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
               </StarThemeProvider>
             </TableBody>
           </Table>
