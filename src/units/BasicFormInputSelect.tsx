@@ -57,12 +57,12 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
   },
   optionButtonHover: {
     '&&:hover': {
-      backgroundColor: theme.palette.grey.A100,
+      backgroundColor: theme.palette.grey[100],
     },
   },
   optionButtonSelected: {
     '&&': {
-      backgroundColor: theme.palette.grey.A100,
+      backgroundColor: theme.palette.grey[200],
     },
   },
 }))
@@ -196,14 +196,14 @@ const IndicatorsContainer: React.FC = ({ children }) => (
   <ArrowDropDown />
 )
 
-const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, isFocused: boolean, innerProps: any }>
-  = ({ innerRef, isSelected, isFocused, children, innerProps }) => {
+const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, innerProps: any }>
+  = ({ innerRef, isSelected, children, innerProps }) => {
     const classes = useStyles2({})
 
     return (
       <MenuItem
         buttonRef={innerRef}
-        selected={isFocused}
+        selected={isSelected}
         component="div"
         className={classes.option}
         classes={{
