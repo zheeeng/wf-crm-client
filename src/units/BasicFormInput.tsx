@@ -37,6 +37,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 500,
     marginTop: theme.spacing(0.5),
     marginBottom: theme.spacing(0.5),
+    ...{
+      "&[type='number']": {
+        '-moz-appearance': 'textfield',
+      },
+      "&::-webkit-outer-spin-button": {
+        '-webkit-appearance': 'none',
+      },
+      "&::-webkit-inner-spin-button": {
+        '-webkit-appearance': 'none',
+      },
+    },
   },
   shrink: {
     fontSize: 8,
