@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useContext } from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useContext, useRef } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -315,15 +315,34 @@ const PeopleList: React.FC<Props> = React.memo(({
     [createForm],
   )
 
+  const lastContactIds = useRef<string[] | null>(null)
+
+  useEffect(
+    () => {
+      console.log(lastContactIds.current)
+      console.log(contacts)
+      if (lastContactIds.current != null) {
+        const lastIds = lastContactIds.current
+        const newerContactIds = contacts.map(contact => contact.id).filter(cid => !lastIds.includes(cid))
+
+        lastContactIds.current = null
+
+        setChecked(newerContactIds)
+      }
+    },
+    [contacts, setChecked],
+  )
+
   const handleAddNewContact = useCallback(
     async (contact: object) => {
       if (addContact) {
-        addContact(contact as ContactFields)
-        search(searchTerm)
+        lastContactIds.current = contacts.map(contact => contact.id)
         changeCreateContactFormOpened(false)()
+        await addContact(contact as ContactFields)
+        search(searchTerm)
       }
     },
-    [addContact, search, changeCreateContactFormOpened, searchTerm],
+    [contacts, addContact, search, changeCreateContactFormOpened, searchTerm],
   )
 
   const handleAddContactToGroup = useCallback(
