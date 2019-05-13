@@ -328,8 +328,6 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   useEffect(
     () => {
-      console.log(lastContactIds.current)
-      console.log(contacts)
       if (lastContactIds.current != null) {
         const lastIds = lastContactIds.current
         const newerContactIds = contacts.map(contact => contact.id).filter(cid => !lastIds.includes(cid))
