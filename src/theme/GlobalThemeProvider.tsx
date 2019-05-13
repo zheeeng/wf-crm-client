@@ -90,6 +90,14 @@ export const themeOptions: ThemeOptions = {
     MuiButton: {
       root: {
         borderRadius: defaultTheme.spacing(2),
+        ...{
+          '&&:hover': {
+            backgroundColor: '#F2F4F7',
+          },
+          '&&:active': {
+            backgroundColor: '#EBEDF5',
+          },
+        },
       },
     },
     MuiOutlinedInput: {
