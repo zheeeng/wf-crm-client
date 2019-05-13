@@ -35,6 +35,8 @@ import StarThemeProvider from '~src/theme/StarThemeProvider'
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
 
+import debounce from 'debounce'
+
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
     flexShrink: 0,
@@ -264,6 +266,13 @@ const PeopleList: React.FC<Props> = React.memo(({
     [page, size, searchTerm],
   )
 
+  const debouncedSearch = useCallback(
+    debounce((term: string) => {
+      search(term)
+    }, 500),
+    [search],
+  )
+
   const handleChangePage = useCallback(
     (_: any, newPage: number) => onSearch({ page: newPage, size, searchTerm }),
     [onSearch, size, searchTerm],
@@ -480,6 +489,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     <Searcher
       className={classes.search}
       onKeyDown={search}
+      onChange={debouncedSearch}
       placeholder="Type a name or email"
     />
   )
