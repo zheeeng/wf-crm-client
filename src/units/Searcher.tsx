@@ -22,8 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputAdornment: {
     fontSize: '0.87rem',
-  },
-  closeIcon: {
     cursor: 'pointer',
   },
   notchedOutline: {
@@ -46,14 +44,10 @@ export interface Props {
 const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, onChange, onKeyDown, theme }) => {
   const classes = useStyles({})
 
-  const [text, setText] = useState(value)
+  const [text, setText] = useState(value || '')
 
   useEffect(
-    () => {
-      if (text !== value) {
-        setText(value)
-      }
-    },
+    () => { text !== value && setText(value || '') },
     [value],
   )
 
@@ -68,11 +62,17 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
   const handleEnter = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.keyCode === 13) {
-        const term = event.currentTarget.value.trim()
-        onKeyDown && onKeyDown(term)
+        onKeyDown && onKeyDown(text.trim())
       }
     },
-    [onKeyDown],
+    [text, onKeyDown],
+  )
+  const handleClickSearchIcon = useCallback(
+    () => {
+      onChange && onChange(text)
+      onKeyDown && onKeyDown(text)
+    },
+    [text, onChange, onKeyDown],
   )
 
   const handleClick = useCallback(
@@ -81,7 +81,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       onChange && onChange('')
       onKeyDown && onKeyDown('')
     },
-    [],
+    [onChange, onKeyDown],
   )
 
   return (
@@ -94,13 +94,13 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       className={classNames(className, classes.searchBar, theme == 'simple' && classes.searchBarSimple)}
       startAdornment={(
         <InputAdornment position="start" className={classes.inputAdornment}>
-          <Icon name={ICONS.Search} />
+          <Icon name={ICONS.Search} onClick={handleClickSearchIcon} />
         </InputAdornment>
       )}
       endAdornment={text
         ? (
           <InputAdornment position="end" className={classes.inputAdornment} onClick={handleClick}>
-            <Icon name={ICONS.Close} className={classes.closeIcon} size="sm" />
+            <Icon name={ICONS.Close} size="sm" />
           </InputAdornment>
         )
         : undefined
