@@ -238,8 +238,8 @@ const ContactsContainer = createContainer(() => {
     //   [removeContactError],
     // )
     useEffect(
-      () => { postContactToGroupError && success(<><CheckCircle /> Contacts Added</>) },
-      [postContactToGroupError],
+      () => { postContactToGroupData && success(<><CheckCircle /> Contacts Added</>) },
+      [postContactToGroupData],
     )
     useEffect(
       () => { postContactToGroupError && fail(postContactToGroupError.message) },
@@ -263,10 +263,12 @@ const ContactsContainer = createContainer(() => {
 
   useEffect(
     () => {
-      setShowAddContactMessage(true)
-      setTimeout(() => setShowAddContactMessage(false), 5000)
+      if (postContactData) {
+        setShowAddContactMessage(true)
+        setTimeout(() => setShowAddContactMessage(false), 5000)
+      }
     },
-    [postContactData],
+    [postContactData, setShowAddContactMessage],
   )
 
   return {
