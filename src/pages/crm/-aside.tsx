@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useCallback, useRef } from 'rea
 import { makeStyles } from '@material-ui/styles'
 import { Link } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
-import classNames from 'classnames'
+import classnames from 'classnames'
 import Portal from '@material-ui/core/Portal'
 import ToolBar from '@material-ui/core/Toolbar'
 import Drawer from '@material-ui/core/Drawer'
@@ -44,8 +44,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: vars.SiderBarWidth,
     backgroundColor: theme.palette.background.paper,
   },
-  flexHeight: {
+  flexWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
     flex: 1,
+  },
+  flexHeight: {
     height: theme.spacing(7),
     minHeight: theme.spacing(7),
   },
@@ -277,7 +281,11 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
       >
         <ToolBar variant="dense" />
         <SiderBarThemeProvider>
-          <List component="nav" className={classes.flexHeight} disablePadding>
+          <List
+            component="nav"
+            className={classnames(classes.flexWrapper, classes.flexHeight)}
+            disablePadding
+          >
             <ListItem component="div">
               <ListItemIcon>
                 <Icon name={ICONS.SideContact}/>
@@ -290,7 +298,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
             {subPageNavs.map(renderLink)}
             <List
               component="nav"
-              className={classNames((!groupsOpened || !groupId) && classes.invisible)}
+              className={classnames((!groupsOpened || !groupId) && classes.invisible)}
             >
               <ListItem component="div">
                 <ListItemSecondaryAction className={classes.groupActions}>

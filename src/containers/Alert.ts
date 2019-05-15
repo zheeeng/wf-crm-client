@@ -46,6 +46,7 @@ const AlertContainer = createContainer(() => {
 
   useEffect(
     () => {
+      console.log('execute')
       if (message) {
         if (timerRef.current) window.clearTimeout(timerRef.current)
         timerRef.current = window.setTimeout(dismiss, defaultDismissTimeout)

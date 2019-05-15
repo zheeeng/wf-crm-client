@@ -46,7 +46,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
           onClose()
         }
       },
-      [exportContactsStatus],
+      [exportContactsStatus, onClose],
     )
 
     useEffect(

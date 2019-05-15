@@ -12,6 +12,20 @@ import Searcher from '~src/units/Searcher'
 import GroupsContainer from '~src/containers/Groups'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  searchCollapse: {
+    overflow: 'hidden',
+  },
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  },
+  simpleResultBox: {
+    maxHeight: '320px',
+  },
+  resultBox: {
+    overflow: 'auto',
+  },
   searchItem: {
     padding: theme.spacing(1.5, 4, 1.5, 3),
   },
@@ -90,19 +104,27 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
   return (
     <Collapse
       className={className}
+      classes={{
+        container: classnames(classes.flexContainer, classes.searchCollapse),
+        wrapper: classes.flexContainer,
+        wrapperInner: classes.flexContainer,
+      }}
       in={groupsOpened}
       timeout="auto"
       unmountOnExit
     >
-      <List disablePadding>
-        <ListItem className={classnames(classes.searchItem, theme === 'simple' && classes.searchItemSimple)}>
-          <Searcher
-            placeholder="Type a group name"
-            value={searchTerm}
-            onChange={handleChangeSearchTerm}
-            theme={theme}
-          />
-        </ListItem>
+      <ListItem component="div" className={classnames(classes.searchItem, theme === 'simple' && classes.searchItemSimple)}>
+        <Searcher
+          placeholder="Type a group name"
+          value={searchTerm}
+          onChange={handleChangeSearchTerm}
+          theme={theme}
+        />
+      </ListItem>
+      <List
+        className={classnames(classes.flexContainer, classes.resultBox, theme === 'simple' && classes.simpleResultBox)}
+        disablePadding
+      >
         {filteredGroups.map(group => (
           <ListItem
             key={group.id}

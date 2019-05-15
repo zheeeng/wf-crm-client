@@ -188,7 +188,8 @@ const ContactsContainer = createContainer(() => {
 
         let statusResponse = await getExportStatus(`/api/backgroundTasks/checkStatus/${taskId}`)()
 
-        while (statusResponse && statusResponse.status === 'pending') {
+
+        while (statusResponse && statusResponse.status === 'PENDING') {
           await sleep(2000)
           statusResponse = await getExportStatus(`/api/backgroundTasks/checkStatus/${taskId}`)()
         }

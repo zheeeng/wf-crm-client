@@ -542,29 +542,29 @@ const PeopleList: React.FC<Props> = React.memo(({
   return (
     <DisplayPaper>
       <ContactTableThemeProvider>
-        {createForm.opened && <CreateForm
+        {<CreateForm
           option={createForm.option}
           open={createForm.opened}
           onClose={changeCreateContactFormOpened(false)}
           onOk={handleAddNewContact}
           discardText="Your contact information won't be created unless you save it"
         />}
-        {mergeContactsOpened && <MergeContactsForm
+        {<MergeContactsForm
           open={mergeContactsOpened}
           onClose={toggleOffMergeContactsOpened}
           onOk={handleMergeContacts}
         />}
-        {exportContactsOpened && <ExportContactsForm
+        {<ExportContactsForm
           open={exportContactsOpened}
           onClose={toggleOffExportContactsOpened}
           contactIds={checked}
         />}
-        {addContactToGroupFormOpened && <AddContactToGroupForm
+        {<AddContactToGroupForm
           open={addContactToGroupFormOpened}
           onClose={toggleOffAddContactToGroupFormOpened}
           onOk={handleAddContactToGroup}
         />}
-        {removeContactFromGroupOpened && <RemoveContactsFromGroupForm
+        {<RemoveContactsFromGroupForm
           open={removeContactFromGroupOpened}
           onClose={toggleOffRemoveContactFromGroupOpened}
           onOk={handleRemoveContactsFromGroup}
@@ -632,17 +632,17 @@ const PeopleList: React.FC<Props> = React.memo(({
 
                 <Hidden lgDown>
                   <TableCell colSpan={4} padding="none">
-                    {checked.length > 0 && searchTerm === '' && renderControls()}
+                    {checked.length > 0 && renderControls()}
                   </TableCell>
                 </Hidden>
                 <Hidden xlUp smDown>
                   <TableCell colSpan={3} padding="none">
-                    {checked.length > 0 && searchTerm === '' && renderControls()}
+                    {checked.length > 0 && renderControls()}
                   </TableCell>
                 </Hidden>
                 <Hidden mdUp>
                   <TableCell colSpan={4} padding="none">
-                    {checked.length > 0 && searchTerm === '' && renderControls()}
+                    {checked.length > 0 && renderControls()}
                   </TableCell>
                 </Hidden>
                 <Hidden smDown>
@@ -653,7 +653,7 @@ const PeopleList: React.FC<Props> = React.memo(({
             <TableBody>
               <StarThemeProvider>
                 {contacts.map(renderTableRows)}
-                {contacts.length == 0 && (
+                {contacts.length == 0 && searchTerm !== '' && (
                   <TableRow>
                     <TableCell colSpan={1000} padding="none">
                       <Typography align={"center"} variant="body1" className={classes.emptyText}>
