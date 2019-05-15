@@ -19,7 +19,7 @@ const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
       values.find(v => v.key === 'month')!.value.padStart(2, '0'),
       values.find(v => v.key === 'day')!.value.padStart(2, '0'),
       values.find(v => v.key === 'year')!.value.padStart(4, '0'),
-    ].join('/')
+    ].join('/').trim()
 
     return dateField !== '00/00/0000' ? dateField : ''
   }
@@ -505,7 +505,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     (values: FieldSegmentValue[], fieldValue: FieldValue, isFirst: boolean, isAppend: boolean) => (
       <div className={classnames(
         classes.fieldTextBar,
-        !editable && !joinSegmentFieldValues(values).trim() && classes.hidden,
+        !editable && !joinSegmentFieldValues(values) && classes.hidden,
         editable && fieldValue.priority === 0 && classes.disabled,
       )}>
         {editable
@@ -623,8 +623,13 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       handleEntryToggleHide, handleEntryDelete]
   )
 
+  const calculatedFieldValues = useMemo(
+    () => hasValues ? localFieldValues : [backupFieldValue],
+    [hasValues, localFieldValues, backupFieldValue]
+  )
+
   const sortableItems = useMemo(
-    () => (hasValues ? localFieldValues : [backupFieldValue]).map(
+    () => calculatedFieldValues.map(
       (fieldValue, index) => ({
         element: (
           <div className={classnames(
@@ -640,11 +645,18 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         id: fieldValue.id,
       }),
     ),
-    [hasValues, localFieldValues, backupFieldValue, editable],
+    [fieldValues, editable],
   )
 
   return (
-    <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)} ref={containerRef}>
+    <div
+      className={classnames(
+        classes.fieldBar,
+        showName && classes.fieldSimpleBar,
+        (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values)).length === 0) ? classes.hidden : '',
+      )}
+      ref={containerRef}
+    >
       {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         {showName
@@ -828,7 +840,12 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
   )
 
   return (
-    <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
+    <div
+      className={classnames(
+        classes.fieldBar,
+        showName && classes.fieldSimpleBar,
+        (!editable && value === '') ? classes.hidden : '',
+      )}>
       {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         {showName
