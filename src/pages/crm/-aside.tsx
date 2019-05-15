@@ -63,14 +63,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   groupBtn: {
     cursor: 'pointer',
   },
+  groupAddIcon: {
+    padding: 2,
+    marginTop: theme.spacing(1),
+  },
   groupStatusIcon: {
     padding: 2,
     marginRight: theme.spacing(1),
     marginTop: theme.spacing(1),
+    transition: 'transform ease 0.3s',
   },
-  groupAddIcon: {
-    padding: 2,
-    marginTop: theme.spacing(1),
+  statusIconRotate90: {
+    transform: 'rotate(90deg)',
   },
 }))
 
@@ -201,19 +205,25 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
 
   const renderLinkLabel = cond(
     [
-      [equals('All'), name => <ListItemText>{name}({contactsCount})</ListItemText>],
-      [equals('Starred'), name => <ListItemText>{name}({starredCount})</ListItemText>],
+      [equals('All'), name => <ListItemText key={name}>{name}({contactsCount})</ListItemText>],
+      [equals('Starred'), name => <ListItemText key={name}>{name}({starredCount})</ListItemText>],
       [equals('Groups'), name => (
         <>
-          <ListItemText>
+          <ListItemText key={name}>
             {name}({groups.length})
           </ListItemText>
-          <ListItemSecondaryAction>
-            {groupsOpened
-              ? <Icon name={ICONS.ChevronDown} className={classes.groupStatusIcon} size="sm" />
-              : <Icon name={ICONS.ChevronRight} className={classes.groupStatusIcon} size="sm" />
-            }
+          <ListItemSecondaryAction key={name + 'action'}>
             <Icon
+              color="hoverLighten"
+              name={ICONS.ChevronRight}
+              className={classnames(
+                classes.groupStatusIcon,
+                groupsOpened && classes.statusIconRotate90,
+              )}
+              size="sm"
+            />
+            <Icon
+              color="hoverLighten"
               name={ICONS.Add}
               onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))}
               className={classes.groupAddIcon}
@@ -230,23 +240,17 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [refreshPage, toggleGroupsOpened],
   )
 
-  const renderLinkWrapper = (routePath: string, onClick?: () => void) =>
-    React.forwardRef((props: ListItemProps<any, any>, ref) => <Link {...props} ref={ref} to={routePath} onClick={onClick}/>)
-
   const renderLink = (
     { routePath, routeFullPath, name, icon }:
     { routePath: string, routeFullPath: string, name: string, icon: string },
   ) => (
-    <React.Fragment key={routePath}>
-      <ListItem
-        component={renderLinkWrapper(
-          (name === 'Groups' && location)
-            ? location.pathname
-            : routePath,
-          handleLinkClick(name),
-        )}
+    <React.Fragment key={name}>
+      <ListItem key={name + 'context'}
+        component={Link}
         classes={{ button: (location && location.pathname.startsWith(routeFullPath)) ? 'active' : '' }}
         button
+        onClick={handleLinkClick(name)}
+        to={(name === 'Groups' && location) ? location.pathname : routePath}
       >
         <ListItemIcon>
           {renderIcon(icon)}
@@ -254,7 +258,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
         {renderLinkLabel(name)}
       </ListItem>
       {name === 'Groups' && (
-        <GroupMenu
+        <GroupMenu key={name + 'group'}
           groupsOpened={groupsOpened}
           onClickGroup={navigateToGroup}
         />
@@ -302,14 +306,18 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
             >
               <ListItem component="div">
                 <ListItemSecondaryAction className={classes.groupActions}>
-                  <Icon name={ICONS.Edit}
+                  <Icon
+                    color="hoverLighten"
+                    name={ICONS.Edit}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'update', updateGroupFormOption)}
                   />
                   {/* <Icon name={ICONS.Export}
                     className={classes.groupBtn}
                   /> */}
-                  <Icon name={ICONS.Delete}
+                  <Icon
+                    color="hoverLighten"
+                    name={ICONS.Delete}
                     className={classes.groupBtn}
                     onClick={changeGroupFormOpened(true, 'remove', removeGroupFormOption)}
                   />
