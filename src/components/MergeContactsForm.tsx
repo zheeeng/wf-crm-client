@@ -7,27 +7,29 @@ import Typography from '@material-ui/core/Typography'
 import cssTips from '~src/utils/cssTips'
 import useToggle from '~src/hooks/useToggle'
 
+import ProgressLoading from '~src/units/ProgressLoading'
+
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
+    width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
     border: 'none',
     outline: '#efefef inset 1px',
+    textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      ...{
-        '&&': {
-          marginLeft: 0,
-          marginRight: 0,
-        }
-      }
     },
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   progress: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(4, 2),
   },
   buttonZone: {
+    width: '100%',
     textAlign: 'right',
     marginTop: theme.spacing(4),
     ...cssTips(theme).horizontallySpaced(),
@@ -56,8 +58,8 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
     async () => {
       toggleOnLoading()
       await onOk()
-      toggleOffLoading()
       onClose()
+      toggleOffLoading()
     },
     [onOk],
   )
@@ -70,26 +72,33 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
         className: classes.paper,
       }}
     >
-      <Typography variant="h6" align="center" color="textSecondary">
-        Merge contacts
-      </Typography>
       {isLoading
         ? (
-          <Typography className={classes.text}>Merging...</Typography>
+          <>
+            <Typography variant="h6" align="center"  color="textSecondary">
+              Merging...
+            </Typography>
+            <ProgressLoading className={classes.progress} />
+          </>
         )
         : (
-          <Typography color="textSecondary" className={classes.text}>Are you sure you want to merge the selected contacts?</Typography>
+          <>
+            <Typography variant="h6" align="center" color="textSecondary">
+              Merge contacts
+            </Typography>
+            <Typography color="textSecondary" className={classes.text}>Are you sure you want to merge the selected contacts?</Typography>
+            <div className={classes.buttonZone}>
+              <Button onClick={onClose}>No</Button>
+              <Button
+                color="primary"
+                onClick={handleOkClick}
+              >
+                Yes
+              </Button>
+            </div>
+          </>
         )
       }
-      <div className={classes.buttonZone}>
-        <Button onClick={onClose}>No</Button>
-        <Button
-          color="primary"
-          onClick={handleOkClick}
-        >
-          Yes
-        </Button>
-      </div>
     </Dialog>
   )
 })
