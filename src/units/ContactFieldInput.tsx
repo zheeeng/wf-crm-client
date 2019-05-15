@@ -15,11 +15,13 @@ import SvgIcon, { ICONS } from '~src/units/Icons'
 
 const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
   if (values[0].fieldType === 'date') {
-    return [
+    const dateField = [
       values.find(v => v.key === 'month')!.value.padStart(2, '0'),
       values.find(v => v.key === 'day')!.value.padStart(2, '0'),
       values.find(v => v.key === 'year')!.value.padStart(4, '0'),
     ].join('/')
+
+    return dateField !== '00/00/0000' ? dateField : ''
   }
 
   return values
