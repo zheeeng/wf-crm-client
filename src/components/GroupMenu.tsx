@@ -96,7 +96,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
       : groups
         .filter(
           group => group.info.name.toLowerCase()
-              .includes(searchTerm.toLowerCase())
+            .includes(searchTerm.toLowerCase())
         ),
     [groups, searchTerm],
   )

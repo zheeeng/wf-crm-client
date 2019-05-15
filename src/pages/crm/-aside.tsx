@@ -100,12 +100,13 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   const {
     value: groupsOpened,
     toggle: toggleGroupsOpened,
+    toggleOn: toggleOnGroupsOpened,
   } = useToggle(false)
 
   const $mountElRef = useRef(document.querySelector('#sidebar'))
 
   const navigateToGroup = useCallback(
-    (id: string) => navigate && navigate(`groups/${id}`),
+    (id?: string) => navigate && navigate(id ? `groups/${id}` : 'all'),
     [navigate],
   )
 
@@ -137,11 +138,14 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
       if (groups.some(g => g.info.name === (group as GroupFields).name)) {
         return
       }
-      addGroup(group as GroupFields)
+      const id = await addGroup(group as GroupFields)
       changeGroupFormOpened(false)()
+      navigateToGroup(id)
+      toggleOnGroupsOpened()
     },
-    [addGroup, changeGroupFormOpened],
+    [addGroup, changeGroupFormOpened, navigateToGroup],
   )
+
 
   const newGroupFormOption: CreateFormOption = {
     title: 'New Group',
@@ -188,6 +192,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     async () => {
       removeGroup()
       changeGroupFormOpened(false)()
+      navigateToGroup()
     },
     [removeGroup, changeGroupFormOpened],
   )
