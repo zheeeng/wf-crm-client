@@ -206,6 +206,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.secondary.main,
     ...{
       '&:hover': {
+        color: theme.palette.text.primary,
+      },
+      '&:active': {
         color: theme.palette.primary.main,
       },
     },
