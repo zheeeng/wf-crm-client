@@ -151,9 +151,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   svgIcon: {
     ...cssTips(theme, { svgIconFactor: 2.5 }).svgIcon(),
   },
+  emptyTextWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '180px',
+  },
   emptyText: {
     fontSize: `${theme.spacing(2)}px`,
     padding: theme.spacing(3, 0),
+    fontWeight: 600,
   },
 }))
 
@@ -653,18 +660,16 @@ const PeopleList: React.FC<Props> = React.memo(({
             <TableBody>
               <StarThemeProvider>
                 {contacts.map(renderTableRows)}
-                {contacts.length == 0 && searchTerm !== '' && (
-                  <TableRow>
-                    <TableCell colSpan={1000} padding="none">
-                      <Typography align={"center"} variant="body1" className={classes.emptyText}>
-                        There are no results that match your search
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                )}
               </StarThemeProvider>
             </TableBody>
           </Table>
+          {contacts.length == 0 && (
+            <div className={classes.emptyTextWrapper}>
+              <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
+                {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
+              </Typography>
+            </div>
+          )}
         </div>
       </ContactTableThemeProvider>
     </DisplayPaper>
