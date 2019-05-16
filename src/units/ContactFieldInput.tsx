@@ -28,7 +28,7 @@ const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
   return values
     .filter(value => value.key !== 'title')
     .map(value => value.value)
-    .join(' ')
+    .join(' ').trim()
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -701,7 +701,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       className={classnames(
         classes.fieldBar,
         showName && classes.fieldSimpleBar,
-        (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values)).length === 0) ? classes.hidden : '',
+        (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values)).length === 0) && classes.hidden,
       )}
       ref={containerRef}
     >
@@ -792,7 +792,13 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   )
 
   return (
-    <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
+    <div
+      className={classnames(
+      classes.fieldBar,
+      showName && classes.fieldSimpleBar,
+      (!editable && value == '') && classes.hidden,
+    )}
+    >
       {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
         {showName
@@ -899,7 +905,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
       className={classnames(
         classes.fieldBar,
         showName && classes.fieldSimpleBar,
-        (!editable && value === '') ? classes.hidden : '',
+        (!editable && value === '') && classes.hidden,
       )}>
       {!showName && Icon && <Icon className={classes.fieldIcon} />}
       <div className={classes.fieldTextWrapper}>
