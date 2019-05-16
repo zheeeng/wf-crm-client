@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import Select, { createFilter } from 'react-select'
+import { SelectComponentsConfig } from 'react-select/lib/components'
 import classnames from 'classnames'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
@@ -13,6 +14,14 @@ import Paper from '@material-ui/core/Paper'
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
 import { useStyles } from './BasicFormInput'
 
+export const useStyles4 = makeStyles(() => ({
+  indicator: {
+    transition: 'transform ease 0.3s',
+  },
+  rotated: {
+    transform: 'rotate(180deg)',
+  },
+}))
 
 export const useStyles2 = makeStyles((theme: Theme) => ({
   select: {
@@ -192,9 +201,11 @@ const ValueContainer: React.FC = ({ children }) => {
   )
 }
 
-const IndicatorsContainer: React.FC = ({ children }) => (
-  <ArrowDropDown />
-)
+const DropdownIndicator: React.FC<{ selectProps: any }> = ({ selectProps }) => {
+  const classes = useStyles4({})
+
+  return <ArrowDropDown className={classnames(classes.indicator, selectProps.menuIsOpen && classes.rotated)} />
+}
 
 const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, innerProps: any }>
   = ({ innerRef, isSelected, children, innerProps }) => {
@@ -220,7 +231,7 @@ const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, innerPro
     )
   }
 
-export const components = {
+export const components: SelectComponentsConfig<any> = {
   Control,
   Menu,
   NoOptionsMessage,
@@ -228,7 +239,7 @@ export const components = {
   Placeholder,
   ValueContainer,
   IndicatorSeparator: null,
-  IndicatorsContainer,
+  DropdownIndicator,
 }
 
 export const filterOption = createFilter({
