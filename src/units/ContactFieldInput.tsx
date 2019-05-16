@@ -8,7 +8,8 @@ import IconButton from '@material-ui/core/IconButton'
 import Select from 'react-select'
 import { components } from '~src/units/BasicFormInputSelect'
 import BasicDateInput from '~src/units/BasicDateInput'
-import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
+import SortableList, { SortHandler } from '~src/units/SortableList'
+import arrayMove from 'array-move'
 import cssTips from '~src/utils/cssTips'
 import { isEmail, isValidDate } from '~src/utils/validation'
 import camelToWords from '~src/utils/camelToWords'
@@ -182,7 +183,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   dragged: {
     backgroundColor: theme.palette.background.paper,
-    boxShadow: '1px 1px 0px 2px lightgrey',
+    boxShadow: '0px 0px 4px 0px rgba(163,174,173,0.5)',
   },
   showInDragged: {
     '$dragged &&': {
