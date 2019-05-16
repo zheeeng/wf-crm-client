@@ -152,6 +152,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   fieldTitleName: {
     paddingLeft: 0,
   },
+  input: {
+    "&[type='number']": {
+      '-moz-appearance': 'textfield',
+    },
+    "&::-webkit-outer-spin-button": {
+      '-webkit-appearance': 'none',
+    },
+    "&::-webkit-inner-spin-button": {
+      '-webkit-appearance': 'none',
+    },
+  },
   fieldInput: {
     flex: 1,
     padding: theme.spacing(1, 0),
@@ -557,7 +568,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     }
                     error={hasErrorKeys.includes(fieldValue.id || '')}
                     className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
-                    classes={{disabled: classes.fieldDisabled}}
+                    classes={{
+                      disabled: classes.fieldDisabled,
+                      input: classes.input,
+                    }}
                     placeholder={camelToWords(segmentValue.key)}
                     defaultValue={segmentValue.value}
                     onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
@@ -790,7 +804,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
             )
           }
         }
-                <div
+        <div
           className={classnames(
             classes.fieldTextBarWrapper,
             !editable && classes.hidden,
@@ -809,6 +823,9 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
                   type={type}
                   error={hasError}
                   className={classes.fieldInput}
+                  classes={{
+                    input: classes.input,
+                  }}
                   placeholder={name}
                   defaultValue={value}
                   onBlur={handleEntryUpdateByBlur}
