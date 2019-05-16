@@ -315,7 +315,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const field = await onUpdateField(name, segmentValue, id, priority)
       if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
     },
-    [localFieldValues, onUpdateField, name],
+    [localFieldValues, onUpdateField, name, setLocalFieldValues],
   )
 
   const addDateField = useCallback(
@@ -325,7 +325,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const field = await onAddDateField({ year, month, day }, newPriority)
       if (field) setLocalFieldValues(values => values.concat(field))
     },
-    [localFieldValues, onAddDateField],
+    [localFieldValues, onAddDateField, setLocalFieldValues],
   )
   const updateDateField = useCallback(
     async (year: number, month: number, day: number, id: string) => {
@@ -338,7 +338,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const field = await onUpdateDateField({ year, month, day }, id, priority)
       if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
     },
-    [localFieldValues, onUpdateDateField]
+    [localFieldValues, onUpdateDateField, setLocalFieldValues]
   )
   const removeField = useCallback(
     async (id: string) => {
@@ -347,7 +347,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
       if (removedId) setLocalFieldValues(values => values.filter(v => v.id !== removedId))
     },
-    [onDeleteField, name],
+    [onDeleteField, name, setLocalFieldValues],
   )
   const toggleHideField = useCallback(
     async (id: string) => {
@@ -514,7 +514,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         )
       }
     },
-    [localFieldValues, setSortingId],
+    [localFieldValues, setSortingId, onChangePriority, setLocalFieldValues],
   )
 
   const onDateChange = useCallback(
@@ -693,7 +693,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         id: fieldValue.id,
       }),
     ),
-    [fieldValues, editable, sortingId],
+    [calculatedFieldValues, editable, sortingId],
   )
 
   return (
