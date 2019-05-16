@@ -5,6 +5,7 @@ import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 import Select from 'react-select'
 import { components } from '~src/units/BasicFormInputSelect'
 import BasicDateInput from '~src/units/BasicDateInput'
@@ -33,6 +34,10 @@ const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  toolTip: {
+    marginTop: theme.spacing(-1),
+    marginLeft: theme.spacing(-2),
+  },
   hidden: {
     '&&': {
       display: 'none',
@@ -62,6 +67,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldSimpleBar: {
     marginBottom: 0,
+  },
+  fieldNameWrapper: {
   },
   fieldTextWrapper: {
     flex: 1,
@@ -706,7 +713,13 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       )}
       ref={containerRef}
     >
-      {!showName && Icon && <Icon className={classes.fieldIcon} />}
+      {!showName && Icon &&
+        <div className={classes.fieldNameWrapper}>
+          <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
+            <div><Icon className={classes.fieldIcon} /></div>
+          </Tooltip>
+        </div>
+      }
       <div className={classnames(
         classes.fieldTextWrapper,
         sortingId != '' && classes.isSorting,
@@ -714,7 +727,11 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         {showName
           && (
             <div className={classes.fieldTitle}>
-              {Icon && <Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} />}
+              {Icon && (
+                <Tooltip title={fieldName}>
+                  <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+                </Tooltip>
+              )}
               <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
             </div>
           )
@@ -800,12 +817,24 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
       (!editable && value == '') && classes.hidden,
     )}
     >
-      {!showName && Icon && <Icon className={classes.fieldIcon} />}
+      {!showName && Icon && (
+        <div className={classes.fieldNameWrapper}>
+          <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
+            <div><Icon className={classes.fieldIcon} /></div>
+          </Tooltip>
+        </div>
+      )}
       <div className={classes.fieldTextWrapper}>
         {showName
             && (
               <>
-                {Icon && <Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} />}
+                {Icon && (
+                  <div>
+                    <Tooltip title={fieldName}>
+                      <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+                    </Tooltip>
+                  </div>
+                )}
                 <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
               </>
             )
@@ -908,12 +937,24 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
         showName && classes.fieldSimpleBar,
         (!editable && value === '') && classes.hidden,
       )}>
-      {!showName && Icon && <Icon className={classes.fieldIcon} />}
+      {!showName && Icon && (
+        <div className={classes.fieldNameWrapper}>
+          <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
+            <div><Icon className={classes.fieldIcon} /></div>
+          </Tooltip>
+        </div>
+      )}
       <div className={classes.fieldTextWrapper}>
         {showName
           && (
-            <div className={classes.fieldTitle}>
-              {Icon && <Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} />}
+              <div className={classes.fieldTitle}>
+              {Icon && (
+                <div>
+                  <Tooltip title={fieldName}>
+                    <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+                  </Tooltip>
+                </div>
+              )}
               <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
             </div>
           )
