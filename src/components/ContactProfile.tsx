@@ -124,7 +124,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   floatTagsWrapper: {
     float: 'right',
-    maxWidth: 280,
+    maxWidth: 256,
+    paddingLeft: theme.spacing(2),
   },
   blockTagsWrapper: {
     paddingLeft: theme.spacing(2.5),
@@ -154,25 +155,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   tags: {},
   tagChip: {
     fontSize: 14,
-    padding: theme.spacing(0.5, 1),
+    padding: theme.spacing(0.5, 0.5, 0.5, 1),
     marginRight: theme.spacing(0.5),
     marginBottom: theme.spacing(0.5),
     borderRadius: theme.spacing(1),
-    backgroundColor: '#e8edf5',
+    transition: 'all 0.3s ease',
+    backgroundColor: theme.palette.grey[900],
     ...{
+      '&:focus': {
+        backgroundColor: theme.palette.grey[900],
+      },
       '& svg': {
-        display: 'none',
-      },
-      '&:hover $tagLabel': {
-        paddingRight: theme.spacing(1.5),
-      },
-      '&:hover svg': {
-        display: 'block',
+        margin: 0,
       },
     },
   },
   tagLabel: {
     padding: 0,
+    paddingRight: theme.spacing(0.5),
   },
   progressWrapper: {
     width: '100%',
@@ -636,6 +636,32 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     </>
   )
 
+  const renderTags = (isFloating: boolean) => !editable && (
+    <Hidden lgDown={isFloating} xlUp={!isFloating}>
+      <div className={isFloating ? classes.floatTagsWrapper : classes.blockTagsWrapper}>
+        <div className={classes.tagsBar}>
+          <Input
+            placeholder="Click to add tag"
+            disableUnderline
+            startAdornment={<Icon name={ICONS.Tag} className={classes.addTagIcon} />}
+            onKeyDown={handleTagsAdd}
+          />
+        </div>
+        <div className={classes.tags}>
+          {tags.map((tag, index) => (
+            <Chip
+              key={`${tag}-${index}`}
+              onDelete={handleTagDelete(tag)}
+              className={classes.tagChip}
+              classes={{ label: classes.tagLabel }}
+              label={tag}
+            />
+          ))}
+        </div>
+      </div>
+    </Hidden>
+  )
+
   return isFetchingContact
     ? (
       <>
@@ -700,34 +726,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
               </div>
             </Dialog>
           </SplitWaiverThemeProvider>
-          <Hidden lgDown>
-            <div className={classes.floatTagsWrapper}>
-              <div className={classes.tagsBar}>
-                <Input
-                  placeholder="Click to add tag"
-                  disableUnderline
-                  startAdornment={
-                    <Icon
-                      name={ICONS.Tag}
-                      className={classes.addTagIcon}
-                    />
-                  }
-                  onKeyDown={handleTagsAdd}
-                />
-              </div>
-              <div className={classes.tags}>
-                {tags.map((tag, index) => (
-                  <Chip
-                    key={`${tag}-${index}`}
-                    onDelete={handleTagDelete(tag)}
-                    className={classes.tagChip}
-                    classes={{ label: classes.tagLabel }}
-                    label={tag}
-                  />
-                ))}
-              </div>
-            </div>
-          </Hidden>
+          {renderTags(true)}
           <div className={classes.avatarBar}>
             <Avatar
               alt={contact.info.name}
@@ -736,29 +735,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             />
             <span className={classes.avatarName}>{contact.info.name}</span>
           </div>
-          <Hidden xlUp>
-            <div className={classes.blockTagsWrapper}>
-              <div className={classes.tagsBar}>
-                <Input
-                  placeholder="Click to add tag"
-                  disableUnderline
-                  startAdornment={<Icon name={ICONS.Tag} className={classes.addTagIcon} />}
-                  onKeyDown={handleTagsAdd}
-                />
-              </div>
-              <div className={classes.tags}>
-                {tags.map((tag, index) => (
-                  <Chip
-                    key={`${tag}-${index}`}
-                    onDelete={handleTagDelete(tag)}
-                    className={classes.tagChip}
-                    classes={{ label: classes.tagLabel }}
-                    label={tag}
-                  />
-                ))}
-              </div>
-            </div>
-          </Hidden>
+          {renderTags(false)}
           {renderFields(false, editable)}
         </div>
       </>
