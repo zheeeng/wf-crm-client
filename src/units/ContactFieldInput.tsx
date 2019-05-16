@@ -11,6 +11,7 @@ import BasicDateInput from '~src/units/BasicDateInput'
 import SortableList, { SortHandler, arrayMove } from '~src/units/SortableList'
 import cssTips from '~src/utils/cssTips'
 import { isEmail, isValidDate } from '~src/utils/validation'
+import camelToWords from '~src/utils/camelToWords'
 import SvgIcon, { ICONS } from '~src/units/Icons'
 
 const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
@@ -65,6 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     paddingTop: theme.spacing(1),
   },
+  isSorting: {
+  },
   fieldTextBarWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -72,6 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     padding: theme.spacing(0, 1),
   },
+  isSortingTarget: {},
   fieldTextBar: {
     flex: 1,
     width: '100%',
@@ -110,8 +114,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '$fieldTextBarWrapper:hover &': {
       visibility: 'visible',
     },
-    '$fieldTextBarWrapper:hover $takePlace &': {
+    '$isSorting &&': {
       visibility: 'hidden',
+    },
+    '$isSortingTarget:hover &': {
+      visibility: 'visible',
     },
   },
   fieldDragIcon: {
@@ -165,6 +172,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   dragged: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: '1px 1px 0px 2px lightgrey',
+  },
+  showInDragged: {
+    '$dragged &&': {
+      visibility: 'visible',
+    },
+  },
+  hiddenInDragged: {
+    '$dragged &&': {
+      visibility: 'hidden',
+    },
   },
   fieldDisabled: {
     cursor: 'not-allowed',
@@ -457,8 +474,18 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [localFieldValues],
   )
 
+  const [sortingId, setSortingId] = useState('')
+
+  const onSortStart = useCallback(
+    ({ index }: { index: number }) => {
+      setSortingId(calculatedFieldValues[index].id || '')
+    },
+    [setSortingId],
+  )
+
   const onSortEnd = useCallback(
     async ({oldIndex, newIndex}) => {
+      setSortingId('')
       const valueOfOld = localFieldValues[oldIndex]
       const valueOfNew = localFieldValues[newIndex]
       const previousValueOfNew = localFieldValues[newIndex - 1]
@@ -476,7 +503,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         )
       }
     },
-    [localFieldValues],
+    [localFieldValues, setSortingId],
   )
 
   const onDateChange = useCallback(
@@ -531,7 +558,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     error={hasErrorKeys.includes(fieldValue.id || '')}
                     className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
                     classes={{disabled: classes.fieldDisabled}}
-                    placeholder={segmentValue.key}
+                    placeholder={camelToWords(segmentValue.key)}
                     defaultValue={segmentValue.value}
                     onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
                     onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
@@ -582,6 +609,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     classes.fieldControlIcon,
                     classes.fieldHoverShowingIcon,
                     classes.fieldDragIcon,
+                    classes.showInDragged,
                   )}
                 >
                   <SvgIcon
@@ -594,7 +622,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             {expandable && (isFirst
               ? (
                 <IconButton
-                  className={classes.fieldControlIcon}
+                  className={classnames(
+                    classes.fieldControlIcon,
+                    classes.hiddenInDragged,
+                  )}
                   onClick={handleAddEntry}
                 >
                   <SvgIcon
@@ -605,7 +636,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               )
               : (
                 <IconButton
-                  className={classes.fieldControlIcon}
+                  className={classnames(
+                    classes.fieldControlIcon,
+                    classes.hiddenInDragged,
+                  )}
                   onClick={handleEntryDelete(fieldValue.id!)}>
                   <SvgIcon
                     name={ICONS.Delete}
@@ -645,7 +679,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         id: fieldValue.id,
       }),
     ),
-    [fieldValues, editable],
+    [fieldValues, editable, sortingId],
   )
 
   return (
@@ -658,7 +692,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       ref={containerRef}
     >
       {!showName && Icon && <Icon className={classes.fieldIcon} />}
-      <div className={classes.fieldTextWrapper}>
+      <div className={classnames(
+        classes.fieldTextWrapper,
+        sortingId != '' && classes.isSorting,
+      )}>
         {showName
           && (
             <div className={classes.fieldTitle}>
@@ -668,6 +705,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )
         }
         <SortableList
+          onSortStart={onSortStart}
           onSortEnd={onSortEnd}
           useDragHandle
           helperContainer={containerRef.current || undefined}
