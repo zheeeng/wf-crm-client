@@ -1,12 +1,12 @@
 import React from 'react'
 import classnames from 'classnames'
 import DateFnsUtils from '@date-io/date-fns'
-import { MuiPickersUtilsProvider, DatePicker as DP } from 'material-ui-pickers'
+import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
 import DatePickerThemeProvider from '~src/theme/DatePickerThemeProvider'
 
-const DatePicker = DP as any
+// const DatePicker = DP as any
 
 export const useStyles = makeStyles((theme: Theme) => ({
   datePicker: {
