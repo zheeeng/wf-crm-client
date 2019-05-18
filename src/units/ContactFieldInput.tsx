@@ -614,60 +614,68 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         )}
         {editable && (
           <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
-            <IconButton
-              className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-              onClick={handleEntryToggleHide(fieldValue.id!)}
-            >
-              <SvgIcon
-                name={ICONS.Eye}
-                color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
-                size="sm"
-              />
-            </IconButton>
+            <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hidden'}>
+              <IconButton
+                className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+                onClick={handleEntryToggleHide(fieldValue.id!)}
+              >
+                <SvgIcon
+                  name={ICONS.Eye}
+                  color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
+                  size="sm"
+                />
+              </IconButton>
+            </Tooltip>
             <SortHandler
               element={
-                <IconButton
-                  className={classnames(
-                    classes.fieldControlIcon,
-                    classes.fieldHoverShowingIcon,
-                    classes.fieldDragIcon,
-                    classes.showInDragged,
-                  )}
-                >
-                  <SvgIcon
-                    name={ICONS.Reorder}
-                    color="hoverLighten" size="sm"
-                  />
-                </IconButton>
+                <Tooltip title="reorder">
+                  <IconButton
+                    className={classnames(
+                      classes.fieldControlIcon,
+                      classes.fieldHoverShowingIcon,
+                      classes.fieldDragIcon,
+                      classes.showInDragged,
+                    )}
+                  >
+                    <SvgIcon
+                      name={ICONS.Reorder}
+                      color="hoverLighten" size="sm"
+                    />
+                  </IconButton>
+                </Tooltip>
               }
             />
             {expandable && (isFirst
               ? (
-                <IconButton
-                  className={classnames(
-                    classes.fieldControlIcon,
-                    classes.hiddenInDragged,
-                  )}
-                  onClick={handleAddEntry}
-                >
-                  <SvgIcon
-                    name={ICONS.AddCircle}
-                    color="hoverLighten" size="sm"
-                  />
-                </IconButton>
+                <Tooltip title="add">
+                  <IconButton
+                    className={classnames(
+                      classes.fieldControlIcon,
+                      classes.hiddenInDragged,
+                    )}
+                    onClick={handleAddEntry}
+                  >
+                    <SvgIcon
+                      name={ICONS.AddCircle}
+                      color="hoverLighten" size="sm"
+                    />
+                  </IconButton>
+                </Tooltip>
               )
               : (
-                <IconButton
-                  className={classnames(
-                    classes.fieldControlIcon,
-                    classes.hiddenInDragged,
-                  )}
-                  onClick={handleEntryDelete(fieldValue.id!)}>
-                  <SvgIcon
-                    name={ICONS.Delete}
-                    color="hoverLighten" size="sm"
-                  />
-                </IconButton>
+                <Tooltip title="delete">
+                  <IconButton
+                    className={classnames(
+                      classes.fieldControlIcon,
+                      classes.hiddenInDragged,
+                    )}
+                    onClick={handleEntryDelete(fieldValue.id!)}>
+                    <SvgIcon
+                      name={ICONS.Delete}
+                      color="hoverLighten" size="sm"
+                    />
+                  </IconButton>
+                </Tooltip>
               )
             )}
           </div>
