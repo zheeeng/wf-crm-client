@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
 import cssTips from '~src/utils/cssTips'
+import useToggle from '~src/hooks/useToggle'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -115,20 +116,11 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     okTextWatch = '', okColor = 'primary', okText = 'Ok', cancelText = 'cancel',
   } = option || {}
 
-  const [cancellationConfirmModalOpen, setCancellationConfirmModalOpen] = useState(false)
-
-  const openCancellationModal = useCallback(
-    () => {
-      setCancellationConfirmModalOpen(true)
-    },
-    [setCancellationConfirmModalOpen]
-  )
-  const closeCancellationModal = useCallback(
-    () => {
-      setCancellationConfirmModalOpen(false)
-    },
-    [setCancellationConfirmModalOpen]
-  )
+  const {
+    value: cancellationConfirmModalOpen,
+    toggleOn: openCancellationModal,
+    toggleOff: closeCancellationModal,
+  } = useToggle(false)
 
   const [toFillFields, setToFillFields] = useState<string[]>([])
 
@@ -165,6 +157,14 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
       } else {
         onClose && onClose(e)
       }
+    },
+    [onClose, openCancellationModal]
+  )
+
+  const forceClose = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      closeCancellationModal()
+      onClose && onClose(e)
     },
     [onClose, openCancellationModal]
   )
@@ -223,7 +223,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           <Typography variant="body2" color="textSecondary">{discardText}</Typography>
           <div className={classes.dialogButtonZone}>
             <Button onClick={closeCancellationModal}>Continue editing</Button>
-            <Button color="primary" onClick={onClose}>Discard</Button>
+            <Button color="primary" onClick={forceClose}>Discard</Button>
           </div>
         </Dialog>
       )}
