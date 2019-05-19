@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
@@ -41,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   text: {
     marginTop: theme.spacing(2),
+  },
+  textAlignFixed: {
+    padding: theme.spacing(0, 6),
   },
 }))
 
@@ -86,7 +90,11 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
             <Typography variant="h6" align="center" color="textSecondary">
               Merge contacts
             </Typography>
-            <Typography color="textSecondary" className={classes.text}>Are you sure you want to merge the selected contacts?</Typography>
+            <Typography
+              color="textSecondary"
+              align="left"
+              className={classnames(classes.text, classes.textAlignFixed)}
+            >Are you sure you want to merge the selected contacts?</Typography>
             <div className={classes.buttonZone}>
               <Button onClick={onClose}>No</Button>
               <Button
