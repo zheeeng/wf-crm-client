@@ -20,8 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     flex: 1,
   },
+  simpleFlexContainer: {
+    display: 'block',
+  },
   simpleResultBox: {
-    maxHeight: '320px',
+    height: 320,
   },
   resultBox: {
     overflow: 'auto',
@@ -105,9 +108,15 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
     <Collapse
       className={className}
       classes={{
-        container: classnames(classes.flexContainer, classes.searchCollapse),
+        container: classnames(
+          classes.flexContainer,
+          classes.searchCollapse,
+        ),
         wrapper: classes.flexContainer,
-        wrapperInner: classes.flexContainer,
+        wrapperInner: classnames(
+          classes.flexContainer,
+          theme === 'simple' && classes.simpleFlexContainer,
+        ),
       }}
       in={groupsOpened}
       timeout="auto"
