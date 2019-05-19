@@ -81,6 +81,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: 'white',
         borderColor: 'white',
       },
+      '&&&': {
+        backgroundColor: 'unset',
+      },
     },
   },
   table: {
