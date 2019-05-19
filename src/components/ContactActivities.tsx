@@ -407,10 +407,13 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
             </>
           )}
           <Tooltip title="note">
-            <IconButton color="primary" onClick={toggleOnAddNote}
+            <IconButton
+              color="primary"
+              onClick={toggleOnAddNote}
+              size="medium"
               // onClick={toggleShowButtons}
             >
-              <Icon name={ICONS.AddCircle} />
+              <Icon size="lg" name={ICONS.AddCircle} />
             </IconButton>
           </Tooltip>
         </div>
