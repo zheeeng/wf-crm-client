@@ -20,6 +20,7 @@ import useToggle from '~src/hooks/useToggle'
 
 import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
+import cssTips from '../utils/cssTips';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -55,7 +56,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   entry: {
     display: 'flex',
-    alignItems: 'center',
     marginBottom: theme.spacing(1),
   },
   noteForToday: {
@@ -66,10 +66,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   entryContent: {
     position: 'relative',
     flex: 1,
-    whiteSpace: 'nowrap',
+    padding: theme.spacing(0.5, 3, 0.5, 1),
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    padding: theme.spacing(0.5, 3, 0.5, 1),
+    wordBreak: 'break-word',
+    ...cssTips(theme).lineClamp(3),
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['900'],

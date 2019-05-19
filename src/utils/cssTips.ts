@@ -14,6 +14,13 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
   const tipOption: TipOption = { ...getDefaultOption(), ...option }
 
   return {
+    lineClamp: (line: number) => createStyles({
+      style: {
+        display: '-webkit-box',
+        '-webkit-line-clamp': line,
+        '-webkit-box-orient': 'vertical',
+      },
+    }).style,
     horizontallySpaced: () => createStyles({
       style: {
         '& > *': {
