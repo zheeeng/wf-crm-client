@@ -20,7 +20,7 @@ import useToggle from '~src/hooks/useToggle'
 
 import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
-import cssTips from '../utils/cssTips';
+// import cssTips from '../utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -70,7 +70,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     wordBreak: 'break-word',
-    ...cssTips(theme).lineClamp(3),
+    // ...cssTips(theme).lineClamp(3),
+    whiteSpace: 'pre',
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['900'],
@@ -103,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     padding: 0,
     right: theme.spacing(0.5),
-    bottom: theme.spacing(0.5),
+    bottom: theme.spacing(1.25),
   },
   noteRemover: {
     position: 'absolute',
