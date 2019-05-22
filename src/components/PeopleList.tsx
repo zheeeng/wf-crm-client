@@ -552,13 +552,15 @@ const PeopleList: React.FC<Props> = React.memo(({
   return (
     <DisplayPaper>
       <ContactTableThemeProvider>
-        {<CreateForm
-          option={createForm.option}
-          open={createForm.opened}
-          onClose={changeCreateContactFormOpened(false)}
-          onOk={handleAddNewContact}
-          discardText="Your contact information won't be created unless you submit it."
-        />}
+        {createForm.opened && (
+          <CreateForm
+            option={createForm.option}
+            open={createForm.opened}
+            onClose={changeCreateContactFormOpened(false)}
+            onOk={handleAddNewContact}
+            discardText="Your contact information won't be created unless you submit it."
+          />
+        )}
         {<MergeContactsForm
           open={mergeContactsOpened}
           onClose={toggleOffMergeContactsOpened}

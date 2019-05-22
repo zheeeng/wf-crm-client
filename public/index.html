@@ -23,7 +23,7 @@
     <title>Waiverforever CRM</title>
     <% if (process.env.NODE_ENV !== 'development') { %>
       <script src="https://browser.sentry-cdn.com/5.1.1/bundle.min.js" crossorigin="anonymous"></script>
-      <script>Sentry.init({ dsn: 'https://1cc91fb7f9694aeeb761b6f19e13e7eb@sentry.io/1452203' });</script>
+      <script>Sentry.init({ release: 'wf-crm@%REACT_APP_VERSION%', dsn: 'https://1cc91fb7f9694aeeb761b6f19e13e7eb@sentry.io/1452203' });</script>
     <% } %>
   </head>
   <body>

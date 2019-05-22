@@ -41,12 +41,15 @@
     "preinstall": "unlink node_modules/~src || true",
     "postinstall": "ln -s `pwd`/src node_modules/~src",
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "prebuild": "sentry-cli releases new $SENTRY_PROJECT@$SOURCE_VERSION",
+    "build": "REACT_APP_VERSION=$SOURCE_VERSION react-app-rewired build",
+    "postbuild": "sentry-cli releases files $SENTRY_PROJECT@$SOURCE_VERSION upload-sourcemaps build --no-rewrite && find build -name *.js.map -exec rm {} \\; && sentry-cli releases finalize $SENTRY_PROJECT@$SOURCE_VERSION ",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "heroku-postbuild": "NODE_ENV=production yarn build"
   },
   "devDependencies": {
+    "@sentry/cli": "^1.43.0",
     "customize-cra": "^0.2.12",
     "react-app-rewired": "^2.1.1",
     "react-scripts": "^2.1.8",
