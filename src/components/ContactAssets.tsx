@@ -135,9 +135,14 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
 
   const {
     value: exportContactsOpened,
-    toggleOn: toggleOnExportContactsOpened,
+    // toggleOn: toggleOnExportContactsOpened,
     toggleOff: toggleOffExportContactsOpened,
   } = useToggle(false)
+
+  const openWaiverExportPage = useCallback(
+    (key: string) => () => { window.open(`/get_signed_doc/${key}`, '_blank') },
+    [],
+  )
 
   return (
     <ContactTableThemeProvider>
@@ -191,7 +196,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       : (
         <div>
           {waivers.map(waiver => (
-            <div key={waiver.id} className={classes.entry}>
+            <div key={waiver.key} className={classes.entry}>
               <Icon
                 name={ICONS.Waiver}
                 className={classes.entryIcon}
@@ -216,7 +221,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                     classes={{
                       label: classes.entryButtonIcon,
                     }}
-                    onClick={toggleOnExportContactsOpened}
+                    onClick={openWaiverExportPage(waiver.key)}
+                    // onClick={toggleOnExportContactsOpened}
                   >
                     <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
                   </IconButton>

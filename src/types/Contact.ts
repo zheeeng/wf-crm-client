@@ -37,6 +37,7 @@ export interface Waiver {
   id: string
   signedTimestamp: number
   title: string
+  key: string,
 }
 
 export interface WaiverAPI {
@@ -250,6 +251,7 @@ export const waiverInputAdapter = (input: WaiverAPI): Waiver => {
     id: input.id,
     signedTimestamp: input.signed_timestamp * 1000,
     title: input.waiver_title,
+    key: input.waiver_key,
   }
 
   return waiver
