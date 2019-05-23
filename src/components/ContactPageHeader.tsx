@@ -39,11 +39,11 @@ const ContactPageHeader: React.FC<Props> = React.memo(
             </IconButton>
           </ToolTip>
         </div>
-        <ToolTip title="delete contact">
+        {/* <ToolTip title="delete contact">
           <IconButton onClick={onDelete}>
             <Icon name={ICONS.Delete} color="hoverLighten" size="lg" />
           </IconButton>
-        </ToolTip>
+        </ToolTip> */}
       </>
     )
   },
