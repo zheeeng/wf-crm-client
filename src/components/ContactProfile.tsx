@@ -322,7 +322,6 @@ export interface Props {
 
 const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   const theme = useTheme<Theme>()
-  const { fail } = useContext(AlertContainer.Context)
   const { toSplitWaiver, cancelSplitWaiver, splitDone } = useContext(WaiverSplitterContainer.Context)
 
   const {
@@ -331,34 +330,16 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     fetchFields,
     tags, addTag, removeTag,
     gender,
-    addField, addFieldError,
+    addField,
     updateContactGender,
-    updateField, updateFieldError,
-    removeField, removeFieldError,
-    splitWaiver, splitWaiverError,
+    updateField,
+    removeField,
+    splitWaiver,
   } = useContact(contactId)
 
   useEffect(
     () => { fetchContact() },
     [contactId],
-  )
-
-  useEffect(
-    () => { addFieldError && fail(addFieldError.message) },
-    [addFieldError],
-  )
-  useEffect(
-    () => { updateFieldError && fail(updateFieldError.message) },
-    [updateFieldError],
-  )
-  useEffect(
-    () => { removeFieldError && fail(removeFieldError.message) },
-    [removeFieldError],
-  )
-
-  useEffect(
-    () => { splitWaiverError && fail(splitWaiverError.message) },
-    [splitWaiverError],
   )
 
   const handleWaiverSplit = useCallback(

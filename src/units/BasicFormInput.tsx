@@ -36,7 +36,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     fontWeight: 500,
     marginTop: theme.spacing(0.5),
-    marginBottom: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
     ...{
       "&[type='number']": {
         '-moz-appearance': 'textfield',

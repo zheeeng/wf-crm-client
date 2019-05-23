@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useContext, useEffect } from 'react'
+import React, { useCallback, useState, useContext, useEffect, useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
@@ -58,8 +58,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   open: boolean,
-  onClose?: React.ReactEventHandler<{}>
-  onOk?: (groupId: string) => Promise<any>
+  onClose: () => void
+  onOk: (groupId: string) => Promise<any>
 }
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
@@ -81,6 +81,11 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
     toggleOn: toggleOnGroupsOpened,
   } = useToggle(true)
 
+  const isGroupExisted = useMemo(
+    () => newGroupName && groups.some(group => group.info.name == newGroupName),
+    [newGroupName, groups]
+  )
+
   const handleGroupClick = useCallback(
     (id: string) => {
       if (selectedGroupId === id) {
@@ -99,7 +104,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       setNewGroupName(name)
       setSelectedGroupId('')
     },
-    [setNewGroupName],
+    [setNewGroupName, selectedGroupId],
   )
 
   const handleCreateGroupClick = useCallback(
@@ -108,21 +113,31 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       if (newName) {
         const gid = await addGroup({ name: newGroupName })
         setSelectedGroupId(gid)
-        onOk && await onOk(gid)
+        await onOk(gid)
 
         toggleOnGroupsOpened()
       }
       setNewGroupName('')
     },
-    [newGroupName, selectedGroupId],
+    [newGroupName, addGroup, setSelectedGroupId, selectedGroupId, toggleOnGroupsOpened, onOk],
   )
 
   const handleAddToGroupClick = useCallback(
     async () => {
-      onOk && await onOk(selectedGroupId)
+      await onOk(selectedGroupId)
       setNewGroupName('')
     },
-    [selectedGroupId]
+    [selectedGroupId, onOk]
+  )
+
+  const handleGroupInputEnterPress = useCallback(
+    async (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isGroupExisted || selectedGroupId) return
+      event.preventDefault()
+
+      handleCreateGroupClick()
+    },
+    [isGroupExisted, selectedGroupId, handleCreateGroupClick],
   )
 
   return (
@@ -139,6 +154,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       <BasicFormInput
         placeholder="New Group"
         onChange={handleNewGroupNameChange}
+        onEnterPress={handleGroupInputEnterPress}
       />
       <div className={classes.label} onClick={toggleGroupsOpened} >
         Existing group
@@ -156,13 +172,13 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       />
       <div className={classes.buttonZone}>
         <Button onClick={onClose}>Cancel</Button>
-        {newGroupName && groups.some(group => group.info.name == newGroupName)
+        {isGroupExisted
           ? (
             <Button disabled>
               Group existed
             </Button>
           )
-          :  selectedGroupId
+          : selectedGroupId
           ? (
             <Button
               color="primary"

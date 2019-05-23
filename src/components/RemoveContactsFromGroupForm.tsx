@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   text: {
     marginTop: theme.spacing(2),
   },
+  textAlignFixed: {
+    padding: theme.spacing(0, 6),
+  },
 }))
 
 export interface Props {
@@ -71,7 +75,10 @@ const RemoveContactsFromGroupForm: React.FC<Props> = React.memo(
         <Typography variant="h6" align="center" color="textSecondary">
           Remove contacts from group
         </Typography>
-        <Typography color="textSecondary" className={classes.text}>
+        <Typography
+          color="textSecondary"
+          className={classnames(classes.text, classes.textAlignFixed)}
+        >
           Are you sure you want to remove the selected contacts from the current group?
         </Typography>
         <div className={classes.buttonZone}>

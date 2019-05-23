@@ -612,7 +612,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             {getFieldDefaultTitleWidthDec(fieldValue)}
           </Typography>
         )}
-        {editable && (
+        {editable && !isAppend && (
           <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
             <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hidden'}>
               <IconButton

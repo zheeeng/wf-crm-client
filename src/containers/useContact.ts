@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import {
   PeopleAPI, contactInputAdapter, Contact,
   contactOutputAdapter,
@@ -18,6 +18,7 @@ import isNil from 'ramda/es/isNil'
 import ContactsCountContainer from './ContactsCount'
 import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
+import AlertContainer from '~src/containers/Alert'
 
 const convertContact = pipe<
   Array<PeopleAPI | null>,
@@ -67,6 +68,31 @@ const useContact = (contactId: string) => {
   const freshContact = useDepMemo(convertContact, [contactData])
   const updatedContact = useDepMemo(convertContact, [updatedContactData])
   const latestContact = useLatest(freshContact, updatedContact)
+
+  const { fail } = useContext(AlertContainer.Context)
+
+  useEffect(
+    () => { postFieldError && fail(postFieldError.message) },
+    [postFieldError],
+  )
+  useEffect(
+    () => { putFieldError && fail(putFieldError.message) },
+    [putFieldError],
+  )
+  useEffect(
+    () => { putFieldError && fail(putFieldError.message) },
+    [putFieldError],
+  )
+
+  useEffect(
+    () => { postSplitWaiverError && fail(postSplitWaiverError.message) },
+    [postSplitWaiverError],
+  )
+
+  useEffect(
+    () => { deleteContactError && fail(deleteContactError.message) },
+    [deleteContactError],
+  )
 
   const tags = useLatest<string[] | undefined | null>(
     latestContact && latestContact.info.tags,

@@ -7,6 +7,7 @@ import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
 
 import BasicFormInput from '~src/units/BasicFormInput'
+import RestoreThemeProvider from '~src/theme/RestoreThemeProvider'
 
 import FirstPageIcon from '@material-ui/icons/FirstPage'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
@@ -79,54 +80,56 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
   )
 
   return (
-    <div className={classes.root}>
-      <Hidden smDown>
+    <RestoreThemeProvider>
+      <div className={classes.root}>
+        <Hidden smDown>
+          <IconButton
+            onClick={handleFirstPageButtonClick}
+            disabled={page === 0}
+            aria-label="First Page"
+          >
+            <FirstPageIcon />
+          </IconButton>
+        </Hidden>
         <IconButton
-          onClick={handleFirstPageButtonClick}
+          onClick={handleBackButtonClick}
           disabled={page === 0}
-          aria-label="First Page"
+          aria-label="Previous Page"
         >
-          <FirstPageIcon />
+          <KeyboardArrowLeft />
         </IconButton>
-      </Hidden>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="Previous Page"
-      >
-        <KeyboardArrowLeft />
-      </IconButton>
-      <Hidden smDown>
-        <BasicFormInput
-          placeholder="Jump"
-          noLabel
-          onEnterPress={handleEnterNewPage}
-          TextFieldClasses={{
-            root: classes.textField,
-          }}
-          InputClasses={{
-            root: classes.textFieldInputRoot,
-            input: classes.textFieldInput,
-          }}
-        />
-      </Hidden>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="Next Page"
-      >
-        <KeyboardArrowRight />
-      </IconButton>
-      <Hidden smDown>
+        <Hidden smDown>
+          <BasicFormInput
+            placeholder="Jump"
+            noLabel
+            onEnterPress={handleEnterNewPage}
+            TextFieldClasses={{
+              root: classes.textField,
+            }}
+            InputClasses={{
+              root: classes.textFieldInputRoot,
+              input: classes.textFieldInput,
+            }}
+          />
+        </Hidden>
         <IconButton
-          onClick={handleLastPageButtonClick}
+          onClick={handleNextButtonClick}
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="Last Page"
+          aria-label="Next Page"
         >
-          <LastPageIcon />
+          <KeyboardArrowRight />
         </IconButton>
-      </Hidden>
-    </div>
+        <Hidden smDown>
+          <IconButton
+            onClick={handleLastPageButtonClick}
+            disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+            aria-label="Last Page"
+          >
+            <LastPageIcon />
+          </IconButton>
+        </Hidden>
+      </div>
+    </RestoreThemeProvider>
   )
 })
 

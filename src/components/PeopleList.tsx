@@ -57,35 +57,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'flex-end',
     },
   },
-  infoForePlaceholder: {
-    width: theme.spacing(24),
-  },
-  infoBar: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  infoText: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  creatingBtn: {
-    textTransform: 'none',
-    color: 'white',
-    borderColor: 'white',
-    marginRight: theme.spacing(2),
-    padding: `0 ${theme.spacing(2)}px`,
-    ...{
-      '&:hover': {
-        color: 'white',
-        borderColor: 'white',
-      },
-      '&&&': {
-        backgroundColor: 'unset',
-      },
-    },
-  },
   table: {
     flex: 1,
     overflowY: 'auto',
@@ -167,6 +138,58 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+
+const useStyles2 = makeStyles((theme: Theme) => ({
+  infoBar: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  infoText: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  infoForePlaceholder: {
+    width: theme.spacing(24),
+  },
+  creatingBtn: {
+    textTransform: 'none',
+    color: 'white',
+    borderColor: 'white',
+    marginRight: theme.spacing(2),
+    padding: `0 ${theme.spacing(2)}px`,
+    ...{
+      '&:hover': {
+        color: 'white',
+        borderColor: 'white',
+      },
+      '&&&': {
+        backgroundColor: 'unset',
+      },
+    },
+  },
+}))
+
+const ContinueEditing: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const classes = useStyles2({})
+
+  return (
+    <div className={classes.infoBar}>
+      <div className={classes.infoForePlaceholder} />
+      <div className={classes.infoText}><CheckCircle /> Contact created!</div>
+      <Button
+        className={classes.creatingBtn}
+        variant="outlined"
+        color="primary"
+        onClick={onClick}
+      >
+        Continue editing
+      </Button>
+    </div>
+  )
+}
+
 export interface Props {
   page: number
   size: number
@@ -206,6 +229,8 @@ const newContactFormOption: CreateFormOption = {
 const PeopleList: React.FC<Props> = React.memo(({
   total, page, size, onSearch, navigateToProfile, isGroupPage = false,
 }) => {
+  const classes = useStyles({})
+
   const { success, fail } = useContext(AlertContainer.Context)
   const {
     contacts,
@@ -216,24 +241,11 @@ const PeopleList: React.FC<Props> = React.memo(({
   useEffect(
     () => {
       showAddContactMessage && addContactData && success(
-        <div className={classes.infoBar}>
-          <div className={classes.infoForePlaceholder} />
-          <div className={classes.infoText}><CheckCircle /> Contact created!</div>
-          <Button
-            className={classes.creatingBtn}
-            variant="outlined"
-            color="primary"
-            onClick={handleShowProfile(addContactData.id)}
-          >
-            Continue editing
-          </Button>
-        </div>
+        <ContinueEditing onClick={handleShowProfile(addContactData.id)} />
       )
     },
     [addContactData, showAddContactMessage],
   )
-
-  const classes = useStyles({})
 
   const [checked, setChecked] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState('')
