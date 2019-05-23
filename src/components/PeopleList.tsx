@@ -231,11 +231,12 @@ const PeopleList: React.FC<Props> = React.memo(({
 }) => {
   const classes = useStyles({})
 
-  const { success, fail } = useContext(AlertContainer.Context)
+  const { success } = useContext(AlertContainer.Context)
   const {
     contacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
+    fromContactId,
   } = useContext(ContactsContainer.Context)
 
   useEffect(
@@ -247,7 +248,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     [addContactData, showAddContactMessage],
   )
 
-  const [checked, setChecked] = useState<string[]>([])
+  const [checked, setChecked] = useState<string[]>([fromContactId].filter(_ => _))
   const [searchTerm, setSearchTerm] = useState('')
   const [createForm, setCreateForm] = useState<{
     opened: boolean

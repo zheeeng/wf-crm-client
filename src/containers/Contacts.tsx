@@ -272,6 +272,8 @@ const ContactsContainer = createContainer(() => {
     [postContactData, setShowAddContactMessage],
   )
 
+  const [fromContactId, setFromContactId] = useState('')
+
   return {
     pagination,
     contacts,
@@ -283,6 +285,7 @@ const ContactsContainer = createContainer(() => {
     exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
     mergeContactsData: postMergeContactsData, mergeContacts, mergeContactsError: postMergeContactsError,
     removeContactsFromGroup, removeContactsFromGroupError: deleteContactsFromGroupError,
+    fromContactId, setFromContactId,
   }
 })
 

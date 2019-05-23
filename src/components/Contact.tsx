@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useEffect, useMemo } from 'react'
+import React, { useContext, useCallback, useEffect, useMemo, useRef } from 'react'
 import useContact from '~src/containers/useContact'
 import ContactsContainer from '~src/containers/Contacts'
 import DetailsPaper from '~src/units/DetailsPaper'
@@ -16,17 +16,24 @@ export interface Props {
 
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
-    const { contacts } = useContext(ContactsContainer.Context)
-    const { contact, fetchContact, removeContact } = useContact(contactId)
+    const { contacts, setFromContactId } = useContext(ContactsContainer.Context)
+    const { fetchContact, removeContact } = useContact(contactId)
+
+    useEffect(() => { fetchContact() }, [contactId])
+
+    const lastContactIdRef = useRef(contactId)
 
     useEffect(
-      () => { fetchContact() },
+      () => { lastContactIdRef.current = contactId },
       [contactId],
     )
 
     const navigateToContact = useCallback(
       () => {
-        path && navigate && navigate(path.split('/').slice(0, -1).join('/'))
+        if (path && navigate) {
+          setFromContactId(lastContactIdRef.current)
+          navigate(path.split('/').slice(0, -1).join('/'))
+        }
       },
       [navigate, path],
     )
@@ -54,10 +61,9 @@ const ContactIndex: React.FC<Props> = React.memo(
 
     const goPreviousContact = useCallback(
       () => {
-        path && navigate && previousContactId
-          && navigate(`${path.split('/').slice(0, -1).join('/')}/${previousContactId}`)
+        path && navigate && previousContactId && navigate(`${path.split('/').slice(0, -1).join('/')}/${previousContactId}`)
       },
-      [navigate, path, previousContactId],
+      [navigate, path, previousContactId, setFromContactId],
     )
 
     const goNextContact = useCallback(
@@ -79,16 +85,16 @@ const ContactIndex: React.FC<Props> = React.memo(
           disableGoNext={!nextContactId}
         />
       ),
-      [removeContact, navigateToContact],
+      [removeContact, navigateToContact, goPreviousContact, goNextContact, previousContactId, nextContactId],
     )
 
     const renderRightPart1 = useCallback(
       () => <ContactAssets contactId={contactId} />,
-      [contact],
+      [contactId],
     )
     const renderRightPart2 = useCallback(
       () => <ContactActivities contactId={contactId} />,
-      [contact],
+      [contactId],
     )
 
     return (
