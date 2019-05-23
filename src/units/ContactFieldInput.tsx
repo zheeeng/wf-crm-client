@@ -688,8 +688,47 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
 
   const calculatedFieldValues = useMemo(
-    () => hasValues ? localFieldValues : [backupFieldValue],
-    [hasValues, localFieldValues, backupFieldValue]
+    () => {
+      const values1 = hasValues ? localFieldValues : [backupFieldValue]
+
+      if (editable) return values1
+      const records = values1.map(it => (
+        [
+          joinSegmentFieldValues(it.values),
+          (it.values.find(v => v.key == 'title') || { value: '' }).value,
+          it,
+        ] as [string, string, FieldValue])
+      ).reduce(
+        (obj, [key, title, fieldValue]) => {
+          if (fieldValue.priority === 0) {
+            return obj
+          }
+          const newItem = { title, value: fieldValue, priority: fieldValue.priority }
+          if (!obj[key]) {
+            obj[key] = [newItem]
+          } else {
+            const titleMatched = obj[key].filter(r => r.title === newItem.title)
+            if (titleMatched.length == 0) {
+              obj[key] = obj[key].concat(newItem)
+            } else if (newItem.priority > titleMatched[0].priority) {
+              obj[key] = obj[key].filter(r => r.title !== newItem.title).concat(newItem)
+            }
+          }
+          return obj
+        },
+        {} as { [key: string]: Array<{title: string, value: FieldValue, priority: FieldValue['priority'] }> }
+      )
+
+      let values2: FieldValue[] = []
+      for (let key in records) {
+        values2.push(...records[key].map(it => it.value))
+      }
+
+      values2.sort((p, c) => c.priority - p.priority)
+
+      return values2
+    },
+    [editable, hasValues, localFieldValues, backupFieldValue]
   )
 
   const sortableItems = useMemo(
