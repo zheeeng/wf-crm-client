@@ -2,6 +2,7 @@ import cookie from 'js-cookie'
 
 const apiKeyKey = 'apiKey'
 const authKeyKey = 'authKey'
+const validAuthKeyKey = '_authKey'
 const accountNameKey = 'rememberMe'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -45,8 +46,20 @@ export async function exchangeAPIKey () {
     return
   }
 
+  const validAuthKey = cookie.get(validAuthKeyKey)
   const authKey = cookie.get(authKeyKey)
-  if (!authKey) throw Error('No authKey')
+  const apiKey = cookie.get(apiKeyKey)
+
+  if (!authKey || (validAuthKey && validAuthKey != authKey)) {
+    cookie.remove(validAuthKeyKey)
+    cookie.remove(apiKeyKey)
+    throw Error('Request login')
+  }
+
+  cookie.set(validAuthKeyKey, authKey)
+
+  if (apiKey) return
+
   const response = await fetch(API_KEY_URL,
     {
       headers: {
