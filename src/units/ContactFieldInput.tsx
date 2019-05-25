@@ -393,14 +393,14 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       (event: React.FocusEvent<HTMLInputElement>) => {
         const value = event.target.value.trim()
 
-        if (!value || value == defaultValue) return
+        if (!value || value === defaultValue) return
 
-        if (key !== 'title' && type == 'email' && !isEmail(value)) {
+        if (key !== 'title' && type === 'email' && !isEmail(value)) {
           setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
           return
         }
 
-        // if (type == 'calendar') {
+        // if (type === 'calendar') {
         //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
         //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
         //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
@@ -440,12 +440,12 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
         if (!value || value === defaultValue) return
 
-        if (key !== 'title' && type == 'email' && !isEmail(value)) {
+        if (key !== 'title' && type === 'email' && !isEmail(value)) {
           setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
           return
         }
 
-        // if (type == 'calendar') {
+        // if (type === 'calendar') {
         //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
         //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
         //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
@@ -695,7 +695,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const records = values1.map(it => (
         [
           joinSegmentFieldValues(it.values),
-          (it.values.find(v => v.key == 'title') || { value: '' }).value,
+          (it.values.find(v => v.key === 'title') || { value: '' }).value,
           it,
         ] as [string, string, FieldValue])
       ).reduce(
@@ -708,7 +708,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             obj[key] = [newItem]
           } else {
             const titleMatched = obj[key].filter(r => r.title === newItem.title)
-            if (titleMatched.length == 0) {
+            if (titleMatched.length === 0) {
               obj[key] = obj[key].concat(newItem)
             } else if (newItem.priority > titleMatched[0].priority) {
               obj[key] = obj[key].filter(r => r.title !== newItem.title).concat(newItem)
@@ -769,7 +769,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       }
       <div className={classnames(
         classes.fieldTextWrapper,
-        sortingId != '' && classes.isSorting,
+        sortingId !== '' && classes.isSorting,
       )}>
         {showName
           && (
@@ -828,7 +828,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
       if (!val || val === value) return
 
-      if (type == 'email' && !isEmail(value)) {
+      if (type === 'email' && !isEmail(value)) {
         setHasError(true)
         return
       }
@@ -846,7 +846,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
       if (!val || val === value) return
 
-      if (type == 'email' && !isEmail(value)) {
+      if (type === 'email' && !isEmail(value)) {
         setHasError(true)
         return
       }
@@ -861,7 +861,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
       className={classnames(
       classes.fieldBar,
       showName && classes.fieldSimpleBar,
-      (!editable && value == '') && classes.hidden,
+      (!editable && value === '') && classes.hidden,
     )}
     >
       {!showName && Icon && (
@@ -956,7 +956,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   )
 })
 
-const mapOption2SelectOption = (option: string) => option == ''
+const mapOption2SelectOption = (option: string) => option === ''
   ? ({ value: '', label: 'None' })
   : ({ value: option, label: option })
 

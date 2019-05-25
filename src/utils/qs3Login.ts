@@ -50,7 +50,7 @@ export async function exchangeAPIKey () {
   const authKey = cookie.get(authKeyKey)
   const apiKey = cookie.get(apiKeyKey)
 
-  if (!authKey || (validAuthKey && validAuthKey != authKey)) {
+  if (!authKey || (validAuthKey && validAuthKey !== authKey)) {
     cookie.remove(validAuthKeyKey)
     cookie.remove(apiKeyKey)
     throw Error('Request login')
@@ -74,7 +74,7 @@ export async function exchangeAPIKey () {
 
   const { success, result } = data
 
-  if (result != true || !success || !success.apiKey) {
+  if (result !== true || !success || !success.apiKey) {
     throw Error('Some errors happened')
   }
 

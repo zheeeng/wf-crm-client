@@ -82,7 +82,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
   } = useToggle(true)
 
   const isGroupExisted = useMemo(
-    () => newGroupName && groups.some(group => group.info.name == newGroupName),
+    () => newGroupName && groups.some(group => group.info.name === newGroupName),
     [newGroupName, groups]
   )
 

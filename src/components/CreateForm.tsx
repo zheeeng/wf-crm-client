@@ -250,7 +250,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
             {tip}
           </Typography>)
         }
-        {fields.map((field, index) => field.type == 'text'
+        {fields.map((field, index) => field.type === 'text'
           ? (
             <BasicFormInput
               autoFocus={index === 0}

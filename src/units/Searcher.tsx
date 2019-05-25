@@ -89,9 +89,9 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       labelWidth={0}
       notched
       classes={{
-        notchedOutline: classNames(classes.notchedOutline, theme == 'simple' && classes.notchedOutlineSimple),
+        notchedOutline: classNames(classes.notchedOutline, theme === 'simple' && classes.notchedOutlineSimple),
       }}
-      className={classNames(className, classes.searchBar, theme == 'simple' && classes.searchBarSimple)}
+      className={classNames(className, classes.searchBar, theme === 'simple' && classes.searchBarSimple)}
       startAdornment={(
         <InputAdornment position="start" className={classes.inputAdornment}>
           <Icon name={ICONS.Search} onClick={handleClickSearchIcon} />

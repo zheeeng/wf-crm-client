@@ -355,7 +355,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   useEffect(
     () => {
-      if (lastContactIds.current != null) {
+      if (lastContactIds.current !== null) {
         const lastIds = lastContactIds.current
         const newerContactIds = contacts.map(contact => contact.id).filter(cid => !lastIds.includes(cid))
 
@@ -691,7 +691,7 @@ const PeopleList: React.FC<Props> = React.memo(({
               </StarThemeProvider>
             </TableBody>
           </Table>
-          {contacts.length == 0 && (
+          {contacts.length === 0 && (
             <div className={classes.emptyTextWrapper}>
               <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
                 {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
