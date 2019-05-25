@@ -522,9 +522,19 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
     `${from.toLocaleString('en-IN')} - ${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
 
-  const renderPagination = (inTable: boolean = false) => (
+  const renderPagination = (inTable: boolean = false) => inTable ? (
     <TablePagination
-      component={inTable ? undefined : 'div'}
+      count={total}
+      rowsPerPage={size}
+      page={page}
+      ActionsComponent={TablePaginationActions}
+      onChangePage={handleChangePage}
+      labelDisplayedRows={renderLabelDisplayedRows}
+      rowsPerPageOptions={[]}
+    />
+  ) : (
+    <TablePagination
+      component="div"
       count={total}
       rowsPerPage={size}
       page={page}

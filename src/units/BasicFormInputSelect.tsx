@@ -201,7 +201,7 @@ const ValueContainer: React.FC = ({ children }) => {
   )
 }
 
-const DropdownIndicator: React.FC<{ selectProps: any }> = ({ selectProps }) => {
+const DropdownIndicator: React.FC<{ selectProps: { menuIsOpen?: boolean } }> = ({ selectProps }) => {
   const classes = useStyles4({})
 
   return <ArrowDropDown className={classnames(classes.indicator, selectProps.menuIsOpen && classes.rotated)} />
@@ -231,8 +231,8 @@ const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, innerPro
     )
   }
 
-export const components: SelectComponentsConfig<any> = {
-  Control,
+export const components: SelectComponentsConfig<{ label: string, value: string }> = {
+  Control: Control as any,
   Menu,
   NoOptionsMessage,
   Option,
