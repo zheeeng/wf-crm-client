@@ -39,12 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 0,
       marginBottom: theme.spacing(4),
     },
+    [theme.breakpoints.up('md')]: {
+      height: '100%',
+    },
   },
   rightSider: {
     display: 'flex',
     flexDirection: 'column',
   },
   rightPart1: {
+    flex: 1,
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
