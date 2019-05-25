@@ -236,7 +236,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     contacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
-    fromContactId,
+    fromContactId, resetFormContactId,
   } = useContext(ContactsContainer.Context)
 
   useEffect(
@@ -248,7 +248,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     [addContactData, showAddContactMessage],
   )
 
-  const [checked, setChecked] = useState<string[]>([fromContactId].filter(_ => _))
+  const [checked, setChecked] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [createForm, setCreateForm] = useState<{
     opened: boolean
@@ -455,12 +455,18 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderTableRows = (contact: Contact) => {
     const { id } = contact
     const isChecked = checked.includes(id)
+    const isHighLighted = fromContactId === id
 
     return (
       <TableRow
         key={id}
         onClick={handleShowProfile(id)}
-        className={classnames(classes.tableRow, isChecked && classes.checkedRow)}
+        className={classnames(
+          classes.tableRow,
+          isChecked && classes.checkedRow,
+          isHighLighted && classes.checkedRow,
+        )}
+        onMouseMove={resetFormContactId}
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox

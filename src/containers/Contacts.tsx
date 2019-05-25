@@ -273,6 +273,10 @@ const ContactsContainer = createContainer(() => {
   )
 
   const [fromContactId, setFromContactId] = useState('')
+  const resetFormContactId = useCallback(
+    () => { setFromContactId('') },
+    [setFromContactId],
+  )
 
   return {
     pagination,
@@ -285,7 +289,7 @@ const ContactsContainer = createContainer(() => {
     exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
     mergeContactsData: postMergeContactsData, mergeContacts, mergeContactsError: postMergeContactsError,
     removeContactsFromGroup, removeContactsFromGroupError: deleteContactsFromGroupError,
-    fromContactId, setFromContactId,
+    fromContactId, setFromContactId, resetFormContactId,
   }
 })
 
