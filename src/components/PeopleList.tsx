@@ -139,6 +139,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  pointer: {
+    cursor: 'pointer',
+  },
   star: {
     color: theme.palette.grey.A200,
   },
@@ -448,7 +451,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderPCLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell className={classnames(classes.contactName, classes.w15Cell)}>
+      <TableCell className={classnames(classes.contactName, classes.w15Cell, classes.pointer)}>
         {contact.info.name}
       </TableCell>
       <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
@@ -459,7 +462,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderTabletLayoutTableRows = (contact: Contact) => (
     <>
-      <TableCell className={classnames(classes.contactName, classes.w25Cell)}>
+      <TableCell className={classnames(classes.contactName, classes.w25Cell, classes.pointer)}>
         {contact.info.name}
       </TableCell>
       <TableCell>
@@ -472,7 +475,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const renderMobileLayoutTableRows = (contact: Contact) => (
     <TableCell>
-      <Typography component="b" variant="body1">{contact.info.name}</Typography>
+      <Typography component="b" variant="body1" className={classes.pointer}>{contact.info.name}</Typography>
       <Typography>{contact.info.email}</Typography>
       <Typography>{contact.info.address}</Typography>
       <Typography>{contact.info.phone}</Typography>
@@ -526,8 +529,9 @@ const PeopleList: React.FC<Props> = React.memo(({
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>
           <Avatar
-            alt="Remy Sharp"
+            alt={contact.info.name}
             src={contact.info.avatar}
+            className={classes.pointer}
           />
         </TableCell>
         <Hidden mdDown>
