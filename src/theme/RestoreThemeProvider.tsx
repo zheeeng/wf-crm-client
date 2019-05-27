@@ -5,7 +5,21 @@ import { themeOptions } from './GlobalThemeProvider'
 
 const { overrides, ...restoreThemeOptions } = themeOptions
 
-export const restoreTheme = createMuiTheme(restoreThemeOptions)
+export const restoreTheme = createMuiTheme({
+  ...restoreThemeOptions,
+  overrides: {
+    MuiIconButton: {
+      root: {
+        '&&:hover': {
+          backgroundColor: '#f2f4f7',
+        },
+        '&&:active': {
+          backgroundColor: '#ebedf5',
+        },
+      },
+    },
+  },
+})
 
 const RestoreThemeProvider: React.FC = (props) => (
   <ThemeProvider theme={restoreTheme}>

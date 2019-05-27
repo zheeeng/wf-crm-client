@@ -92,10 +92,10 @@ export const themeOptions: ThemeOptions = {
         borderRadius: defaultTheme.spacing(2),
         ...{
           '&&:hover': {
-            backgroundColor: '#F2F4F7',
+            backgroundColor: '#f2f4f7',
           },
           '&&:active': {
-            backgroundColor: '#EBEDF5',
+            backgroundColor: '#ebedf5',
           },
         },
       },
