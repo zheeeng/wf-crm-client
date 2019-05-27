@@ -493,7 +493,7 @@ const PeopleList: React.FC<Props> = React.memo(({
           isChecked && classes.checkedRow,
           isHighLighted && classes.checkedRow,
         )}
-        onMouseMove={resetFormContactId}
+        onMouseMove={isHighLighted ? resetFormContactId : undefined}
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
