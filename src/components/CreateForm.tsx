@@ -139,7 +139,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         setWatchValue(value)
       }
     },
-    [fieldValues, watchValue],
+    [fieldValues, setWatchValue],
   )
 
   const handleCreateInfoChange2 = useCallback(
@@ -195,8 +195,10 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     [option],
   )
 
-  const handleOkClick = useCallback(
-    async () => {
+  const handleCreateInfoSubmit = useCallback(
+    async (e: React.SyntheticEvent) => {
+      e.preventDefault()
+
       if (!onOk) return
 
       const values = fieldValues.current
@@ -258,6 +260,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
               key={field.name}
               placeholder={field.label}
               onChange={handleCreateInfoChange(field.name)}
+              onEnterPress={handleCreateInfoSubmit}
             />
           )
           : field.type === 'combinedText'
@@ -274,6 +277,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
                   key={name}
                   placeholder={label}
                   onChange={handleCreateInfoChange(name)}
+                  onEnterPress={handleCreateInfoSubmit}
                   style={{ flex: span }}
                 />
               ))}
@@ -294,7 +298,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           <Button
             disabled={typeof okColor === 'function' && okColor(watchValue) === 'default' ? true : false}
             color={typeof okColor === 'function' ? okColor(watchValue) : okColor}
-            onClick={handleOkClick}
+            onClick={handleCreateInfoSubmit}
           >
             {typeof okText === 'function' ? okText(watchValue) : okText}
           </Button>
