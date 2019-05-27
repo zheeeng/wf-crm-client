@@ -85,7 +85,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.secondary,
   },
   stepper: {
-    padding: `0 ${theme.spacing(4)}px`,
+    margin: `0 ${theme.spacing(4)}px`,
+    [theme.breakpoints.up('md')]: {
+      flex: 1,
+      height: '100%',
+      overflow: 'auto',
+    },
   },
   skeletonContent: {
     margin: theme.spacing(1, 0, 0, 1.5),
@@ -295,7 +300,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
         setLoading({ ...loading, show: false })
       }
     },
-    [loading, isFetchingNotes],
+    [loading, setLoading, isFetchingNotes],
   )
 
   const isLoading = useMemo(

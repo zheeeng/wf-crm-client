@@ -26,21 +26,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   footerPlacer: {
-    marginBottom: theme.spacing(4),
+    // marginBottom: theme.spacing(4),
   },
   leftSider: {
     flex: 1,
+    display: 'flex',
+    minHeight: 0,
+    height: '100%',
+    flexDirection: 'column',
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
     marginRight: theme.spacing(4),
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
-    overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
       marginRight: 0,
       marginBottom: theme.spacing(4),
-    },
-    [theme.breakpoints.up('md')]: {
-      height: '100%',
     },
   },
   rightSider: {
@@ -49,11 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart1: {
     flex: 1,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing(4),
-    overflow: 'auto',
     width: 408,
     maxHeight: '50%',
     [theme.breakpoints.down('lg')]: {
@@ -65,10 +67,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart2: {
     flex: 1,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
-    overflow: 'auto',
     width: 408,
     [theme.breakpoints.down('lg')]: {
       width: 320,

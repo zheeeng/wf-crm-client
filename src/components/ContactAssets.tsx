@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   entry: {
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(0, 4.5),
+    padding: theme.spacing(0, 1.5),
     height: theme.spacing(4),
     lineHeight: `${theme.spacing(4.5)}px`,
     marginBottom: theme.spacing(1),
@@ -103,6 +103,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   progress: {
     margin: theme.spacing(2),
+  },
+  waiverContent: {
+    margin: theme.spacing(0, 3),
+    [theme.breakpoints.up('md')]: {
+      flex: 1,
+      height: '100%',
+      overflow: 'auto',
+    },
   },
 }))
 
@@ -194,7 +202,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
         <Typography align="center">Oops, an error occurred!</Typography>
       )
       : (
-        <div>
+        <div className={classes.waiverContent}>
           {waivers.map(waiver => (
             <div key={waiver.key} className={classes.entry}>
               <Icon

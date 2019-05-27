@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: theme.spacing(2),
+    borderBottom: `solid 1px ${theme.palette.grey[800]}`,
   },
   skeletonProfileBar: {
     height: theme.spacing(6),
@@ -186,6 +187,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   splitTitle: {
     marginBottom: theme.spacing(2),
+  },
+  profileContent: {
+    [theme.breakpoints.up('md')]: {
+      flex: 1,
+      height: '100%',
+      overflow: 'auto',
+    },
   },
 }))
 
@@ -687,7 +695,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             </IconButton>
           </Tooltip>
         </div>
-        <div>
+        <div className={classes.profileContent}>
           <SplitWaiverThemeProvider>
             <Dialog
               open={splitDialogOpened}

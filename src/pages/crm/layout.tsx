@@ -17,14 +17,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   main: {
     flex: 1,
-    overflow: 'auto',
     marginLeft: vars.SiderBarWidth,
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
     },
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3),
-    paddingBottom: 0,
     minWidth: 0,
     height: '100vh',
     display: 'flex',

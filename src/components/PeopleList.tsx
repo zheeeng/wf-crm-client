@@ -52,14 +52,36 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced(),
     },
   },
+  paginationHead: {
+    marginBottom: theme.spacing(1),
+  },
   alignRight: {
     '$head&': {
       justifyContent: 'flex-end',
     },
   },
+  tableContainer: {
+    flex: 1,
+    display: 'flex',
+    minHeight: 0,
+  },
   table: {
     flex: 1,
-    overflowY: 'auto',
+    display: 'flex',
+    minHeight: 0,
+    flexDirection: 'column',
+  },
+  tableHead: {
+    display: 'block',
+    width: '100%',
+  },
+  tableBody: {
+    flex: 1,
+    minHeight: 0,
+    display: 'block',
+    width: '100%',
+    overflow: 'auto',
+    height: '100%',
   },
   outlinedButton: {
     borderRadius: theme.spacing(3),
@@ -643,13 +665,13 @@ const PeopleList: React.FC<Props> = React.memo(({
           </div>
         </Hidden>
         <Hidden mdUp>
-          <div className={classnames(classes.head, classes.alignRight)}>
+          <div className={classnames(classes.head, classes.paginationHead, classes.alignRight)}>
             {renderPagination()}
           </div>
         </Hidden>
-        <div className={classes.table}>
-          <Table>
-            <TableHead>
+        <div className={classes.tableContainer}>
+          <Table className={classes.table}>
+            <TableHead className={classes.tableHead}>
               <TableRow className={classes.tableControlRow}>
                 <TableCell padding="none" className={classes.minCell}>
                   <Checkbox
@@ -691,7 +713,7 @@ const PeopleList: React.FC<Props> = React.memo(({
                 </Hidden>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody className={classes.tableBody}>
               <StarThemeProvider>
                 {contacts.map(renderTableRows)}
               </StarThemeProvider>
