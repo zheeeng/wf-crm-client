@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     display: 'flex',
     minHeight: 0,
+    flexDirection: 'column',
   },
   table: {
     flex: 1,
@@ -220,7 +221,6 @@ export interface Props {
   navigateToProfile: (id: string) => void
   isGroupPage?: boolean
 }
-
 
 const newContactFormOption: CreateFormOption = {
   title: 'New Contact',
@@ -713,19 +713,19 @@ const PeopleList: React.FC<Props> = React.memo(({
                 </Hidden>
               </TableRow>
             </TableHead>
+            {contacts.length === 0 && (
+              <div className={classes.emptyTextWrapper}>
+                <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
+                  {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
+                </Typography>
+              </div>
+            )}
             <TableBody className={classes.tableBody}>
               <StarThemeProvider>
                 {contacts.map(renderTableRows)}
               </StarThemeProvider>
             </TableBody>
           </Table>
-          {contacts.length === 0 && (
-            <div className={classes.emptyTextWrapper}>
-              <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
-                {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
-              </Typography>
-            </div>
-          )}
         </div>
       </ContactTableThemeProvider>
     </DisplayPaper>

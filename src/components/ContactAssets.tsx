@@ -189,7 +189,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       {currentTab === 0
       && isFetchingWaivers
       ? (
-        <div>
+        <div className={classes.waiverContent}>
           {Array.from(({ length: 3 }), (_, index) => (
             <div className={classes.entry} key={index} >
               <Skeleton widthRandomness={0} />
