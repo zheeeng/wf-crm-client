@@ -154,6 +154,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     marginTop: '180px',
   },
+  emptyTextCell: {
+    display: 'block',
+    width: '100%',
+    borderBottom: 'none',
+  },
   emptyText: {
     fontSize: `${theme.spacing(2)}px`,
     padding: theme.spacing(3, 0),
@@ -258,7 +263,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     contacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
-    fromContactId, resetFormContactId,
+    fromContactId, resetFormContactId, setFromContactId,
   } = useContext(ContactsContainer.Context)
 
   useEffect(
@@ -383,7 +388,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
         lastContactIds.current = null
 
-        setChecked(newerContactIds)
+        newerContactIds.length && setFromContactId(newerContactIds[0])
       }
     },
     [contacts, setChecked],
@@ -713,14 +718,16 @@ const PeopleList: React.FC<Props> = React.memo(({
                 </Hidden>
               </TableRow>
             </TableHead>
-            {contacts.length === 0 && (
-              <div className={classes.emptyTextWrapper}>
-                <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
-                  {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
-                </Typography>
-              </div>
-            )}
             <TableBody className={classes.tableBody}>
+              {contacts.length === 0 && (
+                <TableRow className={classes.emptyTextWrapper}>
+                  <TableCell padding="none" className={classes.emptyTextCell}>
+                    <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
+                      {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
               <StarThemeProvider>
                 {contacts.map(renderTableRows)}
               </StarThemeProvider>
