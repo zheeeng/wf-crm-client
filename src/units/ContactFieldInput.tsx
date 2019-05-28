@@ -229,13 +229,13 @@ const getFieldDefaultTitleWidthDec = (fieldValue: FieldValue) => {
 const getLabelExample = (fieldType?: string) => {
   switch (fieldType) {
     case 'calendar':
-      return 'Birthday'
+      return 'label: e.g. Birthday'
     case 'email':
-      return 'Person'
+      return 'label: e.g. Person'
     case 'number':
-      return 'Person'
+      return 'label: e.g. Person'
     case 'address':
-      return 'Home'
+      return 'label: e.g. Home'
     default:
       return 'label'
   }
