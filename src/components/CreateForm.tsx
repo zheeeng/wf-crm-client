@@ -60,6 +60,7 @@ export type TextField = {
   name: string
   label: string
   required: boolean
+  validator?: (value: string) => boolean
 }
 
 export type CombinedTextField = {
@@ -71,6 +72,7 @@ export type CombinedTextField = {
     label: string
     required: boolean
     span: number
+    validator?: (value: string) => boolean
   }>
 }
 
@@ -80,6 +82,7 @@ export type EnumTextField = {
   label: string
   options: string[]
   required: boolean
+  validator?: (value: string) => boolean
 }
 
 export type CountryField = {
@@ -88,6 +91,7 @@ export type CountryField = {
   label: string
   options: string[]
   required: boolean
+  validator?: (value: string) => boolean
 }
 
 export type OkColor = 'inherit' | 'primary' | 'secondary' | 'default' | undefined
@@ -125,7 +129,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     toggleOff: closeCancellationModal,
   } = useToggle(false)
 
-  const [toFillFields, setToFillFields] = useState<string[]>([])
+  const [toWarnFields, setToWarnFields] = useState<string[]>([])
 
   const fieldValues = useRef<{ [key: string]: string }>({})
 
@@ -195,6 +199,33 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
     [option],
   )
 
+  type Validator = { name: string, validator: (value: string) => boolean }
+
+  const validators = useMemo(
+    () => option
+      ? option.fields.reduce(
+        (acc, field) => {
+          switch (field.type) {
+            case 'text':
+            case 'enumText':
+              return field.validator ? [...acc, { name: field.name, validator: field.validator }] : acc
+            case 'combinedText':
+              return [
+                ...acc,
+                ...field.nameAndLabels
+                  .filter(p => p.validator)
+                  .map(p => ({ name: p.name, validator: p.validator! }))
+                ]
+            default:
+              return acc
+          }
+        },
+        [] as Validator[],
+      )
+      : [] as Validator[],
+    [option],
+  )
+
   const handleCreateInfoSubmit = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault()
@@ -203,14 +234,18 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
 
       const values = fieldValues.current
 
-      const noPassedFieldNames = requiredFieldNames.filter(
+      const missedFieldNames = requiredFieldNames.filter(
         name => !values[name]
       )
 
-      if (noPassedFieldNames.length === 0) {
+      const inValidFieldNames = validators.filter(
+        v => values[v.name] && !v.validator(values[v.name])
+      ).map(v => v.name)
+
+      if (missedFieldNames.length === 0 && inValidFieldNames.length === 0) {
         await onOk(fieldValues.current)
       } else {
-        setToFillFields(noPassedFieldNames)
+        setToWarnFields(missedFieldNames.concat(inValidFieldNames))
       }
     },
     [onOk],
@@ -256,9 +291,13 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           ? (
             <BasicFormInput
               autoFocus={index === 0}
-              error={toFillFields.includes(field.name)}
+              error={toWarnFields.includes(field.name)}
               key={field.name}
-              placeholder={field.label}
+              placeholder={field.label + (
+                (toWarnFields.includes(field.name) && validators.find(v => v.name === field.name))
+                  ? ' (invalid format)'
+                  : ''
+              )}
               onChange={handleCreateInfoChange(field.name)}
               onEnterPress={handleCreateInfoSubmit}
             />
@@ -272,7 +311,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
               {field.nameAndLabels.map(({ name, label, span, isNumber }) => (
                 <BasicFormInput
                   type={isNumber ? 'number' : 'text'}
-                  error={toFillFields.includes(name)}
+                  error={toWarnFields.includes(name)}
                   className={classes.formItem }
                   key={name}
                   placeholder={label}
@@ -285,7 +324,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
           )
           : (
             <BasicFormInputSelect
-              error={toFillFields.includes(field.name)}
+              error={toWarnFields.includes(field.name)}
               key={field.name}
               options={field.options.map(option => ({ label: option, value: option }))}
               placeholder={field.label}

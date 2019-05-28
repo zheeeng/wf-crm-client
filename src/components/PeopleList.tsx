@@ -34,6 +34,7 @@ import StarThemeProvider from '~src/theme/StarThemeProvider'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
+import { isEmail } from '~src/utils/validation'
 
 import debounce from 'debounce'
 
@@ -239,7 +240,7 @@ const newContactFormOption: CreateFormOption = {
         { name: 'last_name', label: 'Last Name', span: 1, required: true },
       ],
     },
-    { type: 'text', name: 'email', label: 'Email', required: false },
+    { type: 'text', name: 'email', label: 'Email', required: false, validator: isEmail },
     { type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'], required: false },
     { type: 'text', name: 'first_line', label: 'Address Line1', required: false },
     { type: 'text', name: 'second_line', label: 'Address Line2', required: false },
