@@ -22,18 +22,18 @@ const AlertContainer = createContainer(() => {
     (content: React.ReactNode) => {
       updateMessage({ expand: true, type: 'success', content })
     },
-    [],
+    [updateMessage],
   )
   const fail = useCallback(
     (content: React.ReactNode) => {
       updateMessage({ expand: true, type: 'fail', content })
     },
-    [],
+    [updateMessage],
   )
 
   const reset = useCallback(
     () => updateMessage(initialMessage),
-    [],
+    [updateMessage],
   )
 
   const dismiss = useCallback(
@@ -41,7 +41,7 @@ const AlertContainer = createContainer(() => {
       updateMessage(message => ({ ...message, expand: false }))
       setTimeout(reset, 1000)
     },
-    [],
+    [updateMessage],
   )
 
   useEffect(

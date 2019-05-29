@@ -180,7 +180,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       const sortedNs = ns.sort((p, c) => c.timestamp - p.timestamp)
       setNotes(sortedNs)
     },
-    [],
+    [fetchNotes, setNotes],
   )
 
   useEffect(() => { freshNotes() }, [contactId])
@@ -221,7 +221,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     async (event: React.FocusEvent<HTMLInputElement>) => {
       inputtingNoteRef.current = event.target.value
     },
-    [],
+    [inputtingNoteRef],
   )
 
   const handleSubmitUpdate = useCallback(

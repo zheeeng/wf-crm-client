@@ -155,7 +155,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
 
       return readyToSplitWaiver(id, title)
     },
-    [],
+    [readyToSplitWaiver],
   )
 
   const {

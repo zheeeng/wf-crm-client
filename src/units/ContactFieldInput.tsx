@@ -481,16 +481,16 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
       updateField({ key, value, fieldType: name }, id)
     },
-    [],
+    [updateField],
   )
 
   const handleEntryDelete = useCallback(
     (id: string) => () => removeField(id),
-    [localFieldValues],
+    [removeField],
   )
   const handleEntryToggleHide = useCallback(
     (id: string) => () => toggleHideField(id),
-    [localFieldValues],
+    [toggleHideField],
   )
 
   const [sortingId, setSortingId] = useState('')

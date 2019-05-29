@@ -4,14 +4,16 @@ import ContactsContainer from '~src/containers/Contacts'
 
 import { ComponentProps } from '@roundation/roundation/lib/types'
 
-export interface Props extends ComponentProps {}
+export interface Props extends ComponentProps<never, 'search' | 'page'> {}
 
-const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
+const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries, locationInfo }) => {
   const { pagination, fetchContacts } = useContext(ContactsContainer.Context)
 
   const searchContacts = useCallback(
-    ({ page = 0, size = 30, searchTerm = '' }) => fetchContacts({ page: page + 1, size, searchTerm }),
-    [],
+    ({ page = 0, size = 30, searchTerm = '' }) => {
+      fetchContacts({ page: page + 1, size, searchTerm })
+    },
+    [fetchContacts],
   )
 
   const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])

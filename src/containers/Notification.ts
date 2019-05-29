@@ -6,12 +6,12 @@ const NotificationContainer = createContainer(() => {
 
   const notify = useCallback(
     (msg: React.ReactNode) => { updateMessage(msg) },
-    [],
+    [updateMessage],
   )
 
   const dismiss = useCallback(
     () => { updateMessage(null) },
-    [],
+    [updateMessage],
   )
 
   return {

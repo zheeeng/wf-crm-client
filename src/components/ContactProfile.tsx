@@ -380,7 +380,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
       updateContactGender(value)
     },
-    [],
+    [updateContactGender],
   )
 
   const handleFieldAdd = useCallback(

@@ -15,7 +15,7 @@ const GroupsContainer = createContainer(() => {
     () => {
       getGroupsData('/api/group')()
     },
-    [],
+    [getGroupsData],
   )
 
   useEffect(refreshGroupCounts, [])
@@ -26,7 +26,7 @@ const GroupsContainer = createContainer(() => {
       await refreshGroupCounts()
       return id as string
     },
-    [],
+    [postGroup, refreshGroupCounts],
   )
 
   const [updateGroup, updateGroupMutation] = useInfoCallback(
@@ -36,7 +36,7 @@ const GroupsContainer = createContainer(() => {
         await refreshGroupCounts()
       }
     },
-    [groupId],
+    [putGroup, groupId, refreshGroupCounts],
   )
 
   const [removeGroup, removeGroupMutation] = useInfoCallback(
@@ -46,7 +46,7 @@ const GroupsContainer = createContainer(() => {
         await refreshGroupCounts()
       }
     },
-    [groupId],
+    [deleteGroup, refreshGroupCounts, groupId],
   )
 
   return {

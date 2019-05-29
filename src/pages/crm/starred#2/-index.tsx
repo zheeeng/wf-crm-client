@@ -11,7 +11,7 @@ const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate }) => {
 
   const searchContacts = useCallback(
     ({page = 0, size = 30, searchTerm = '' }) => fetchContacts({ page: page + 1, size, searchTerm, favourite: true }),
-    [],
+    [fetchContacts],
   )
 
   const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])

@@ -90,7 +90,7 @@ const ContactsContainer = createContainer(() => {
     async (params: FetchParams) => {
       await getContacts('/api/people/search')(params)
     },
-    [],
+    [getContacts],
   )
 
   const [addContact, addMutation] = useInfoCallback(
@@ -98,7 +98,7 @@ const ContactsContainer = createContainer(() => {
       await postContact('/api/people')(contactFieldAdapter(contact))
       refreshCounts()
     },
-    [],
+    [postContact, refreshCounts],
   )
 
   const [starContact, starMutation] = useInfoCallback(
@@ -106,7 +106,7 @@ const ContactsContainer = createContainer(() => {
       await putContact(`/api/people/${id}`)({ favourite: star })
       refreshCounts()
     },
-    [],
+    [putContact, refreshCounts],
   )
 
   const [removeContacts, removeMutation] = useInfoCallback(
@@ -120,7 +120,7 @@ const ContactsContainer = createContainer(() => {
       )
       refreshCounts()
     },
-    [],
+    [deleteContact, refreshCounts],
   )
 
   const removeContactError = useMemo(
