@@ -660,6 +660,7 @@ const PeopleList: React.FC<Props> = React.memo(({
             color="primary"
             href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
             className={classes.download}
+            target="_blank"
           >
             <Icon
               name={ICONS.DownloadPlugin}
