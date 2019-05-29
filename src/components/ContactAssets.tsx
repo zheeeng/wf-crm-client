@@ -66,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
   },
+  pointer: {
+    cursor: 'pointer',
+  },
   entryIcon: {
     marginRight: theme.spacing(1),
   },
@@ -147,7 +150,11 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   useEffect(() => { fetchWaivers() }, [contactId, splitMutation])
 
   const handleOpenWaiverSplitter = useCallback(
-    (id: string, title: string) => () => readyToSplitWaiver(id, title),
+    (id: string, title: string) => (e: React.SyntheticEvent) => {
+      e.stopPropagation()
+
+      return readyToSplitWaiver(id, title)
+    },
     [],
   )
 
@@ -214,7 +221,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       : (
         <div className={classes.waiverContent}>
           {waivers.map(waiver => (
-            <div key={waiver.key} className={classes.entry}>
+            <div key={waiver.key} className={classnames(classes.entry, classes.pointer)} onClick={openWaiverExportPage(waiver.key)}>
               <Icon
                 name={ICONS.Waiver}
                 className={classes.entryIcon}
@@ -233,7 +240,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                     <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="export">
+                {/* <Tooltip title="export">
                   <IconButton
                     className={classes.entryButton}
                     classes={{
@@ -244,7 +251,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                   >
                     <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
                   </IconButton>
-                </Tooltip>
+                </Tooltip> */}
               </div>
             </div>
           ))}
