@@ -351,7 +351,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
                 : groupForm.type === 'remove'
                   ? handleRemoveGroup
                   : undefined
-            }
+          }
         />
       )}
       <Hidden mdDown>

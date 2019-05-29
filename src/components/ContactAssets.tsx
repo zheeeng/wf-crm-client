@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect, useMemo, useContext } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -50,6 +51,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:hover': {
         backgroundColor: theme.palette.grey[900],
       },
+    },
+  },
+  skeletonEntry: {
+    '&:hover': {
+      backgroundColor: 'unset',
+    },
+    '& span': {
+      display: 'block',
+      width: '100%',
     },
   },
   uploadButton: {
@@ -191,8 +201,8 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
       ? (
         <div className={classes.waiverContent}>
           {Array.from(({ length: 3 }), (_, index) => (
-            <div className={classes.entry} key={index} >
-              <Skeleton widthRandomness={0} />
+            <div className={classnames(classes.entry, classes.skeletonEntry)} key={index} >
+              <Skeleton widthRandomness={0} width="100%"/>
             </div>
           ))}
         </div>
