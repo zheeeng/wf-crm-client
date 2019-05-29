@@ -1,12 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import DateFnsUtils from '@date-io/date-fns'
-import { MuiPickersUtilsProvider, DatePicker as DP } from 'material-ui-pickers'
+import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
 import DatePickerThemeProvider from '~src/theme/DatePickerThemeProvider'
-
-const DatePicker = DP as any
 
 export const useStyles = makeStyles((theme: Theme) => ({
   datePicker: {
@@ -31,19 +29,36 @@ export interface Props {
 const BasicDateInput: React.FC<Props> = React.memo(({ className, placeholder, date, onDateChange, disabled }) => {
   const classes = useStyles()
 
+  const [localDate, setLocalDate] = useState(date)
+
+  useEffect(
+    () => {
+      setLocalDate(date)
+    },
+    [setLocalDate, date]
+  )
+
+  const submitLocalDate = useCallback(
+    (date: Date | null) => {
+      onDateChange(date)
+    },
+    [onDateChange]
+  )
+
   return (
     <DatePickerThemeProvider>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
-          variant="inline"
           views={["day", "month", "year"]} format="dd/MM/yyyy"
           className={classnames(className, classes.datePicker, disabled && classes.disabled)}
           margin="normal"
           InputProps={{
             placeholder: placeholder,
           }}
-          value={date ? date : null}
-          onChange={onDateChange}
+          value={localDate ? localDate : null}
+          onChange={setLocalDate}
+          onAccept={submitLocalDate}
+          clearable
         />
       </MuiPickersUtilsProvider>
     </DatePickerThemeProvider>
