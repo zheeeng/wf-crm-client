@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect, useContext, useRef, useMemo } 
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
+import Dialog from '@material-ui/core/Dialog'
+import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Stepper from '@material-ui/core/Stepper'
@@ -21,6 +23,7 @@ import useToggle from '~src/hooks/useToggle'
 import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
 // import cssTips from '../utils/cssTips'
+import { useStyles as useStyles2 } from '~src/components/RemoveContactsFromGroupForm'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
@@ -158,6 +161,7 @@ export interface Props {
 
 const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
+  const classes2 = useStyles2({})
 
   const { fail } = useContext(AlertContainer.Context)
 
@@ -257,13 +261,22 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [addNote, freshNotes, toggleOffShowAddNote],
   )
 
+  const [showRemoveConfirmationForId, setShowRemoveConfirmationForId] = useState('')
+
+  const handleSetRemoveId = useCallback(
+    (id: string) => () => {
+      setShowRemoveConfirmationForId(id)
+    },
+    [setShowRemoveConfirmationForId]
+  )
+
   const handleNoteRemove = useCallback(
-    (id: string) =>
-      async () => {
-        await removeNote(id)
-        await freshNotes()
-      },
-    [removeNote, freshNotes],
+    async () => {
+      setShowRemoveConfirmationForId('')
+      await removeNote(showRemoveConfirmationForId)
+      await freshNotes()
+    },
+    [showRemoveConfirmationForId, removeNote, freshNotes],
   )
 
   const noteGroups = useMemo(
@@ -310,6 +323,32 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
 
   return (
     <ContactTableThemeProvider>
+      <Dialog
+        open={showRemoveConfirmationForId != ''}
+        onClose={handleSetRemoveId('')}
+        PaperProps={{
+          className: classes2.paper,
+        }}
+      >
+        <Typography variant="h6" align="center" color="textSecondary">
+          Remove note
+        </Typography>
+        <Typography
+          color="textSecondary"
+          className={classnames(classes2.text, classes2.textAlignFixed)}
+        >
+          Are you sure you want to remove this note?
+        </Typography>
+        <div className={classes2.buttonZone}>
+          <Button onClick={handleSetRemoveId('')}>Cancel</Button>
+          <Button
+            color="primary"
+            onClick={handleNoteRemove}
+          >
+            Ok
+          </Button>
+        </div>
+      </Dialog>
       <div className={classes.headWrapper}>
         {/* <Typography variant="h4" className={classes.title}>Activities</Typography> */}
         <Typography variant="h4" className={classes.title}>Notes</Typography>
@@ -379,7 +418,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                     <div className={classes.entryContent}>
                       {note.content}
                       <Tooltip title="remove">
-                        <IconButton className={classes.noteRemover} onClick={handleNoteRemove(note.id)}>
+                        <IconButton className={classes.noteRemover} onClick={handleSetRemoveId(note.id)}>
                           <Icon name={ICONS.Delete} color={'hoverLighten'}/>
                         </IconButton>
                       </Tooltip>

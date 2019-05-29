@@ -9,7 +9,7 @@ import cssTips from '~src/utils/cssTips'
 
 import GroupsContainer from '~src/containers/Groups'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
