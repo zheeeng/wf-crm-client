@@ -1,6 +1,6 @@
 import React from 'react'
+import { ComponentProps } from '@roundation/roundation'
 import Contact from '~src/components/Contact'
-import { ComponentProps } from '@roundation/roundation/lib/types'
 
 export interface Props extends ComponentProps {
   contact: string

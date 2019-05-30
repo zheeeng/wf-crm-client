@@ -1,8 +1,8 @@
 import React from 'react'
+import { ComponentProps } from '@roundation/roundation'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
-import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import * as vars from '~src/theme/vars'
 

@@ -1,19 +1,40 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useEffect, useContext, useRef } from 'react'
+import { ComponentProps } from '@roundation/roundation'
 import PeopleList from '~src/components/PeopleList'
 import ContactsContainer from '~src/containers/Contacts'
 
-import { ComponentProps } from '@roundation/roundation/lib/types'
+export interface Props extends ComponentProps<'', 'page' | 'search'> {}
 
-export interface Props extends ComponentProps<never, 'search' | 'page'> {}
-
-const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries, locationInfo }) => {
-  const { pagination, fetchContacts } = useContext(ContactsContainer.Context)
+const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries }) => {
+  const { pagination } = useContext(ContactsContainer.Context)
 
   const searchContacts = useCallback(
-    ({ page = 0, size = 30, searchTerm = '' }) => {
-      fetchContacts({ page: page + 1, size, searchTerm })
+    ({page, searchTerm }: { page: number, searchTerm: string }) => {
+      // const queryPage = queries.page ? queries.page[0] : ''
+      const querySearch = queries.search ? queries.search[0] : ''
+      if (searchTerm !== querySearch) {
+        setQueries({ page: ['1'], search: [searchTerm] })
+      } else {
+        setQueries({ page: [(page + 1).toString()], search: [searchTerm] })
+      }
     },
-    [fetchContacts],
+    [setQueries, queries],
+  )
+
+  const pageRef = useRef(queries.page ? queries.page[0] : undefined)
+
+  useEffect(
+    () => { pageRef.current = queries.page ? queries.page[0] : undefined },
+    [queries]
+  )
+
+  useEffect(
+    () => {
+      if (pagination.page.toString() !== pageRef.current) {
+        setQueries({ page: [pagination.page.toString()] })
+      }
+    },
+    [pagination]
   )
 
   const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])

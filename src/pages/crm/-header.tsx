@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext, useCallback } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
-import { Link } from '@roundation/roundation'
+import { Link, ComponentProps } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
@@ -12,7 +12,6 @@ import Hidden from '@material-ui/core/Hidden'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
-import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import * as vars from '~src/theme/vars'
 

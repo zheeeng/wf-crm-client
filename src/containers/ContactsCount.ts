@@ -17,7 +17,7 @@ const ContactsCountContainer = createContainer(() => {
       getContactsData('/api/people/search')({ size: 1, page: 1 })
       getStarredData('/api/people/search')({ size: 1, page: 1, favourite: true })
     },
-    [],
+    [getContactsData, getStarredData],
   )
 
   useEffect(() => {

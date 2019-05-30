@@ -1033,10 +1033,10 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@roundation/roundation@^0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.34.tgz#facec99ddab768e0f8d6770d9f8b1b611240224e"
-  integrity sha512-f1U+d2E2bPcurlrefurujqf7blaE9yfK3Ko0tjqTUATuyJc7gGr6Cg5oLeY/2gptBtS4EfYjTFLPr2S/KD0Tew==
+"@roundation/roundation@^0.0.40":
+  version "0.0.40"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.40.tgz#33daaf614a7fab14538bbc342ca4874d4b4132dc"
+  integrity sha512-xawsPr02870HLU8B5fNazTdOtvoNAbIOVnb/0exrAZZT6CFD3otGGPDHa/m+klvDVhDaFjagybeViqrbjFaBtg==
   dependencies:
     "@reach/router" "^1.2.1"
     "@types/reach__router" "^1.2.3"

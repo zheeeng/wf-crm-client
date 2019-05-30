@@ -52,7 +52,17 @@ const convertContacts = pipe<
   map(contactInputAdapter),
 )
 
-const ContactsContainer = createContainer(() => {
+type ContainerProps = {
+  page?: number,
+  size?: number,
+  searchTerm?: string,
+  favourite?: boolean,
+  groupId?: string,
+}
+
+const ContactsContainer = createContainer(({
+  page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
+}: ContainerProps) => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
 
   const { data: contactsData, request: getContacts, error: getContactsError } = useGet<ContactsResponse>()
@@ -87,15 +97,24 @@ const ContactsContainer = createContainer(() => {
   const contacts = useDepMemo(convertContacts, [contactsData])
 
   const fetchContacts = useCallback(
-    async (params: FetchParams) => {
+    async (size: number) => {
+      const params: FetchParams = {
+        page,
+        size,
+        favourite,
+        groupId,
+        searchTerm,
+      }
+
       await getContacts('/api/people/search')(params)
     },
-    [getContacts],
+    [getContacts, page, favourite, groupId, searchTerm],
   )
 
   const [addContact, addMutation] = useInfoCallback(
     async (contact: ContactFields) => {
-      await postContact('/api/people')(contactFieldAdapter(contact))
+      const contactData = favourite ? { ...contact, favourite } : contact
+      await postContact('/api/people')(contactFieldAdapter(contactData))
       refreshCounts()
     },
     [postContact, refreshCounts],
@@ -172,7 +191,7 @@ const ContactsContainer = createContainer(() => {
 
       return contactInputAdapter(response!)
     },
-    [],
+    [refreshCounts, postMergeContacts],
   )
 
   const exportContacts = useCallback(
@@ -276,6 +295,11 @@ const ContactsContainer = createContainer(() => {
   const resetFormContactId = useCallback(
     () => { setFromContactId('') },
     [setFromContactId],
+  )
+
+  useEffect(
+    () => { fetchContacts(size) },
+    [fetchContacts, size]
   )
 
   return {

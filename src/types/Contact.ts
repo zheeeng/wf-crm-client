@@ -94,7 +94,7 @@ export interface OtherField extends ContactField {
   title?: string
 }
 
-export type ContactFields = Pick<PeopleAPI, 'first_name' | 'last_name' | 'country' | 'state' | 'city' | 'zipcode' | 'email' | 'phone'>
+export type ContactFields = Pick<PeopleAPI, 'first_name' | 'last_name' | 'country' | 'state' | 'city' | 'zipcode' | 'email' | 'phone' | 'favourite'>
 
 export type CommonField = NameField | EmailField | PhoneField | AddressField | DateField | OtherField
 

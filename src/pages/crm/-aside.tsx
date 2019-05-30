@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { Link } from '@roundation/roundation'
+import { Link, ComponentProps } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
 import classnames from 'classnames'
 import Portal from '@material-ui/core/Portal'
@@ -17,7 +17,6 @@ import useToggle from '~src/hooks/useToggle'
 
 import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
-import { ComponentProps } from '@roundation/roundation/lib/types'
 
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
