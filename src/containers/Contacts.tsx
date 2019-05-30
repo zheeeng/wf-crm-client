@@ -283,9 +283,15 @@ const ContactsContainer = createContainer(({
 
   useEffect(
     () => {
+      let ignore = false
       if (postContactData) {
         setShowAddContactMessage(true)
-        setTimeout(() => setShowAddContactMessage(false), 5000)
+        setTimeout(() => !ignore && setShowAddContactMessage(false), 5000)
+      }
+
+      return () => {
+        ignore = true
+        setShowAddContactMessage(false)
       }
     },
     [postContactData, setShowAddContactMessage],
