@@ -6,13 +6,12 @@ import ContactsContainer from '~src/containers/Contacts'
 export interface Props extends ComponentProps<'', 'page' | 'search'> {
 }
 
-const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries }) => {
+const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries, locationInfo }) => {
   const { pagination } = useContext(ContactsContainer.Context)
 
   const searchContacts = useCallback(
     ({page, searchTerm }: { page: number, searchTerm: string }) => {
       // const queryPage = queries.page ? queries.page[0] : ''
-      console.log('search')
       const querySearch = queries.search ? queries.search[0] : ''
       if (searchTerm !== querySearch) {
         setQueries({ page: ['1'], search: [searchTerm] })
