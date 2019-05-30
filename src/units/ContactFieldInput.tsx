@@ -602,7 +602,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             </>
           )
           : (
-            <span className={classnames(classes.fieldDisplayText, showName && classes.fieldSimpleDisplayText)}>
+            <span className={classnames(
+              classes.fieldDisplayText,
+              showName && classes.fieldSimpleDisplayText,
+            )}>
               {joinSegmentFieldValues(values)}
             </span>
           )
@@ -737,7 +740,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         element: (
           <div className={classnames(
             classes.fieldTextBarWrapper,
-            !editable && fieldValue.priority === 0 && classes.hidden
+            !editable && fieldValue.priority === 0 && classes.hidden,
           )}>
             {renderField(fieldValue.values, fieldValue, index === 0, false)}
             {fieldValue.appendValues
@@ -873,24 +876,22 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
       )}
       <div className={classes.fieldTextWrapper}>
         {showName
-            && (
-              <>
-                {Icon && (
-                  <div>
-                    <Tooltip title={fieldName}>
-                      <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-                    </Tooltip>
-                  </div>
-                )}
-                <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
-              </>
-            )
-          }
+          && (
+            <>
+              {Icon && (
+                <div>
+                  <Tooltip title={fieldName}>
+                    <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+                  </Tooltip>
+                </div>
+              )}
+              <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
+            </>
+          )
         }
         <div
           className={classnames(
             classes.fieldTextBarWrapper,
-            !editable && classes.hidden,
           )}
         >
           <div className={classes.fieldTextBar}>
@@ -992,24 +993,30 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
         </div>
       )}
       <div className={classes.fieldTextWrapper}>
-        {showName
-          && (
-              <div className={classes.fieldTitle}>
-              {Icon && (
-                <div>
-                  <Tooltip title={fieldName}>
-                    <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-                  </Tooltip>
-                </div>
-              )}
-              <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
+        {showName && (
+          <div className={classes.fieldTitle}>
+          {Icon && (
+            <div>
+              <Tooltip title={fieldName}>
+                <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+              </Tooltip>
             </div>
-          )
-        }
+          )}
+          <Typography
+            variant="h6"
+            className={classnames(
+              classes.fieldName,
+              classes.fieldTitleName,
+            )}
+            color="textSecondary"
+          >
+            {fieldName}
+          </Typography>
+        </div>
+        )}
         <div
           className={classnames(
             classes.fieldTextBarWrapper,
-            !editable && classes.hidden,
           )}
         >
           <div className={classes.fieldTextBar}>
@@ -1018,31 +1025,28 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
                 {name}
               </Typography>
             )}
-            {editable
-              ? (
-                <Select
-                  className={classes.fieldInput}
-                  classes={classes}
-                  components={components}
-                  props={{
-                    placeholder: fieldName,
-                  }}
-                  isSearchable={false}
-                  isClearable={false}
-                  options={selectOptions}
-                  onChange={handleEntryUpdate}
-                  value={mapOption2SelectOption(value)}
-                />
-              )
-              : (
-                <Input
-                  disabled={true}
-                  disableUnderline={true}
-                  className={classes.fieldInput}
-                  value={value}
-                />
-              )
-            }
+            {editable ? (
+              <Select
+                className={classes.fieldInput}
+                classes={classes}
+                components={components}
+                props={{
+                  placeholder: fieldName,
+                }}
+                isSearchable={false}
+                isClearable={false}
+                options={selectOptions}
+                onChange={handleEntryUpdate}
+                value={mapOption2SelectOption(value)}
+              />
+            ) : (
+              <Input
+                disabled={true}
+                disableUnderline={true}
+                className={classes.fieldInput}
+                value={value}
+              />
+            )}
           </div>
         </div>
       </div>
