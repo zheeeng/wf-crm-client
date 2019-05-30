@@ -1,7 +1,8 @@
 import React from 'react'
+import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
 
-const useGlobalStyles = makeStyles({
+const useGlobalStyles = makeStyles((theme: Theme) => ({
   '@global': {
     'div[role="group"][tabindex]': {
       display: 'flex',
@@ -20,7 +21,7 @@ const useGlobalStyles = makeStyles({
       },
     },
   },
-})
+}))
 
 const InjectIntoGlobalStyles: React.FC = () => {
   useGlobalStyles({})

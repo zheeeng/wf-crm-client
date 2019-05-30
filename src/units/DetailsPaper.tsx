@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flex: 1,
+    height: '100%',
     [theme.breakpoints.down('sm')]: {
       display: 'block',
       overflow: 'auto',
@@ -39,6 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.down('sm')]: {
+      flex: 'unset',
+      height: 'unset',
       marginRight: 0,
       marginBottom: theme.spacing(4),
     },
