@@ -609,7 +609,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
-      <ContactFieldInput
+      {/* <ContactFieldInput
         key="other" name="other" editable={isEditable}
         showName={showName}
         Icon={DescriptionIcon}
@@ -621,7 +621,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onUpdateField={handleFieldUpdate}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
-      />
+      /> */}
     </>
   )
 

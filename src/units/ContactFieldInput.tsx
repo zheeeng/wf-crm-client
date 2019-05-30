@@ -177,8 +177,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.secondary,
   },
   fieldDisplayText: {
+    fontSize: 14,
     lineHeight: '1.875em',
-    padding: '14px 0 15px 0',
+    padding: '10px 0 16px 0',
     color: theme.palette.text.secondary,
     fontWeight: 600,
   },
@@ -1044,6 +1045,9 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
                 disabled={true}
                 disableUnderline={true}
                 className={classes.fieldInput}
+                classes={{
+                   input: classes.fieldDisplayText,
+                }}
                 value={value}
               />
             )}
