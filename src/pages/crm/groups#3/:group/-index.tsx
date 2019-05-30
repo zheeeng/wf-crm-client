@@ -12,6 +12,7 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries 
   const searchContacts = useCallback(
     ({page, searchTerm }: { page: number, searchTerm: string }) => {
       // const queryPage = queries.page ? queries.page[0] : ''
+      console.log('search')
       const querySearch = queries.search ? queries.search[0] : ''
       if (searchTerm !== querySearch) {
         setQueries({ page: ['1'], search: [searchTerm] })

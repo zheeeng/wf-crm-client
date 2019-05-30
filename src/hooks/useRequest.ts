@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
-import fetch from '~src/utils/fetchData'
+import useFetch from './useFetch'
 
 const useRequest = <T = any>(method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
+  const fetch = useFetch()
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<any>(null)
