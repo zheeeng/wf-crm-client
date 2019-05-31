@@ -384,14 +384,16 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   const handleFieldAdd = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other',
+    async (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other',
      { key, value }: FieldSegmentValue, priority: number,
-    ) =>
-      addField({
-        fieldType: name,
-        [key]: value,
-        priority,
-      } as any).then(specificFieldToInputField(name)),
+    ) => {
+      const params: any = name !== 'date'
+        ? { fieldType: name, [key]: value, priority }
+        : { fieldType: name, [key]: value, priority, year: 0, month: 0, day: 0 }
+      const result = await addField(params)
+
+      return specificFieldToInputField(name)(result)
+    },
     [addField],
   )
   const handleFieldUpdate = useCallback(
