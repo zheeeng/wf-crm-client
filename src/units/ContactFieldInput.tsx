@@ -142,7 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldLabelText: {
     lineHeight: '1.1875em',
-    padding: '14px 0 15px 0',
+    padding: '10px 0 16px 0',
     textAlign: 'left',
     color: theme.palette.text.secondary,
     fontStyle: 'italic',
@@ -312,7 +312,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const field = await onAddField(name, segmentValue, newPriority)
       if (field) setLocalFieldValues(values => values.concat(field))
     },
-    [localFieldValues, onAddField, name],
+    [localFieldValues, onAddField, name, setLocalFieldValues],
   )
   const updateField = useCallback(
     async (segmentValue: FieldSegmentValue, id: string) => {
