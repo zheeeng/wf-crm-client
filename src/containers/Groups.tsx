@@ -1,8 +1,11 @@
-import { useState, useCallback, useEffect } from 'react'
+import React from 'react'
+import { useState, useCallback, useEffect, useContext } from 'react'
 import createContainer from 'constate'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import { groupInputAdapter, GroupFields, GroupAPI, groupFieldAdapter } from '~src/types/Contact'
 import useInfoCallback from '~src/hooks/useInfoCallback'
+import AlertContainer from './Alert'
+import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 
 const GroupsContainer = createContainer(() => {
   const [ groupId, setGroupId ] = useState('')
@@ -11,6 +14,32 @@ const GroupsContainer = createContainer(() => {
   const { request: putGroup, error: putGroupError } = usePut()
   const { data: deleteGroupData, request: deleteGroup, error: deleteGroupError } = useDelete()
 
+  const [addGroup, addGroupMutation] = useInfoCallback(
+    async (group: GroupFields) => {
+      const { id } = await postGroup('/api/group')(groupFieldAdapter(group))
+      return id as string
+    },
+    [postGroup],
+  )
+
+  const [updateGroup, updateGroupMutation] = useInfoCallback(
+    async (group: GroupFields) => {
+      if (groupId) {
+        await putGroup(`/api/group/${groupId}`)(groupFieldAdapter(group))
+      }
+    },
+    [putGroup, groupId],
+  )
+
+  const [removeGroup, removeGroupMutation] = useInfoCallback(
+    async () => {
+      if (groupId) {
+        await deleteGroup(`/api/group/${groupId}`)()
+      }
+    },
+    [deleteGroup, groupId],
+  )
+
   const refreshGroupCounts = useCallback(
     () => {
       getGroupsData('/api/group')()
@@ -18,36 +47,24 @@ const GroupsContainer = createContainer(() => {
     [getGroupsData],
   )
 
-  useEffect(refreshGroupCounts, [])
+  {
+    const { success, fail } = useContext(AlertContainer.Context)
 
-  const [addGroup, addGroupMutation] = useInfoCallback(
-    async (group: GroupFields) => {
-      const { id } = await postGroup('/api/group')(groupFieldAdapter(group))
-      await refreshGroupCounts()
-      return id as string
-    },
-    [postGroup, refreshGroupCounts],
-  )
+    useEffect(
+      refreshGroupCounts,
+      [addGroupMutation, updateGroupMutation, removeGroupMutation],
+    )
 
-  const [updateGroup, updateGroupMutation] = useInfoCallback(
-    async (group: GroupFields) => {
-      if (groupId) {
-        await putGroup(`/api/group/${groupId}`)(groupFieldAdapter(group))
-        await refreshGroupCounts()
-      }
-    },
-    [putGroup, groupId, refreshGroupCounts],
-  )
+    useEffect(
+      () => { deleteGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },
+      [deleteGroupData],
+    )
 
-  const [removeGroup, removeGroupMutation] = useInfoCallback(
-    async () => {
-      if (groupId) {
-        await deleteGroup(`/api/group/${groupId}`)()
-        await refreshGroupCounts()
-      }
-    },
-    [deleteGroup, refreshGroupCounts, groupId],
-  )
+    useEffect(
+      () => { deleteGroupError && fail(deleteGroupError.message) },
+      [deleteGroupError]
+    )
+  }
 
   return {
     groupId,
@@ -56,7 +73,9 @@ const GroupsContainer = createContainer(() => {
     refreshGroupCounts,
     addGroup, addGroupMutation, addGroupError: postGroupError,
     updateGroup, updateGroupMutation, updateGroupError: putGroupError,
-    removeGroupData: deleteGroupData, removeGroup, removeGroupMutation, removeGroupError: deleteGroupError,
+    removeGroup, removeGroupMutation,
+    removeGroupData: deleteGroupData,
+    removeGroupError: deleteGroupError,
   }
 })
 

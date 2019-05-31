@@ -7,7 +7,7 @@ import Portal from '@material-ui/core/Portal'
 import ToolBar from '@material-ui/core/Toolbar'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
-import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
+import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
@@ -23,14 +23,12 @@ import GroupMenu from '~src/components/GroupMenu'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import muteClick from '~src/utils/muteClick'
-import AlertContainer from '~src/containers/Alert'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
 import AppContainer from '~src/containers/App'
 import { GroupFields } from '~src/types/Contact'
 import * as vars from '~src/theme/vars'
 
-import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -84,17 +82,9 @@ export interface Props extends ComponentProps {
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
-  const { success } = useContext(AlertContainer.Context)
   const { contactsCount, starredCount, refreshPage } = useContext(ContactsCountContainer.Context)
   const { groupId, groups, addGroup, updateGroup, removeGroupData, removeGroup } = useContext(GroupsContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
-
-  useEffect(
-    () => {
-      removeGroupData && success(<><CheckCircle /> Group Removed</>)
-    },
-    [removeGroupData],
-  )
 
   const {
     value: groupsOpened,
