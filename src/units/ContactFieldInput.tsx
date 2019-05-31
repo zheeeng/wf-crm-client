@@ -265,6 +265,7 @@ export type Props = InputProps & {
   expandable: boolean,
   onAddField (name: string, value: FieldSegmentValue, priority: number): Promise<FieldValue | null>,
   onUpdateField (name: string, value: FieldSegmentValue, id: string,  priority: number): Promise<FieldValue | null>
+  onBatchUpdateFields(name: string, updateObj: any, id: string, priority: number): Promise<FieldValue | null>
   onUpdateDateField?: (date: { year: number, month: number, day: number }, id: string,  priority: number) => Promise<FieldValue | null>
   onAddDateField?: (date: { year: number, month: number, day: number }, priority: number) => Promise<FieldValue | null>
   onDeleteField (name: string, id: string): Promise<string | null>
@@ -288,7 +289,8 @@ const getFieldDate = (values: FieldSegmentValue[]) => {
 const ContactFieldInput: React.FC<Props> = React.memo(
   ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
      editable = false, type, hasTitle, expandable,
-     onAddField, onUpdateField, onUpdateDateField, onAddDateField, onDeleteField, onChangePriority }) => {
+     onAddField, onUpdateField, onBatchUpdateFields, onUpdateDateField, onAddDateField, onDeleteField, onChangePriority,
+  }) => {
 
   const classes = useStyles({})
 
@@ -311,6 +313,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
       const field = await onAddField(name, segmentValue, newPriority)
       if (field) setLocalFieldValues(values => values.concat(field))
+      return field
     },
     [localFieldValues, onAddField, name, setLocalFieldValues],
   )
@@ -323,6 +326,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
       const field = await onUpdateField(name, segmentValue, id, priority)
       if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+      return field
     },
     [localFieldValues, onUpdateField, name, setLocalFieldValues],
   )
@@ -333,6 +337,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
       const field = await onAddDateField({ year, month, day }, newPriority)
       if (field) setLocalFieldValues(values => values.concat(field))
+      return field
     },
     [localFieldValues, onAddDateField, setLocalFieldValues],
   )
@@ -389,9 +394,31 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
   const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
 
+  const queueRef = useRef({ queue: [] as FieldSegmentValue[], isAdding: false })
+
+  const batchUpdateFields = useCallback(
+    async (fields: FieldSegmentValue[], id: string, priority: number) => {
+      const fieldType = fields[0].fieldType
+      const updateObj = fields.reduce(
+        (acc: any, field) => {
+          acc[field.key] = field.value
+          return acc
+        },
+        {},
+      )
+
+      const field = await onBatchUpdateFields(fieldType, updateObj, id, priority)
+
+      if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+    },
+    [localFieldValues, onUpdateField, name, setLocalFieldValues],
+  )
+
+
+
   const handleEntryUpdateByBlur = useCallback(
     (key: string, id: string, defaultValue: string) =>
-      (event: React.FocusEvent<HTMLInputElement>) => {
+      async (event: React.FocusEvent<HTMLInputElement>) => {
         const value = event.target.value.trim()
 
         if (!value || value === defaultValue) return
@@ -422,13 +449,30 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         //   }
         // }
 
+        const fieldData = { key, value, fieldType: name }
         if (hasValues) {
-          updateField({ key, value, fieldType: name }, id)
+          updateField(fieldData, id)
         } else {
-          addField({ key, value, fieldType: name })
+          if (queueRef.current.isAdding) {
+            queueRef.current.queue.push(fieldData)
+            return
+          }
+
+          queueRef.current = { queue: [], isAdding: true }
+          const result = await addField(fieldData)
+          if (!result || !result.id) {
+            queueRef.current = { queue: [], isAdding: false }
+            return
+          }
+
+          while (queueRef.current.queue.length) {
+            await batchUpdateFields(queueRef.current.queue, result.id, result.priority)
+          }
+
+          queueRef.current = { queue: [], isAdding: false }
         }
       },
-    [localFieldValues, name],
+    [localFieldValues, setHasErrorKeys, name, updateField, addField],
   )
 
   const handleEntryUpdateByKeydown = useCallback(
@@ -527,7 +571,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
 
   const onDateChange = useCallback(
-    (id?: string) => (date: Date | null) => {
+    (id?: string) => async (date: Date | null) => {
       if (!date) {
         if (hasValues && id) {
           updateDateField(0, 0 , 0, id)
@@ -542,7 +586,26 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       if (hasValues && id) {
         updateDateField(year, month, day, id)
       } else {
-        addDateField(year, month, day)
+        const fieldData = [{ key: 'year', value: year, fieldType: name }, { key: 'month', value: month, fieldType: name }, { key: 'day', value: day, fieldType: name }]
+
+        if (queueRef.current.isAdding) {
+          // Note: type unsafe, but implementation works
+          queueRef.current.queue.push(...fieldData as any)
+          return
+        }
+
+        queueRef.current = { queue: [], isAdding: true }
+        const result = await addDateField(year, month, day)
+        if (!result || !result.id) {
+          queueRef.current = { queue: [], isAdding: false }
+          return
+        }
+
+        while (queueRef.current.queue.length) {
+          await batchUpdateFields(queueRef.current.queue, result.id, result.priority)
+        }
+
+        queueRef.current = { queue: [], isAdding: false }
       }
     },
     [updateDateField, addDateField],
@@ -839,7 +902,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
       updateField(val)
     },
-    [],
+    [updateField, setHasError],
   )
   const handleEntryUpdateByKeydown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {

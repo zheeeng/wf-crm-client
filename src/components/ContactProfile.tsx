@@ -396,18 +396,31 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     },
     [addField],
   )
+
   const handleFieldUpdate = useCallback(
     (name: 'name' | 'email' | 'address' | 'phone' | 'date'  | 'other',
-     { key, value }: FieldSegmentValue, id: string, priority: number,
+    { key, value }: FieldSegmentValue,
+    id: string,
+    priority: number,
   ) =>
-      updateField({
-        id,
-        fieldType: name,
-        [key]: value,
-        priority,
-      } as any).then(specificFieldToInputField(name)),
+    updateField({
+      id,
+      fieldType: name,
+      [key]: value,
+      priority,
+    } as any).then(specificFieldToInputField(name)),
     [updateField],
   )
+
+  const handleBatchUpdateFields = useCallback(
+    (name: 'name' | 'email' | 'address' | 'phone' | 'date'  | 'other',
+      updateObj: any,
+      id: string,
+      priority: number,
+    ) => updateField({ ...updateObj, id, priority, fieldType: name }).then(specificFieldToInputField(name)),
+    [],
+  )
+
   const handleAddDateField = useCallback(
     ({ year, month, day }: { year: number, month: number, day: number }, priority: number) =>
       addField({
@@ -536,6 +549,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         backupFieldValue={backupNameField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
+        onBatchUpdateFields={handleBatchUpdateFields}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
@@ -551,6 +565,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         backupFieldValue={backupEmailField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
+        onBatchUpdateFields={handleBatchUpdateFields}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
@@ -566,6 +581,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         backupFieldValue={backupPhoneField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
+        onBatchUpdateFields={handleBatchUpdateFields}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
@@ -582,6 +598,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
         onUpdateDateField={handleUpdateDateField}
+        onBatchUpdateFields={handleBatchUpdateFields}
         onAddDateField={handleAddDateField}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
@@ -608,6 +625,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         backupFieldValue={backupAddressField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
+        onBatchUpdateFields={handleBatchUpdateFields}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
@@ -621,6 +639,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         backupFieldValue={backupOtherField}
         onAddField={handleFieldAdd}
         onUpdateField={handleFieldUpdate}
+        onBatchUpdateFields={handleBatchUpdateFields}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       /> */}
