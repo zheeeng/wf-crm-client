@@ -79,6 +79,7 @@ const ContactsContainer = createContainer(({
   } = usePost<PeopleAPI>()
 
   const {
+    data: deleteContactsFromGroupData,
     request: deleteContactsFromGroup,
     error: deleteContactsFromGroupError,
   } = useDelete<PeopleAPI>()
@@ -274,6 +275,10 @@ const ContactsContainer = createContainer(({
       [postMergeContactsError],
     )
     useEffect(
+      () => { deleteContactsFromGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },
+      [deleteContactsFromGroupData],
+    )
+    useEffect(
       () => { deleteContactsFromGroupError && fail(deleteContactsFromGroupError.message) },
       [deleteContactsFromGroupError]
     )
@@ -318,6 +323,7 @@ const ContactsContainer = createContainer(({
     addContactToGroupData: postContactToGroupData, addContactToGroup, addContactToGroupError: postContactToGroupError,
     exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
     mergeContactsData: postMergeContactsData, mergeContacts, mergeContactsError: postMergeContactsError,
+    removeContactsFromGroupData: deleteContactsFromGroupData,
     removeContactsFromGroup, removeContactsFromGroupError: deleteContactsFromGroupError,
     fromContactId, setFromContactId, resetFormContactId,
   }

@@ -425,9 +425,9 @@ const PeopleList: React.FC<Props> = React.memo(({
       if (checked.length < 1) return
 
       await removeContactsFromGroup(groupId, checked)
-      onSearch({ page, size, searchTerm })
+      search(searchTerm)
     },
-    [checked, page, size, searchTerm],
+    [checked, searchTerm, search],
   )
 
   // const handleContactsRemove = useCallback(
