@@ -281,7 +281,7 @@ const backupAddressField =
 const otherFieldMap = ({ id, content, title, priority, waiver }: OtherField): FieldValue =>
   ({
     values: [
-      { key: 'other', value: content || '', fieldType: 'other' },
+      { key: 'content', value: content || '', fieldType: 'other' },
       { key: 'title', value: title || '', fieldType: 'other' },
     ],
     id,
@@ -629,7 +629,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
       />
-      {/* <ContactFieldInput
+      <ContactFieldInput
         key="other" name="other" editable={isEditable}
         showName={showName}
         Icon={DescriptionIcon}
@@ -642,7 +642,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         onBatchUpdateFields={handleBatchUpdateFields}
         onDeleteField={handleFieldRemove}
         onChangePriority={handleFieldPriorityChange}
-      /> */}
+      />
     </>
   )
 
