@@ -153,7 +153,7 @@ const ContactsContainer = createContainer(({
     [deleteContactError],
   )
 
-  const addContactToGroup = useCallback(
+  const [addContactToGroup, addContactToGroupMutation] = useInfoCallback(
     async (groupId: string, contactIds: string[]) => {
       await postContactToGroup(`/api/group/${groupId}/people`)({
         people: contactIds,
@@ -162,7 +162,7 @@ const ContactsContainer = createContainer(({
     [postContactToGroup],
   )
 
-  const removeContactsFromGroup = useCallback(
+  const [removeContactsFromGroup, removeContactsFromGroupMutation] = useInfoCallback(
     async (groupId: string, contactIds: string[]) => {
       await deleteContactsFromGroup(`/api/group/${groupId}/people`)({
         people: contactIds,
@@ -171,7 +171,7 @@ const ContactsContainer = createContainer(({
     [deleteContactsFromGroup],
   )
 
-  const mergeContacts = useCallback(
+  const [mergeContacts, mergeContactsMutation] = useInfoCallback(
     async ([targetId, ...sourceIds]: string[]) => {
       let latestResponse: Promise<PeopleAPI | null>
 
@@ -316,15 +316,36 @@ const ContactsContainer = createContainer(({
   return {
     pagination,
     contacts,
-    fetchContacts, fetchContactsError: getContactsError,
-    addContactData: postContactData, showAddContactMessage, addContact, addMutation, addContactError: postContactError,
-    starContact, starMutation, starContactError: putContactError,
-    removeContacts, removeMutation, removeContactError,
-    addContactToGroupData: postContactToGroupData, addContactToGroup, addContactToGroupError: postContactToGroupError,
-    exportContacts, exportContactsStatus, exportStatusError: getExportStatusError,
-    mergeContactsData: postMergeContactsData, mergeContacts, mergeContactsError: postMergeContactsError,
+
+    fetchContacts,
+    fetchContactsError: getContactsError,
+
+    addContact, addMutation,
+    addContactData: postContactData,
+    addContactError: postContactError,
+    showAddContactMessage,
+
+    starContact, starMutation,
+    starContactError: putContactError,
+
+    removeContacts, removeMutation,
+    removeContactError,
+
+    addContactToGroup, addContactToGroupMutation,
+    addContactToGroupData: postContactToGroupData,
+    addContactToGroupError: postContactToGroupError,
+
+    exportContacts,
+    exportContactsStatus, exportStatusError: getExportStatusError,
+
+    mergeContacts, mergeContactsMutation,
+    mergeContactsData: postMergeContactsData,
+    mergeContactsError: postMergeContactsError,
+
+    removeContactsFromGroup, removeContactsFromGroupMutation,
     removeContactsFromGroupData: deleteContactsFromGroupData,
-    removeContactsFromGroup, removeContactsFromGroupError: deleteContactsFromGroupError,
+    removeContactsFromGroupError: deleteContactsFromGroupError,
+
     fromContactId, setFromContactId, resetFormContactId,
   }
 })

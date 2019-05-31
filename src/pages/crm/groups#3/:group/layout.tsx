@@ -5,13 +5,13 @@ import ContactsContainer from '~src/containers/Contacts'
 import ContactsCountContainer from '~src/containers/ContactsCount'
 
 const Content: React.FC<{ group: string }> = React.memo(({ group, children }) => {
-  const { fetchContacts, addMutation, starMutation, removeMutation } = useContext(ContactsContainer.Context)
+  const { fetchContacts, addMutation, starMutation, removeMutation, mergeContactsMutation, removeContactsFromGroupMutation } = useContext(ContactsContainer.Context)
   const { refreshPageMutation } = useContext(ContactsCountContainer.Context)
   const { setGroupId } = useContext(GroupsContainer.Context)
 
   useEffect(
     () => { fetchContacts(30) },
-    [addMutation, starMutation, removeMutation, group, refreshPageMutation],
+    [addMutation, starMutation, removeMutation, group, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation],
   )
 
   useEffect(

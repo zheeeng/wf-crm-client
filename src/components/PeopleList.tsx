@@ -321,7 +321,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
       onSearch({ page, size, searchTerm: term })
     },
-    [page, size, searchTerm],
+    [page, size, searchTerm, setSearchTerm, onSearch, setChecked],
   )
 
   const debouncedSearch = useCallback(
@@ -379,7 +379,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     (opened: boolean, option?: CreateFormOption) => () => {
       setCreateForm({ opened, option: opened ? option : undefined })
     },
-    [createForm],
+    [setCreateForm],
   )
 
   const lastContactIds = useRef<string[] | null>(null)
@@ -425,9 +425,8 @@ const PeopleList: React.FC<Props> = React.memo(({
       if (checked.length < 1) return
 
       await removeContactsFromGroup(groupId, checked)
-      search(searchTerm)
     },
-    [checked, searchTerm, search],
+    [checked],
   )
 
   // const handleContactsRemove = useCallback(
@@ -445,9 +444,8 @@ const PeopleList: React.FC<Props> = React.memo(({
       if (checked.length < 2) return
 
       await mergeContacts(checked)
-      onSearch({ page, size, searchTerm })
     },
-    [checked, page, size, searchTerm],
+    [checked],
   )
 
   const renderPCLayoutTableRows = (contact: Contact) => (
