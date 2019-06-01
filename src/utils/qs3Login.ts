@@ -26,6 +26,10 @@ export function isAuthored () {
   return apiKey && validAuthKey && validAuthKey === authKey
 }
 
+export function getFallbackUsername () {
+  return cookie.get(accountNameKey) || ''
+}
+
 export async function exchangeAPIKey () {
   const authKey = cookie.get(authKeyKey)
 

@@ -242,7 +242,7 @@ const Header: React.FC<Props> = React.memo(() => {
   const mountElRef = useRef(document.querySelector('#header'))
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
   const { message, dismiss } = useContext(AlertContainer.Context)
-  const { authored, username, login } = useContext(AccountContainer.Context)
+  const { username, login } = useContext(AccountContainer.Context)
   const [ anchorEl, setAnchorEl ] = useState<HTMLElement | null>(null)
   const [ openAccount, setOpenAccount ] = useState(false)
 
