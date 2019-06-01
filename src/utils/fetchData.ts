@@ -1,3 +1,4 @@
+import { clean, persistLoginInfo, getCRMToken } from '~src/utils/qs3Login'
 import { pascal2snake } from '~src/utils/caseConvert'
 
 type Option = {
@@ -13,12 +14,14 @@ export const getQuery = (query: object): string => {
   return search ? `?${search}` : search
 }
 
-const base = process.env.NODE_ENV === 'development' ? 'https://crm-api-dev.waiverforeverk8s.com' : 'https://crm-api.waiverforeverk8s.com'
+const base = process.env.NODE_ENV === 'development'
+  ? 'https://crm-api-dev.waiverforeverk8s.com'
+  : 'https://crm-api.waiverforeverk8s.com'
 
 export default async function fetchData<T = any> (url: string, option?: Option): Promise<T> {
   const fetchOption = Object.assign({ method: 'GET' }, option)
 
-  const Authorization = window.localStorage.getItem('@token@') || ''
+  const Authorization = getCRMToken()
 
   if (url === '/api/auth/authToken') {
     if (Authorization) {
@@ -49,16 +52,10 @@ export default async function fetchData<T = any> (url: string, option?: Option):
   const data = await response.json()
 
   const { account, id, token, username } = data
-  if (account) window.localStorage.setItem('@account@', account)
-  if (id) window.localStorage.setItem('@id@', id)
-  if (token) window.localStorage.setItem('@token@', token)
-  if (username) window.localStorage.setItem('@username@', username)
+  persistLoginInfo(account, id, token, username)
 
   if (url === '/api/auth/invalidateToken') {
-    window.localStorage.removeItem('@account@')
-    window.localStorage.removeItem('@id@')
-    window.localStorage.removeItem('@token@')
-    window.localStorage.removeItem('@username@')
+    clean()
   }
 
   return data

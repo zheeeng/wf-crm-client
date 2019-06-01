@@ -5,6 +5,11 @@ const authKeyKey = 'authKey'
 const validAuthKeyKey = '_authKey'
 const accountNameKey = 'rememberMe'
 
+const crmAccountKey = '@account@'
+const crmIdKey = '@id@'
+const crmTokenKey = '@token@'
+const crmUsernameKey = '@username@'
+
 const isDev = process.env.NODE_ENV === 'development'
 const devLoginInfo = {
   api_key: '',
@@ -19,12 +24,13 @@ export async function exchangeAPIKey () {
   const apiKey = cookie.get(apiKeyKey)
 
   if (!authKey) {
-    cookie.remove(validAuthKeyKey)
-    cookie.remove(apiKeyKey)
+    clean()
     throw Error('Request login')
   }
 
   if (!apiKey || !validAuthKey || validAuthKey !== authKey) {
+    cleanCRMInfo()
+
     const response = await fetch(
       API_KEY_URL,
       {
@@ -50,10 +56,30 @@ export async function exchangeAPIKey () {
   }
 }
 
+export function persistLoginInfo (account: string, id: string, token: string, username: string) {
+  if (account) window.localStorage.setItem(crmAccountKey, account)
+  if (id) window.localStorage.setItem(crmIdKey, id)
+  if (token) window.localStorage.setItem(crmTokenKey, token)
+  if (username) window.localStorage.setItem(crmUsernameKey, username)
+}
+
+export function cleanCRMInfo () {
+  window.localStorage.removeItem(crmAccountKey)
+  window.localStorage.removeItem(crmIdKey)
+  window.localStorage.removeItem(crmTokenKey)
+  window.localStorage.removeItem(crmUsernameKey)
+}
+
 export function clean () {
+  cleanCRMInfo()
+
   cookie.remove(apiKeyKey)
   cookie.remove(authKeyKey)
   cookie.remove(accountNameKey)
+}
+
+export function getCRMToken () {
+  return window.localStorage.getItem('@token@') || ''
 }
 
 export function getLoginParams () {
@@ -65,6 +91,3 @@ export function getLoginParams () {
     password: '',
   }
 }
-
-
-"_ga=GA1.2.841888290.1559366381; _gid=GA1.2.109605956.1559366381; __stripe_mid=a1504fb3-0aa7-4c7f-bf95-2edbd7b5ffbc; __stripe_sid=d2dbcd23-b2c9-4da1-8eb4-f3bfd5bd290b; _hjIncludedInSample=1; rememberMe=a; authKey=fcB5pQxXBvksGxwHuceGv3; intercom-session-rrsp64of=WFhablFyaWxTeGE3MkJuTDJUOU9GbW1GLzQ0VVVxL3RJbU82UG9OVFhCQmpEbElsZnNicjRzRTNpUXhDUW9CUi0taDNNbFZtakdsSXNkNE96eXRtRlJrZz09--287dda113ecc9326325e7dd3a1411f4de07a6c35; _authKey=fcB5pQxXBvksGxwHuceGv3"
