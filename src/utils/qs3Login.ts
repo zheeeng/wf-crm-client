@@ -18,17 +18,23 @@ const devLoginInfo = {
 }
 const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
 
-export async function exchangeAPIKey () {
+export function isAuthored () {
   const validAuthKey = cookie.get(validAuthKeyKey)
   const authKey = cookie.get(authKeyKey)
   const apiKey = cookie.get(apiKeyKey)
+
+  return apiKey && validAuthKey && validAuthKey === authKey
+}
+
+export async function exchangeAPIKey () {
+  const authKey = cookie.get(authKeyKey)
 
   if (!authKey) {
     clean()
     throw Error('Request login')
   }
 
-  if (!apiKey || !validAuthKey || validAuthKey !== authKey) {
+  if (!isAuthored()) {
     cleanCRMInfo()
 
     const response = await fetch(

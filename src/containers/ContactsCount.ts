@@ -20,7 +20,8 @@ const ContactsCountContainer = createContainer(() => {
     [getContactsData, getStarredData],
   )
 
-  useEffect(() => {
+  useEffect(
+    () => {
       authored && refreshCounts()
     },
     [authored],

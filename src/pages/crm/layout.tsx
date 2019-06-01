@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ComponentProps } from '@roundation/roundation'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import cssTips from '~src/utils/cssTips'
+import AccountContainer from '~src/containers/Account'
+import ProgressLoading from '~src/units/ProgressLoading'
 
 import * as vars from '~src/theme/vars'
 
@@ -26,6 +28,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 0,
     height: '100vh',
   },
+  loadingContainer: {
+    ...cssTips(theme).centerFlex(),
+    width: '100%',
+    height: '100%',
+  },
+  progress: {
+    width: `${theme.spacing(8)}px`,
+    height: `${theme.spacing(8)}px`,
+  },
 }))
 
 
@@ -37,6 +48,7 @@ export interface Props extends
 
 const CRMLayout: React.FC<Props> = ({ slots, children }) => {
   const classes = useStyles({})
+  const { authored } = useContext(AccountContainer.Context)
 
   return (
     <ContactsCountContainer.Provider>
@@ -46,7 +58,14 @@ const CRMLayout: React.FC<Props> = ({ slots, children }) => {
         <div className={classes.main}>
           <Toolbar variant="dense" />
           {slots.aside}
-          {children}
+          {authored
+            ? children
+            : (
+              <div className={classes.loadingContainer}>
+                <ProgressLoading className={classes.progress} />
+              </div>
+            )
+          }
         </div>
       </div>
       </GroupsContainer.Provider>

@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography'
 import ContactsContainer from '~src/containers/Contacts'
 import shallowEqual from '~src/utils/shallowEqual'
 import cssTips from '~src/utils/cssTips'
-
 import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
