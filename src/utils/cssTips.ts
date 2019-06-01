@@ -14,6 +14,27 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
   const tipOption: TipOption = { ...getDefaultOption(), ...option }
 
   return {
+    centerFlex: () => createStyles({
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    }).style,
+    growFlex: () => createStyles({
+      style: {
+        flex: 1,
+        minHeight: 0,
+      },
+    }).style,
+    casFlex: (direction: 'column' | 'row' = 'column') => createStyles({
+      style: {
+        flexGrow: 1,
+        display: 'flex',
+        minHeight: 0,
+        flexDirection: direction,
+      },
+    }).style,
     lineClamp: (line: number) => createStyles({
       style: {
         display: '-webkit-box',

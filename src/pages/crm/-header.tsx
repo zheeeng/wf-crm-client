@@ -99,8 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     verticalAlign: 'middle',
   },
   navList: {
-    display: 'flex',
-    flex: 1,
+    ...cssTips(theme).casFlex('row'),
     fontSize: 14,
     fontWeight: 600,
     lineHeight: '30px',

@@ -141,7 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2.5),
   },
   skeletonContentText: {
-    flex: 1,
+    flexGrow: 1,
   },
   tagsBar: {
     display: 'flex',
@@ -190,7 +190,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileContent: {
     [theme.breakpoints.up('md')]: {
-      flex: 1,
+      flexGrow: 1,
       height: '100%',
       overflow: 'auto',
     },

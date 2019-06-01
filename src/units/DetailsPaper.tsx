@@ -1,12 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
+import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
+    ...cssTips(theme).casFlex(),
   },
   header: {
     display: 'flex',
@@ -17,9 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(0.5)}px ${theme.spacing(2.5)}px`,
   },
   content: {
-    display: 'flex',
-    flexDirection: 'row',
-    flex: 1,
+    ...cssTips(theme).casFlex('row'),
     height: '100%',
     [theme.breakpoints.down('sm')]: {
       display: 'block',
@@ -30,11 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     // marginBottom: theme.spacing(4),
   },
   leftSider: {
-    flex: 1,
-    display: 'flex',
-    minHeight: 0,
+    ...cssTips(theme).casFlex(),
     height: '100%',
-    flexDirection: 'column',
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
     marginRight: theme.spacing(4),
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
@@ -51,10 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   rightPart1: {
-    flex: 1,
-    minHeight: 0,
-    display: 'flex',
-    flexDirection: 'column',
+    ...cssTips(theme).casFlex(),
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
@@ -69,10 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   rightPart2: {
-    flex: 1,
-    minHeight: 0,
-    display: 'flex',
-    flexDirection: 'column',
+    ...cssTips(theme).casFlex(),
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,

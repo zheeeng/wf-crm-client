@@ -71,12 +71,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   fieldNameWrapper: {
   },
   fieldTextWrapper: {
-    flex: 1,
+    flexGrow: 1,
     paddingTop: theme.spacing(1),
   },
   isSorting: {
   },
   fieldTextBarWrapper: {
+    ...cssTips(theme).centerFlex,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   isSortingTarget: {},
   fieldTextBar: {
-    flex: 1,
+    flexGrow: 1,
     width: '100%',
     display: 'flex',
     alignItems: 'center',
@@ -172,7 +173,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   fieldInput: {
-    flex: 1,
+    flexGrow: 1,
     padding: theme.spacing(1, 0),
     color: theme.palette.text.secondary,
   },

@@ -42,9 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   flexWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
+    ...cssTips(theme).casFlex(),
   },
   flexHeight: {
     height: theme.spacing(7),

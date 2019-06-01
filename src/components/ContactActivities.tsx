@@ -67,8 +67,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 16,
   },
   entryContent: {
-    position: 'relative',
     flex: 1,
+    position: 'relative',
     padding: theme.spacing(0.5, 3, 0.5, 1),
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   stepper: {
     margin: `0 ${theme.spacing(4)}px`,
     [theme.breakpoints.up('md')]: {
-      flex: 1,
+      flexGrow: 1,
       height: '100%',
       overflow: 'auto',
     },

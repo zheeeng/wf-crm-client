@@ -52,7 +52,7 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
   valueContainer: {
     display: 'flex',
     flexWrap: 'wrap',
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     overflow: 'hidden',
     color: theme.palette.text.secondary,

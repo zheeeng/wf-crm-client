@@ -62,24 +62,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   tableContainer: {
-    flex: 1,
-    display: 'flex',
-    minHeight: 0,
-    flexDirection: 'column',
+    ...cssTips(theme).casFlex(),
   },
   table: {
-    flex: 1,
-    display: 'flex',
-    minHeight: 0,
-    flexDirection: 'column',
+    ...cssTips(theme).casFlex(),
   },
   tableHead: {
     display: 'block',
     width: '100%',
   },
   tableBody: {
-    flex: 1,
-    minHeight: 0,
+    ...cssTips(theme).growFlex(),
     display: 'block',
     width: '100%',
     overflow: 'auto',
@@ -153,9 +146,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...cssTips(theme, { svgIconFactor: 2.5 }).svgIcon(),
   },
   emptyTextWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...cssTips(theme).centerFlex(),
     marginTop: '180px',
   },
   emptyTextCell: {

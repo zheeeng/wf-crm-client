@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(1),
   },
   entryContent: {
-    flex: 1,
+    flexGrow: 1,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   waiverContent: {
     margin: theme.spacing(0, 3),
     [theme.breakpoints.up('md')]: {
-      flex: 1,
+      flexGrow: 1,
       height: '100%',
       overflow: 'auto',
     },
