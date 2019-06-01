@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart1: {
     ...cssTips(theme).casFlex(),
+    flexBasis: '50%',
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
@@ -61,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rightPart2: {
     ...cssTips(theme).casFlex(),
+    flexBasis: '50%',
     padding: `${theme.spacing(2)}px 0`,
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,
