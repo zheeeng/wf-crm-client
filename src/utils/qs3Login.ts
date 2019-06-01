@@ -14,38 +14,6 @@ const devLoginInfo = {
 const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
 
 export async function exchangeAPIKey () {
-  if (location.search.includes('email=jeff@riversportsoutfitters.com')) {
-    const apiKey = '1ffab6ce897009de7bb6db8ddcdbf69b'
-    cookie.set(apiKeyKey, apiKey)
-    cookie.set(accountNameKey, 'jeff@riversportsoutfitters.com')
-    return
-  } else if (location.search.includes('email=vegasicon@gmail.com')) {
-    const apiKey = '76823457cbac692928d64ca0b99e5782'
-    cookie.set(apiKeyKey, apiKey)
-    cookie.set(accountNameKey, 'jvegasicon@gmail.com')
-    return
-  } else if (location.search.includes('email=samsnba02@gmail.com')) {
-    const apiKey = 'e3312e200523c825887536d25b32a1f6'
-    cookie.set(apiKeyKey, apiKey)
-    cookie.set(accountNameKey, 'samsnba02@gmail.com')
-    return
-  } else if (location.search.includes('email=jools@stayontarget.uk')) {
-    const apiKey = '5c634f3a9b2815ae19ef6807a4b3bce5'
-    cookie.set(apiKeyKey, apiKey)
-    cookie.set(accountNameKey, 'jools@stayontarget.uk')
-    return
-  } else if (location.search.includes('email=keithnemerow@yahoo.com')) {
-    const apiKey = 'f5d1f5fc43d427a2f2368b001af5953d'
-    cookie.set(apiKeyKey, apiKey)
-    cookie.set(accountNameKey, 'keithnemerow@yahoo.com')
-    return
-  } else if (location.search.includes('email=dwayne@midnightproduction.com')) {
-    const apiKey = '8325d11e4c9a5f8cdeb0658f571bb7ac'
-    cookie.set(apiKeyKey, apiKey)
-    cookie.set(accountNameKey, 'dwayne@midnightproduction.com')
-    return
-  }
-
   const validAuthKey = cookie.get(validAuthKeyKey)
   const authKey = cookie.get(authKeyKey)
   const apiKey = cookie.get(apiKeyKey)
@@ -96,3 +64,6 @@ export function getLoginParams () {
     password: '',
   }
 }
+
+
+"_ga=GA1.2.841888290.1559366381; _gid=GA1.2.109605956.1559366381; __stripe_mid=a1504fb3-0aa7-4c7f-bf95-2edbd7b5ffbc; __stripe_sid=d2dbcd23-b2c9-4da1-8eb4-f3bfd5bd290b; _hjIncludedInSample=1; rememberMe=a; authKey=fcB5pQxXBvksGxwHuceGv3; intercom-session-rrsp64of=WFhablFyaWxTeGE3MkJuTDJUOU9GbW1GLzQ0VVVxL3RJbU82UG9OVFhCQmpEbElsZnNicjRzRTNpUXhDUW9CUi0taDNNbFZtakdsSXNkNE96eXRtRlJrZz09--287dda113ecc9326325e7dd3a1411f4de07a6c35; _authKey=fcB5pQxXBvksGxwHuceGv3"

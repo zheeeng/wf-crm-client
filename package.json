@@ -34,7 +34,8 @@
     "react-dom": "^16.8.6",
     "react-select": "^2.4.3",
     "react-skeleton-loader": "^1.0.4",
-    "react-sortable-hoc": "^1.9.1"
+    "react-sortable-hoc": "^1.9.1",
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "preinstall": "unlink node_modules/~src || true",
