@@ -24,12 +24,11 @@ import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
 // import cssTips from '../utils/cssTips'
 import { useStyles as useStyles2 } from '~src/components/RemoveContactsFromGroupForm'
+import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    ...cssTips(theme).centerFlex('space-between'),
     padding: `0 ${theme.spacing(4)}px`,
     marginBottom: theme.spacing(2),
   },
@@ -146,9 +145,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   progressWrapper: {
     width: '100%',
     maxHeight: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex(),
   },
   progress: {
     margin: theme.spacing(2),

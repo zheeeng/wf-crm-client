@@ -14,11 +14,11 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
   const tipOption: TipOption = { ...getDefaultOption(), ...option }
 
   return {
-    centerFlex: () => createStyles({
+    centerFlex: (justifyContent: 'center' | 'space-between' | 'space-around' | 'normal' = 'center') => createStyles({
       style: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent,
       },
     }).style,
     growFlex: () => createStyles({

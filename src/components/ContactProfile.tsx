@@ -70,9 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...cssTips(theme).horizontallySpaced(),
   },
   profileBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('space-between'),
     marginBottom: theme.spacing(2),
     borderBottom: `solid 1px ${theme.palette.grey[800]}`,
   },
@@ -89,14 +87,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: `translateX(${theme.spacing(1.5)})`,
   },
   avatarBar: {
-    display: 'flex',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('normal'),
     height: theme.spacing(8),
     marginBottom: theme.spacing(2),
   },
   skeletonAvatarBar: {
-    display: 'flex',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('normal'),
     height: theme.spacing(8),
     marginBottom: theme.spacing(2),
   },
@@ -133,8 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   skeletonContent: {
-    display: 'flex',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('normal'),
   },
   skeletonContentIcon: {
     padding: theme.spacing(2.5),
@@ -144,8 +139,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
   },
   tagsBar: {
-    display: 'flex',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('normal'),
     marginBottom: theme.spacing(1),
   },
   addTagIcon: {
@@ -178,9 +172,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   progressWrapper: {
     width: '100%',
     height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex(),
   },
   progress: {
     margin: theme.spacing(2),

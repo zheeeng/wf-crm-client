@@ -77,18 +77,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   isSorting: {
   },
   fieldTextBarWrapper: {
-    ...cssTips(theme).centerFlex,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    ...cssTips(theme).centerFlex('space-between'),
     flexDirection: 'column',
     padding: theme.spacing(0, 1),
   },
   isSortingTarget: {},
   fieldTextBar: {
-    flexGrow: 1,
+    ...cssTips(theme).casFlex('row'),
     width: '100%',
-    display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(1),
     ...cssTips(theme, { sizeFactor: 2 }).horizontallySpaced(),

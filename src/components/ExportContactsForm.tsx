@@ -5,11 +5,13 @@ import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import ContactsContainer from '~src/containers/Contacts'
 import shallowEqual from '~src/utils/shallowEqual'
+import cssTips from '~src/utils/cssTips'
 
 import ProgressLoading from '~src/units/ProgressLoading'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
+    ...cssTips(theme).centerFlex(),
     width: Math.min(theme.breakpoints.values.sm, 388),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
@@ -20,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   progress: {
     margin: theme.spacing(4, 2),

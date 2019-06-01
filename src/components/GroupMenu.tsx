@@ -8,6 +8,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import Searcher from '~src/units/Searcher'
+import cssTips from '~src/utils/cssTips'
 
 import GroupsContainer from '~src/containers/Groups'
 
@@ -16,9 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
   },
   flexContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
+    ...cssTips(theme).casFlex()
   },
   simpleFlexContainer: {
     display: 'block',

@@ -13,6 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Paper from '@material-ui/core/Paper'
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
 import { useStyles } from './BasicFormInput'
+import cssTips from '~src/utils/cssTips'
 
 export const useStyles4 = makeStyles(() => ({
   indicator: {
@@ -50,9 +51,8 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     fontSize: 16,
   },
   valueContainer: {
-    display: 'flex',
+    ...cssTips(theme).casFlex('row'),
     flexWrap: 'wrap',
-    flexGrow: 1,
     alignItems: 'center',
     overflow: 'hidden',
     color: theme.palette.text.secondary,

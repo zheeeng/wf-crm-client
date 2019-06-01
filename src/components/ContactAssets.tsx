@@ -8,23 +8,21 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
+import Skeleton from 'react-skeleton-loader'
 
 import useToggle from '~src/hooks/useToggle'
-
 import ExportContactsForm from '~src/components/ExportContactsForm'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
+import cssTips from '~src/utils/cssTips'
 
 import Icon, { ICONS } from '~src/units/Icons'
-import Skeleton from 'react-skeleton-loader'
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabsWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    ...cssTips(theme).centerFlex('space-between'),
     padding: theme.spacing(0, 4),
     marginBottom: theme.spacing(2),
   },
@@ -38,8 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20,
   },
   entry: {
-    display: 'flex',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('normal'),
     padding: theme.spacing(0, 1.5),
     height: theme.spacing(4),
     lineHeight: `${theme.spacing(4.5)}px`,
@@ -110,9 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   progressWrapper: {
     width: '100%',
     maxHeight: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex(),
   },
   progress: {
     margin: theme.spacing(2),

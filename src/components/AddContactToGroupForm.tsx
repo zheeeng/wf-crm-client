@@ -46,9 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   label: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    ...cssTips(theme).centerFlex('space-between'),
     lineHeight: `${theme.spacing(4)}px`,
     height: theme.spacing(4),
     padding: theme.spacing(1),

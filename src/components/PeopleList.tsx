@@ -40,10 +40,8 @@ import debounce from 'debounce'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
+    ...cssTips(theme).centerFlex('space-between'),
     flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     marginBottom: theme.spacing(3),
     whiteSpace: 'nowrap',
     [theme.breakpoints.between('sm', 'md')]: {
@@ -165,13 +163,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const useStyles2 = makeStyles((theme: Theme) => ({
   infoBar: {
     width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('space-between'),
   },
   infoText: {
-    display: 'flex',
-    alignItems: 'center',
+    ...cssTips(theme).centerFlex('normal'),
   },
   infoForePlaceholder: {
     width: theme.spacing(24),
