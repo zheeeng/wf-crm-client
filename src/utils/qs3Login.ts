@@ -18,35 +18,36 @@ export async function exchangeAPIKey () {
   const authKey = cookie.get(authKeyKey)
   const apiKey = cookie.get(apiKeyKey)
 
-  if (!authKey || (validAuthKey && validAuthKey !== authKey)) {
+  if (!authKey) {
     cookie.remove(validAuthKeyKey)
     cookie.remove(apiKeyKey)
     throw Error('Request login')
   }
 
-  cookie.set(validAuthKeyKey, authKey)
-
-  if (apiKey) return
-
-  const response = await fetch(API_KEY_URL,
-    {
-      headers: {
-        Authorization: `Bearer ${authKey}`,
+  if (!apiKey || !validAuthKey || validAuthKey !== authKey) {
+    const response = await fetch(
+      API_KEY_URL,
+      {
+        headers: {
+          Authorization: `Bearer ${authKey}`,
+        },
       },
-    },
-  )
+    )
 
-  if (!response.ok) throw Error(response.statusText)
+    if (!response.ok) throw Error(response.statusText)
 
-  const data = await response.json()
+    const data = await response.json()
 
-  const { success, result } = data
+    const { success, result } = data
 
-  if (result !== true || !success || !success.apiKey) {
-    throw Error('Some errors happened')
+    if (result !== true || !success || !success.apiKey) {
+      throw Error('Some errors happened')
+    }
+
+    cookie.set(apiKeyKey, success.apiKey)
+
+    cookie.set(validAuthKeyKey, authKey)
   }
-
-  cookie.set(apiKeyKey, success.apiKey)
 }
 
 export function clean () {
