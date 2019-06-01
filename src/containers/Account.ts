@@ -5,7 +5,7 @@ import useLatest from '~src/hooks/useLatest'
 import merge from 'ramda/es/merge'
 import pick from 'ramda/es/pick'
 
-import { getLoginParams, isAuthored, getFallbackUsername } from '~src/utils/qs3Login'
+import { getLoginParams, getIsAuthored, getFallbackUsername } from '~src/utils/qs3Login'
 
 type AuthData = { id: string, username: string }
 
@@ -27,7 +27,7 @@ const AccountContainer = createContainer(() => {
 
   useEffect(() => { postAuthentication('/api/auth/authToken')() }, [])
 
-  const authored = useMemo(() => !!username && isAuthored(), [username])
+  const authored = useMemo(() => !!username && getIsAuthored(), [username])
 
   const displayName = useMemo(() => username || getFallbackUsername(), [username])
 
