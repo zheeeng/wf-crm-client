@@ -162,7 +162,6 @@ const useContact = (contactId: string) => {
   const [starContact, starMutation] = useInfoCallback(
     async (star: boolean) => {
       await putContact(`/api/people/${contactId}`)({ favourite: star })
-      refreshCounts()
     },
     [contactId],
   )
@@ -177,7 +176,6 @@ const useContact = (contactId: string) => {
   const [removeContact, removeMutation] = useInfoCallback(
     async () => {
       await deleteContact(`/api/people/${contactId}`)()
-      refreshCounts()
     },
     [contactId],
   )
@@ -241,6 +239,11 @@ const useContact = (contactId: string) => {
     async (id: string) =>
       deleteNote(`/api/people/${contactId}/notes/${id}`)(),
     [contactId],
+  )
+
+  useEffect(
+    () => { refreshCounts() },
+    [starMutation, removeMutation],
   )
 
   return {

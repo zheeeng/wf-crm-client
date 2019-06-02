@@ -63,7 +63,7 @@ type ContainerProps = {
 const ContactsContainer = createContainer(({
   page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
 }: ContainerProps) => {
-  const { refreshCounts } = useContext(ContactsCountContainer.Context)
+  const { refreshCounts, refreshPageMutation } = useContext(ContactsCountContainer.Context)
 
   const { data: contactsData, request: getContacts, error: getContactsError } = useGet<ContactsResponse>()
   const { request: deleteContact, error: deleteContactError } = useDelete()
@@ -107,7 +107,7 @@ const ContactsContainer = createContainer(({
         searchTerm,
       }
 
-      await getContacts('/api/people/search')(params)
+      return await getContacts('/api/people/search')(params)
     },
     [getContacts, page, favourite, groupId, searchTerm],
   )
@@ -116,7 +116,6 @@ const ContactsContainer = createContainer(({
     async (contact: ContactFields) => {
       const contactData = favourite ? { ...contact, favourite } : contact
       await postContact('/api/people')(contactFieldAdapter(contactData))
-      refreshCounts()
     },
     [postContact, refreshCounts],
   )
@@ -124,21 +123,19 @@ const ContactsContainer = createContainer(({
   const [starContact, starMutation] = useInfoCallback(
     async (id: string, star: boolean) => {
       await putContact(`/api/people/${id}`)({ favourite: star })
-      refreshCounts()
     },
     [putContact, refreshCounts],
   )
 
   const [removeContacts, removeMutation] = useInfoCallback(
     async (contactIds: string[]) => {
-      await contactIds.reduce(
+      return await contactIds.reduce(
         async (p, id) => {
           await p,
           await deleteContact(`/api/people/${id}`)()
         },
         Promise.resolve(),
       )
-      refreshCounts()
     },
     [deleteContact, refreshCounts],
   )
@@ -173,24 +170,17 @@ const ContactsContainer = createContainer(({
 
   const [mergeContacts, mergeContactsMutation] = useInfoCallback(
     async ([targetId, ...sourceIds]: string[]) => {
-      let latestResponse: Promise<PeopleAPI | null>
-
-      const response = await sourceIds.reduce(
-        async (chain, sId) => {
+      return await sourceIds.reduce(
+        async (chain, sourceId) => {
           try {
             await chain
-            latestResponse = postMergeContacts(`/api/people/${targetId}/mergePerson/${sId}`)()
+            return await postMergeContacts(`/api/people/${targetId}/mergePerson/${sourceId}`)()
           } finally {
-            // tslint:disable-next-line:no-unsafe-finally
-            return latestResponse
+            return Promise.resolve()
           }
         },
-        Promise.resolve() as any as Promise<PeopleAPI | null>,
+        Promise.resolve() as Promise<any>,
       )
-
-      refreshCounts()
-
-      return contactInputAdapter(response!)
     },
     [refreshCounts, postMergeContacts],
   )
@@ -221,6 +211,13 @@ const ContactsContainer = createContainer(({
       }
     },
     [postExportContacts],
+  )
+
+  useEffect(
+    () => {
+      refreshCounts()
+    },
+    [addMutation, starMutation, removeMutation, mergeContactsMutation],
   )
 
   // alter effects
@@ -281,6 +278,11 @@ const ContactsContainer = createContainer(({
     useEffect(
       () => { deleteContactsFromGroupError && fail(deleteContactsFromGroupError.message) },
       [deleteContactsFromGroupError]
+    )
+
+    useEffect(
+      () => { fetchContacts(30) },
+      [addMutation, starMutation, removeMutation, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation]
     )
   }
 

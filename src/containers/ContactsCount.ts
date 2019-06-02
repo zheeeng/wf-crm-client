@@ -24,7 +24,7 @@ const ContactsCountContainer = createContainer(() => {
     () => {
       authored && refreshCounts()
     },
-    [authored],
+    [authored, refreshCounts],
   )
 
   return {

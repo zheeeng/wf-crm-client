@@ -1,16 +1,9 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import { ComponentProps } from '@roundation/roundation'
 import ContactsContainer from '~src/containers/Contacts'
-import ContactsCountContainer from '~src/containers/ContactsCount'
 
 const Content: React.FC = React.memo(({ children }) => {
-  const { fetchContacts, addMutation, starMutation, removeMutation, mergeContactsMutation, removeContactsFromGroupMutation } = useContext(ContactsContainer.Context)
-  const { refreshPageMutation } = useContext(ContactsCountContainer.Context)
-
-  useEffect(
-    () => { fetchContacts(30) },
-    [addMutation, starMutation, removeMutation, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation],
-  )
+  useContext(ContactsContainer.Context)
 
   return <>{children}</>
 })
