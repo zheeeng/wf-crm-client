@@ -444,7 +444,10 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               </IconButton> */}
               <Tooltip title="add note">
                 <IconButton classes={{ label: classes.entryButtonIcon }} onClick={toggleOnAddNote}>
-                  <Icon name={ICONS.Note} color={showAddNote ? 'primary' : 'hoverLighten'} />
+                  <Icon
+                    name={ICONS.Note}
+                    color={showAddNote ? 'primary' : 'hoverLighten'}
+                  />
                 </IconButton>
               </Tooltip>
             </>

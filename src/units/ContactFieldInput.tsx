@@ -46,11 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   disabled: {
     cursor: 'not-allowed',
     opacity: 0.3,
-    ...{
-      '& *': {
-        cursor: 'not-allowed',
-      },
-    },
   },
   breaker: {
     width: '100%',
@@ -634,20 +629,32 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                   <Input
                     autoComplete="no"
                     key={segmentValue.key}
-                    type={(type === 'address' && segmentValue.key === 'zipcode')
-                      ? 'number'
-                      : type
+                    type={
+                      (type === 'address' && segmentValue.key === 'zipcode')
+                        ? 'number'
+                        : type
                     }
                     error={hasErrorKeys.includes(fieldValue.id || '')}
-                    className={classnames(classes.fieldTypeText, isAppend && classes.takeQuarter)}
+                    className={classnames(
+                      classes.fieldTypeText,
+                      isAppend && classes.takeQuarter,
+                    )}
                     classes={{
                       disabled: classes.fieldDisabled,
                       input: classes.input,
                     }}
                     placeholder={camelToWords(segmentValue.key)}
                     defaultValue={segmentValue.value}
-                    onBlur={handleEntryUpdateByBlur(segmentValue.key, fieldValue.id!, segmentValue.value)}
-                    onKeyDown={handleEntryUpdateByKeydown(segmentValue.key, fieldValue.id!, segmentValue.value)}
+                    onBlur={handleEntryUpdateByBlur(
+                      segmentValue.key,
+                      fieldValue.id!,
+                      segmentValue.value,
+                    )}
+                    onKeyDown={handleEntryUpdateByKeydown(
+                      segmentValue.key,
+                      fieldValue.id!,
+                      segmentValue.value,
+                    )}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                   />
                 ))
@@ -682,7 +689,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         )}
         {editable && !isAppend && (
           <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
-            <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hidden'}>
+            <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hide'}>
               <IconButton
                 className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
                 onClick={handleEntryToggleHide(fieldValue.id!)}
