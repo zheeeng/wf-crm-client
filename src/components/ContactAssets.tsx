@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   entryContent: {
     flexGrow: 1,
+    flexBasis: '100%',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -116,6 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(0, 3),
     [theme.breakpoints.up('md')]: {
       flexGrow: 1,
+      flexBasis: '100%',
       height: '100%',
       overflow: 'auto',
     },

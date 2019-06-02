@@ -30,6 +30,7 @@ const cssTips = (theme: Theme, option: Partial<TipOption> = {}) => {
     casFlex: (direction: 'column' | 'row' = 'column') => createStyles({
       style: {
         flexGrow: 1,
+        flexBasis: '100%',
         display: 'flex',
         minHeight: 0,
         flexDirection: direction,

@@ -90,6 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `0 ${theme.spacing(4)}px`,
     [theme.breakpoints.up('md')]: {
       flexGrow: 1,
+      flexBasis: '100%',
       height: '100%',
       overflow: 'auto',
     },

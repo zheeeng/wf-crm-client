@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   skeletonContentText: {
     flexGrow: 1,
+    flexBasis: '100%',
   },
   tagsBar: {
     ...cssTips(theme).centerFlex('normal'),
@@ -183,6 +184,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   profileContent: {
     [theme.breakpoints.up('md')]: {
       flexGrow: 1,
+      flexBasis: '100%',
       height: '100%',
       overflow: 'auto',
     },

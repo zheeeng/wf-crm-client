@@ -95,6 +95,7 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
     },
     MuiStepConnector: {
       root: {
+        flex:0,
         position: 'relative',
         padding: 0,
         height: 0,

@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldTextWrapper: {
     flexGrow: 1,
+    flexBasis: '100%',
     paddingTop: theme.spacing(1),
   },
   isSorting: {
@@ -170,6 +171,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fieldInput: {
     flexGrow: 1,
+    flexBasis: '100%',
     padding: theme.spacing(1, 0),
     color: theme.palette.text.secondary,
   },
