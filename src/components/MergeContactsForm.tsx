@@ -58,10 +58,13 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
 
   const handleOkClick = useCallback(
     async () => {
-      toggleOnLoading()
-      await onOk()
-      onClose()
-      toggleOffLoading()
+      try {
+        toggleOnLoading()
+        await onOk()
+      } finally {
+        onClose()
+        toggleOffLoading()
+      }
     },
     [onOk],
   )
