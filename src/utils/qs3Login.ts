@@ -1,11 +1,11 @@
 import cookie from 'js-cookie'
 
-const apiKeyKey = 'apiKey'
 const authKeyKey = 'authKey'
 const rememberNameKey = 'rememberMe'
-const validAuthKeyKey = '_authKey'
-const accountNameKey = '_accountName'
 
+const apiKeyKey = '@apiKey@'
+const validAuthKeyKey = '@authKey@'
+const accountNameKey = '@accountName@'
 const crmAccountKey = '@account@'
 const crmIdKey = '@id@'
 const crmTokenKey = '@token@'
@@ -21,9 +21,9 @@ const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPI
 const GET_USER_URL = 'https://api.waiverforever.com/api/v3/auth/getUser'
 
 export function getIsAuthored () {
-  const validAuthKey = cookie.get(validAuthKeyKey)
   const authKey = cookie.get(authKeyKey)
-  const apiKey = cookie.get(apiKeyKey)
+  const validAuthKey = window.localStorage.getItem(validAuthKeyKey)
+  const apiKey = window.localStorage.getItem(apiKeyKey)
 
   return apiKey && validAuthKey && validAuthKey === authKey
 }
@@ -70,10 +70,10 @@ export async function exchangeAPIKey () {
       throw Error('Some errors happened')
     }
 
-    cookie.set(apiKeyKey, apiKeySuccess.apiKey)
-    cookie.set(accountNameKey, userSuccess.username)
+    window.localStorage.setItem(apiKeyKey, apiKeySuccess.apiKey)
+    window.localStorage.setItem(accountNameKey, userSuccess.username)
 
-    cookie.set(validAuthKeyKey, authKey)
+    window.localStorage.setItem(validAuthKeyKey, authKey)
   }
 }
 
@@ -94,21 +94,21 @@ export function cleanCRMInfo () {
 export function clean () {
   cleanCRMInfo()
 
-  cookie.remove(apiKeyKey)
   cookie.remove(authKeyKey)
-  cookie.remove(accountNameKey)
+  window.localStorage.removeItem(apiKeyKey)
+  window.localStorage.removeItem(accountNameKey)
 }
 
 export function getCRMToken () {
-  return window.localStorage.getItem('@token@') || ''
+  return window.localStorage.getItem(crmTokenKey) || ''
 }
 
 export function getLoginParams () {
   if (isDev) return devLoginInfo
 
   return {
-    email: cookie.get(accountNameKey),
-    api_key: cookie.get(apiKeyKey),
+    email: window.localStorage.getItem(accountNameKey),
+    api_key: window.localStorage.getItem(apiKeyKey),
     password: '',
   }
 }
