@@ -2,8 +2,9 @@ import cookie from 'js-cookie'
 
 const apiKeyKey = 'apiKey'
 const authKeyKey = 'authKey'
+const rememberNameKey = 'rememberMe'
 const validAuthKeyKey = '_authKey'
-const accountNameKey = 'rememberMe'
+const accountNameKey = '_accountName'
 
 const crmAccountKey = '@account@'
 const crmIdKey = '@id@'
@@ -17,6 +18,7 @@ const devLoginInfo = {
   password: '0cc175b9c0f1b6a831c399e269772661',
 }
 const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
+const GET_USER_URL = 'https://api.waiverforever.com/api/v3/auth/getUser'
 
 export function getIsAuthored () {
   const validAuthKey = cookie.get(validAuthKeyKey)
@@ -27,7 +29,7 @@ export function getIsAuthored () {
 }
 
 export function getFallbackUsername () {
-  return cookie.get(accountNameKey) || ''
+  return cookie.get(rememberNameKey) || ''
 }
 
 export async function exchangeAPIKey () {
@@ -41,26 +43,35 @@ export async function exchangeAPIKey () {
   if (!getIsAuthored()) {
     cleanCRMInfo()
 
-    const response = await fetch(
-      API_KEY_URL,
-      {
-        headers: {
-          Authorization: `Bearer ${authKey}`,
-        },
+    const requestOption = {
+      headers: {
+        Authorization: `Bearer ${authKey}`,
       },
-    )
+    }
 
-    if (!response.ok) throw Error(response.statusText)
+    const [ApiKeyResponse, UserResponse] = await Promise.all([
+      fetch(API_KEY_URL,requestOption),
+      fetch(GET_USER_URL,requestOption),
+    ]).catch(() => Promise.reject('Request fails'))
 
-    const data = await response.json()
+    if (!ApiKeyResponse.ok || !UserResponse.ok) throw Error(ApiKeyResponse.statusText || UserResponse.statusText)
 
-    const { success, result } = data
+    const [apiKeyData, userData] = await Promise.all([ApiKeyResponse.json(), UserResponse.json()])
 
-    if (result !== true || !success || !success.apiKey) {
+    const { success: apiKeySuccess, result: apiKeyResult } = apiKeyData
+
+    if (apiKeyResult !== true || !apiKeySuccess || !apiKeySuccess.apiKey) {
       throw Error('Some errors happened')
     }
 
-    cookie.set(apiKeyKey, success.apiKey)
+    const { success: userSuccess, result: userResult } = userData
+
+    if (userResult !== true || !userSuccess || !userSuccess.username) {
+      throw Error('Some errors happened')
+    }
+
+    cookie.set(apiKeyKey, apiKeySuccess.apiKey)
+    cookie.set(accountNameKey, userSuccess.username)
 
     cookie.set(validAuthKeyKey, authKey)
   }
