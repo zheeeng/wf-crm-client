@@ -302,6 +302,15 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     [fieldValues, localFieldValues],
   )
 
+  const addHiddenField = useCallback(
+    async () => {
+      const field = await onAddField(name, getEmptyFieldSegmentValue(name), 0)
+      if (field) setLocalFieldValues(values => values.concat(field))
+      return field
+    },
+    [localFieldValues, onAddField, name, setLocalFieldValues],
+  )
+
   const addField = useCallback(
     async (segmentValue: FieldSegmentValue) => {
       const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
@@ -359,8 +368,16 @@ const ContactFieldInput: React.FC<Props> = React.memo(
   )
   const toggleHideField = useCallback(
     async (id: string) => {
-      const priority = localFieldValues.find(v => v.id === id)!.priority
-      const newPriority = priority !== 0
+      if (!id) {
+        await addHiddenField()
+        return
+      }
+
+      const targetField = localFieldValues.find(v => v.id === id)
+
+      if (!targetField) return
+
+      const newPriority = targetField.priority !== 0
         ? 0
         : Math.max(
             Math.min.apply(
