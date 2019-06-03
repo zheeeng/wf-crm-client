@@ -378,7 +378,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         )
       }
     },
-    [name, localFieldValues],
+    [name, onChangePriority, localFieldValues, setLocalFieldValues],
   )
 
   const handleAddEntry = useCallback(

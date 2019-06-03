@@ -117,14 +117,14 @@ const ContactsContainer = createContainer(({
       const contactData = favourite ? { ...contact, favourite } : contact
       await postContact('/api/people')(contactFieldAdapter(contactData))
     },
-    [postContact, refreshCounts],
+    [postContact],
   )
 
   const [starContact, starMutation] = useInfoCallback(
     async (id: string, star: boolean) => {
       await putContact(`/api/people/${id}`)({ favourite: star })
     },
-    [putContact, refreshCounts],
+    [putContact],
   )
 
   const [removeContacts, removeMutation] = useInfoCallback(
@@ -137,7 +137,7 @@ const ContactsContainer = createContainer(({
         Promise.resolve(),
       )
     },
-    [deleteContact, refreshCounts],
+    [deleteContact],
   )
 
   const removeContactError = useMemo(
@@ -175,14 +175,14 @@ const ContactsContainer = createContainer(({
           try {
             await chain
             return await postMergeContacts(`/api/people/${targetId}/mergePerson/${sourceId}`)()
-          } finally {
+          } catch {
             return Promise.resolve()
           }
         },
         Promise.resolve() as Promise<any>,
       )
     },
-    [refreshCounts, postMergeContacts],
+    [postMergeContacts],
   )
 
   const exportContacts = useCallback(
