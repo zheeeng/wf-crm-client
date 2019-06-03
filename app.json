@@ -1,5 +1,22 @@
 {
     "name": "wf-crm-client",
+    "env": {
+        "NODE_ENV": {
+          "required": true
+        },
+        "SENTRY_AUTH_TOKEN": {
+          "required": true
+        },
+        "SENTRY_DSN": {
+          "required": true
+        },
+        "SENTRY_ORG": {
+          "required": true
+        },
+        "SENTRY_PROJECT": {
+          "required": true
+        }
+    },
     "buildpacks": [
         {
             "url": "heroku/nodejs"
