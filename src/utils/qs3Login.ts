@@ -89,13 +89,13 @@ export function cleanCRMInfo () {
   window.localStorage.removeItem(crmIdKey)
   window.localStorage.removeItem(crmTokenKey)
   window.localStorage.removeItem(crmUsernameKey)
+  window.localStorage.removeItem(apiKeyKey)
 }
 
 export function clean () {
   cleanCRMInfo()
 
   cookie.remove(authKeyKey)
-  window.localStorage.removeItem(apiKeyKey)
   window.localStorage.removeItem(accountNameKey)
 }
 
