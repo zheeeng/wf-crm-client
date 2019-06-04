@@ -6,6 +6,7 @@ import { groupInputAdapter, GroupFields, GroupAPI, groupFieldAdapter } from '~sr
 import useInfoCallback from '~src/hooks/useInfoCallback'
 import AlertContainer from './Alert'
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
+import AccountContainer from './Account'
 
 const GroupsContainer = createContainer(() => {
   const [ groupId, setGroupId ] = useState('')
@@ -13,6 +14,7 @@ const GroupsContainer = createContainer(() => {
   const { request: postGroup, error: postGroupError } = usePost()
   const { request: putGroup, error: putGroupError } = usePut()
   const { data: deleteGroupData, request: deleteGroup, error: deleteGroupError } = useDelete()
+  const { authored } = useContext(AccountContainer.Context)
 
   const [addGroup, addGroupMutation] = useInfoCallback(
     async (group: GroupFields) => {
@@ -51,8 +53,8 @@ const GroupsContainer = createContainer(() => {
     const { success, fail } = useContext(AlertContainer.Context)
 
     useEffect(
-      refreshGroupCounts,
-      [addGroupMutation, updateGroupMutation, removeGroupMutation],
+      () => { authored && refreshGroupCounts() },
+      [authored, addGroupMutation, updateGroupMutation, removeGroupMutation],
     )
 
     useEffect(

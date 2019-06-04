@@ -81,7 +81,7 @@ export interface Props extends ComponentProps {
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
   const { contactsCount, starredCount, refreshPage } = useContext(ContactsCountContainer.Context)
-  const { groupId, groups, addGroup, updateGroup, removeGroupData, removeGroup } = useContext(GroupsContainer.Context)
+  const { groupId, groups, addGroup, updateGroup, removeGroup } = useContext(GroupsContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
 
   const {

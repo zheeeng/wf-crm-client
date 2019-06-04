@@ -34,7 +34,7 @@ const AccountContainer = createContainer(() => {
   return {
     authored,
     id,
-    username,
+    username: displayName,
     login,
     logout,
   }
