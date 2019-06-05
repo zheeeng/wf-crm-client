@@ -8,7 +8,7 @@ type UseBooleanToggle = (initial?: boolean) =>
 interface UseToggle extends UseAlternativeToggle, UseBooleanToggle {
 }
 
-const useAlternativeToggle: UseAlternativeToggle = <T1, T2 = T1>(initial: T1, alternative: T2) => {
+export const useAlternativeToggle: UseAlternativeToggle = <T1, T2 = T1>(initial: T1, alternative: T2) => {
   const [value, updateValue] = useState<T1 | T2>(initial)
   const toggle = useCallback(() => updateValue(prev => prev === initial ? alternative : initial), [])
   const toggleOn = useCallback(() => updateValue(alternative), [])
@@ -30,10 +30,9 @@ const useBooleanToggle: UseBooleanToggle = (initial: boolean = false) => {
   }
 }
 
-function useToggle (...args: any[]) {
-  if (args.length === 2) return useAlternativeToggle(args[0], args[1])
+function useToggle (initial: boolean = false) {
 
-  return useBooleanToggle(args[0])
+  return useBooleanToggle(initial)
 }
 
 export default useToggle as UseToggle

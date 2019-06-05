@@ -6,6 +6,8 @@ import Toolbar from '@material-ui/core/Toolbar'
 import cssTips from '~src/utils/cssTips'
 import AccountContainer from '~src/containers/Account'
 import ProgressLoading from '~src/units/ProgressLoading'
+import ContactsCountContainer from '~src/containers/ContactsCount'
+import GroupsContainer from '~src/containers/Groups'
 
 import * as vars from '~src/theme/vars'
 
@@ -38,10 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: `${theme.spacing(8)}px`,
   },
 }))
-
-
-import ContactsCountContainer from '~src/containers/ContactsCount'
-import GroupsContainer from '~src/containers/Groups'
 
 export interface Props extends ComponentProps<'aside' | 'header'> {
 }

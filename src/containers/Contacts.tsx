@@ -144,7 +144,7 @@ const ContactsContainer = createContainer(({
     async (contactIds: string[]) => {
       return await contactIds.reduce(
         async (p, id) => {
-          await p,
+          await p
           await deleteContact(`/api/people/${id}`)()
         },
         Promise.resolve(),
