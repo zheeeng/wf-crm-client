@@ -7,17 +7,17 @@ export default function mergeOptions<O extends object> (...options: O[]) {
 
         merged[key] = (
           !merged[key]
-          // tslint:disable-next-line:strict-type-predicates
           || typeof merged[key] !== 'object'
           || [merged[key], option[key]].some(Array.isArray)
         )
           ? option[key]
-          : mergeOptions(merged[key] as any, option[key] as any)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          : mergeOptions(merged[key] as any, option[key])
       }
 
       return merged
     },
-    // tslint:disable-next-line:no-object-literal-type-assertion
+    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     {} as O,
   )
 }

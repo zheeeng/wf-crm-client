@@ -19,11 +19,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  className?: string,
-  date: Date | null,
+  className?: string
+  date: Date | null
   onDateChange: (date: Date | null) => void
-  disabled?: boolean,
-  placeholder?: string,
+  disabled?: boolean
+  placeholder?: string
 }
 
 const BasicDateInput: React.FC<Props> = React.memo(({ className, placeholder, date, onDateChange, disabled }) => {

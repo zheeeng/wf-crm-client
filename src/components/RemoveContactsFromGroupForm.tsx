@@ -45,8 +45,8 @@ export const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  open: boolean,
-  onClose: () => void,
+  open: boolean
+  onClose: () => void
   onOk?: (groupId: string) => Promise<any>
 }
 

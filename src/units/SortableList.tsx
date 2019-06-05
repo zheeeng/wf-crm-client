@@ -1,13 +1,13 @@
 import React from 'react'
-import { SortableContainer, SortableElement, SortableHandle, arrayMove, WrappedComponent, Config } from 'react-sortable-hoc'
+import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
 
 export {
   arrayMove,
 }
 
 interface ItemProps {
-  element: JSX.Element,
-  id?: string,
+  element: JSX.Element
+  id?: string
 }
 
 export const SortHandler = SortableHandle(({ element }: ItemProps) => element)

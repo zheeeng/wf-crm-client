@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 
-type DependencyList = ReadonlyArray<any>
+type DependencyList = any[]
 
 type EffectCallback = () => (void | (() => void | undefined))
 

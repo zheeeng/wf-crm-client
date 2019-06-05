@@ -2,13 +2,13 @@ import { cleanStorage, persistLoginInfo, getCRMToken } from '~src/utils/qs3Login
 import { pascal2snake } from '~src/utils/caseConvert'
 
 type Option = {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE',
-  params?: object,
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  params?: object
 }
 
 export const getQuery = (query: object): string => {
   const search = Object.entries(query)
-    .filter(([_, v]) => v)
+    .filter(([, v]) => v)
     .map(([k, v]) => `${pascal2snake(k)}=${encodeURIComponent(v)}`).join('&')
 
   return search ? `?${search}` : search
@@ -18,7 +18,7 @@ const base = process.env.NODE_ENV === 'development'
   ? 'https://crm-api-dev.waiverforeverk8s.com'
   : 'https://crm-api.waiverforeverk8s.com'
 
-export default async function fetchData<T = any> (url: string, option?: Option): Promise<T> {
+export default async function fetchData<T> (url: string, option?: Option): Promise<T> {
   const fetchOption = Object.assign({ method: 'GET' }, option)
 
   const Authorization = getCRMToken()

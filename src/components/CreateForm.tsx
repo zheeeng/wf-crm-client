@@ -65,9 +65,9 @@ export type TextField = {
 
 export type CombinedTextField = {
   type: 'combinedText'
-  keyName: string,
+  keyName: string
   nameAndLabels: Array<{
-    isNumber?: boolean,
+    isNumber?: boolean
     name: string
     label: string
     required: boolean
@@ -97,13 +97,13 @@ export type CountryField = {
 export type OkColor = 'inherit' | 'primary' | 'secondary' | 'default' | undefined
 
 export interface CreateFormOption {
-  title?: string,
-  tip?: string,
-  fields: Array<TextField | CombinedTextField | EnumTextField | CountryField>,
-  okTextWatch?: string,
-  okText?: string | ((text: string) => string),
-  okColor?: OkColor | ((text: string) => OkColor),
-  cancelText?: string,
+  title?: string
+  tip?: string
+  fields: Array<TextField | CombinedTextField | EnumTextField | CountryField>
+  okTextWatch?: string
+  okText?: string | ((text: string) => string)
+  okColor?: OkColor | ((text: string) => OkColor)
+  cancelText?: string
 }
 
 export interface Props {
@@ -214,8 +214,9 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
                 ...acc,
                 ...field.nameAndLabels
                   .filter(p => p.validator)
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   .map(p => ({ name: p.name, validator: p.validator! }))
-                ]
+              ]
             default:
               return acc
           }
@@ -303,34 +304,34 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
             />
           )
           : field.type === 'combinedText'
-          ? (
-            <div
-              key={field.keyName}
-              className={classes.combinedFormRow}
-            >
-              {field.nameAndLabels.map(({ name, label, span, isNumber }) => (
-                <BasicFormInput
-                  type={isNumber ? 'number' : 'text'}
-                  error={toWarnFields.includes(name)}
-                  className={classes.formItem }
-                  key={name}
-                  placeholder={label}
-                  onChange={handleCreateInfoChange(name)}
-                  onEnterPress={handleCreateInfoSubmit}
-                  style={{ flex: span }}
-                />
-              ))}
-            </div>
-          )
-          : (
-            <BasicFormInputSelect
-              error={toWarnFields.includes(field.name)}
-              key={field.name}
-              options={field.options.map(option => ({ label: option, value: option }))}
-              placeholder={field.label}
-              onChange={handleCreateInfoChange2(field.name)}
-            />
-          )
+            ? (
+              <div
+                key={field.keyName}
+                className={classes.combinedFormRow}
+              >
+                {field.nameAndLabels.map(({ name, label, span, isNumber }) => (
+                  <BasicFormInput
+                    type={isNumber ? 'number' : 'text'}
+                    error={toWarnFields.includes(name)}
+                    className={classes.formItem }
+                    key={name}
+                    placeholder={label}
+                    onChange={handleCreateInfoChange(name)}
+                    onEnterPress={handleCreateInfoSubmit}
+                    style={{ flex: span }}
+                  />
+                ))}
+              </div>
+            )
+            : (
+              <BasicFormInputSelect
+                error={toWarnFields.includes(field.name)}
+                key={field.name}
+                options={field.options.map(option => ({ label: option, value: option }))}
+                placeholder={field.label}
+                onChange={handleCreateInfoChange2(field.name)}
+              />
+            )
         )}
         <div className={classes.dialogButtonZone}>
           <Button onClick={onClose}>{cancelText}</Button>

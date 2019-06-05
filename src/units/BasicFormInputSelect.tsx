@@ -86,16 +86,16 @@ const useStyles3 = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  className?: string,
-  value?: string,
-  error?: boolean,
-  options: Array<{ label: string, value: string }>,
-  onChange?: (value: string) => void,
-  placeholder?: string,
-  fullWidth?: boolean,
+  className?: string
+  value?: string
+  error?: boolean
+  options: Array<{ label: string, value: string }>
+  onChange?: (value: string) => void
+  placeholder?: string
+  fullWidth?: boolean
   InputClasses?: Partial<ClassNameMap<FilledInputClassKey>>
   TextFieldClasses?: Partial<ClassNameMap<TextFieldClassKey>>
-  disabled?: boolean,
+  disabled?: boolean
 }
 
 
@@ -103,10 +103,10 @@ const InputComponent: React.FC<{ inputRef: React.LegacyRef<HTMLDivElement> }>
   = ({ inputRef, ...props }) => <div ref={inputRef} {...props} />
 
 const Control: React.FC<{
-  hasValue: boolean,
-  innerRef: React.Ref<HTMLDivElement>,
-  selectProps: { props: Partial<Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> & { isSimple: boolean }> },
-  innerProps: any,
+  hasValue: boolean
+  innerRef: React.Ref<HTMLDivElement>
+  selectProps: { props: Partial<Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> & { isSimple: boolean }> }
+  innerProps: any
 }>
   = React.memo(({
     innerRef,
@@ -218,8 +218,8 @@ const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, innerPro
         component="div"
         className={classes.option}
         classes={{
-            root: classes.optionButtonHover,
-            selected: classes.optionButtonSelected,
+          root: classes.optionButtonHover,
+          selected: classes.optionButtonSelected,
         }}
         style={{
           fontWeight: isSelected ? 500 : 400,
@@ -250,7 +250,7 @@ export const filterOption = createFilter({
 })
 
 const BasicFormInputSelect: React.FC<Props> = React.memo(({
-  placeholder = '', className, value = '', error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
+  placeholder = '', className, error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
 }) => {
   const classes = useStyles({})
   const classes2 = useStyles2({})
@@ -286,7 +286,7 @@ const BasicFormInputSelect: React.FC<Props> = React.memo(({
 
 
 export const SimpleFormInputSelect: React.FC<Props> = React.memo(({
-  placeholder = '', className, value = '', error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
+  placeholder = '', className, error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
 }) => {
   const classes = useStyles({})
   const classes2 = useStyles2({})

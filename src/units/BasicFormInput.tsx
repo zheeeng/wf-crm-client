@@ -56,17 +56,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  className?: string,
-  type?: string,
-  style?: React.CSSProperties,
-  value?: string,
-  error?: boolean,
-  onChange?: React.ChangeEventHandler<HTMLElement>,
-  onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>,
-  autoFocus?: boolean,
-  placeholder?: string,
-  noLabel?: boolean,
-  fullWidth?: boolean,
+  className?: string
+  type?: string
+  style?: React.CSSProperties
+  value?: string
+  error?: boolean
+  onChange?: React.ChangeEventHandler<HTMLElement>
+  onEnterPress?: React.KeyboardEventHandler<HTMLInputElement>
+  autoFocus?: boolean
+  placeholder?: string
+  noLabel?: boolean
+  fullWidth?: boolean
   InputClasses?: Partial<ClassNameMap<FilledInputClassKey>>
   TextFieldClasses?: Partial<ClassNameMap<TextFieldClassKey>>
 }

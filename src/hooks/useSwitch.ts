@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-type DependencyList = ReadonlyArray<any>
+type DependencyList = any[]
 
 const useSwitch = <F extends Function>(f: F, deps: DependencyList = []): F => {
   const ref = useRef<F | null>(f)

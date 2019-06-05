@@ -5,11 +5,6 @@ import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useInfoCallback from '~src/hooks/useInfoCallback'
-import pipe from 'ramda/es/pipe'
-import prop from 'ramda/es/prop'
-import head from 'ramda/es/head'
-import map from 'ramda/es/map'
-import defaultTo from 'ramda/es/defaultTo'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 
@@ -21,20 +16,20 @@ import useLatest from '~src/hooks/useLatest'
 import useDidUpdate from '~src/hooks/useDidUpdate'
 
 type FetchParams = {
-  page?: number,
-  size?: number,
-  searchTerm?: string,
-  favourite?: boolean,
-  groupId?: string,
+  page?: number
+  size?: number
+  searchTerm?: string
+  favourite?: boolean
+  groupId?: string
 }
 type ContactsResponse = { pagination: Pagination, result: PeopleAPI[] }
 
 type ContainerProps = {
-  page?: number,
-  size?: number,
-  searchTerm?: string,
-  favourite?: boolean,
-  groupId?: string,
+  page?: number
+  size?: number
+  searchTerm?: string
+  favourite?: boolean
+  groupId?: string
 }
 
 const ContactsContainer = createContainer(({
@@ -74,12 +69,12 @@ const ContactsContainer = createContainer(({
 
   const { request: postExportContacts } = usePost<{ task_id: string }>()
   const { request: getExportStatus, data: exportContactsStatus, error: getExportStatusError } = useGet<{
-    id: string,
-    ready: boolean,
-    status: string,
+    id: string
+    ready: boolean
+    status: string
     result?: {
-      url: string,
-    },
+      url: string
+    }
   }>()
 
   const latestContactsData = useLatest(contactsData, contactsData2)
@@ -224,7 +219,7 @@ const ContactsContainer = createContainer(({
 
         if (statusResponse && statusResponse.ready === true
           && statusResponse.result && statusResponse.result.url) {
-            downloadFile(statusResponse.result.url)
+          downloadFile(statusResponse.result.url)
         }
       }
     },

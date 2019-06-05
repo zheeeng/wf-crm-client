@@ -98,27 +98,27 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   )
 
   const [groupForm, setGroupForm] = useState<{
-    type: FormType,
-    opened: boolean,
-    option?: CreateFormOption,
+    type: FormType
+    opened: boolean
+    option?: CreateFormOption
   }>({
     type: '',
     opened: false,
   })
 
   const changeGroupFormOpened = useCallback<{
-    (opened: true, type: FormType, option: CreateFormOption): () => void;
-    (opened: false): () => void;
+    (opened: true, type: FormType, option: CreateFormOption): () => void
+    (opened: false): () => void
   }>(
-    (opened: boolean, type?: FormType, option?: CreateFormOption) => () => {
-      setGroupForm({
-        type: type ? type : '',
-        opened,
-        option: opened ? option : undefined,
-      })
-    },
-    [groupForm],
-  )
+      (opened: boolean, type?: FormType, option?: CreateFormOption) => () => {
+        setGroupForm({
+          type: type ? type : '',
+          opened,
+          option: opened ? option : undefined,
+        })
+      },
+      [groupForm],
+      )
 
   const handleAddNewGroup = useCallback(
     async (group: object) => {

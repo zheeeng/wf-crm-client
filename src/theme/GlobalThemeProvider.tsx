@@ -84,7 +84,7 @@ export const themeOptions: ThemeOptions = {
   overrides: {
     MuiToolbar: {
       dense: {
-         height: 56,
+        height: 56,
       },
     },
     MuiButton: {

@@ -28,9 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  open: boolean,
-  onClose: () => void,
-  contactIds: string[],
+  open: boolean
+  onClose: () => void
+  contactIds: string[]
 }
 
 const ExportContactsForm: React.FC<Props> = React.memo(

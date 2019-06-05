@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext, useCallback } from 'react'
+import React, { useRef, useEffect, useContext } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Link, ComponentProps } from '@roundation/roundation'
@@ -244,20 +244,18 @@ const Header: React.FC<Props> = React.memo(() => {
   const { toggleDrawerExpanded } = useContext(AppContainer.Context)
   const { message, dismiss } = useContext(AlertContainer.Context)
   const { username, login } = useContext(AccountContainer.Context)
-  const [ anchorEl, setAnchorEl ] = useState<HTMLElement | null>(null)
-  const [ openAccount, setOpenAccount ] = useState(false)
 
-  const handleMenuToggle = useCallback(
-    (forOpen: boolean) => (event: React.MouseEvent<HTMLElement>) => {
-      if (forOpen) {
-        setOpenAccount(true)
-        !anchorEl && setAnchorEl(event.currentTarget)
-      } else {
-        setOpenAccount(false)
-      }
-    },
-    [anchorEl, openAccount],
-  )
+  // const handleMenuToggle = useCallback(
+  //   (forOpen: boolean) => (event: React.MouseEvent<HTMLElement>) => {
+  //     if (forOpen) {
+  //       setOpenAccount(true)
+  //       !anchorEl && setAnchorEl(event.currentTarget)
+  //     } else {
+  //       setOpenAccount(false)
+  //     }
+  //   },
+  //   [anchorEl, openAccount],
+  // )
 
   useEffect(() => { login() }, [])
 
@@ -284,23 +282,23 @@ const Header: React.FC<Props> = React.memo(() => {
               </IconButton>
             </Hidden>
             <Hidden xsDown>
-            <nav className={classes.navList}>
-              <div className={classes.navItem}>
-                <a href="/welcome" className={classes.link}>
-                  Dashboard
-                </a>
-              </div>
-              <div className={classes.navItem}>
-                <a href="/templates" className={classes.link}>
-                  Waiver Templates
-                </a>
-              </div>
-              <div className={classes.navItem}>
-                <Link to="/crm" className={classnames(classes.link, 'active')}>
-                  My Customers
-                </Link>
-              </div>
-            </nav>
+              <nav className={classes.navList}>
+                <div className={classes.navItem}>
+                  <a href="/welcome" className={classes.link}>
+                    Dashboard
+                  </a>
+                </div>
+                <div className={classes.navItem}>
+                  <a href="/templates" className={classes.link}>
+                    Waiver Templates
+                  </a>
+                </div>
+                <div className={classes.navItem}>
+                  <Link to="/crm" className={classnames(classes.link, 'active')}>
+                    My Customers
+                  </Link>
+                </div>
+              </nav>
             </Hidden>
             <div className={classes.dropdownButton}>
               <Avatar src={crateGravatar(username)} classes={{root: classes.avatarRoot}} />
@@ -313,7 +311,12 @@ const Header: React.FC<Props> = React.memo(() => {
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_blank" href="https://help.waiverforever.com/"> Help Center</a>
+                  <a
+                    className={classes.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://help.waiverforever.com/"
+                  > Help Center</a>
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
                 <MenuItem className={classes.menuItem}>

@@ -14,11 +14,9 @@ import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 
 import SplitWaiverThemeProvider from '~src/theme/SplitWaiverThemeProvider'
-import AlertContainer from '~src/containers/Alert'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import useContact from '~src/containers/useContact'
-import ContactFieldInput,
-  { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
+import ContactFieldInput, { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import useToggle from '~src/hooks/useToggle'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
@@ -319,7 +317,7 @@ const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'ph
 }
 
 export interface Props {
-  contactId: string,
+  contactId: string
 }
 
 const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
@@ -379,7 +377,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   const handleFieldAdd = useCallback(
     async (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other',
-     { key, value }: FieldSegmentValue, priority: number,
+      { key, value }: FieldSegmentValue, priority: number,
     ) => {
       const params: any = name !== 'date'
         ? { fieldType: name, [key]: value, priority }
@@ -393,16 +391,18 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   const handleFieldUpdate = useCallback(
     (name: 'name' | 'email' | 'address' | 'phone' | 'date'  | 'other',
-    { key, value }: FieldSegmentValue,
-    id: string,
-    priority: number,
-  ) =>
-    updateField({
-      id,
-      fieldType: name,
-      [key]: value,
-      priority,
-    } as any).then(specificFieldToInputField(name)),
+      { key, value }: FieldSegmentValue,
+      id: string,
+      priority: number,
+    ) =>
+      updateField(
+        {
+          id,
+          fieldType: name,
+          [key]: value,
+          priority,
+        } as any
+      ).then(specificFieldToInputField(name)),
     [updateField],
   )
 
@@ -424,21 +424,22 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         day,
         priority,
       } as any).then(specificFieldToInputField('date')),
-      [addField],
+    [addField],
   )
   const handleUpdateDateField = useCallback(
     ({ year, month, day }: { year: number, month: number, day: number }, id: string, priority: number,
-  ) =>
-    updateField({
-      id,
-      fieldType: 'date',
-      year: year,
-      month: month,
-      day: day,
-      priority,
-    } as any).then(specificFieldToInputField('date')),
+    ) =>
+      updateField({
+        id,
+        fieldType: 'date',
+        year: year,
+        month: month,
+        day: day,
+        priority,
+      } as any).then(specificFieldToInputField('date')),
     [updateField],
   )
+
   const handleFieldRemove = useCallback(
     (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other', id: string) =>
       removeField({
@@ -697,60 +698,60 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       </>
     )
     : fetchContactError
-    ? (
-      <Typography align="center">Oops, an error occurred!</Typography>
-    )
-    : contact
-    ? (
-      <>
-        <div className={classes.profileBar}>
-          <Typography variant="h4" className={classes.profileTitle}>
-            Profile
-          </Typography>
-          <Tooltip title={editable ? 'display' : 'edit'}>
-            <IconButton onClick={toggleEditable} className={classes.editIconBox}>
-              {editable
-                ? <Icon name={ICONS.CheckCircle} size="lg" color="hoverLighten" />
-                : <Icon name={ICONS.Edit} size="lg" color="hoverLighten" />
-              }
-            </IconButton>
-          </Tooltip>
-        </div>
-        <div className={classes.profileContent}>
-          <SplitWaiverThemeProvider>
-            <Dialog
-              open={splitDialogOpened}
-              onClose={cancelSplitWaiver}
-              PaperProps={{
-                className: classnames(classes.paper, classes.splitPaper),
-              }}
-              onAnimationEnd={clearSplitWaiverTitle}
-            >
-              <Typography variant="h6" align="center" color="textSecondary" className={classes.splitTitle}>
-                {splitWaiverTitle}
+      ? (
+        <Typography align="center">Oops, an error occurred!</Typography>
+      )
+      : contact
+        ? (
+          <>
+            <div className={classes.profileBar}>
+              <Typography variant="h4" className={classes.profileTitle}>
+                Profile
               </Typography>
-              {renderFields(true, false)}
-              <div className={classes.dialogButtonZone}>
-                <Button onClick={cancelSplitWaiver}>Cancel</Button>
-                <Button color="primary" onClick={handleWaiverSplit}>Split</Button>
+              <Tooltip title={editable ? 'display' : 'edit'}>
+                <IconButton onClick={toggleEditable} className={classes.editIconBox}>
+                  {editable
+                    ? <Icon name={ICONS.CheckCircle} size="lg" color="hoverLighten" />
+                    : <Icon name={ICONS.Edit} size="lg" color="hoverLighten" />
+                  }
+                </IconButton>
+              </Tooltip>
+            </div>
+            <div className={classes.profileContent}>
+              <SplitWaiverThemeProvider>
+                <Dialog
+                  open={splitDialogOpened}
+                  onClose={cancelSplitWaiver}
+                  PaperProps={{
+                    className: classnames(classes.paper, classes.splitPaper),
+                  }}
+                  onAnimationEnd={clearSplitWaiverTitle}
+                >
+                  <Typography variant="h6" align="center" color="textSecondary" className={classes.splitTitle}>
+                    {splitWaiverTitle}
+                  </Typography>
+                  {renderFields(true, false)}
+                  <div className={classes.dialogButtonZone}>
+                    <Button onClick={cancelSplitWaiver}>Cancel</Button>
+                    <Button color="primary" onClick={handleWaiverSplit}>Split</Button>
+                  </div>
+                </Dialog>
+              </SplitWaiverThemeProvider>
+              {renderTags(true)}
+              <div className={classes.avatarBar}>
+                <Avatar
+                  alt={contact.info.name}
+                  src={contact.info.avatar}
+                  className={classes.avatarIcon}
+                />
+                <span className={classes.avatarName}>{contact.info.name}</span>
               </div>
-            </Dialog>
-          </SplitWaiverThemeProvider>
-          {renderTags(true)}
-          <div className={classes.avatarBar}>
-            <Avatar
-              alt={contact.info.name}
-              src={contact.info.avatar}
-              className={classes.avatarIcon}
-            />
-            <span className={classes.avatarName}>{contact.info.name}</span>
-          </div>
-          {renderTags(false)}
-          {renderFields(false, editable)}
-        </div>
-      </>
-    )
-    : null
+              {renderTags(false)}
+              {renderFields(false, editable)}
+            </div>
+          </>
+        )
+        : null
 })
 
 export default ContactProfile

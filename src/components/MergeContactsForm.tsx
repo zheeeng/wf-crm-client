@@ -47,9 +47,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  open: boolean,
-  onClose: () => void,
-  onOk: () => Promise<any>,
+  open: boolean
+  onClose: () => void
+  onOk: () => Promise<any>
 }
 
 const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {

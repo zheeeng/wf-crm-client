@@ -4,9 +4,9 @@ import createContainer from 'constate'
 const defaultDismissTimeout = 5000
 
 const initialMessage: {
-  expand: boolean,
-  type: 'success' | 'fail',
-  content: React.ReactNode,
+  expand: boolean
+  type: 'success' | 'fail'
+  content: React.ReactNode
 } = {
   expand: false,
   type: 'success',

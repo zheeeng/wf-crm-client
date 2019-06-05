@@ -11,7 +11,9 @@ const ContactIndex: React.FC<Props> = React.memo(
     <Contact
       key={contact}
       contactId={contact}
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       navigate={navigate!}
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       path={location!.pathname}
     />
   ),

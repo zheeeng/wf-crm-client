@@ -19,8 +19,11 @@ import SvgIcon, { ICONS } from '~src/units/Icons'
 const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
   if (values[0].fieldType === 'date') {
     const dateField = [
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       values.find(v => v.key === 'month')!.value.padStart(2, '0'),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       values.find(v => v.key === 'day')!.value.padStart(2, '0'),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       values.find(v => v.key === 'year')!.value.padStart(4, '0'),
     ].join('/').trim()
 
@@ -210,7 +213,9 @@ const getEmptyFieldSegmentValue = (fieldType: string): FieldSegmentValue => ({
   fieldType,
 })
 
-const getFieldDefaultTitle = (fieldValue: FieldValue) => fieldValue.values.find(sv => sv.key === 'title')!.value
+const getFieldDefaultTitle = (fieldValue: FieldValue) =>
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  fieldValue.values.find(sv => sv.key === 'title')!.value
 
 const getFieldDefaultTitleWidthDec = (fieldValue: FieldValue) => {
   const defaultTitle = getFieldDefaultTitle(fieldValue).trim()
@@ -244,26 +249,26 @@ export interface FieldValue {
 }
 
 export type InputProps = {
-  fieldName?: string,
-  showName?: boolean,
-  Icon?: React.ComponentType<{ className?: string, color?: any }>,
-  name: string,
-  hasTitle: boolean,
-  editable?: boolean,
-  type?: string,
+  fieldName?: string
+  showName?: boolean
+  Icon?: React.ComponentType<{ className?: string, color?: any }>
+  name: string
+  hasTitle: boolean
+  editable?: boolean
+  type?: string
 }
 
 export type Props = InputProps & {
-  fieldValues: FieldValue[],
-  backupFieldValue: FieldValue,
-  expandable: boolean,
-  onAddField (name: string, value: FieldSegmentValue, priority: number): Promise<FieldValue | null>,
+  fieldValues: FieldValue[]
+  backupFieldValue: FieldValue
+  expandable: boolean
+  onAddField (name: string, value: FieldSegmentValue, priority: number): Promise<FieldValue | null>
   onUpdateField (name: string, value: FieldSegmentValue, id: string,  priority: number): Promise<FieldValue | null>
   onBatchUpdateFields(name: string, updateObj: any, id: string, priority: number): Promise<FieldValue | null>
   onUpdateDateField?: (date: { year: number, month: number, day: number }, id: string,  priority: number) => Promise<FieldValue | null>
   onAddDateField?: (date: { year: number, month: number, day: number }, priority: number) => Promise<FieldValue | null>
   onDeleteField (name: string, id: string): Promise<string | null>
-  onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>,
+  onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>
 }
 
 const getFieldDate = (values: FieldSegmentValue[]) => {
@@ -282,195 +287,364 @@ const getFieldDate = (values: FieldSegmentValue[]) => {
 
 const ContactFieldInput: React.FC<Props> = React.memo(
   ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
-     editable = false, type, hasTitle, expandable,
-     onAddField, onUpdateField, onBatchUpdateFields, onUpdateDateField, onAddDateField, onDeleteField, onChangePriority,
+    editable = false, type, hasTitle, expandable,
+    onAddField, onUpdateField, onBatchUpdateFields, onUpdateDateField, onAddDateField, onDeleteField, onChangePriority,
   }) => {
 
-  const classes = useStyles({})
+    const classes = useStyles({})
 
-  const [ localFieldValues, setLocalFieldValues ] = useState(fieldValues)
+    const [ localFieldValues, setLocalFieldValues ] = useState(fieldValues)
 
-  useEffect(
-    () => setLocalFieldValues(fieldValues),
-    [fieldValues],
-  )
+    useEffect(
+      () => setLocalFieldValues(fieldValues),
+      [fieldValues],
+    )
 
-  const containerRef = useRef<HTMLDivElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
 
-  const hasValues = useMemo(
-    () => !!fieldValues.length || !!localFieldValues.length,
-    [fieldValues, localFieldValues],
-  )
+    const hasValues = useMemo(
+      () => !!fieldValues.length || !!localFieldValues.length,
+      [fieldValues, localFieldValues],
+    )
 
-  const addHiddenField = useCallback(
-    async () => {
-      const field = await onAddField(name, getEmptyFieldSegmentValue(name), 0)
-      if (field) setLocalFieldValues(values => values.concat(field))
-      return field
-    },
-    [localFieldValues, onAddField, name, setLocalFieldValues],
-  )
+    const addHiddenField = useCallback(
+      async () => {
+        const field = await onAddField(name, getEmptyFieldSegmentValue(name), 0)
+        if (field) setLocalFieldValues(values => values.concat(field))
+        return field
+      },
+      [localFieldValues, onAddField, name, setLocalFieldValues],
+    )
 
-  const addField = useCallback(
-    async (segmentValue: FieldSegmentValue) => {
-      const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
-      const field = await onAddField(name, segmentValue, newPriority)
-      if (field) setLocalFieldValues(values => values.concat(field))
-      return field
-    },
-    [localFieldValues, onAddField, name, setLocalFieldValues],
-  )
-  const updateField = useCallback(
-    async (segmentValue: FieldSegmentValue, id: string) => {
-      if (!id) return
-      const fieldValue = localFieldValues.find(value => value.id === id)
-      if (!fieldValue) return
-      const priority = fieldValue.priority
+    const addField = useCallback(
+      async (segmentValue: FieldSegmentValue) => {
+        const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
+        const field = await onAddField(name, segmentValue, newPriority)
+        if (field) setLocalFieldValues(values => values.concat(field))
+        return field
+      },
+      [localFieldValues, onAddField, name, setLocalFieldValues],
+    )
+    const updateField = useCallback(
+      async (segmentValue: FieldSegmentValue, id: string) => {
+        if (!id) return
+        const fieldValue = localFieldValues.find(value => value.id === id)
+        if (!fieldValue) return
+        const priority = fieldValue.priority
 
-      const field = await onUpdateField(name, segmentValue, id, priority)
-      if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
-      return field
-    },
-    [localFieldValues, onUpdateField, name, setLocalFieldValues],
-  )
+        const field = await onUpdateField(name, segmentValue, id, priority)
+        if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+        return field
+      },
+      [localFieldValues, onUpdateField, name, setLocalFieldValues],
+    )
 
-  const addDateField = useCallback(
-    async (year: number, month: number, day: number) => {
-      if (!onAddDateField) return
-      const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
-      const field = await onAddDateField({ year, month, day }, newPriority)
-      if (field) setLocalFieldValues(values => values.concat(field))
-      return field
-    },
-    [localFieldValues, onAddDateField, setLocalFieldValues],
-  )
-  const updateDateField = useCallback(
-    async (year: number, month: number, day: number, id: string) => {
-      if (!onUpdateDateField) return
-      if (!id) return
-      const fieldValue = localFieldValues.find(value => value.id === id)
-      if (!fieldValue) return
-      const priority = fieldValue.priority
+    const addDateField = useCallback(
+      async (year: number, month: number, day: number) => {
+        if (!onAddDateField) return
+        const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
+        const field = await onAddDateField({ year, month, day }, newPriority)
+        if (field) setLocalFieldValues(values => values.concat(field))
+        return field
+      },
+      [localFieldValues, onAddDateField, setLocalFieldValues],
+    )
+    const updateDateField = useCallback(
+      async (year: number, month: number, day: number, id: string) => {
+        if (!onUpdateDateField) return
+        if (!id) return
+        const fieldValue = localFieldValues.find(value => value.id === id)
+        if (!fieldValue) return
+        const priority = fieldValue.priority
 
-      const field = await onUpdateDateField({ year, month, day }, id, priority)
-      if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
-    },
-    [localFieldValues, onUpdateDateField, setLocalFieldValues]
-  )
-  const removeField = useCallback(
-    async (id: string) => {
-      if (!id) return
-      const removedId = await onDeleteField(name, id)
+        const field = await onUpdateDateField({ year, month, day }, id, priority)
+        if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+      },
+      [localFieldValues, onUpdateDateField, setLocalFieldValues]
+    )
+    const removeField = useCallback(
+      async (id: string) => {
+        if (!id) return
+        const removedId = await onDeleteField(name, id)
 
-      if (removedId) setLocalFieldValues(values => values.filter(v => v.id !== removedId))
-    },
-    [onDeleteField, name, setLocalFieldValues],
-  )
-  const toggleHideField = useCallback(
-    async (id: string) => {
-      if (!id) {
-        await addHiddenField()
-        return
-      }
+        if (removedId) setLocalFieldValues(values => values.filter(v => v.id !== removedId))
+      },
+      [onDeleteField, name, setLocalFieldValues],
+    )
+    const toggleHideField = useCallback(
+      async (id: string) => {
+        if (!id) {
+          await addHiddenField()
+          return
+        }
 
-      const targetField = localFieldValues.find(v => v.id === id)
+        const targetField = localFieldValues.find(v => v.id === id)
 
-      if (!targetField) return
+        if (!targetField) return
 
-      const newPriority = targetField.priority !== 0
-        ? 0
-        : Math.max(
+        const newPriority = targetField.priority !== 0
+          ? 0
+          : Math.max(
             Math.min.apply(
               null,
               localFieldValues.map(v => v.priority).filter(p => typeof p !== 'undefined'),
             ) - 1,
             1,
           )
-      const field = await onChangePriority(name, id, newPriority)
-      if (field) {
-        setLocalFieldValues(
-          values => values
-            .map(v => v.id === id ? field : v)
-            .sort((p, c) => c.priority - p.priority),
+        const field = await onChangePriority(name, id, newPriority)
+        if (field) {
+          setLocalFieldValues(
+            values => values
+              .map(v => v.id === id ? field : v)
+              .sort((p, c) => c.priority - p.priority),
+          )
+        }
+      },
+      [name, onChangePriority, localFieldValues, setLocalFieldValues],
+    )
+
+    const handleAddEntry = useCallback(
+      () => { addField(getEmptyFieldSegmentValue(name)) },
+      [localFieldValues, name],
+    )
+
+    const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
+
+    const queueRef = useRef({ queue: [] as FieldSegmentValue[], isAdding: false })
+
+    const batchUpdateFields = useCallback(
+      async (fields: FieldSegmentValue[], id: string, priority: number) => {
+        const fieldType = fields[0].fieldType
+        const updateObj = fields.reduce(
+          (acc: any, field) => {
+            acc[field.key] = field.value
+            return acc
+          },
+          {},
         )
-      }
-    },
-    [name, onChangePriority, localFieldValues, setLocalFieldValues],
-  )
 
-  const handleAddEntry = useCallback(
-    () => { addField(getEmptyFieldSegmentValue(name)) },
-    [localFieldValues, name],
-  )
+        const field = await onBatchUpdateFields(fieldType, updateObj, id, priority)
 
-  const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
+        if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+      },
+      [localFieldValues, onUpdateField, name, setLocalFieldValues],
+    )
 
-  const queueRef = useRef({ queue: [] as FieldSegmentValue[], isAdding: false })
+    const handleEntryUpdateByBlur = useCallback(
+      (key: string, id: string, defaultValue: string) =>
+        async (event: React.FocusEvent<HTMLInputElement>) => {
+          const value = event.target.value.trim()
 
-  const batchUpdateFields = useCallback(
-    async (fields: FieldSegmentValue[], id: string, priority: number) => {
-      const fieldType = fields[0].fieldType
-      const updateObj = fields.reduce(
-        (acc: any, field) => {
-          acc[field.key] = field.value
-          return acc
+          if (!value || value === defaultValue) return
+
+          if (key !== 'title' && type === 'email' && !isEmail(value)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          // if (type === 'calendar') {
+          //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+          //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+          //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+
+          //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+          // }
+
+          const fieldData = { key, value, fieldType: name }
+          if (hasValues) {
+            updateField(fieldData, id)
+          } else {
+            if (queueRef.current.isAdding) {
+              queueRef.current.queue.push(fieldData)
+              return
+            }
+
+            queueRef.current = { queue: [], isAdding: true }
+            const result = await addField(fieldData)
+            if (!result || !result.id) {
+              queueRef.current = { queue: [], isAdding: false }
+              return
+            }
+
+            while (queueRef.current.queue.length) {
+              await batchUpdateFields(queueRef.current.queue, result.id, result.priority)
+            }
+
+            queueRef.current = { queue: [], isAdding: false }
+          }
         },
-        {},
-      )
+      [localFieldValues, setHasErrorKeys, name, updateField, addField],
+    )
 
-      const field = await onBatchUpdateFields(fieldType, updateObj, id, priority)
+    const handleEntryUpdateByKeydown = useCallback(
+      (key: string, id: string, defaultValue: string) =>
+        (event: React.KeyboardEvent<HTMLInputElement>) => {
+          key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
 
-      if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
-    },
-    [localFieldValues, onUpdateField, name, setLocalFieldValues],
-  )
+          if (event.keyCode !== 13) return
+          const value = event.currentTarget.value.trim()
 
+          if (!value || value === defaultValue) return
 
+          if (key !== 'title' && type === 'email' && !isEmail(value)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
 
-  const handleEntryUpdateByBlur = useCallback(
-    (key: string, id: string, defaultValue: string) =>
-      async (event: React.FocusEvent<HTMLInputElement>) => {
-        const value = event.target.value.trim()
+          // if (type === 'calendar') {
+          //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+          //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+          //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
 
-        if (!value || value === defaultValue) return
+          //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
 
-        if (key !== 'title' && type === 'email' && !isEmail(value)) {
-          setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+          // }
+
+          if (hasValues) {
+            updateField({ key, value, fieldType: name }, id)
+          } else {
+            addField({ key, value, fieldType: name })
+          }
+        },
+      [localFieldValues, name, type],
+    )
+
+    // const handleEntryUpdate = useCallback(
+    //   (key: string, id: string, defaultValue: string) =>
+    //     (value: string) => { updateField({ key, value, fieldType: name }, id) },
+    //   [updateField],
+    // )
+
+    const handleEntryDelete = useCallback(
+      (id: string) => () => removeField(id),
+      [removeField],
+    )
+    const handleEntryToggleHide = useCallback(
+      (id: string) => () => toggleHideField(id),
+      [toggleHideField],
+    )
+
+    const [sortingId, setSortingId] = useState('')
+
+    const calculatedFieldValues = useMemo(
+      () => {
+        const values1 = hasValues ? localFieldValues : [backupFieldValue]
+
+        if (editable) return values1
+        const records = values1.map(it => (
+          [
+            joinSegmentFieldValues(it.values),
+            (it.values.find(v => v.key === 'title') || { value: '' }).value,
+            it,
+          ] as [string, string, FieldValue])
+        ).reduce(
+          (obj, [key, title, fieldValue]) => {
+            if (fieldValue.priority === 0) {
+              return obj
+            }
+            const newItem = { title, value: fieldValue, priority: fieldValue.priority }
+            if (!obj[key]) {
+              obj[key] = [newItem]
+            } else {
+              const titleMatched = obj[key].filter(r => r.title === newItem.title)
+              if (titleMatched.length === 0) {
+                obj[key] = obj[key].concat(newItem)
+              } else if (newItem.priority > titleMatched[0].priority) {
+                obj[key] = obj[key].filter(r => r.title !== newItem.title).concat(newItem)
+              }
+            }
+            return obj
+          },
+          // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
+          {} as { [key: string]: Array<{title: string, value: FieldValue, priority: FieldValue['priority'] }> }
+        )
+
+        let values2: FieldValue[] = []
+        for (let key in records) {
+          values2.push(...records[key].map(it => it.value))
+        }
+
+        values2.sort((p, c) => c.priority - p.priority)
+
+        return values2
+      },
+      [editable, hasValues, localFieldValues, backupFieldValue]
+    )
+
+    const onSortEnd = useCallback(
+      async ({oldIndex, newIndex}) => {
+        setSortingId('')
+        const valueOfOld = localFieldValues[oldIndex]
+        const valueOfNew = localFieldValues[newIndex]
+        const previousValueOfNew = localFieldValues[newIndex - 1]
+        setLocalFieldValues(values => arrayMove(values, oldIndex, newIndex))
+        const newPriority = !previousValueOfNew
+          ? valueOfNew.priority + 1
+          : (valueOfNew.priority + previousValueOfNew.priority) / 2
+
+        const field = await onChangePriority(name, valueOfOld.id || '', newPriority)
+        if (field) {
+          setLocalFieldValues(
+            values => values
+              .map(v => v.id === valueOfOld.id ? field : v)
+              .sort((p, c) => c.priority - p.priority),
+          )
+        }
+      },
+      [localFieldValues, setSortingId, onChangePriority, setLocalFieldValues],
+    )
+
+    const onDateChange = useCallback(
+      (id?: string) => async (date: Date | null) => {
+        if (!date) {
+          if (hasValues && id) {
+            updateDateField(0, 0 , 0, id)
+          }
           return
         }
 
-        // if (type === 'calendar') {
-        //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
-        //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
-        //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+        const year = date.getFullYear()
+        const month = date.getMonth() + 1
+        const day = date.getDate()
 
-        //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
-        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-        //     return
-        //   }
-
-        //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
-        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-        //     return
-        //   }
-
-        //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
-        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-        //     return
-        //   }
-        // }
-
-        const fieldData = { key, value, fieldType: name }
-        if (hasValues) {
-          updateField(fieldData, id)
+        if (hasValues && id) {
+          updateDateField(year, month, day, id)
         } else {
+          const fieldData = [{ key: 'year', value: year, fieldType: name }, { key: 'month', value: month, fieldType: name }, { key: 'day', value: day, fieldType: name }]
+
           if (queueRef.current.isAdding) {
-            queueRef.current.queue.push(fieldData)
+            // Note: type unsafe, but implementation works
+            queueRef.current.queue.push(...fieldData as any)
             return
           }
 
           queueRef.current = { queue: [], isAdding: true }
-          const result = await addField(fieldData)
+          const result = await addDateField(year, month, day)
           if (!result || !result.id) {
             queueRef.current = { queue: [], isAdding: false }
             return
@@ -483,428 +657,255 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           queueRef.current = { queue: [], isAdding: false }
         }
       },
-    [localFieldValues, setHasErrorKeys, name, updateField, addField],
-  )
+      [updateDateField, addDateField],
+    )
 
-  const handleEntryUpdateByKeydown = useCallback(
-    (key: string, id: string, defaultValue: string) =>
-      (event: React.KeyboardEvent<HTMLInputElement>) => {
-        key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
-
-        if (event.keyCode !== 13) return
-        const value = event.currentTarget.value.trim()
-
-        if (!value || value === defaultValue) return
-
-        if (key !== 'title' && type === 'email' && !isEmail(value)) {
-          setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          return
-        }
-
-        // if (type === 'calendar') {
-        //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
-        //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
-        //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
-
-        //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
-        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-        //     return
-        //   }
-
-        //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
-        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-        //     return
-        //   }
-
-        //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
-        //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-        //     return
-        //   }
-        // }
-
-        if (hasValues) {
-          updateField({ key, value, fieldType: name }, id)
-        } else {
-          addField({ key, value, fieldType: name })
-        }
-      },
-    [localFieldValues, name, type],
-  )
-
-  const handleEntryUpdate = useCallback(
-    (key: string, id: string, defaultValue: string) =>
-      (value: string) => {
-
-      updateField({ key, value, fieldType: name }, id)
-    },
-    [updateField],
-  )
-
-  const handleEntryDelete = useCallback(
-    (id: string) => () => removeField(id),
-    [removeField],
-  )
-  const handleEntryToggleHide = useCallback(
-    (id: string) => () => toggleHideField(id),
-    [toggleHideField],
-  )
-
-  const [sortingId, setSortingId] = useState('')
-
-  const onSortStart = useCallback(
-    ({ index }: { index: number }) => {
-      setSortingId(calculatedFieldValues[index].id || '')
-    },
-    [setSortingId],
-  )
-
-  const onSortEnd = useCallback(
-    async ({oldIndex, newIndex}) => {
-      setSortingId('')
-      const valueOfOld = localFieldValues[oldIndex]
-      const valueOfNew = localFieldValues[newIndex]
-      const previousValueOfNew = localFieldValues[newIndex - 1]
-      setLocalFieldValues(values => arrayMove(values, oldIndex, newIndex))
-      const newPriority = !previousValueOfNew
-        ? valueOfNew.priority + 1
-        : (valueOfNew.priority + previousValueOfNew.priority) / 2
-
-      const field = await onChangePriority(name, valueOfOld.id!, newPriority)
-      if (field) {
-        setLocalFieldValues(
-          values => values
-            .map(v => v.id === valueOfOld.id ? field : v)
-            .sort((p, c) => c.priority - p.priority),
-        )
-      }
-    },
-    [localFieldValues, setSortingId, onChangePriority, setLocalFieldValues],
-  )
-
-  const onDateChange = useCallback(
-    (id?: string) => async (date: Date | null) => {
-      if (!date) {
-        if (hasValues && id) {
-          updateDateField(0, 0 , 0, id)
-        }
-        return
-      }
-
-      const year = date.getFullYear()
-      const month = date.getMonth() + 1
-      const day = date.getDate()
-
-      if (hasValues && id) {
-        updateDateField(year, month, day, id)
-      } else {
-        const fieldData = [{ key: 'year', value: year, fieldType: name }, { key: 'month', value: month, fieldType: name }, { key: 'day', value: day, fieldType: name }]
-
-        if (queueRef.current.isAdding) {
-          // Note: type unsafe, but implementation works
-          queueRef.current.queue.push(...fieldData as any)
-          return
-        }
-
-        queueRef.current = { queue: [], isAdding: true }
-        const result = await addDateField(year, month, day)
-        if (!result || !result.id) {
-          queueRef.current = { queue: [], isAdding: false }
-          return
-        }
-
-        while (queueRef.current.queue.length) {
-          await batchUpdateFields(queueRef.current.queue, result.id, result.priority)
-        }
-
-        queueRef.current = { queue: [], isAdding: false }
-      }
-    },
-    [updateDateField, addDateField],
-  )
-
-  const renderField = useCallback(
-    (values: FieldSegmentValue[], fieldValue: FieldValue, isFirst: boolean, isAppend: boolean) => (
-      <div className={classnames(
-        classes.fieldTextBar,
-        !editable && !joinSegmentFieldValues(values) && classes.hidden,
-        editable && fieldValue.priority === 0 && classes.disabled,
-      )}>
-        {editable
-          ? (
-            <>
-              {type === 'calendar' && (
-                <BasicDateInput
-                  className={classes.fieldTypeText}
-                  date={getFieldDate(values)}
-                  onDateChange={onDateChange(fieldValue.id)}
-                  disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                  placeholder="date"
-                />
-              )}
-              {type !== 'calendar' && values.filter(segmentValue => segmentValue.key !== 'title')
-                .map(segmentValue => (
+    const renderField = useCallback(
+      (values: FieldSegmentValue[], fieldValue: FieldValue, isFirst: boolean, isAppend: boolean) => (
+        <div className={classnames(
+          classes.fieldTextBar,
+          !editable && !joinSegmentFieldValues(values) && classes.hidden,
+          editable && fieldValue.priority === 0 && classes.disabled,
+        )}>
+          {editable
+            ? (
+              <>
+                {type === 'calendar' && (
+                  <BasicDateInput
+                    className={classes.fieldTypeText}
+                    date={getFieldDate(values)}
+                    onDateChange={onDateChange(fieldValue.id)}
+                    disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                    placeholder="date"
+                  />
+                )}
+                {type !== 'calendar' && values.filter(segmentValue => segmentValue.key !== 'title')
+                  .map(segmentValue => (
+                    <Input
+                      autoComplete="no"
+                      key={segmentValue.key}
+                      type={
+                        (type === 'address' && segmentValue.key === 'zipcode')
+                          ? 'number'
+                          : type
+                      }
+                      error={hasErrorKeys.includes(fieldValue.id || '')}
+                      className={classnames(
+                        classes.fieldTypeText,
+                        isAppend && classes.takeQuarter,
+                      )}
+                      classes={{
+                        disabled: classes.fieldDisabled,
+                        input: classes.input,
+                      }}
+                      placeholder={camelToWords(segmentValue.key)}
+                      defaultValue={segmentValue.value}
+                      onBlur={handleEntryUpdateByBlur(
+                        segmentValue.key,
+                        fieldValue.id || '',
+                        segmentValue.value,
+                      )}
+                      onKeyDown={handleEntryUpdateByKeydown(
+                        segmentValue.key,
+                        fieldValue.id || '',
+                        segmentValue.value,
+                      )}
+                      disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                    />
+                  ))
+                }
+                {!isAppend && hasTitle &&(
                   <Input
                     autoComplete="no"
-                    key={segmentValue.key}
-                    type={
-                      (type === 'address' && segmentValue.key === 'zipcode')
-                        ? 'number'
-                        : type
-                    }
-                    error={hasErrorKeys.includes(fieldValue.id || '')}
-                    className={classnames(
-                      classes.fieldTypeText,
-                      isAppend && classes.takeQuarter,
-                    )}
-                    classes={{
-                      disabled: classes.fieldDisabled,
-                      input: classes.input,
-                    }}
-                    placeholder={camelToWords(segmentValue.key)}
-                    defaultValue={segmentValue.value}
-                    onBlur={handleEntryUpdateByBlur(
-                      segmentValue.key,
-                      fieldValue.id!,
-                      segmentValue.value,
-                    )}
-                    onKeyDown={handleEntryUpdateByKeydown(
-                      segmentValue.key,
-                      fieldValue.id!,
-                      segmentValue.value,
-                    )}
+                    className={classes.fieldTypeText}
+                    classes={{disabled: classes.fieldDisabled}}
+                    defaultValue={getFieldDefaultTitle(fieldValue)}
+                    onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '', '')}
+                    onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id || '', '')}
+                    placeholder={getLabelExample(type)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                   />
-                ))
-              }
-              {!isAppend && hasTitle &&(
-                <Input
-                  autoComplete="no"
-                  className={classes.fieldTypeText}
-                  classes={{disabled: classes.fieldDisabled}}
-                  defaultValue={getFieldDefaultTitle(fieldValue)}
-                  onBlur={handleEntryUpdateByBlur('title', fieldValue.id!, '')}
-                  onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id!, '')}
-                  placeholder={getLabelExample(type)}
-                  disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                />
-              )}
-            </>
-          )
-          : (
-            <span className={classnames(
-              classes.fieldDisplayText,
-              showName && classes.fieldSimpleDisplayText,
-            )}>
-              {joinSegmentFieldValues(values)}
-            </span>
-          )
-        }
-        {(hasTitle && !editable) && (
-          <Typography variant="body2" className={classes.fieldLabelText}>
-            {getFieldDefaultTitleWidthDec(fieldValue)}
-          </Typography>
-        )}
-        {editable && !isAppend && (
-          <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
-            <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hide'}>
-              <IconButton
-                className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                onClick={handleEntryToggleHide(fieldValue.id!)}
-              >
-                <SvgIcon
-                  name={ICONS.Eye}
-                  color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
-                  size="sm"
-                />
-              </IconButton>
-            </Tooltip>
-            <SortHandler
-              element={
-                <Tooltip title="reorder">
-                  <IconButton
-                    className={classnames(
-                      classes.fieldControlIcon,
-                      classes.fieldHoverShowingIcon,
-                      classes.fieldDragIcon,
-                      classes.showInDragged,
-                    )}
-                  >
-                    <SvgIcon
-                      name={ICONS.Reorder}
-                      color="hoverLighten" size="sm"
-                    />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-            {expandable && (isFirst
-              ? (
-                <Tooltip title="add">
-                  <IconButton
-                    className={classnames(
-                      classes.fieldControlIcon,
-                      classes.hiddenInDragged,
-                    )}
-                    onClick={handleAddEntry}
-                  >
-                    <SvgIcon
-                      name={ICONS.AddCircle}
-                      color="hoverLighten" size="sm"
-                    />
-                  </IconButton>
-                </Tooltip>
-              )
-              : (
-                <Tooltip title="delete">
-                  <IconButton
-                    className={classnames(
-                      classes.fieldControlIcon,
-                      classes.hiddenInDragged,
-                    )}
-                    onClick={handleEntryDelete(fieldValue.id!)}>
-                    <SvgIcon
-                      name={ICONS.Delete}
-                      color="hoverLighten" size="sm"
-                    />
-                  </IconButton>
-                </Tooltip>
-              )
-            )}
-          </div>
-        )}
-      </div>
-    ),
-    [editable, hasTitle, hasErrorKeys,
-      handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
-      handleEntryToggleHide, handleEntryDelete]
-  )
-
-  const calculatedFieldValues = useMemo(
-    () => {
-      const values1 = hasValues ? localFieldValues : [backupFieldValue]
-
-      if (editable) return values1
-      const records = values1.map(it => (
-        [
-          joinSegmentFieldValues(it.values),
-          (it.values.find(v => v.key === 'title') || { value: '' }).value,
-          it,
-        ] as [string, string, FieldValue])
-      ).reduce(
-        (obj, [key, title, fieldValue]) => {
-          if (fieldValue.priority === 0) {
-            return obj
+                )}
+              </>
+            )
+            : (
+              <span className={classnames(
+                classes.fieldDisplayText,
+                showName && classes.fieldSimpleDisplayText,
+              )}>
+                {joinSegmentFieldValues(values)}
+              </span>
+            )
           }
-          const newItem = { title, value: fieldValue, priority: fieldValue.priority }
-          if (!obj[key]) {
-            obj[key] = [newItem]
-          } else {
-            const titleMatched = obj[key].filter(r => r.title === newItem.title)
-            if (titleMatched.length === 0) {
-              obj[key] = obj[key].concat(newItem)
-            } else if (newItem.priority > titleMatched[0].priority) {
-              obj[key] = obj[key].filter(r => r.title !== newItem.title).concat(newItem)
-            }
-          }
-          return obj
-        },
-        {} as { [key: string]: Array<{title: string, value: FieldValue, priority: FieldValue['priority'] }> }
-      )
-
-      let values2: FieldValue[] = []
-      for (let key in records) {
-        values2.push(...records[key].map(it => it.value))
-      }
-
-      values2.sort((p, c) => c.priority - p.priority)
-
-      return values2
-    },
-    [editable, hasValues, localFieldValues, backupFieldValue]
-  )
-
-  const sortableItems = useMemo(
-    () => calculatedFieldValues.map(
-      (fieldValue, index) => ({
-        element: (
-          <div className={classnames(
-            classes.fieldTextBarWrapper,
-            !editable && fieldValue.priority === 0 && classes.hidden,
-          )}>
-            {renderField(fieldValue.values, fieldValue, index === 0, false)}
-            {fieldValue.appendValues
-              && fieldValue.appendValues.length
-              && renderField(fieldValue.appendValues, fieldValue, index === 0, true)}
-          </div>
-        ),
-        id: fieldValue.id,
-      }),
-    ),
-    [calculatedFieldValues, editable, sortingId],
-  )
-
-  return (
-    <div
-      className={classnames(
-        classes.fieldBar,
-        showName && classes.fieldSimpleBar,
-        (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values)).length === 0) && classes.hidden,
-      )}
-      ref={containerRef}
-    >
-      {!showName && Icon &&
-        <div className={classes.fieldNameWrapper}>
-          <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
-            <div><Icon className={classes.fieldIcon} /></div>
-          </Tooltip>
-        </div>
-      }
-      <div className={classnames(
-        classes.fieldTextWrapper,
-        sortingId !== '' && classes.isSorting,
-      )}>
-        {showName
-          && (
-            <div className={classes.fieldTitle}>
-              {Icon && (
-                <Tooltip title={fieldName}>
-                  <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-                </Tooltip>
+          {(hasTitle && !editable) && (
+            <Typography variant="body2" className={classes.fieldLabelText}>
+              {getFieldDefaultTitleWidthDec(fieldValue)}
+            </Typography>
+          )}
+          {editable && !isAppend && (
+            <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
+              <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hide'}>
+                <IconButton
+                  className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+                  onClick={handleEntryToggleHide(fieldValue.id || '')}
+                >
+                  <SvgIcon
+                    name={ICONS.Eye}
+                    color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
+                    size="sm"
+                  />
+                </IconButton>
+              </Tooltip>
+              <SortHandler
+                element={
+                  <Tooltip title="reorder">
+                    <IconButton
+                      className={classnames(
+                        classes.fieldControlIcon,
+                        classes.fieldHoverShowingIcon,
+                        classes.fieldDragIcon,
+                        classes.showInDragged,
+                      )}
+                    >
+                      <SvgIcon
+                        name={ICONS.Reorder}
+                        color="hoverLighten" size="sm"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
+              {expandable && (isFirst
+                ? (
+                  <Tooltip title="add">
+                    <IconButton
+                      className={classnames(
+                        classes.fieldControlIcon,
+                        classes.hiddenInDragged,
+                      )}
+                      onClick={handleAddEntry}
+                    >
+                      <SvgIcon
+                        name={ICONS.AddCircle}
+                        color="hoverLighten" size="sm"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )
+                : (
+                  <Tooltip title="delete">
+                    <IconButton
+                      className={classnames(
+                        classes.fieldControlIcon,
+                        classes.hiddenInDragged,
+                      )}
+                      onClick={handleEntryDelete(fieldValue.id || '')}>
+                      <SvgIcon
+                        name={ICONS.Delete}
+                        color="hoverLighten" size="sm"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )
               )}
-              <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
             </div>
-          )
+          )}
+        </div>
+      ),
+      [editable, hasTitle, hasErrorKeys,
+        handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
+        handleEntryToggleHide, handleEntryDelete]
+    )
+
+    const sortableItems = useMemo(
+      () => calculatedFieldValues.map(
+        (fieldValue, index) => ({
+          element: (
+            <div className={classnames(
+              classes.fieldTextBarWrapper,
+              !editable && fieldValue.priority === 0 && classes.hidden,
+            )}>
+              {renderField(fieldValue.values, fieldValue, index === 0, false)}
+              {fieldValue.appendValues
+                && fieldValue.appendValues.length
+                && renderField(fieldValue.appendValues, fieldValue, index === 0, true)}
+            </div>
+          ),
+          id: fieldValue.id,
+        }),
+      ),
+      [calculatedFieldValues, editable, sortingId],
+    )
+
+    const onSortStart = useCallback(
+      ({ index }: { index: number }) => {
+        setSortingId(calculatedFieldValues[index].id || '')
+      },
+      [setSortingId],
+    )
+
+    return (
+      <div
+        className={classnames(
+          classes.fieldBar,
+          showName && classes.fieldSimpleBar,
+          (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values)).length === 0) && classes.hidden,
+        )}
+        ref={containerRef}
+      >
+        {!showName && Icon &&
+          <div className={classes.fieldNameWrapper}>
+            <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
+              <div><Icon className={classes.fieldIcon} /></div>
+            </Tooltip>
+          </div>
         }
-        <SortableList
-          onSortStart={onSortStart}
-          onSortEnd={onSortEnd}
-          useDragHandle
-          helperContainer={containerRef.current || undefined}
-          helperClass={classes.dragged}
-        >
-          {sortableItems}
-        </SortableList>
+        <div className={classnames(
+          classes.fieldTextWrapper,
+          sortingId !== '' && classes.isSorting,
+        )}>
+          {showName
+            && (
+              <div className={classes.fieldTitle}>
+                {Icon && (
+                  <Tooltip title={fieldName}>
+                    <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+                  </Tooltip>
+                )}
+                <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
+              </div>
+            )
+          }
+          <SortableList
+            onSortStart={onSortStart}
+            onSortEnd={onSortEnd}
+            useDragHandle
+            helperContainer={containerRef.current || undefined}
+            helperClass={classes.dragged}
+          >
+            {sortableItems}
+          </SortableList>
+        </div>
       </div>
-    </div>
-  )
-})
+    )
+  })
 
 export default ContactFieldInput
 
 export type TextInputProps = InputProps & {
-  value: string,
-  updateField: (value: string) => void,
+  value: string
+  updateField: (value: string) => void
 }
 
 export type SelectedInputProps = InputProps & {
-  value: string,
-  options: string[],
-  updateField: (value: string) => void,
+  value: string
+  options: string[]
+  updateField: (value: string) => void
 }
 
 export type DataInputProps = InputProps & {
-  value: string,
-  updateField: (value: string) => void,
+  value: string
+  updateField: (value: string) => void
 }
 
 export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
@@ -951,10 +952,10 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
   return (
     <div
       className={classnames(
-      classes.fieldBar,
-      showName && classes.fieldSimpleBar,
-      (!editable && value === '') && classes.hidden,
-    )}
+        classes.fieldBar,
+        showName && classes.fieldSimpleBar,
+        (!editable && value === '') && classes.hidden,
+      )}
     >
       {!showName && Icon && (
         <div className={classes.fieldNameWrapper}>
@@ -1053,7 +1054,7 @@ const mapOption2SelectOption = (option: string) => option === ''
   : ({ value: option, label: option })
 
 export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  fieldName = '', showName = false, Icon, editable, type, hasTitle, name, value, options, updateField,
+  fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
@@ -1086,24 +1087,24 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
       <div className={classes.fieldTextWrapper}>
         {showName && (
           <div className={classes.fieldTitle}>
-          {Icon && (
-            <div>
-              <Tooltip title={fieldName}>
-                <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-              </Tooltip>
-            </div>
-          )}
-          <Typography
-            variant="h6"
-            className={classnames(
-              classes.fieldName,
-              classes.fieldTitleName,
+            {Icon && (
+              <div>
+                <Tooltip title={fieldName}>
+                  <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+                </Tooltip>
+              </div>
             )}
-            color="textSecondary"
-          >
-            {fieldName}
-          </Typography>
-        </div>
+            <Typography
+              variant="h6"
+              className={classnames(
+                classes.fieldName,
+                classes.fieldTitleName,
+              )}
+              color="textSecondary"
+            >
+              {fieldName}
+            </Typography>
+          </div>
         )}
         <div
           className={classnames(
@@ -1137,7 +1138,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
                 disableUnderline={true}
                 className={classes.fieldInput}
                 classes={{
-                   input: classes.fieldDisplayText,
+                  input: classes.fieldDisplayText,
                 }}
                 value={value}
               />

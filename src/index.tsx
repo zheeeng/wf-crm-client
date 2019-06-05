@@ -32,14 +32,14 @@ async function main () {
         <CssBaseline />
         <InjectIntoGlobalStyles />
         <AppContainer.Provider>
-        <AccountContainer.Provider>
-        <NotificationContainer.Provider>
-        <AlertContainer.Provider>
-          <Notification />
-          <Roundation />
-        </AlertContainer.Provider>
-        </NotificationContainer.Provider>
-        </AccountContainer.Provider>
+          <AccountContainer.Provider>
+            <NotificationContainer.Provider>
+              <AlertContainer.Provider>
+                <Notification />
+                <Roundation />
+              </AlertContainer.Provider>
+            </NotificationContainer.Provider>
+          </AccountContainer.Provider>
         </AppContainer.Provider>
       </GlobalThemeProvider>
     )

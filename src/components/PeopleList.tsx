@@ -261,6 +261,8 @@ const PeopleList: React.FC<Props> = React.memo(({
     fromContactId, resetFormContactId, setFromContactId,
   } = useContext(ContactsContainer.Context)
 
+  const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
+
   useEffect(
     () => {
       showAddContactMessage && addContactData && success(
@@ -302,7 +304,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     toggleOff: toggleOffExportContactsOpened,
   } = useToggle(false)
 
-  const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
+  // const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 
   const search = useCallback(
     (term: string) => {
@@ -326,8 +328,6 @@ const PeopleList: React.FC<Props> = React.memo(({
     (_: any, newPage: number) => onSearch({ page: newPage + 1, size, searchTerm }),
     [onSearch, size, searchTerm],
   )
-
-  const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
 
   const handleItemCheckedToggle = useCallback(
     (id: string) => (e: React.SyntheticEvent) => {
@@ -364,14 +364,14 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const changeCreateContactFormOpened = useCallback<{
-    (opened: true, option: CreateFormOption): () => void;
-    (opened: false): () => void;
+    (opened: true, option: CreateFormOption): () => void
+    (opened: false): () => void
   }>(
-    (opened: boolean, option?: CreateFormOption) => () => {
-      setCreateForm({ opened, option: opened ? option : undefined })
-    },
-    [setCreateForm],
-  )
+      (opened: boolean, option?: CreateFormOption) => () => {
+        setCreateForm({ opened, option: opened ? option : undefined })
+      },
+      [setCreateForm],
+      )
 
   const lastContactIds = useRef<string[] | null>(null)
 
@@ -661,7 +661,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         </div>
         <Hidden mdUp>
           <div className={classes.head}>
-          {renderSearcher()}
+            {renderSearcher()}
           </div>
         </Hidden>
         <Hidden mdUp>

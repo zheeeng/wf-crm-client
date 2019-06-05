@@ -1,4 +1,7 @@
-// tslint:disable:no-console
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable no-console */
+
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -23,7 +26,7 @@ export default function register () {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(
-      process.env.PUBLIC_URL!,
+      process.env.PUBLIC_URL,
       window.location.toString(),
     )
     if (publicUrl.origin !== window.location.origin) {

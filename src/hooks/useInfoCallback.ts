@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
 export default function useInfoCallback <T extends (...args: any[]) => any> (
-  callback: T, inputs: ReadonlyArray<any>,
+  callback: T, inputs: any[],
 ): [T, number] {
   const [mutation, notify] = useState(0)
 

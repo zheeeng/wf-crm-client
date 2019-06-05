@@ -142,7 +142,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
 
   const {
     waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError,
-   } = useContact(contactId)
+  } = useContact(contactId)
 
   useEffect(() => { fetchWaivers() }, [contactId, splitMutation])
 
@@ -180,13 +180,15 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           textColor="primary"
           onChange={handleCurrentTabChange}
           classes={{
-             indicator: classes.tabIndicator,
+            indicator: classes.tabIndicator,
           }}
         >
           <Tab
-            label={<Typography variant="h4"
-            className={classes.title}
-          >Waivers</Typography>}
+            label={(
+              <Typography variant="h4"
+                className={classes.title}
+              >Waivers</Typography>
+            )}
           />
           {/* <Tab
             label={<Typography variant="h4">Attachments</Typography>}
@@ -200,60 +202,59 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           >Upload</Button>
         )}
       </div>
-      {currentTab === 0
-      && isFetchingWaivers
-      ? (
-        <div className={classes.waiverContent}>
-          {Array.from(({ length: 3 }), (_, index) => (
-            <div className={classnames(classes.entry, classes.skeletonEntry)} key={index} >
-              <Skeleton widthRandomness={0} width="100%"/>
-            </div>
-          ))}
-        </div>
-      )
-      : fetchWaiversError
-      ? (
-        <Typography align="center">Oops, an error occurred!</Typography>
-      )
-      : (
-        <div className={classes.waiverContent}>
-          {waivers.map(waiver => (
-            <div key={waiver.key} className={classnames(classes.entry, classes.pointer)} onClick={openWaiverExportPage(waiver.key)}>
-              <Icon
-                name={ICONS.Waiver}
-                className={classes.entryIcon}
-              />
-              <span className={classes.entryContent}>{waiver.title}</span>
-              <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
-              <div className={classes.entryButtons}>
-                <Tooltip title="split">
-                  <IconButton
-                    className={classes.entryButton}
-                    classes={{
-                      label: classes.entryButtonIcon,
-                    }}
-                    onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
-                  >
-                    <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
-                  </IconButton>
-                </Tooltip>
-                {/* <Tooltip title="export">
-                  <IconButton
-                    className={classes.entryButton}
-                    classes={{
-                      label: classes.entryButtonIcon,
-                    }}
-                    onClick={openWaiverExportPage(waiver.key)}
-                    // onClick={toggleOnExportContactsOpened}
-                  >
-                    <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
-                  </IconButton>
-                </Tooltip> */}
+      {currentTab === 0 && isFetchingWaivers
+        ? (
+          <div className={classes.waiverContent}>
+            {Array.from(({ length: 3 }), (_, index) => (
+              <div className={classnames(classes.entry, classes.skeletonEntry)} key={index} >
+                <Skeleton widthRandomness={0} width="100%"/>
               </div>
+            ))}
+          </div>
+        )
+        : fetchWaiversError
+          ? (
+            <Typography align="center">Oops, an error occurred!</Typography>
+          )
+          : (
+            <div className={classes.waiverContent}>
+              {waivers.map(waiver => (
+                <div key={waiver.key} className={classnames(classes.entry, classes.pointer)} onClick={openWaiverExportPage(waiver.key)}>
+                  <Icon
+                    name={ICONS.Waiver}
+                    className={classes.entryIcon}
+                  />
+                  <span className={classes.entryContent}>{waiver.title}</span>
+                  <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
+                  <div className={classes.entryButtons}>
+                    <Tooltip title="split">
+                      <IconButton
+                        className={classes.entryButton}
+                        classes={{
+                          label: classes.entryButtonIcon,
+                        }}
+                        onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
+                      >
+                        <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
+                      </IconButton>
+                    </Tooltip>
+                    {/* <Tooltip title="export">
+                      <IconButton
+                        className={classes.entryButton}
+                        classes={{
+                          label: classes.entryButtonIcon,
+                        }}
+                        onClick={openWaiverExportPage(waiver.key)}
+                        // onClick={toggleOnExportContactsOpened}
+                      >
+                        <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
+                      </IconButton>
+                    </Tooltip> */}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )}
       {currentTab === 1 && (
         <div>
           <div className={classes.entry}>

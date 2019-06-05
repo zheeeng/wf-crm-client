@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  open: boolean,
+  open: boolean
   onClose: () => void
   onOk: (groupId: string) => Promise<any>
 }
@@ -177,21 +177,21 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
             </Button>
           )
           : selectedGroupId
-          ? (
-            <Button
-              color="primary"
-              onClick={handleAddToGroupClick}
-            >
-              Add to group
-            </Button>
-          ) : (
-            <Button
-              color="primary"
-              onClick={handleCreateGroupClick}
-            >
-              Create and add
-            </Button>
-          )
+            ? (
+              <Button
+                color="primary"
+                onClick={handleAddToGroupClick}
+              >
+                Add to group
+              </Button>
+            ) : (
+              <Button
+                color="primary"
+                onClick={handleCreateGroupClick}
+              >
+                Create and add
+              </Button>
+            )
         }
       </div>
     </Dialog>

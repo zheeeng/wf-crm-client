@@ -50,7 +50,6 @@ import { ReactComponent as ArrowUpIcon } from '~src/assets/icons/arrow-up.svg'
 import { ReactComponent as ArrowDownIcon } from '~src/assets/icons/arrow-down.svg'
 
 import { ReactComponent as LoadingIcon } from '~src/assets/loading.svg'
-import { SvgAttributes } from 'csstype';
 
 export enum ICONS {
   SideContact,
@@ -236,35 +235,35 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  name: ICONS,
-  className?: string,
-  color?: 'primary' | 'secondary' | 'disabled' | 'hoverLighten',
-  size?: 'md' | 'sm' | 'xs' | 'lg' | 'xl',
-  onClick?: React.MouseEventHandler<SVGElement>,
-  onMouseEnter?: React.MouseEventHandler<SVGElement>,
-  onMouseLeave?: React.MouseEventHandler<SVGElement>,
-  style?: React.CSSProperties,
+  name: ICONS
+  className?: string
+  color?: 'primary' | 'secondary' | 'disabled' | 'hoverLighten'
+  size?: 'md' | 'sm' | 'xs' | 'lg' | 'xl'
+  onClick?: React.MouseEventHandler<SVGElement>
+  onMouseEnter?: React.MouseEventHandler<SVGElement>
+  onMouseLeave?: React.MouseEventHandler<SVGElement>
+  style?: React.CSSProperties
 }
 
-const SvgIcon: React.FC<Props> = React.memo(({ name, style, className, color = 'primary', size = 'md', onClick, onMouseEnter, onMouseLeave }) => {
+const SvgIcon: React.FC<Props> = React.memo(({ name, style, className, color /*= 'primary'*/, size /*= 'md'*/, onClick, onMouseEnter, onMouseLeave }) => {
   const classes = useStyles({})
 
   const clsName = classnames(
     classes.svgIcon,
-    ({
+    {
       primary: classes.primaryColorIcon,
       secondary: classes.secondaryColorIcon,
       disabled: classes.disabledIcon,
       hoverLighten: classes.hoverLightenIcon
-    } as any)[color] || '',
-    ({
+    }[color || 'primary'],
+    {
       xl: classes.xlIcon,
       lg: classes.lgIcon,
       md: classes.mdIcon,
       sm: classes.smIcon,
       xs: classes.xsIcon,
-    } as any)[size] || '',
-     className
+    }[size || 'md'],
+    className
   )
 
   const Comp = getIcon(name)

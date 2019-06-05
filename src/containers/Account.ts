@@ -12,7 +12,7 @@ type AuthData = { id: string, username: string }
 const getDefaultAuthData = (): AuthData => ({ id: '', username: '' })
 
 const AccountContainer = createContainer(() => {
-  const { data: authData, request: postAuthentication } = usePost<AuthData>()
+  const { data: authData, /* request: postAuthentication */ } = usePost<AuthData>()
   const { data: loginData, request: postLogin } = usePost<AuthData>()
   const { data: tmpLogoutData, request: postLogout } = usePost<{}>()
   const logoutData = useMemo<AuthData>(

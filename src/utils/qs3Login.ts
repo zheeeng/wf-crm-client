@@ -12,12 +12,37 @@ const crmUsernameKey = '@username@'
 
 const isDev = process.env.NODE_ENV === 'development'
 const devLoginInfo = {
+  // eslint-disable-next-line @typescript-eslint/camelcase
   api_key: '',
   email: 'a',
   password: '0cc175b9c0f1b6a831c399e269772661',
 }
 const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
 const GET_USER_URL = 'https://api.waiverforever.com/api/v3/auth/getUser'
+
+export function cleanStorage () {
+  window.localStorage.removeItem(crmAccountKey)
+  window.localStorage.removeItem(crmIdKey)
+  window.localStorage.removeItem(crmTokenKey)
+  window.localStorage.removeItem(crmUsernameKey)
+  window.localStorage.removeItem(apiKeyKey)
+  window.localStorage.removeItem(accountNameKey)
+}
+
+export function getCRMToken () {
+  return window.localStorage.getItem(crmTokenKey) || ''
+}
+
+export function getLoginParams () {
+  if (isDev) return devLoginInfo
+
+  return {
+    email: window.localStorage.getItem(accountNameKey),
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    api_key: window.localStorage.getItem(apiKeyKey),
+    password: '',
+  }
+}
 
 export function getFallbackUsername () {
   return window.localStorage.getItem(crmUsernameKey)
@@ -99,27 +124,4 @@ export function persistLoginInfo (account: string, id: string, token: string, us
   if (id) window.localStorage.setItem(crmIdKey, id)
   if (token) window.localStorage.setItem(crmTokenKey, token)
   if (username) window.localStorage.setItem(crmUsernameKey, username)
-}
-
-export function cleanStorage () {
-  window.localStorage.removeItem(crmAccountKey)
-  window.localStorage.removeItem(crmIdKey)
-  window.localStorage.removeItem(crmTokenKey)
-  window.localStorage.removeItem(crmUsernameKey)
-  window.localStorage.removeItem(apiKeyKey)
-  window.localStorage.removeItem(accountNameKey)
-}
-
-export function getCRMToken () {
-  return window.localStorage.getItem(crmTokenKey) || ''
-}
-
-export function getLoginParams () {
-  if (isDev) return devLoginInfo
-
-  return {
-    email: window.localStorage.getItem(accountNameKey),
-    api_key: window.localStorage.getItem(apiKeyKey),
-    password: '',
-  }
 }

@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 import ContactsCountContainer from '~src/containers/ContactsCount'
 import GroupsContainer from '~src/containers/Groups'
-export interface Props extends
-  ComponentProps<'aside' | 'header'> {
+
+export interface Props extends ComponentProps<'aside' | 'header'> {
 }
 
 const CRMLayout: React.FC<Props> = ({ slots, children }) => {
@@ -53,21 +53,21 @@ const CRMLayout: React.FC<Props> = ({ slots, children }) => {
   return (
     <ContactsCountContainer.Provider>
       <GroupsContainer.Provider>
-      <div className={classes.root}>
-        {slots.header}
-        <div className={classes.main}>
-          <Toolbar variant="dense" />
-          {slots.aside}
-          {authored
-            ? children
-            : (
-              <div className={classes.loadingContainer}>
-                <ProgressLoading className={classes.progress} />
-              </div>
-            )
-          }
+        <div className={classes.root}>
+          {slots.header}
+          <div className={classes.main}>
+            <Toolbar variant="dense" />
+            {slots.aside}
+            {authored
+              ? children
+              : (
+                <div className={classes.loadingContainer}>
+                  <ProgressLoading className={classes.progress} />
+                </div>
+              )
+            }
+          </div>
         </div>
-      </div>
       </GroupsContainer.Provider>
     </ContactsCountContainer.Provider>
   )

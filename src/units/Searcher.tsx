@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  className?: string,
-  value?: string,
+  className?: string
+  value?: string
   onChange?: (v: string) => void
   placeholder?: string
   onKeyDown?: (v: string) => void

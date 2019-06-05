@@ -12,8 +12,8 @@ export interface Activity {
 }
 
 export interface ActivityAPI {
-  id: string,
-  account: string,
+  id: string
+  account: string
   content: string
   activity_type: string | null
   person: string
@@ -37,7 +37,7 @@ export interface Waiver {
   id: string
   signedTimestamp: number
   title: string
-  key: string,
+  key: string
 }
 
 export interface WaiverAPI {
@@ -49,7 +49,7 @@ export interface WaiverAPI {
 }
 
 export interface ContactField {
-  fieldType: string,
+  fieldType: string
   id?: string
   priority: number
   title?: string
@@ -57,29 +57,29 @@ export interface ContactField {
 }
 
 export interface NameField extends ContactField {
-  fieldType: 'name',
+  fieldType: 'name'
   firstName?: string
   middleName?: string
   lastName?: string
 }
 
 export interface EmailField extends ContactField {
-  fieldType: 'email',
+  fieldType: 'email'
   email?: string
 }
 export interface PhoneField extends ContactField {
-  fieldType: 'phone',
+  fieldType: 'phone'
   number?: string
 }
 export interface DateField extends ContactField {
-  fieldType: 'date',
+  fieldType: 'date'
   year?: number
   month?: number
   day?: number
 }
 
 export interface AddressField extends ContactField {
-  fieldType: 'address',
+  fieldType: 'address'
   firstLine?: string
   secondLine?: string
   city?: string
@@ -99,45 +99,45 @@ export type ContactFields = Pick<PeopleAPI, 'first_name' | 'last_name' | 'countr
 export type CommonField = NameField | EmailField | PhoneField | AddressField | DateField | OtherField
 
 export interface Contact {
-  id: string,
+  id: string
   info: {
-    avatar: string,
-    starred: boolean,
-    name: string,
-    names: NameField[],
-    gender: 'Male' | 'Female' | 'Other' | null,
-    birthDay: string,
-    dates: any[],
-    email: string,
-    emails: EmailField[],
-    address: string,
-    addresses: AddressField[],
-    phone: string,
-    phones: PhoneField[],
-    tags: string[],
-    pictures: string[],
-    waivers: any[],
-    activities: Activity[],
-    notes: Note[],
-    others: OtherField[],
+    avatar: string
+    starred: boolean
+    name: string
+    names: NameField[]
+    gender: 'Male' | 'Female' | 'Other' | null
+    birthDay: string
+    dates: any[]
+    email: string
+    emails: EmailField[]
+    address: string
+    addresses: AddressField[]
+    phone: string
+    phones: PhoneField[]
+    tags: string[]
+    pictures: string[]
+    waivers: any[]
+    activities: Activity[]
+    notes: Note[]
+    others: OtherField[]
   }
 }
 
 export interface Group {
-  id: string,
+  id: string
   info: {
-    account: string,
-    name: string,
-    contacts: Contact[],
-    updateTimestamp: number,
+    account: string
+    name: string
+    contacts: Contact[]
+    updateTimestamp: number
   }
 }
 
 export interface GroupAPI {
-  id: string,
-  account: string,
-  name: string,
-  last_update_timestamp: number,
+  id: string
+  account: string
+  name: string
+  last_update_timestamp: number
 }
 
 export interface PeopleAPI {
@@ -167,10 +167,10 @@ export interface PeopleAPI {
   others?: any[]
   dates?: any[]
   tags: string[]
-  pictures: string[],
-  waivers: any[],
-  activities: ActivityAPI[] | null,
-  notes: NoteAPI[] | null,
+  pictures: string[]
+  waivers: any[]
+  activities: ActivityAPI[] | null
+  notes: NoteAPI[] | null
 }
 
 export type GroupFields = Pick<GroupAPI, 'name'>
@@ -180,6 +180,7 @@ export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
     email: output.info.email,
     phone: output.info.phone,
     favourite: output.info.starred,
+    // eslint-disable-next-line @typescript-eslint/camelcase
     picture_url: output.info.avatar,
     name: output.info.name,
     gender: output.info.gender || null,
@@ -222,6 +223,7 @@ export const activityInputAdapter = (input: ActivityAPI): Activity => {
 export const activityOutputAdapter = (output: Partial<Activity>): Partial<ActivityAPI> => {
   const activity = {
     content: output.content,
+    // eslint-disable-next-line @typescript-eslint/camelcase
     activity_type: output.activityType || 'activity',
   }
 
@@ -271,18 +273,22 @@ export const groupInputAdapter = (input: GroupAPI): Group =>
 
 export const contactInputAdapter = (input: PeopleAPI): Contact => {
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id, account, favourite,
+    // eslint-disable-next-line @typescript-eslint/camelcase
     picture_url, name, names, gender, dob_day, dob_month, dob_year,
     email, emails, address, addresses, phone, phones, others, tags, dates,
     pictures, waivers, activities, notes,
   } = input
 
   const info: Contact['info'] = {
+    // eslint-disable-next-line @typescript-eslint/camelcase
     avatar: picture_url || crateGravatar(email || ''),
     starred: favourite || false,
     name: name || '',
     names: (names || []).map(o => mapKeys(snake2pascal, o)),
     gender: gender || null as 'Male' | 'Female' | 'Other' | null,
+    // eslint-disable-next-line @typescript-eslint/camelcase
     birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
     email: email || '',
     emails: (emails || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),

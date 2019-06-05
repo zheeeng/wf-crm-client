@@ -21,9 +21,9 @@ import mapKeys from '~src/utils/mapKeys'
 import AlertContainer from '~src/containers/Alert'
 
 const convertContact = pipe<
-  Array<PeopleAPI | null>,
-  PeopleAPI | null,
-  Contact | undefined
+Array<PeopleAPI | null>,
+PeopleAPI | null,
+Contact | undefined
 >(
   head,
   cond([
@@ -138,20 +138,24 @@ const useContact = (contactId: string) => {
     async (field: CommonField): Promise<CommonField | null> => {
       const result = await postField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field))
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
     [contactId],
   )
   const updateField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const result = await putField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
     [contactId],
   )
   const removeField = useCallback(
     async (field: CommonField) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const result = await deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
 
       return result && (field.id || null)
@@ -199,8 +203,10 @@ const useContact = (contactId: string) => {
   const addNote = useCallback(
     async (content: string): Promise<NoteAPI | null> => {
       const result = await postNote(`/api/people/${contactId}/notes`)({ note: content })
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         .then(n => noteInputAdapter(n!))
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
     [contactId],
@@ -220,6 +226,7 @@ const useContact = (contactId: string) => {
     async (waiverId: string): Promise<PeopleAPI | null> => {
       const result = await postSplitWaiver(`/api/people/${contactId}/splitWaiver/${waiverId}`)()
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
     [contactId],
@@ -228,8 +235,10 @@ const useContact = (contactId: string) => {
   const updateNote = useCallback(
     async (id: string, content: string): Promise<NoteAPI | null> => {
       const result = await putNote(`/api/people/${contactId}/notes/${id}`)({ note: content })
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         .then(n => noteInputAdapter(n!))
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
     [contactId],

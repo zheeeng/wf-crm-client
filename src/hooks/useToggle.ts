@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
 
 type UseAlternativeToggle = <T1, T2 = T1 >(initial: T1, alternative: T2) =>
-    { value: T1 | T2, toggle: () => void, toggleOn: () => void, toggleOff: () => void }
+{ value: T1 | T2, toggle: () => void, toggleOn: () => void, toggleOff: () => void }
 type UseBooleanToggle = (initial?: boolean) =>
-    { value: boolean, toggle: () => void, toggleOn: () => void, toggleOff: () => void }
+{ value: boolean, toggle: () => void, toggleOn: () => void, toggleOff: () => void }
 
 interface UseToggle extends UseAlternativeToggle, UseBooleanToggle {
 }

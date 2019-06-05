@@ -3,7 +3,8 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/styles'
 import { themeOptions } from './GlobalThemeProvider'
 
-const { overrides, ...restoreThemeOptions } = themeOptions
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { overrides: _, ...restoreThemeOptions } = themeOptions
 
 export const restoreTheme = createMuiTheme({
   ...restoreThemeOptions,
