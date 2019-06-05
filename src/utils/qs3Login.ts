@@ -108,7 +108,6 @@ export function cleanStorage () {
   window.localStorage.removeItem(crmUsernameKey)
   window.localStorage.removeItem(apiKeyKey)
   window.localStorage.removeItem(accountNameKey)
-  cookie.remove(authKeyKey)
 }
 
 export function getCRMToken () {
