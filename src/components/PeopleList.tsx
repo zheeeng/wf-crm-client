@@ -22,6 +22,7 @@ import useToggle from '~src/hooks/useToggle'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
+import ProgressLoading from '~src/units/ProgressLoading'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import ExportContactsForm from '~src/components/ExportContactsForm'
 import MergeContactsForm from '~src/components/MergeContactsForm'
@@ -157,6 +158,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3, 0),
     fontWeight: 600,
   },
+  progress: {
+    width: `${theme.spacing(6)}px`,
+    height: `${theme.spacing(6)}px`,
+  },
 }))
 
 
@@ -250,7 +255,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const { success } = useContext(AlertContainer.Context)
   const {
-    contacts,
+    contacts, isFetchingContacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
     fromContactId, resetFormContactId, setFromContactId,
@@ -313,7 +318,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const debouncedSearch = useCallback(
     debounce((term: string) => {
       search(term)
-    }, 500),
+    }, 600),
     [search],
   )
 
@@ -709,17 +714,28 @@ const PeopleList: React.FC<Props> = React.memo(({
               </TableRow>
             </TableHead>
             <TableBody className={classes.tableBody}>
-              {contacts.length === 0 && (
-                <TableRow className={classes.emptyTextWrapper}>
-                  <TableCell padding="none" className={classes.emptyTextCell}>
-                    <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
-                      {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )}
+              {isFetchingContacts
+                ? (
+                  <TableRow className={classes.emptyTextWrapper}>
+                    <TableCell padding="none">
+                      <ProgressLoading className={classes.progress} />
+                    </TableCell>
+                  </TableRow>
+                )
+                : (
+                  contacts.length === 0 && (
+                    <TableRow className={classes.emptyTextWrapper}>
+                      <TableCell padding="none" className={classes.emptyTextCell}>
+                        <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
+                          {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )
+                )
+              }
               <StarThemeProvider>
-                {contacts.map(renderTableRows)}
+                {!isFetchingContacts && contacts.map(renderTableRows)}
               </StarThemeProvider>
             </TableBody>
           </Table>

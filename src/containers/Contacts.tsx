@@ -65,7 +65,12 @@ const ContactsContainer = createContainer(({
 }: ContainerProps) => {
   const { refreshCounts, refreshPageMutation } = useContext(ContactsCountContainer.Context)
 
-  const { data: contactsData, request: getContacts, error: getContactsError } = useGet<ContactsResponse>()
+  const {
+    data: contactsData,
+    isLoading: getContactsIsLoading,
+    request: getContacts,
+    error: getContactsError,
+  } = useGet<ContactsResponse>()
   const { request: deleteContact, error: deleteContactError } = useDelete()
 
   const { data: postContactData, request: postContact, error: postContactError } = usePost()
@@ -317,8 +322,9 @@ const ContactsContainer = createContainer(({
 
   return {
     pagination,
-    contacts,
 
+    contacts,
+    isFetchingContacts: getContactsIsLoading,
     fetchContacts,
     fetchContactsError: getContactsError,
 
