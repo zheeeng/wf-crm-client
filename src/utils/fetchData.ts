@@ -1,4 +1,4 @@
-import { clean, persistLoginInfo, getCRMToken } from '~src/utils/qs3Login'
+import { cleanStorage, persistLoginInfo, getCRMToken } from '~src/utils/qs3Login'
 import { pascal2snake } from '~src/utils/caseConvert'
 
 type Option = {
@@ -23,16 +23,6 @@ export default async function fetchData<T = any> (url: string, option?: Option):
 
   const Authorization = getCRMToken()
 
-  if (url === '/api/auth/authToken') {
-    if (Authorization) {
-      const validationInfo = await fetchData('/api/auth/validateToken')
-
-      return validationInfo
-    }
-
-    throw Error('Auth failed.')
-  }
-
   const requestUrl = `${base}${url}`
   const query = (fetchOption.method && ['GET', 'HEAD'].includes(fetchOption.method || '') && fetchOption.params)
     ? getQuery(fetchOption.params)
@@ -55,7 +45,7 @@ export default async function fetchData<T = any> (url: string, option?: Option):
   persistLoginInfo(account, id, token, username)
 
   if (url === '/api/auth/invalidateToken') {
-    clean()
+    cleanStorage()
   }
 
   return data

@@ -4,7 +4,6 @@ const authKeyKey = 'authKey'
 const rememberNameKey = 'rememberMe'
 
 const apiKeyKey = '@apiKey@'
-const validAuthKeyKey = '@authKey@'
 const accountNameKey = '@accountName@'
 const crmAccountKey = '@account@'
 const crmIdKey = '@id@'
@@ -20,49 +19,37 @@ const devLoginInfo = {
 const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
 const GET_USER_URL = 'https://api.waiverforever.com/api/v3/auth/getUser'
 
-export function getIsAuthored () {
-  const authKey = cookie.get(authKeyKey)
-  const validAuthKey = window.localStorage.getItem(validAuthKeyKey)
-  const apiKey = window.localStorage.getItem(apiKeyKey)
-
-  return apiKey && validAuthKey && validAuthKey === authKey
-}
-
 export function getFallbackUsername () {
-  return cookie.get(rememberNameKey) || ''
+  return window.localStorage.getItem(crmUsernameKey)
+    || window.localStorage.getItem(accountNameKey)
+    || cookie.get(rememberNameKey) || ''
 }
 
 export async function exchangeAPIKey () {
   const authKey = cookie.get(authKeyKey)
 
+  if (isDev) return
+
   if (!authKey) {
-    clean()
+    cleanStorage()
     throw Error('Request login')
   }
 
-  if (!getIsAuthored()) {
-    cleanCRMInfo()
+  const requestOption = {
+    headers: {
+      Authorization: `Bearer ${authKey}`,
+    },
+  }
 
-    const requestOption = {
-      headers: {
-        Authorization: `Bearer ${authKey}`,
-      },
-    }
+  // Block 1: request main app userName
+  // This userName is email format
+  let userName!: string
+  {
+    const UserResponse = await fetch(GET_USER_URL,requestOption)
 
-    const [ApiKeyResponse, UserResponse] = await Promise.all([
-      fetch(API_KEY_URL,requestOption),
-      fetch(GET_USER_URL,requestOption),
-    ]).catch(() => Promise.reject('Request fails'))
+    if (!UserResponse.ok) throw Error(UserResponse.statusText)
 
-    if (!ApiKeyResponse.ok || !UserResponse.ok) throw Error(ApiKeyResponse.statusText || UserResponse.statusText)
-
-    const [apiKeyData, userData] = await Promise.all([ApiKeyResponse.json(), UserResponse.json()])
-
-    const { success: apiKeySuccess, result: apiKeyResult } = apiKeyData
-
-    if (apiKeyResult !== true || !apiKeySuccess || !apiKeySuccess.apiKey) {
-      throw Error('Some errors happened')
-    }
+    const userData = await UserResponse.json()
 
     const { success: userSuccess, result: userResult } = userData
 
@@ -70,10 +57,40 @@ export async function exchangeAPIKey () {
       throw Error('Some errors happened')
     }
 
-    window.localStorage.setItem(apiKeyKey, apiKeySuccess.apiKey)
-    window.localStorage.setItem(accountNameKey, userSuccess.username)
+    userName = userSuccess.username
+  }
 
-    window.localStorage.setItem(validAuthKeyKey, authKey)
+  // Block 2: check email is same with previous one, if true, we assume apiKey is validated
+  {
+    const email = window.localStorage.getItem(accountNameKey)
+
+    if (email === userName) return
+  }
+
+  // Block 3: fetch fresh API key
+  let apiKey!: string
+  {
+    const ApiKeyResponse = await fetch(API_KEY_URL,requestOption)
+
+    if (!ApiKeyResponse.ok) throw Error(ApiKeyResponse.statusText)
+
+    const apiKeyData = await ApiKeyResponse.json()
+
+    const { success: apiKeySuccess, result: apiKeyResult } = apiKeyData
+
+    if (apiKeyResult !== true || !apiKeySuccess || !apiKeySuccess.apiKey) {
+      throw Error('Some errors happened')
+    }
+
+    apiKey = apiKeySuccess.apiKey
+  }
+
+  // Block 4: store data
+  {
+    cleanStorage()
+
+    window.localStorage.setItem(apiKeyKey, apiKey)
+    window.localStorage.setItem(accountNameKey, userName)
   }
 }
 
@@ -84,19 +101,14 @@ export function persistLoginInfo (account: string, id: string, token: string, us
   if (username) window.localStorage.setItem(crmUsernameKey, username)
 }
 
-export function cleanCRMInfo () {
+export function cleanStorage () {
   window.localStorage.removeItem(crmAccountKey)
   window.localStorage.removeItem(crmIdKey)
   window.localStorage.removeItem(crmTokenKey)
   window.localStorage.removeItem(crmUsernameKey)
   window.localStorage.removeItem(apiKeyKey)
-}
-
-export function clean () {
-  cleanCRMInfo()
-
-  cookie.remove(authKeyKey)
   window.localStorage.removeItem(accountNameKey)
+  cookie.remove(authKeyKey)
 }
 
 export function getCRMToken () {

@@ -176,9 +176,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuItem: {
     fontSize: 14,
-    color: theme.palette.text.secondary,
+    color: '#8693a7',
     padding: '6px 20px',
     wordWrap: 'break-word',
+    whiteSpace: 'normal',
     lineHeight: `${theme.spacing(2.5)}px`,
     minHeight: theme.spacing(4),
     ...{

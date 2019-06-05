@@ -23,7 +23,7 @@ const useRequest = <T = any>(method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
         setIsLoading(false)
       }
     },
-    [setData, setIsLoading, setError],
+    [setData, fetch, setIsLoading, setError],
   )
 
   return {
