@@ -19,7 +19,7 @@ export interface Props {
 }
 
 const ContactPageHeader: React.FC<Props> = React.memo(
-  ({ onGoBack, onGoPrevious, onGoNext,  onDelete, disableGoPrevious, disableGoNext }) => {
+  ({ onGoBack, onGoPrevious, onGoNext, onDelete, disableGoPrevious, disableGoNext }) => {
     return (
       <>
         <div>

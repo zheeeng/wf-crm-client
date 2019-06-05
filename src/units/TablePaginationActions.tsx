@@ -73,8 +73,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
   const handleEnterNewPage = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       const newPage = event.currentTarget.value.trim()
-      event.currentTarget.value = ''
-      !isNaN(+newPage) && onChangePage(null, parseInt(newPage, 10))
+      !isNaN(+newPage) && onChangePage(null, parseInt(newPage, 10) - 1)
     },
     [page, count, rowsPerPage],
   )
@@ -85,7 +84,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         <Hidden smDown>
           <IconButton
             onClick={handleFirstPageButtonClick}
-            disabled={page === 0}
+            disabled={page <= 0}
             aria-label="First Page"
           >
             <FirstPageIcon />
@@ -93,15 +92,17 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         </Hidden>
         <IconButton
           onClick={handleBackButtonClick}
-          disabled={page === 0}
+          disabled={page <= 0}
           aria-label="Previous Page"
         >
           <KeyboardArrowLeft />
         </IconButton>
         <Hidden smDown>
           <BasicFormInput
+            autoFocus
             placeholder="Jump"
             noLabel
+            value={(page + 1).toString()}
             onEnterPress={handleEnterNewPage}
             TextFieldClasses={{
               root: classes.textField,

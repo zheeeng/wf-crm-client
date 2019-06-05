@@ -97,6 +97,7 @@ const BasicFormInput: React.FC<Props> = React.memo(({
       label={noLabel ? undefined : placeholder}
       placeholder={noLabel ? placeholder : undefined}
       defaultValue={value}
+      key={value}
       onChange={onChange}
       margin="normal"
       fullWidth={fullWidth}

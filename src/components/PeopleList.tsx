@@ -323,7 +323,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const handleChangePage = useCallback(
-    (_: any, newPage: number) => onSearch({ page: newPage, size, searchTerm }),
+    (_: any, newPage: number) => onSearch({ page: newPage + 1, size, searchTerm }),
     [onSearch, size, searchTerm],
   )
 
@@ -553,7 +553,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     <TablePagination
       count={total}
       rowsPerPage={size}
-      page={page}
+      page={page - 1}
       ActionsComponent={TablePaginationActions}
       onChangePage={handleChangePage}
       labelDisplayedRows={renderLabelDisplayedRows}
@@ -564,7 +564,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       component="div"
       count={total}
       rowsPerPage={size}
-      page={page}
+      page={page - 1}
       ActionsComponent={TablePaginationActions}
       onChangePage={handleChangePage}
       labelDisplayedRows={renderLabelDisplayedRows}

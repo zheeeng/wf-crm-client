@@ -4,7 +4,6 @@ import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
-import useDepMemo from '~src/hooks/useDepMemo'
 import useInfoCallback from '~src/hooks/useInfoCallback'
 import pipe from 'ramda/es/pipe'
 import prop from 'ramda/es/prop'
@@ -18,6 +17,8 @@ import ContactsCountContainer from './ContactsCount'
 import AlertContainer from './Alert'
 import sleep from '~src/utils/sleep'
 import downloadFile from '~src/utils/downloadFile'
+import useLatest from '~src/hooks/useLatest'
+import useDidUpdate from '~src/hooks/useDidUpdate'
 
 type FetchParams = {
   page?: number,
@@ -27,30 +28,6 @@ type FetchParams = {
   groupId?: string,
 }
 type ContactsResponse = { pagination: Pagination, result: PeopleAPI[] }
-
-const convertPagination = pipe<
-  Array<ContactsResponse | null>,
-  ContactsResponse | null,
-  ContactsResponse,
-  Pagination
->(
-  head,
-  defaultTo({ pagination: { page: 1, size: 0, total: 0 }, result: [] }),
-  prop('pagination'),
-)
-
-const convertContacts = pipe<
-  Array<ContactsResponse | null>,
-  ContactsResponse | null,
-  ContactsResponse,
-  ContactsResponse['result'],
-  Contact[]
->(
-  head,
-  defaultTo({ pagination: { page: 1, size: 0, total: 0 }, result: [] }),
-  prop('result'),
-  map(contactInputAdapter),
-)
 
 type ContainerProps = {
   page?: number,
@@ -70,6 +47,12 @@ const ContactsContainer = createContainer(({
     isLoading: getContactsIsLoading,
     request: getContacts,
     error: getContactsError,
+  } = useGet<ContactsResponse>()
+
+  const {
+    data: contactsData2,
+    request: getContacts2,
+    error: getContactsError2,
   } = useGet<ContactsResponse>()
   const { request: deleteContact, error: deleteContactError } = useDelete()
 
@@ -99,10 +82,40 @@ const ContactsContainer = createContainer(({
     },
   }>()
 
-  const pagination = useDepMemo(convertPagination, [contactsData])
-  const contacts = useDepMemo(convertContacts, [contactsData])
+  const latestContactsData = useLatest(contactsData, contactsData2)
+
+  const pagination = useMemo<Pagination>(
+    () => latestContactsData
+      ? latestContactsData.pagination
+      : { page, size: 0, total: 0 },
+    [latestContactsData, page]
+  )
+
+  const contacts = useMemo<Contact[]>(
+    () => (
+      latestContactsData
+        ? latestContactsData.result
+        : []
+    ).map(contactInputAdapter),
+    [latestContactsData],
+  )
 
   const fetchContacts = useCallback(
+    async (size: number, pageNumber?: number) => {
+      const params: FetchParams = {
+        page: pageNumber || page,
+        size,
+        favourite,
+        groupId,
+        searchTerm,
+      }
+
+      return await getContacts('/api/people/search')(params)
+    },
+    [getContacts, page, favourite, groupId, searchTerm],
+  )
+
+  const fetchContactsQuietly = useCallback(
     async (size: number) => {
       const params: FetchParams = {
         page,
@@ -112,7 +125,7 @@ const ContactsContainer = createContainer(({
         searchTerm,
       }
 
-      return await getContacts('/api/people/search')(params)
+      return await getContacts2('/api/people/search')(params)
     },
     [getContacts, page, favourite, groupId, searchTerm],
   )
@@ -285,9 +298,14 @@ const ContactsContainer = createContainer(({
       [deleteContactsFromGroupError]
     )
 
-    useEffect(
-      () => { fetchContacts(30) },
-      [addMutation, starMutation, removeMutation, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation]
+    useDidUpdate(
+      () => { fetchContactsQuietly(30) },
+      [starMutation]
+    )
+
+    useDidUpdate(
+      () => { fetchContacts(30, 1) },
+      [addMutation, removeMutation, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation]
     )
   }
 
@@ -327,6 +345,9 @@ const ContactsContainer = createContainer(({
     isFetchingContacts: getContactsIsLoading,
     fetchContacts,
     fetchContactsError: getContactsError,
+
+    fetchContactsQuietly,
+    fetchContactsQuietlyError: getContactsError2,
 
     addContact, addMutation,
     addContactData: postContactData,

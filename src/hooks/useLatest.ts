@@ -5,7 +5,7 @@ function pickLatest<T> (oldValues: T[], newValues: T[]) {
 }
 
 export default function useLatest<T> (...values: T[]) {
-  const latestRef = useRef<T | undefined>(undefined)
+  const latestRef = useRef<T | null>(null)
   const previousRef = useRef(values)
   const latest = pickLatest(previousRef.current, values)
   if (latest) {

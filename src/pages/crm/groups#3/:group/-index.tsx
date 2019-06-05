@@ -16,7 +16,7 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries,
       if (searchTerm !== querySearch) {
         setQueries({ page: ['1'], search: [searchTerm] })
       } else {
-        setQueries({ page: [(page + 1).toString()], search: [searchTerm] })
+        setQueries({ page: [page.toString()], search: [searchTerm] })
       }
     },
     [setQueries, queries],
@@ -42,7 +42,7 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries,
 
   return (
     <PeopleList
-      page={pagination.page - 1}
+      page={pagination.page}
       size={pagination.size}
       total={pagination.total}
       onSearch={searchContacts}
