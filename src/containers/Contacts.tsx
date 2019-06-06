@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react'
-
+import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
@@ -13,7 +13,6 @@ import AlertContainer from './Alert'
 import sleep from '~src/utils/sleep'
 import downloadFile from '~src/utils/downloadFile'
 import useLatest from '~src/hooks/useLatest'
-import useDidUpdate from '~src/hooks/useDidUpdate'
 
 type FetchParams = {
   page?: number
@@ -293,12 +292,12 @@ const ContactsContainer = createContainer(({
       [deleteContactsFromGroupError, fail]
     )
 
-    useDidUpdate(
+    useUpdateEffect(
       () => { fetchContactsQuietly(30) },
       [starMutation]
     )
 
-    useDidUpdate(
+    useUpdateEffect(
       () => { fetchContacts(30, 1) },
       [addMutation, removeMutation, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation]
     )
