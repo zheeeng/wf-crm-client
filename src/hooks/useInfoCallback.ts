@@ -12,7 +12,8 @@ export default function useInfoCallback <T extends (...args: any[]) => any> (
 
       return ret
     },
-    inputs,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [callback, notify, ...inputs],
   )
 
   return [innerCallback as any, mutation]

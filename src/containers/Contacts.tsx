@@ -122,7 +122,7 @@ const ContactsContainer = createContainer(({
 
       return await getContacts2('/api/people/search')(params)
     },
-    [getContacts, page, favourite, groupId, searchTerm],
+    [getContacts2, page, favourite, groupId, searchTerm],
   )
 
   const [addContact, addMutation] = useInfoCallback(
@@ -223,7 +223,7 @@ const ContactsContainer = createContainer(({
         }
       }
     },
-    [postExportContacts],
+    [postExportContacts, getExportStatus],
   )
 
   useEffect(
@@ -243,22 +243,22 @@ const ContactsContainer = createContainer(({
           success(<><CheckCircle /> Contacts Exported</>)
         }
       },
-      [exportContactsStatus],
+      [exportContactsStatus, success],
     )
 
     useEffect(
       () => { getExportStatusError && fail(getExportStatusError.message) },
-      [getExportStatusError],
+      [getExportStatusError, fail],
     )
 
     useEffect(
       () => { postContactError && fail(postContactError.message) },
-      [postContactError],
+      [postContactError, fail],
     )
 
     useEffect(
       () => { putContactError && fail(putContactError.message) },
-      [putContactError],
+      [putContactError, fail],
     )
     // useEffect(
     //   () => { removeContactData && success(<><CheckCircle /> Contacts Removed</>) },
@@ -270,27 +270,27 @@ const ContactsContainer = createContainer(({
     // )
     useEffect(
       () => { postContactToGroupData && success(<><CheckCircle /> Contacts Added</>) },
-      [postContactToGroupData],
+      [postContactToGroupData, success],
     )
     useEffect(
       () => { postContactToGroupError && fail(postContactToGroupError.message) },
-      [postContactToGroupError],
+      [postContactToGroupError, fail],
     )
     useEffect(
       () => { postMergeContactsData && success(<><CheckCircle /> Contacts Merged</>) },
-      [postMergeContactsData],
+      [postMergeContactsData, success],
     )
     useEffect(
       () => { postMergeContactsError && fail(postMergeContactsError.message) },
-      [postMergeContactsError],
+      [postMergeContactsError, fail],
     )
     useEffect(
       () => { deleteContactsFromGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },
-      [deleteContactsFromGroupData],
+      [deleteContactsFromGroupData, success],
     )
     useEffect(
       () => { deleteContactsFromGroupError && fail(deleteContactsFromGroupError.message) },
-      [deleteContactsFromGroupError]
+      [deleteContactsFromGroupError, fail]
     )
 
     useDidUpdate(

@@ -73,25 +73,25 @@ const useContact = (contactId: string) => {
 
   useEffect(
     () => { postFieldError && fail(postFieldError.message) },
-    [postFieldError],
+    [postFieldError, fail],
   )
   useEffect(
     () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError],
+    [putFieldError, fail],
   )
   useEffect(
     () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError],
+    [putFieldError, fail],
   )
 
   useEffect(
     () => { postSplitWaiverError && fail(postSplitWaiverError.message) },
-    [postSplitWaiverError],
+    [postSplitWaiverError, fail],
   )
 
   useEffect(
     () => { deleteContactError && fail(deleteContactError.message) },
-    [deleteContactError],
+    [deleteContactError, fail],
   )
 
   const tags = useLatest<string[] | undefined | null>(
@@ -122,17 +122,17 @@ const useContact = (contactId: string) => {
         embeds: ['all'].join(','),
       })
     },
-    [contactId],
+    [contactId, getContact],
   )
 
   const updateContact = useCallback(
     async (cont: Contact) => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
-    [contactId],
+    [contactId, putContact],
   )
 
   const fetchFields = useCallback(
     async () => getFields(`/api/people/${contactId}/fields`)({}),
-    [contactId],
+    [contactId, getFields],
   )
   const addField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
@@ -141,7 +141,7 @@ const useContact = (contactId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
-    [contactId],
+    [contactId, postField],
   )
   const updateField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
@@ -151,7 +151,7 @@ const useContact = (contactId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
-    [contactId],
+    [contactId, putField],
   )
   const removeField = useCallback(
     async (field: CommonField) => {
@@ -160,44 +160,44 @@ const useContact = (contactId: string) => {
 
       return result && (field.id || null)
     },
-    [contactId],
+    [contactId, deleteField],
   )
 
   const [starContact, starMutation] = useInfoCallback(
     async (star: boolean) => {
       await putContact(`/api/people/${contactId}`)({ favourite: star })
     },
-    [contactId],
+    [contactId, putContact],
   )
 
   const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
     async (newGender: 'Male' | 'Female' | 'Other') => {
       await putContactFiled(`/api/people/${contactId}`)({ gender: newGender })
     },
-    [contactId],
+    [contactId, putContactFiled],
   )
 
   const [removeContact, removeMutation] = useInfoCallback(
     async () => {
       await deleteContact(`/api/people/${contactId}`)()
     },
-    [contactId],
+    [contactId, deleteContact],
   )
 
   const addTag = useCallback(
     async (tag: string) => postTag(`/api/people/${contactId}/tags`)({ tag }),
-    [contactId],
+    [contactId, postTag],
   )
 
   const removeTag = useCallback(
     async (tag: string) => deleteTag(`/api/people/${contactId}/tags/${tag}`)(),
-    [contactId],
+    [contactId, deleteTag],
   )
 
   const fetchNotes = useCallback(
     async () => getNotes(`/api/people/${contactId}/notes`)({})
       .then(notes => (notes || []).map(noteInputAdapter)),
-    [contactId],
+    [contactId, getNotes],
   )
 
   const addNote = useCallback(
@@ -209,12 +209,12 @@ const useContact = (contactId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
-    [contactId],
+    [contactId, postNote],
   )
 
   const fetchWaivers = useCallback(
     async () => getWaivers(`/api/people/${contactId}/waivers`)({}),
-    [contactId],
+    [contactId, getWaivers],
   )
 
   const waivers = useMemo(
@@ -229,7 +229,7 @@ const useContact = (contactId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
-    [contactId],
+    [contactId, postSplitWaiver],
   )
 
   const updateNote = useCallback(
@@ -241,18 +241,18 @@ const useContact = (contactId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return mapKeys(snake2pascal, result!)
     },
-    [contactId],
+    [contactId, putNote],
   )
 
   const removeNote = useCallback(
     async (id: string) =>
       deleteNote(`/api/people/${contactId}/notes/${id}`)(),
-    [contactId],
+    [contactId, deleteNote],
   )
 
   useEffect(
     () => { refreshCounts() },
-    [starMutation, removeMutation],
+    [refreshCounts, starMutation, removeMutation],
   )
 
   return {

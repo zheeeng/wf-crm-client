@@ -143,7 +143,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         setWatchValue(value)
       }
     },
-    [fieldValues, setWatchValue],
+    [fieldValues, setWatchValue, okTextWatch],
   )
 
   const handleCreateInfoChange2 = useCallback(
@@ -153,7 +153,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         setWatchValue(value)
       }
     },
-    [fieldValues, watchValue],
+    [fieldValues, setWatchValue, okTextWatch],
   )
 
   const handleClose = useCallback(
@@ -173,7 +173,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
       closeCancellationModal()
       onClose && onClose(e)
     },
-    [onClose, openCancellationModal]
+    [onClose, closeCancellationModal]
   )
 
   const requiredFieldNames = useMemo(
@@ -249,7 +249,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         setToWarnFields(missedFieldNames.concat(inValidFieldNames))
       }
     },
-    [onOk],
+    [onOk, setToWarnFields, validators, requiredFieldNames],
   )
 
   return (
