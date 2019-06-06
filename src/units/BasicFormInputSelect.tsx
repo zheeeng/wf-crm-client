@@ -260,7 +260,7 @@ const BasicFormInputSelect: React.FC<Props> = React.memo(({
 
       onChange && input && input.value && onChange((input as { value: string, label: string }).value)
     },
-    [onchange]
+    [onChange]
   )
 
   return (
@@ -296,7 +296,7 @@ export const SimpleFormInputSelect: React.FC<Props> = React.memo(({
 
       onChange && input && input.value && onChange((input as { value: string, label: string }).value)
     },
-    [onchange]
+    [onChange]
   )
 
   return (

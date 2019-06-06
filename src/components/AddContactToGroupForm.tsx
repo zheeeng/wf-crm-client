@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useContext, useEffect, useMemo } from 'react'
+import { useBoolean } from 'react-hanger'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
@@ -10,7 +11,6 @@ import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
 import AlertContainer from '~src/containers/Alert'
 import GroupsContainer from '~src/containers/Groups'
-import useToggle from '~src/hooks/useToggle'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
@@ -73,11 +73,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
   const [newGroupName, setNewGroupName] = useState('')
   const [selectedGroupId, setSelectedGroupId] = useState('')
 
-  const {
-    value: groupsOpened,
-    toggle: toggleGroupsOpened,
-    toggleOn: toggleOnGroupsOpened,
-  } = useToggle(true)
+  const { value: groupsOpened, toggle: toggleGroupsOpened, setTrue: toggleOnGroupsOpened } = useBoolean(true)
 
   const isGroupExisted = useMemo(
     () => newGroupName && groups.some(group => group.info.name === newGroupName),

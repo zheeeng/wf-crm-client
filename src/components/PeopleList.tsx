@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useContext, useRef } from 'react'
+import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -18,7 +19,6 @@ import Tooltip from '@material-ui/core/Tooltip'
 import cssTips from '~src/utils/cssTips'
 import { Contact, ContactFields } from '~src/types/Contact'
 
-import useToggle from '~src/hooks/useToggle'
 import AlertContainer from '~src/containers/Alert'
 import ContactsContainer from '~src/containers/Contacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
@@ -280,29 +280,30 @@ const PeopleList: React.FC<Props> = React.memo(({
   }>({
     opened: false,
   })
+
   const {
     value: addContactToGroupFormOpened,
-    toggleOn: toggleOnAddContactToGroupFormOpened,
-    toggleOff: toggleOffAddContactToGroupFormOpened,
-  } = useToggle(false)
+    setTrue: toggleOnAddContactToGroupFormOpened,
+    setFalse: toggleOffAddContactToGroupFormOpened,
+  } = useBoolean(false)
 
   const {
     value: mergeContactsOpened,
-    toggleOn: toggleOnMergeContactsOpened,
-    toggleOff: toggleOffMergeContactsOpened,
-  } = useToggle(false)
+    setTrue: toggleOnMergeContactsOpened,
+    setFalse: toggleOffMergeContactsOpened,
+  } = useBoolean(false)
 
   const {
     value: removeContactFromGroupOpened,
-    toggleOn: toggleOnRemoveContactFromGroupOpened,
-    toggleOff: toggleOffRemoveContactFromGroupOpened,
-  } = useToggle(false)
+    setTrue: toggleOnRemoveContactFromGroupOpened,
+    setFalse: toggleOffRemoveContactFromGroupOpened,
+  } = useBoolean(false)
 
   const {
     value: exportContactsOpened,
-    toggleOn: toggleOnExportContactsOpened,
-    toggleOff: toggleOffExportContactsOpened,
-  } = useToggle(false)
+    setTrue: toggleOnExportContactsOpened,
+    setFalse: toggleOffExportContactsOpened,
+  } = useBoolean(false)
 
   // const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 

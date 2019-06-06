@@ -1,13 +1,13 @@
 import createContainer from 'constate'
-import useToggle from '~src/hooks/useToggle'
+import { useBoolean } from 'react-hanger'
 
 const AppContainer = createContainer(() => {
   const {
     value: drawerExpanded,
     toggle: toggleDrawerExpanded,
-    toggleOn: toggleOnDrawerExpanded,
-    toggleOff: toggleOffDrawerExpanded,
-  } = useToggle(false)
+    setTrue: toggleOnDrawerExpanded,
+    setFalse: toggleOffDrawerExpanded,
+  } = useBoolean(false)
 
   return {
     drawerExpanded,

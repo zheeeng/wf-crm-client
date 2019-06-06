@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react'
+import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -10,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import Skeleton from 'react-skeleton-loader'
 
-import useToggle from '~src/hooks/useToggle'
 import ExportContactsForm from '~src/components/ExportContactsForm'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
@@ -157,9 +157,9 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
 
   const {
     value: exportContactsOpened,
-    // toggleOn: toggleOnExportContactsOpened,
-    toggleOff: toggleOffExportContactsOpened,
-  } = useToggle(false)
+    // setTrue: toggleOnExportContactsOpened,
+    setFalse: toggleOffExportContactsOpened,
+  } = useBoolean(false)
 
   const openWaiverExportPage = useCallback(
     (key: string) => () => { window.open(`/get_signed_doc/${key}`, '_blank') },

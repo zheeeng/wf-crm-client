@@ -61,7 +61,7 @@ const RemoveContactsFromGroupForm: React.FC<Props> = React.memo(
         onOk && await onOk(groupId)
         onClose()
       },
-      [onOk, onClose]
+      [onOk, groupId, onClose]
     )
 
     return (

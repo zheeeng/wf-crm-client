@@ -111,6 +111,7 @@ export async function exchangeAPIKey () {
   }
 
   // Block 4: store data
+  // eslint-disable-next-line no-lone-blocks
   {
     cleanStorage()
 

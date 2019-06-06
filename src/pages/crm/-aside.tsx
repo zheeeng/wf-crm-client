@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from 'react'
+import { useBoolean } from 'react-hanger'
 import { makeStyles } from '@material-ui/styles'
 import { Link, ComponentProps } from '@roundation/roundation'
 import { Theme } from '@material-ui/core/styles'
@@ -13,7 +14,6 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
 import Hidden from '@material-ui/core/Hidden'
-import useToggle from '~src/hooks/useToggle'
 
 import cond from 'ramda/es/cond'
 import equals from 'ramda/es/equals'
@@ -87,8 +87,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   const {
     value: groupsOpened,
     toggle: toggleGroupsOpened,
-    toggleOn: toggleOnGroupsOpened,
-  } = useToggle(false)
+    setTrue: toggleOnGroupsOpened,
+  } = useBoolean(false)
 
   const $mountElRef = useRef(document.querySelector('#sidebar'))
 
@@ -117,7 +117,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           option: opened ? option : undefined,
         })
       },
-      [groupForm],
+      [],
       )
 
   const handleAddNewGroup = useCallback(
@@ -130,7 +130,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
       navigateToGroup(id)
       toggleOnGroupsOpened()
     },
-    [addGroup, changeGroupFormOpened, navigateToGroup],
+    [addGroup, changeGroupFormOpened, groups, navigateToGroup, toggleOnGroupsOpened],
   )
 
   useEffect(() => { if (groupId) toggleOnGroupsOpened() }, [])
@@ -182,7 +182,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
       changeGroupFormOpened(false)()
       navigateToGroup()
     },
-    [removeGroup, changeGroupFormOpened],
+    [removeGroup, changeGroupFormOpened, navigateToGroup],
   )
 
   const renderIcon = (icon: string) => {

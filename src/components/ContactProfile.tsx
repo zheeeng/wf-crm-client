@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
+import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -17,7 +18,6 @@ import SplitWaiverThemeProvider from '~src/theme/SplitWaiverThemeProvider'
 import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import useContact from '~src/containers/useContact'
 import ContactFieldInput, { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
-import useToggle from '~src/hooks/useToggle'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
@@ -351,7 +351,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [toSplitWaiver.id],
   )
 
-  const { value: editable, toggle: toggleEditable, toggleOff: toggleOffEditable } = useToggle(false)
+  const { value: editable, toggle: toggleEditable, setFalse: toggleOffEditable } = useBoolean(false)
   const classes = useStyles({})
 
   const handleTagsAdd = useCallback(

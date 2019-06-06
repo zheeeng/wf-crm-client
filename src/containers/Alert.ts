@@ -41,7 +41,7 @@ const AlertContainer = createContainer(() => {
       updateMessage(message => ({ ...message, expand: false }))
       setTimeout(reset, 1000)
     },
-    [updateMessage],
+    [updateMessage, reset],
   )
 
   useEffect(

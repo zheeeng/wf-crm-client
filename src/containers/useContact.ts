@@ -101,8 +101,8 @@ const useContact = (contactId: string) => {
   ) || []
 
   const gender = useLatest<'Male' | 'Female' | 'Other' | ''>(
-    latestContact && latestContact.info.gender || '',
-    putContactFiledData && putContactFiledData.gender || '',
+    latestContact ? (latestContact.info.gender || '') : '',
+    putContactFiledData ? (putContactFiledData.gender || '') : '',
   )
 
   const contact = useMemo<Contact | undefined>(

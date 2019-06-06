@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext, useRef, useMemo } from 'react'
+import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -18,7 +19,6 @@ import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import AlertContainer from '~src/containers/Alert'
 import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
-import useToggle from '~src/hooks/useToggle'
 
 import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
@@ -196,9 +196,23 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [removeNoteError],
   )
 
-  const {value: showCtlButtons, /* toggleOn: toggleOnShowCtlButtons, toggleOff: toggleOffShowCtlButtons */} = useToggle(false)
-  // const {value: editActivity, toggle: toggleEditActivity, toggleOff: toggleOffEditActivity} = useToggle(false)
-  const {value: showAddNote, toggleOn: toggleOnAddNote, toggleOff: toggleOffShowAddNote} = useToggle(false)
+  const {
+    value: showCtlButtons,
+    // setTrue: toggleOnShowCtlButtons,
+    // setFalse: toggleOffShowCtlButtons,
+  } = useBoolean(false)
+
+  // const {
+  //   value: editActivity,
+  //   toggle: toggleEditActivity,
+  //   setFalse: toggleOffEditActivity
+  // } = useBoolean(false)
+
+  const {
+    value: showAddNote,
+    setTrue: toggleOnAddNote,
+    setFalse: toggleOffShowAddNote
+  } = useBoolean(false)
 
   // const toggleShowButtons = useCallback(
   //   () => {

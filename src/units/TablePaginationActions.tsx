@@ -67,7 +67,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
   const handleLastPageButtonClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) =>
       onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1)),
-    [onChangePage, page, count, rowsPerPage],
+    [onChangePage, count, rowsPerPage],
   )
 
   const handleEnterNewPage = useCallback(
@@ -75,7 +75,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
       const newPage = event.currentTarget.value.trim()
       !isNaN(+newPage) && onChangePage(null, parseInt(newPage, 10) - 1)
     },
-    [page, count, rowsPerPage],
+    [onChangePage],
   )
 
   return (

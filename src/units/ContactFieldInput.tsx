@@ -313,7 +313,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         if (field) setLocalFieldValues(values => values.concat(field))
         return field
       },
-      [localFieldValues, onAddField, name, setLocalFieldValues],
+      [onAddField, name, setLocalFieldValues],
     )
 
     const addField = useCallback(
@@ -400,12 +400,12 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )
         }
       },
-      [name, onChangePriority, localFieldValues, setLocalFieldValues],
+      [localFieldValues, onChangePriority, name, addHiddenField],
     )
 
     const handleAddEntry = useCallback(
       () => { addField(getEmptyFieldSegmentValue(name)) },
-      [localFieldValues, name],
+      [addField, name],
     )
 
     const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
@@ -427,7 +427,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
         if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
       },
-      [localFieldValues, onUpdateField, name, setLocalFieldValues],
+      [onBatchUpdateFields],
     )
 
     const handleEntryUpdateByBlur = useCallback(
@@ -486,7 +486,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             queueRef.current = { queue: [], isAdding: false }
           }
         },
-      [localFieldValues, setHasErrorKeys, name, updateField, addField],
+      [type, name, hasValues, updateField, addField, batchUpdateFields],
     )
 
     const handleEntryUpdateByKeydown = useCallback(
@@ -531,7 +531,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             addField({ key, value, fieldType: name })
           }
         },
-      [localFieldValues, name, type],
+      [addField, hasValues, name, type, updateField],
     )
 
     // const handleEntryUpdate = useCallback(
@@ -616,7 +616,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )
         }
       },
-      [localFieldValues, setSortingId, onChangePriority, setLocalFieldValues],
+      [localFieldValues, onChangePriority, name],
     )
 
     const onDateChange = useCallback(
@@ -657,7 +657,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           queueRef.current = { queue: [], isAdding: false }
         }
       },
-      [updateDateField, addDateField],
+      [hasValues, updateDateField, name, addDateField, batchUpdateFields],
     )
 
     const renderField = useCallback(
@@ -812,9 +812,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )}
         </div>
       ),
-      [editable, hasTitle, hasErrorKeys,
-        handleAddEntry, handleEntryUpdateByBlur, handleEntryUpdateByKeydown,
-        handleEntryToggleHide, handleEntryDelete]
+      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, handleEntryToggleHide, expandable, handleAddEntry, handleEntryDelete, hasErrorKeys]
     )
 
     const sortableItems = useMemo(
@@ -834,14 +832,14 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           id: fieldValue.id,
         }),
       ),
-      [calculatedFieldValues, editable, sortingId],
+      [calculatedFieldValues, classes.fieldTextBarWrapper, classes.hidden, editable, renderField],
     )
 
     const onSortStart = useCallback(
       ({ index }: { index: number }) => {
         setSortingId(calculatedFieldValues[index].id || '')
       },
-      [setSortingId],
+      [calculatedFieldValues],
     )
 
     return (
@@ -928,7 +926,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
       updateField(val)
     },
-    [updateField, setHasError],
+    [value, type, updateField],
   )
   const handleEntryUpdateByKeydown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -946,7 +944,7 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
 
       updateField(val)
     },
-    [],
+    [type, updateField, value],
   )
 
   return (

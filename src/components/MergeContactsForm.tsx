@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -6,7 +7,6 @@ import Dialog from '@material-ui/core/Dialog'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import cssTips from '~src/utils/cssTips'
-import useToggle from '~src/hooks/useToggle'
 
 import ProgressLoading from '~src/units/ProgressLoading'
 
@@ -54,7 +54,7 @@ export interface Props {
 
 const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
   const classes = useStyles({})
-  const { value: isLoading, toggleOn: toggleOnLoading, toggleOff: toggleOffLoading } = useToggle(false)
+  const { value: isLoading, setTrue: toggleOnLoading, setFalse: toggleOffLoading } = useBoolean(false)
 
   const handleOkClick = useCallback(
     async () => {

@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, useRef } from 'react'
+import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -8,7 +9,6 @@ import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import BasicFormInputSelect from '~src/units/BasicFormInputSelect'
 import cssTips from '~src/utils/cssTips'
-import useToggle from '~src/hooks/useToggle'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -125,9 +125,9 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
 
   const {
     value: cancellationConfirmModalOpen,
-    toggleOn: openCancellationModal,
-    toggleOff: closeCancellationModal,
-  } = useToggle(false)
+    setTrue: openCancellationModal,
+    setFalse: closeCancellationModal,
+  } = useBoolean(false)
 
   const [toWarnFields, setToWarnFields] = useState<string[]>([])
 

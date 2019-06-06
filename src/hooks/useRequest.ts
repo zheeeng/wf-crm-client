@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
+import { useBoolean } from 'react-hanger'
 import useFetch from './useFetch'
 
 const useRequest = <T = any>(method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
   const fetch = useFetch()
-  const [isLoading, setIsLoading] = useState(false)
+  const { value: isLoading, setValue: setIsLoading } = useBoolean(false)
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<any>(null)
 
@@ -23,7 +24,7 @@ const useRequest = <T = any>(method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
         setIsLoading(false)
       }
     },
-    [setData, fetch, setIsLoading, setError],
+    [method, setData, fetch, setIsLoading, setError],
   )
 
   return {
