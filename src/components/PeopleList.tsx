@@ -314,7 +314,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
       onSearch({ page, size, searchTerm: term })
     },
-    [page, size, searchTerm, setSearchTerm, onSearch, setChecked],
+    [page, size, searchTerm, setSearchTerm, onSearch, setChecked, checked],
   )
 
   const debouncedSearch = useCallback(
@@ -386,7 +386,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         newerContactIds.length && setFromContactId(newerContactIds[0])
       }
     },
-    [contacts, setChecked],
+    [contacts, setChecked, setFromContactId],
   )
 
   const handleAddNewContact = useCallback(
@@ -408,7 +408,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       }
       toggleOffAddContactToGroupFormOpened()
     },
-    [checked],
+    [checked, addContactToGroup, toggleOffAddContactToGroupFormOpened],
   )
 
   const handleRemoveContactsFromGroup = useCallback(
@@ -417,7 +417,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
       await removeContactsFromGroup(groupId, checked)
     },
-    [checked],
+    [checked, removeContactsFromGroup],
   )
 
   // const handleContactsRemove = useCallback(
@@ -436,7 +436,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
       await mergeContacts(checked)
     },
-    [checked],
+    [checked, mergeContacts],
   )
 
   const renderPCLayoutTableRows = (contact: Contact) => (

@@ -322,7 +322,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   return (
     <ContactTableThemeProvider>
       <Dialog
-        open={showRemoveConfirmationForId != ''}
+        open={showRemoveConfirmationForId !== ''}
         onClose={handleSetRemoveId('')}
         PaperProps={{
           className: classes2.paper,

@@ -70,8 +70,8 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
     [addGroupError],
   )
 
-  const [ newGroupName, setNewGroupName ] = useState('')
-  const [ selectedGroupId, setSelectedGroupId ] = useState('')
+  const [newGroupName, setNewGroupName] = useState('')
+  const [selectedGroupId, setSelectedGroupId] = useState('')
 
   const {
     value: groupsOpened,
@@ -102,7 +102,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       setNewGroupName(name)
       setSelectedGroupId('')
     },
-    [setNewGroupName, selectedGroupId],
+    [setNewGroupName, setSelectedGroupId],
   )
 
   const handleCreateGroupClick = useCallback(
@@ -117,7 +117,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       }
       setNewGroupName('')
     },
-    [newGroupName, addGroup, setSelectedGroupId, selectedGroupId, toggleOnGroupsOpened, onOk],
+    [newGroupName, addGroup, setSelectedGroupId, toggleOnGroupsOpened, onOk],
   )
 
   const handleAddToGroupClick = useCallback(

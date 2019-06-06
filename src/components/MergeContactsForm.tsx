@@ -66,7 +66,7 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
         toggleOffLoading()
       }
     },
-    [onOk],
+    [onOk, onClose, toggleOnLoading, toggleOffLoading],
   )
 
   return (

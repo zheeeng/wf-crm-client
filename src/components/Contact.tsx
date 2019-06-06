@@ -35,7 +35,7 @@ const ContactIndex: React.FC<Props> = React.memo(
           navigate(path.split('/').slice(0, -1).join('/'))
         }
       },
-      [navigate, path],
+      [navigate, path, setFromContactId],
     )
 
     const previousContactId = useMemo(
@@ -63,7 +63,7 @@ const ContactIndex: React.FC<Props> = React.memo(
       () => {
         path && navigate && previousContactId && navigate(`${path.split('/').slice(0, -1).join('/')}/${previousContactId}`)
       },
-      [navigate, path, previousContactId, setFromContactId],
+      [navigate, path, previousContactId],
     )
 
     const goNextContact = useCallback(

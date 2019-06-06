@@ -137,7 +137,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
 
   const handleCurrentTabChange = useCallback(
     (_: any, value: number) => setCurrentTab(value),
-    [currentTab],
+    [setCurrentTab],
   )
 
   const {
