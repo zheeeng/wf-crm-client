@@ -194,18 +194,18 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   }
 
   const renderLinkLabel = useCallback(
-    (label: string) => {
-      switch (label) {
+    (name: string) => {
+      switch (name) {
         case 'All':
-          return (name: string) => (
+          return (
             <ListItemText key={name}>{name}({contactsCount})</ListItemText>
           )
         case 'Starred':
-          return (name: string) => (
+          return (
             <ListItemText key={name}>{name}({starredCount})</ListItemText>
           )
         case 'Groups':
-          return (name: string) => (
+          return (
             <>
               <ListItemText key={name}>
                 {name}({groups.length})
@@ -234,7 +234,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
           throw Error('impossible')
       }
     },
-    [changeGroupFormOpened, classes, groups.length, groupsOpened, newGroupFormOption]
+    [changeGroupFormOpened, classes.groupAddIcon, classes.groupStatusIcon, classes.statusIconRotate90, contactsCount, groups.length, groupsOpened, newGroupFormOption, starredCount],
   )
 
   const handleLinkClick = useCallback(

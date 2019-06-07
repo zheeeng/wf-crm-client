@@ -61,25 +61,25 @@ const useContact = (contactId: string) => {
 
   useEffect(
     () => { postFieldError && fail(postFieldError.message) },
-    [postFieldError],
+    [postFieldError, fail],
   )
   useEffect(
     () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError],
+    [putFieldError, fail],
   )
   useEffect(
     () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError],
+    [putFieldError, fail],
   )
 
   useEffect(
     () => { postSplitWaiverError && fail(postSplitWaiverError.message) },
-    [postSplitWaiverError],
+    [postSplitWaiverError, fail],
   )
 
   useEffect(
     () => { deleteContactError && fail(deleteContactError.message) },
-    [deleteContactError],
+    [deleteContactError, fail],
   )
 
   const tags = useLatest<string[] | undefined | null>(
