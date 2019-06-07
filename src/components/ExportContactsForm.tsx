@@ -49,7 +49,7 @@ const ExportContactsForm: React.FC<Props> = React.memo(
 
     useEffect(
       () => { open && contactIds.length && exportContacts(contactIds) },
-      [open, contactIds],
+      [open, contactIds, exportContacts],
     )
 
     return (

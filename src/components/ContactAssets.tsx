@@ -144,7 +144,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError,
   } = useContact(contactId)
 
-  useEffect(() => { fetchWaivers() }, [contactId, splitMutation])
+  useEffect(() => { fetchWaivers() }, [contactId, fetchWaivers, splitMutation])
 
   const handleOpenWaiverSplitter = useCallback(
     (id: string, title: string) => (e: React.SyntheticEvent) => {

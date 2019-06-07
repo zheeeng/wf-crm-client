@@ -218,7 +218,6 @@ const emailFieldMap = ({ id, email, title, priority, waiver }: EmailField): Fiel
 const backupEmailField =
   emailFieldMap({ id: '', email: '', title: '', fieldType: 'email', priority: 100 })
 
-// tslint:disable-next-line:variable-name
 const phoneFieldMap = ({ id, number, title, priority, waiver }: PhoneField): FieldValue =>
   ({
     values: [
@@ -507,7 +506,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       })()
 
     },
-    [toSplitWaiver.id],
+    [fetchFields, toSplitWaiver.id, toggleOffEditable],
   )
 
   const splitWaiverTitle = useInput('')

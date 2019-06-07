@@ -130,7 +130,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [addGroup, changeGroupFormOpened, groups, navigateToGroup, toggleOnGroupsOpened],
   )
 
-  useEffect(() => { if (groupIdState.value) toggleOnGroupsOpened() }, [])
+  useEffect(() => { if (groupIdState.value) toggleOnGroupsOpened() }, [groupIdState.value, toggleOnGroupsOpened])
 
   const newGroupFormOption: CreateFormOption = {
     title: 'New Group',

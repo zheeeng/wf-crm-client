@@ -48,7 +48,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
 
   useEffect(
     () => { text !== value && setText(value || '') },
-    [value],
+    [text, value],
   )
 
   const handleChange = useCallback(

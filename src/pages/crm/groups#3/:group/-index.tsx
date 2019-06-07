@@ -35,7 +35,7 @@ const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries 
         setQueries({ page: [pagination.page.toString()] })
       }
     },
-    [pagination]
+    [pagination, setQueries]
   )
 
   const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])

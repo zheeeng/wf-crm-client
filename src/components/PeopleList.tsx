@@ -269,7 +269,7 @@ const PeopleList: React.FC<Props> = React.memo(({
         <ContinueEditing onClick={handleShowProfile(addContactData.id)} />
       )
     },
-    [addContactData, showAddContactMessage],
+    [addContactData, handleShowProfile, showAddContactMessage, success],
   )
 
   const [checked, setChecked] = useState<string[]>([])

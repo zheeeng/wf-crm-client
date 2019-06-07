@@ -257,7 +257,7 @@ const Header: React.FC<Props> = React.memo(() => {
   //   [anchorEl, openAccount],
   // )
 
-  useEffect(() => { login() }, [])
+  useEffect(() => { login() }, [login])
 
   return (
     <Portal container={mountElRef.current}>

@@ -56,7 +56,7 @@ const AlertContainer = createContainer(() => {
         }
       }
     },
-    [message],
+    [dismiss, message],
   )
 
   return {

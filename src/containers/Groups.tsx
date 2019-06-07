@@ -54,17 +54,17 @@ const GroupsContainer = createContainer(() => {
 
     useEffect(
       () => { authored && refreshGroupCounts() },
-      [authored, addGroupMutation, updateGroupMutation, removeGroupMutation],
+      [authored, addGroupMutation, updateGroupMutation, removeGroupMutation, refreshGroupCounts],
     )
 
     useEffect(
       () => { deleteGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },
-      [deleteGroupData],
+      [deleteGroupData, success],
     )
 
     useEffect(
       () => { deleteGroupError && fail(deleteGroupError.message) },
-      [deleteGroupError],
+      [deleteGroupError, fail],
     )
   }
 

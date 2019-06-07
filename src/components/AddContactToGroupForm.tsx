@@ -67,7 +67,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
 
   useEffect(
     () => { addGroupError && fail(addGroupError.message) },
-    [addGroupError],
+    [addGroupError, fail],
   )
 
   const newGroupNameState = useInput('')
