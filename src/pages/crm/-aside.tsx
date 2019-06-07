@@ -15,9 +15,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
 import Hidden from '@material-ui/core/Hidden'
 
-import cond from 'ramda/es/cond'
-import equals from 'ramda/es/equals'
-
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
 import GroupMenu from '~src/components/GroupMenu'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
@@ -81,7 +78,7 @@ export interface Props extends ComponentProps {
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
   const { contactsCount, starredCount, refreshPage } = useContext(ContactsCountContainer.Context)
-  const { groupId, groups, addGroup, updateGroup, removeGroup } = useContext(GroupsContainer.Context)
+  const { groupIdState, groups, addGroup, updateGroup, removeGroup } = useContext(GroupsContainer.Context)
   const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
 
   const {
@@ -133,7 +130,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [addGroup, changeGroupFormOpened, groups, navigateToGroup, toggleOnGroupsOpened],
   )
 
-  useEffect(() => { if (groupId) toggleOnGroupsOpened() }, [])
+  useEffect(() => { if (groupIdState.value) toggleOnGroupsOpened() }, [])
 
   const newGroupFormOption: CreateFormOption = {
     title: 'New Group',
@@ -196,36 +193,48 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     }
   }
 
-  const renderLinkLabel = cond(
-    [
-      [equals('All'), name => <ListItemText key={name}>{name}({contactsCount})</ListItemText>],
-      [equals('Starred'), name => <ListItemText key={name}>{name}({starredCount})</ListItemText>],
-      [equals('Groups'), name => (
-        <>
-          <ListItemText key={name}>
-            {name}({groups.length})
-          </ListItemText>
-          <ListItemSecondaryAction key={name + 'action'}>
-            <Icon
-              color="hoverLighten"
-              name={ICONS.ChevronRight}
-              className={classnames(
-                classes.groupStatusIcon,
-                groupsOpened && classes.statusIconRotate90,
-              )}
-              size="sm"
-            />
-            <Icon
-              color="hoverLighten"
-              name={ICONS.Add}
-              onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))}
-              className={classes.groupAddIcon}
-              size="sm"
-            />
-          </ListItemSecondaryAction>
-        </>
-      )],
-    ],
+  const renderLinkLabel = useCallback(
+    (label: string) => {
+      switch (label) {
+        case 'All':
+          return (name: string) => (
+            <ListItemText key={name}>{name}({contactsCount})</ListItemText>
+          )
+        case 'Starred':
+          return (name: string) => (
+            <ListItemText key={name}>{name}({starredCount})</ListItemText>
+          )
+        case 'Groups':
+          return (name: string) => (
+            <>
+              <ListItemText key={name}>
+                {name}({groups.length})
+              </ListItemText>
+              <ListItemSecondaryAction key={name + 'action'}>
+                <Icon
+                  color="hoverLighten"
+                  name={ICONS.ChevronRight}
+                  className={classnames(
+                    classes.groupStatusIcon,
+                    groupsOpened && classes.statusIconRotate90,
+                  )}
+                  size="sm"
+                />
+                <Icon
+                  color="hoverLighten"
+                  name={ICONS.Add}
+                  onClick={muteClick(changeGroupFormOpened(true, 'add', newGroupFormOption))}
+                  className={classes.groupAddIcon}
+                  size="sm"
+                />
+              </ListItemSecondaryAction>
+            </>
+          )
+        default:
+          throw Error('impossible')
+      }
+    },
+    [changeGroupFormOpened, classes, groups.length, groupsOpened, newGroupFormOption]
   )
 
   const handleLinkClick = useCallback(
@@ -295,7 +304,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
             {subPageNavs.map(renderLink)}
             <List
               component="nav"
-              className={classnames((!groupsOpened || !groupId) && classes.invisible)}
+              className={classnames((!groupsOpened || !groupIdState.value) && classes.invisible)}
             >
               <ListItem component="div">
                 <ListItemSecondaryAction className={classes.groupActions}>

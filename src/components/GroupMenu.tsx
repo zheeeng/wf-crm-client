@@ -1,4 +1,5 @@
-import React, { useState, useContext, useCallback, useMemo } from 'react'
+import React, { useContext, useCallback, useMemo } from 'react'
+import { useInput } from 'react-hanger';
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -73,16 +74,16 @@ export interface Props {
 const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onClickGroup, theme }) => {
   const classes = useStyles({})
 
-  const { groupId, groups } = useContext(GroupsContainer.Context)
+  const { groupIdState, groups } = useContext(GroupsContainer.Context)
 
-  const [searchTerm, setSearchTerm] = useState('')
+  const searchTermState = useInput('')
 
   const handleChangeSearchTerm = useCallback(
     (value: string) => {
-      setSearchTerm(value)
+      searchTermState.setValue(value)
       onClickGroup('')
     },
-    [setSearchTerm, onClickGroup],
+    [searchTermState, onClickGroup],
   )
 
   const handleOnClick = useCallback(
@@ -93,14 +94,14 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
   )
 
   const filteredGroups = useMemo(
-    () => !searchTerm
+    () => !searchTermState.hasValue
       ? groups
       : groups
         .filter(
           group => group.info.name.toLowerCase()
-            .includes(searchTerm.toLowerCase())
+            .includes(searchTermState.value.toLowerCase())
         ),
-    [groups, searchTerm],
+    [groups, searchTermState],
   )
 
   return (
@@ -124,7 +125,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
       <ListItem component="div" className={classnames(classes.searchItem, theme === 'simple' && classes.searchItemSimple)}>
         <Searcher
           placeholder="Type a group name"
-          value={searchTerm}
+          value={searchTermState.value}
           onChange={handleChangeSearchTerm}
           theme={theme}
         />
@@ -138,12 +139,18 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
             key={group.id}
             button
             component="li"
-            className={classnames(classes.nestedItem, theme === 'simple' && classes.text, group.id === groupId && classes.activeItem, group.id === selectedId && classes.selectedItem)}
+            className={
+              classnames(
+                classes.nestedItem, theme === 'simple' && classes.text,
+                group.id === groupIdState.value && classes.activeItem,
+                group.id === selectedId && classes.selectedItem,
+              )
+            }
             onClick={handleOnClick(group.id)}
           >
             <ListItemText
               classes={{
-                primary: (group.id === groupId || group.id === selectedId)
+                primary: (group.id === groupIdState.value || group.id === selectedId)
                   ? classes.activeItemText
                   : undefined,
               }}

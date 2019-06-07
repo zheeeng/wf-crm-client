@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
+import { useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -549,7 +550,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
       [toggleHideField],
     )
 
-    const [sortingId, setSortingId] = useState('')
+    const sortingId = useInput('')
 
     const calculatedFieldValues = useMemo(
       () => {
@@ -598,7 +599,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
     const onSortEnd = useCallback(
       async ({oldIndex, newIndex}) => {
-        setSortingId('')
+        sortingId.clear()
         const valueOfOld = localFieldValues[oldIndex]
         const valueOfNew = localFieldValues[newIndex]
         const previousValueOfNew = localFieldValues[newIndex - 1]
@@ -616,7 +617,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )
         }
       },
-      [localFieldValues, onChangePriority, name],
+      [sortingId, localFieldValues, onChangePriority, name],
     )
 
     const onDateChange = useCallback(
@@ -837,9 +838,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
     const onSortStart = useCallback(
       ({ index }: { index: number }) => {
-        setSortingId(calculatedFieldValues[index].id || '')
+        sortingId.setValue(calculatedFieldValues[index].id || '')
       },
-      [calculatedFieldValues],
+      [calculatedFieldValues, sortingId],
     )
 
     return (
@@ -860,7 +861,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         }
         <div className={classnames(
           classes.fieldTextWrapper,
-          sortingId !== '' && classes.isSorting,
+          sortingId.hasValue && classes.isSorting,
         )}>
           {showName
             && (

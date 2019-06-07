@@ -5,15 +5,15 @@ import ContactsContainer from '~src/containers/Contacts'
 
 const Content: React.FC<{ group: string }> = React.memo(({ group, children }) => {
   useContext(ContactsContainer.Context)
-  const { setGroupId } = useContext(GroupsContainer.Context)
+  const { groupIdState } = useContext(GroupsContainer.Context)
 
   useEffect(
     () => {
-      setGroupId(group)
+      groupIdState.value && groupIdState.setValue(group)
 
-      return () => setGroupId('')
+      return groupIdState.clear
     },
-    [group],
+    [group, groupIdState],
   )
 
   return <>{children}</>

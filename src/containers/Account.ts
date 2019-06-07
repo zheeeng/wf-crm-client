@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import useMount from 'react-use/lib/useMount'
 import createContainer from 'constate'
 import { usePost } from '~src/hooks/useRequest'
 import useLatest from '~src/hooks/useLatest'
-import merge from 'ramda/es/merge'
-import pick from 'ramda/es/pick'
 
 import { getLoginParams, getFallbackUsername } from '~src/utils/qs3Login'
 
@@ -14,18 +13,12 @@ const getDefaultAuthData = (): AuthData => ({ id: '', username: '' })
 const AccountContainer = createContainer(() => {
   const { data: authData, /* request: postAuthentication */ } = usePost<AuthData>()
   const { data: loginData, request: postLogin } = usePost<AuthData>()
-  const { data: tmpLogoutData, request: postLogout } = usePost<{}>()
-  const logoutData = useMemo<AuthData>(
-    () => pick(['id', 'username'])(merge(getDefaultAuthData())(tmpLogoutData)),
-    [tmpLogoutData],
-  )
 
   const login = useCallback(() => postLogin('/api/auth/login')(getLoginParams()), [postLogin])
-  const logout = useCallback(postLogout('/api/auth/invalidateToken'), [postLogout])
 
-  const { id, username } = useLatest<AuthData | null>(authData, loginData, logoutData) || getDefaultAuthData()
+  const { id, username } = useLatest<AuthData | null>(authData, loginData) || getDefaultAuthData()
 
-  useEffect(() => { login() }, [])
+  useMount(login)
 
   const authored = useMemo(() => !!username, [username])
 
@@ -36,7 +29,6 @@ const AccountContainer = createContainer(() => {
     id,
     username: displayName,
     login,
-    logout,
   }
 })
 

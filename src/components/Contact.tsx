@@ -1,4 +1,5 @@
-import React, { useContext, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useContext, useCallback, useMemo } from 'react'
+import { usePrevious } from 'react-hanger'
 import useContact from '~src/containers/useContact'
 import ContactsContainer from '~src/containers/Contacts'
 import DetailsPaper from '~src/units/DetailsPaper'
@@ -16,26 +17,19 @@ export interface Props {
 
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
-    const { contacts, setFromContactId } = useContext(ContactsContainer.Context)
-    const { fetchContact, removeContact } = useContact(contactId)
+    const { contacts, fromContactIdState } = useContext(ContactsContainer.Context)
+    const { removeContact } = useContact(contactId)
 
-    useEffect(() => { fetchContact() }, [contactId])
-
-    const lastContactIdRef = useRef(contactId)
-
-    useEffect(
-      () => { lastContactIdRef.current = contactId },
-      [contactId],
-    )
+    const lastContactId = usePrevious(contactId)
 
     const navigateToContact = useCallback(
       () => {
-        if (path && navigate) {
-          setFromContactId(lastContactIdRef.current)
+        if (path && navigate && lastContactId) {
+          fromContactIdState.setValue(lastContactId)
           navigate(path.split('/').slice(0, -1).join('/'))
         }
       },
-      [navigate, path, setFromContactId],
+      [path, navigate, lastContactId, fromContactIdState],
     )
 
     const previousContactId = useMemo(

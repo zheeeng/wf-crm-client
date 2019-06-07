@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext, useRef, useMemo } from 'react'
-import { useBoolean } from 'react-hanger'
+import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -273,19 +273,13 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [addNote, freshNotes, toggleOffShowAddNote],
   )
 
-  const [showRemoveConfirmationForId, setShowRemoveConfirmationForId] = useState('')
-
-  const handleSetRemoveId = useCallback(
-    (id: string) => () => {
-      setShowRemoveConfirmationForId(id)
-    },
-    [setShowRemoveConfirmationForId]
-  )
+  const showRemoveConfirmationForId = useInput('')
 
   const handleNoteRemove = useCallback(
     async () => {
-      setShowRemoveConfirmationForId('')
-      await removeNote(showRemoveConfirmationForId)
+      const noteID = showRemoveConfirmationForId.value
+      showRemoveConfirmationForId.clear()
+      await removeNote(noteID)
       await freshNotes()
     },
     [showRemoveConfirmationForId, removeNote, freshNotes],
@@ -336,8 +330,8 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   return (
     <ContactTableThemeProvider>
       <Dialog
-        open={showRemoveConfirmationForId !== ''}
-        onClose={handleSetRemoveId('')}
+        open={showRemoveConfirmationForId.hasValue}
+        onClose={showRemoveConfirmationForId.clear}
         PaperProps={{
           className: classes2.paper,
         }}
@@ -352,7 +346,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           Are you sure you want to remove this note?
         </Typography>
         <div className={classes2.buttonZone}>
-          <Button onClick={handleSetRemoveId('')}>Cancel</Button>
+          <Button onClick={showRemoveConfirmationForId.clear}>Cancel</Button>
           <Button
             color="primary"
             onClick={handleNoteRemove}
@@ -430,7 +424,10 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                         <div className={classes.entryContent}>
                           {note.content}
                           <Tooltip title="remove">
-                            <IconButton className={classes.noteRemover} onClick={handleSetRemoveId(note.id)}>
+                            <IconButton
+                              className={classes.noteRemover}
+                              onClick={showRemoveConfirmationForId.setValue.bind(null, note.id)}
+                            >
                               <Icon name={ICONS.Delete} color={'hoverLighten'}/>
                             </IconButton>
                           </Tooltip>

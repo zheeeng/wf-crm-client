@@ -1,5 +1,5 @@
-import React from 'react'
-import { useState, useCallback, useEffect, useContext } from 'react'
+import React, { useMemo, useCallback, useEffect, useContext } from 'react'
+import { useInput } from 'react-hanger';
 import createContainer from 'constate'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import { groupInputAdapter, GroupFields, GroupAPI, groupFieldAdapter } from '~src/types/Contact'
@@ -9,7 +9,7 @@ import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import AccountContainer from './Account'
 
 const GroupsContainer = createContainer(() => {
-  const [ groupId, setGroupId ] = useState('')
+  const groupIdState = useInput('')
   const { data: groupsData, request: getGroupsData } = useGet<GroupAPI[]>()
   const { request: postGroup, error: postGroupError } = usePost()
   const { request: putGroup, error: putGroupError } = usePut()
@@ -26,20 +26,20 @@ const GroupsContainer = createContainer(() => {
 
   const [updateGroup, updateGroupMutation] = useInfoCallback(
     async (group: GroupFields) => {
-      if (groupId) {
-        await putGroup(`/api/group/${groupId}`)(groupFieldAdapter(group))
+      if (groupIdState.value) {
+        await putGroup(`/api/group/${groupIdState.value}`)(groupFieldAdapter(group))
       }
     },
-    [putGroup, groupId],
+    [putGroup, groupIdState.value],
   )
 
   const [removeGroup, removeGroupMutation] = useInfoCallback(
     async () => {
-      if (groupId) {
-        await deleteGroup(`/api/group/${groupId}`)()
+      if (groupIdState.value) {
+        await deleteGroup(`/api/group/${groupIdState.value}`)()
       }
     },
-    [deleteGroup, groupId],
+    [deleteGroup, groupIdState.value],
   )
 
   const refreshGroupCounts = useCallback(
@@ -64,14 +64,18 @@ const GroupsContainer = createContainer(() => {
 
     useEffect(
       () => { deleteGroupError && fail(deleteGroupError.message) },
-      [deleteGroupError]
+      [deleteGroupError],
     )
   }
 
+  const groups = useMemo(
+    () => (groupsData || []).map(groupInputAdapter),
+    [groupsData],
+  )
+
   return {
-    groupId,
-    setGroupId,
-    groups: (groupsData || []).map(groupInputAdapter),
+    groupIdState,
+    groups,
     refreshGroupCounts,
     addGroup, addGroupMutation, addGroupError: postGroupError,
     updateGroup, updateGroupMutation, updateGroupError: putGroupError,

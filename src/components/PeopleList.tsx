@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useContext, useRef } from 'react'
-import { useBoolean } from 'react-hanger'
+import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -258,7 +258,7 @@ const PeopleList: React.FC<Props> = React.memo(({
     contacts, isFetchingContacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
-    fromContactId, resetFormContactId, setFromContactId,
+    fromContactIdState,
   } = useContext(ContactsContainer.Context)
 
   const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
@@ -273,7 +273,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const [checked, setChecked] = useState<string[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
+  const searchTermState = useInput('')
   const [createForm, setCreateForm] = useState<{
     opened: boolean
     option?: CreateFormOption
@@ -294,9 +294,9 @@ const PeopleList: React.FC<Props> = React.memo(({
   } = useBoolean(false)
 
   const {
-    value: removeContactFromGroupOpened,
-    setTrue: toggleOnRemoveContactFromGroupOpened,
-    setFalse: toggleOffRemoveContactFromGroupOpened,
+    value: removeContactFormGroupOpened,
+    setTrue: toggleOnRemoveContactFormGroupOpened,
+    setFalse: toggleOffRemoveContactFormGroupOpened,
   } = useBoolean(false)
 
   const {
@@ -309,13 +309,13 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const search = useCallback(
     (term: string) => {
-      searchTerm !== term && setSearchTerm(term)
+      searchTermState.value !== term && searchTermState.setValue(term)
 
       checked.length !== 0 && setChecked([])
 
       onSearch({ page, size, searchTerm: term })
     },
-    [page, size, searchTerm, setSearchTerm, onSearch, setChecked, checked],
+    [searchTermState, checked.length, onSearch, page, size],
   )
 
   const debouncedSearch = useCallback(
@@ -326,8 +326,8 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const handleChangePage = useCallback(
-    (_: any, newPage: number) => onSearch({ page: newPage + 1, size, searchTerm }),
-    [onSearch, size, searchTerm],
+    (_: any, newPage: number) => onSearch({ page: newPage + 1, size, searchTerm: searchTermState.value }),
+    [onSearch, size, searchTermState],
   )
 
   const handleItemCheckedToggle = useCallback(
@@ -364,42 +364,44 @@ const PeopleList: React.FC<Props> = React.memo(({
     [starContact],
   )
 
-  const changeCreateContactFormOpened = useCallback<{
+  interface ChangeCreateContactFormOpened {
     (opened: true, option: CreateFormOption): () => void
     (opened: false): () => void
-  }>(
-      (opened: boolean, option?: CreateFormOption) => () => {
-        setCreateForm({ opened, option: opened ? option : undefined })
-      },
-      [setCreateForm],
-      )
+  }
 
-  const lastContactIds = useRef<string[] | null>(null)
+  const changeCreateContactFormOpened = useCallback<ChangeCreateContactFormOpened>(
+    (opened: boolean, option?: CreateFormOption) => () => {
+      setCreateForm({ opened, option: opened ? option : undefined })
+    },
+    [setCreateForm],
+  )
+
+  const lastContactIdsRef = useRef<string[] | null>(null)
 
   useEffect(
     () => {
-      if (lastContactIds.current !== null) {
-        const lastIds = lastContactIds.current
+      if (lastContactIdsRef.current !== null) {
+        const lastIds = lastContactIdsRef.current
         const newerContactIds = contacts.map(contact => contact.id).filter(cid => !lastIds.includes(cid))
 
-        lastContactIds.current = null
+        lastContactIdsRef.current = null
 
-        newerContactIds.length && setFromContactId(newerContactIds[0])
+        newerContactIds.length && fromContactIdState.setValue(newerContactIds[0])
       }
     },
-    [contacts, setChecked, setFromContactId],
+    [contacts, setChecked, fromContactIdState],
   )
 
   const handleAddNewContact = useCallback(
     async (contact: object) => {
       if (addContact) {
-        lastContactIds.current = contacts.map(contact => contact.id)
+        lastContactIdsRef.current = contacts.map(contact => contact.id)
         changeCreateContactFormOpened(false)()
         await addContact(contact as ContactFields)
-        search(searchTerm)
+        search(searchTermState.value)
       }
     },
-    [contacts, addContact, search, changeCreateContactFormOpened, searchTerm],
+    [contacts, addContact, search, changeCreateContactFormOpened, searchTermState],
   )
 
   const handleAddContactToGroup = useCallback(
@@ -476,7 +478,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderTableRows = (contact: Contact) => {
     const { id } = contact
     const isChecked = checked.includes(id)
-    const isHighLighted = fromContactId === id
+    const isHighLighted = fromContactIdState.value === id
 
     return (
       <TableRow
@@ -487,7 +489,7 @@ const PeopleList: React.FC<Props> = React.memo(({
           isChecked && classes.checkedRow,
           isHighLighted && classes.checkedRow,
         )}
-        onMouseMove={isHighLighted ? resetFormContactId : undefined}
+        onMouseMove={isHighLighted ? fromContactIdState.clear : undefined}
       >
         <TableCell padding="none" className={classes.minCell}>
           <Checkbox
@@ -592,7 +594,7 @@ const PeopleList: React.FC<Props> = React.memo(({
       </Tooltip>
       {isGroupPage && (
         <Tooltip title="remove from group">
-          <IconButton onClick={toggleOnRemoveContactFromGroupOpened}>
+          <IconButton onClick={toggleOnRemoveContactFormGroupOpened}>
             <Icon name={ICONS.Delete} color="hoverLighten" />
           </IconButton>
         </Tooltip>
@@ -628,8 +630,8 @@ const PeopleList: React.FC<Props> = React.memo(({
           onOk={handleAddContactToGroup}
         />}
         {<RemoveContactsFromGroupForm
-          open={removeContactFromGroupOpened}
-          onClose={toggleOffRemoveContactFromGroupOpened}
+          open={removeContactFormGroupOpened}
+          onClose={toggleOffRemoveContactFormGroupOpened}
           onOk={handleRemoveContactsFromGroup}
         />}
         <div className={classes.head}>
@@ -728,7 +730,7 @@ const PeopleList: React.FC<Props> = React.memo(({
                     <TableRow className={classes.emptyTextWrapper}>
                       <TableCell padding="none" className={classes.emptyTextCell}>
                         <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
-                          {searchTerm === '' ? 'There are no contacts' : 'There are no results that match your search'}
+                          {searchTermState.hasValue ? 'There are no contacts' : 'There are no results that match your search'}
                         </Typography>
                       </TableCell>
                     </TableRow>

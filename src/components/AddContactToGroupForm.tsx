@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useContext, useEffect, useMemo } from 'react'
-import { useBoolean } from 'react-hanger'
+import React, { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useBoolean, useInput } from 'react-hanger'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
@@ -70,68 +70,68 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
     [addGroupError],
   )
 
-  const [newGroupName, setNewGroupName] = useState('')
-  const [selectedGroupId, setSelectedGroupId] = useState('')
+  const newGroupNameState = useInput('')
+  const selectedGroupIdState = useInput('')
 
   const { value: groupsOpened, toggle: toggleGroupsOpened, setTrue: toggleOnGroupsOpened } = useBoolean(true)
 
   const isGroupExisted = useMemo(
-    () => newGroupName && groups.some(group => group.info.name === newGroupName),
-    [newGroupName, groups]
+    () => newGroupNameState.hasValue && groups.some(group => group.info.name === newGroupNameState.value),
+    [groups, newGroupNameState.hasValue, newGroupNameState.value]
   )
 
   const handleGroupClick = useCallback(
     (id: string) => {
-      if (selectedGroupId === id) {
-        setSelectedGroupId('')
+      if (selectedGroupIdState.value === id) {
+        selectedGroupIdState.clear()
       } else {
-        setSelectedGroupId(id)
+        selectedGroupIdState.setValue(id)
       }
     },
-    [selectedGroupId],
+    [selectedGroupIdState],
   )
 
   const handleNewGroupNameChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const name = event.target.value
 
-      setNewGroupName(name)
-      setSelectedGroupId('')
+      newGroupNameState.setValue(name)
+      selectedGroupIdState.clear()
     },
-    [setNewGroupName, setSelectedGroupId],
+    [newGroupNameState, selectedGroupIdState],
   )
 
   const handleCreateGroupClick = useCallback(
     async () => {
-      const newName = newGroupName.trim()
+      const newName = newGroupNameState.value.trim()
       if (newName) {
-        const gid = await addGroup({ name: newGroupName })
-        setSelectedGroupId(gid)
+        const gid = await addGroup({ name: newGroupNameState.value })
+        selectedGroupIdState.setValue(gid)
         await onOk(gid)
 
         toggleOnGroupsOpened()
       }
-      setNewGroupName('')
+      newGroupNameState.clear()
     },
-    [newGroupName, addGroup, setSelectedGroupId, toggleOnGroupsOpened, onOk],
+    [newGroupNameState, addGroup, selectedGroupIdState, onOk, toggleOnGroupsOpened],
   )
 
   const handleAddToGroupClick = useCallback(
     async () => {
-      await onOk(selectedGroupId)
-      setNewGroupName('')
+      await onOk(selectedGroupIdState.value)
+      newGroupNameState.clear()
     },
-    [selectedGroupId, onOk]
+    [onOk, selectedGroupIdState.value, newGroupNameState]
   )
 
   const handleGroupInputEnterPress = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (isGroupExisted || selectedGroupId) return
+      if (isGroupExisted || selectedGroupIdState.hasValue) return
       event.preventDefault()
 
       handleCreateGroupClick()
     },
-    [isGroupExisted, selectedGroupId, handleCreateGroupClick],
+    [isGroupExisted, selectedGroupIdState.hasValue, handleCreateGroupClick],
   )
 
   return (
@@ -159,7 +159,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
       </div>
       <GroupMenu
         className={classes.groupMenu}
-        selectedId={selectedGroupId}
+        selectedId={selectedGroupIdState.value}
         groupsOpened={groupsOpened}
         onClickGroup={handleGroupClick}
         theme="simple"
@@ -172,7 +172,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
               Group existed
             </Button>
           )
-          : selectedGroupId
+          : selectedGroupIdState.hasValue
             ? (
               <Button
                 color="primary"

@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react'
+import { useInput } from 'react-hanger'
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import createContainer from 'constate'
 import { Pagination } from '~src/types/Pagination'
@@ -242,22 +243,22 @@ const ContactsContainer = createContainer(({
           success(<><CheckCircle /> Contacts Exported</>)
         }
       },
-      [exportContactsStatus, success],
+      [exportContactsStatus],
     )
 
     useEffect(
       () => { getExportStatusError && fail(getExportStatusError.message) },
-      [getExportStatusError, fail],
+      [getExportStatusError],
     )
 
     useEffect(
       () => { postContactError && fail(postContactError.message) },
-      [postContactError, fail],
+      [postContactError],
     )
 
     useEffect(
       () => { putContactError && fail(putContactError.message) },
-      [putContactError, fail],
+      [putContactError],
     )
     // useEffect(
     //   () => { removeContactData && success(<><CheckCircle /> Contacts Removed</>) },
@@ -269,27 +270,27 @@ const ContactsContainer = createContainer(({
     // )
     useEffect(
       () => { postContactToGroupData && success(<><CheckCircle /> Contacts Added</>) },
-      [postContactToGroupData, success],
+      [postContactToGroupData],
     )
     useEffect(
       () => { postContactToGroupError && fail(postContactToGroupError.message) },
-      [postContactToGroupError, fail],
+      [postContactToGroupError],
     )
     useEffect(
       () => { postMergeContactsData && success(<><CheckCircle /> Contacts Merged</>) },
-      [postMergeContactsData, success],
+      [postMergeContactsData],
     )
     useEffect(
       () => { postMergeContactsError && fail(postMergeContactsError.message) },
-      [postMergeContactsError, fail],
+      [postMergeContactsError],
     )
     useEffect(
       () => { deleteContactsFromGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },
-      [deleteContactsFromGroupData, success],
+      [deleteContactsFromGroupData],
     )
     useEffect(
       () => { deleteContactsFromGroupError && fail(deleteContactsFromGroupError.message) },
-      [deleteContactsFromGroupError, fail]
+      [deleteContactsFromGroupError]
     )
 
     useUpdateEffect(
@@ -321,11 +322,7 @@ const ContactsContainer = createContainer(({
     [postContactData, setShowAddContactMessage],
   )
 
-  const [fromContactId, setFromContactId] = useState('')
-  const resetFormContactId = useCallback(
-    () => { setFromContactId('') },
-    [setFromContactId],
-  )
+  const fromContactIdState = useInput('')
 
   useEffect(
     () => { fetchContacts(size) },
@@ -369,7 +366,7 @@ const ContactsContainer = createContainer(({
     removeContactsFromGroupData: deleteContactsFromGroupData,
     removeContactsFromGroupError: deleteContactsFromGroupError,
 
-    fromContactId, setFromContactId, resetFormContactId,
+    fromContactIdState,
   }
 })
 

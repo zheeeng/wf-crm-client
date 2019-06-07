@@ -7,30 +7,12 @@ import {
   WaiverAPI, waiverInputAdapter,
 } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
-import useDepMemo from '~src/hooks/useDepMemo'
 import useInfoCallback from '~src/hooks/useInfoCallback'
 import useLatest from '~src/hooks/useLatest'
-import pipe from 'ramda/es/pipe'
-import cond from 'ramda/es/cond'
-import head from 'ramda/es/head'
-import T from 'ramda/es/T'
-import isNil from 'ramda/es/isNil'
 import ContactsCountContainer from './ContactsCount'
 import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
 import AlertContainer from '~src/containers/Alert'
-
-const convertContact = pipe<
-Array<PeopleAPI | null>,
-PeopleAPI | null,
-Contact | undefined
->(
-  head,
-  cond([
-    [isNil, () => undefined],
-    [T, contactInputAdapter as any],
-  ]),
-)
 
 const useContact = (contactId: string) => {
   const { refreshCounts } = useContext(ContactsCountContainer.Context)
@@ -65,33 +47,39 @@ const useContact = (contactId: string) => {
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
 
-  const freshContact = useDepMemo(convertContact, [contactData])
-  const updatedContact = useDepMemo(convertContact, [updatedContactData])
+  const freshContact = useMemo(
+    () => contactData ? contactInputAdapter(contactData) : null,
+    [contactData],
+  )
+  const updatedContact = useMemo(
+    () => updatedContactData ? contactInputAdapter(updatedContactData) : null,
+    [updatedContactData],
+  )
   const latestContact = useLatest(freshContact, updatedContact)
 
   const { fail } = useContext(AlertContainer.Context)
 
   useEffect(
     () => { postFieldError && fail(postFieldError.message) },
-    [postFieldError, fail],
+    [postFieldError],
   )
   useEffect(
     () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError, fail],
+    [putFieldError],
   )
   useEffect(
     () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError, fail],
+    [putFieldError],
   )
 
   useEffect(
     () => { postSplitWaiverError && fail(postSplitWaiverError.message) },
-    [postSplitWaiverError, fail],
+    [postSplitWaiverError],
   )
 
   useEffect(
     () => { deleteContactError && fail(deleteContactError.message) },
-    [deleteContactError, fail],
+    [deleteContactError],
   )
 
   const tags = useLatest<string[] | undefined | null>(
@@ -115,14 +103,17 @@ const useContact = (contactId: string) => {
   )
 
   const fetchContact = useCallback(
-    async () => {
-      if (!contactId) return
-
+    async (contactId: string) => {
       await getContact(`/api/people/${contactId}`)({
         embeds: ['all'].join(','),
       })
     },
-    [contactId, getContact],
+    [getContact],
+  )
+
+  useEffect(
+    () => { contactId && fetchContact(contactId) },
+    [fetchContact, contactId],
   )
 
   const updateContact = useCallback(

@@ -54,14 +54,14 @@ const RemoveContactsFromGroupForm: React.FC<Props> = React.memo(
   ({ open, onClose, onOk }) => {
     const classes = useStyles({})
 
-    const { groupId } = useContext(GroupsContainer.Context)
+    const { groupIdState } = useContext(GroupsContainer.Context)
 
     const handleOkClick = useCallback(
       async () => {
-        onOk && await onOk(groupId)
+        onOk && await onOk(groupIdState.value)
         onClose()
       },
-      [onOk, groupId, onClose]
+      [onOk, groupIdState.value, onClose]
     )
 
     return (

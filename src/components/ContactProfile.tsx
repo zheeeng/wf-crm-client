@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
-import { useBoolean } from 'react-hanger'
+import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -326,7 +326,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
 
   const {
     contact,
-    fetchContact, isFetchingContact, fetchContactError,
+    isFetchingContact, fetchContactError,
     fetchFields,
     tags, addTag, removeTag,
     gender,
@@ -337,18 +337,13 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     splitWaiver,
   } = useContact(contactId)
 
-  useEffect(
-    () => { fetchContact() },
-    [contactId],
-  )
-
   const handleWaiverSplit = useCallback(
     async () => {
       cancelSplitWaiver()
       await splitWaiver(toSplitWaiver.id)
       splitDone()
     },
-    [toSplitWaiver.id],
+    [toSplitWaiver.id, cancelSplitWaiver, splitWaiver, splitDone],
   )
 
   const { value: editable, toggle: toggleEditable, setFalse: toggleOffEditable } = useBoolean(false)
@@ -412,7 +407,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       id: string,
       priority: number,
     ) => updateField({ ...updateObj, id, priority, fieldType: name }).then(specificFieldToInputField(name)),
-    [],
+    [updateField],
   )
 
   const handleAddDateField = useCallback(
@@ -515,20 +510,15 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [toSplitWaiver.id],
   )
 
-  const [splitWaiverTitle, setSplitWaiverTitle] = useState('')
+  const splitWaiverTitle = useInput('')
 
   useEffect(
     () => {
       if (toSplitWaiver.title) {
-        setSplitWaiverTitle(toSplitWaiver.title)
+        splitWaiverTitle.setValue(toSplitWaiver.title)
       }
     },
-    [toSplitWaiver.title]
-  )
-
-  const clearSplitWaiverTitle= useCallback(
-    () => { setSplitWaiverTitle('') },
-    [setSplitWaiverTitle]
+    [toSplitWaiver.title, splitWaiverTitle],
   )
 
   const renderFields = (showName: boolean, isEditable: boolean) => (
@@ -725,10 +715,10 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                   PaperProps={{
                     className: classnames(classes.paper, classes.splitPaper),
                   }}
-                  onAnimationEnd={clearSplitWaiverTitle}
+                  onAnimationEnd={splitWaiverTitle.clear}
                 >
                   <Typography variant="h6" align="center" color="textSecondary" className={classes.splitTitle}>
-                    {splitWaiverTitle}
+                    {splitWaiverTitle.value}
                   </Typography>
                   {renderFields(true, false)}
                   <div className={classes.dialogButtonZone}>
