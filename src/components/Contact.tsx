@@ -1,13 +1,13 @@
-import React, { useContext, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { usePrevious } from 'react-hanger'
-import useContact from '~src/containers/useContact'
-import ContactsContainer from '~src/containers/Contacts'
 import DetailsPaper from '~src/units/DetailsPaper'
 import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
 import ContactAssets from '~src/components/ContactAssets'
 import ContactActivities from '~src/components/ContactActivities'
-import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
+import useWaiverSplitter from '~src/containers/useWaiverSplitter'
+import useContact from '~src/containers/useContact'
+import useContacts from '~src/containers/useContacts'
 
 export interface Props {
   contactId: string
@@ -17,7 +17,7 @@ export interface Props {
 
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
-    const { contacts, fromContactIdState } = useContext(ContactsContainer.Context)
+    const { contacts, fromContactIdState } = useContacts()
     const { removeContact } = useContact(contactId)
 
     const lastContactId = usePrevious(contactId)
@@ -92,7 +92,7 @@ const ContactIndex: React.FC<Props> = React.memo(
     )
 
     return (
-      <WaiverSplitterContainer.Provider>
+      <useWaiverSplitter.Provider>
         <DetailsPaper
           renderHeader={renderHeader}
           renderRightPart1={renderRightPart1}
@@ -102,7 +102,7 @@ const ContactIndex: React.FC<Props> = React.memo(
             contactId={contactId}
           />
         </DetailsPaper>
-      </WaiverSplitterContainer.Provider>
+      </useWaiverSplitter.Provider>
     )
   },
 )

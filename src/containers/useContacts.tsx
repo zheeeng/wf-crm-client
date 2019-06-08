@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { useInput } from 'react-hanger'
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
-import createContainer from 'constate'
+import createUseContext from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
@@ -9,8 +9,8 @@ import useInfoCallback from '~src/hooks/useInfoCallback'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 
-import ContactsCountContainer from './ContactsCount'
-import AlertContainer from './Alert'
+import useContactsCount from '~src/containers/useContactsCount'
+import useAlert from '~src/containers/useAlert'
 import sleep from '~src/utils/sleep'
 import downloadFile from '~src/utils/downloadFile'
 import useLatest from '~src/hooks/useLatest'
@@ -32,10 +32,10 @@ type ContainerProps = {
   groupId?: string
 }
 
-const ContactsContainer = createContainer(({
+const useContacts = createUseContext(({
   page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
 }: ContainerProps) => {
-  const { refreshCounts, refreshPageMutation } = useContext(ContactsCountContainer.Context)
+  const { refreshCounts, refreshPageMutation } = useContactsCount()
 
   const {
     data: contactsData,
@@ -235,7 +235,7 @@ const ContactsContainer = createContainer(({
 
   // alter effects
   {
-    const { success, fail } = useContext(AlertContainer.Context)
+    const { success, fail } = useAlert()
 
     useEffect(
       () => {
@@ -370,4 +370,4 @@ const ContactsContainer = createContainer(({
   }
 })
 
-export default ContactsContainer
+export default useContacts

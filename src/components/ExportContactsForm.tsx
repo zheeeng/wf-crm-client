@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
-import ContactsContainer from '~src/containers/Contacts'
+import useContacts from '~src/containers/useContacts'
 import shallowEqual from '~src/utils/shallowEqual'
 import cssTips from '~src/utils/cssTips'
 import ProgressLoading from '~src/units/ProgressLoading'
@@ -35,7 +35,7 @@ export interface Props {
 
 const ExportContactsForm: React.FC<Props> = React.memo(
   ({ open, onClose, contactIds }) => {
-    const { exportContacts, exportContactsStatus } = useContext(ContactsContainer.Context)
+    const { exportContacts, exportContactsStatus } = useContacts()
     const classes = useStyles({})
 
     useEffect(

@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useInput } from 'react-hanger';
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
@@ -11,7 +11,7 @@ import Collapse from '@material-ui/core/Collapse'
 import Searcher from '~src/units/Searcher'
 import cssTips from '~src/utils/cssTips'
 
-import GroupsContainer from '~src/containers/Groups'
+import useGroups from '~src/containers/useGroups'
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchCollapse: {
@@ -74,7 +74,7 @@ export interface Props {
 const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onClickGroup, theme }) => {
   const classes = useStyles({})
 
-  const { groupIdState, groups } = useContext(GroupsContainer.Context)
+  const { groupIdState, groups } = useGroups()
 
   const searchTermState = useInput('')
 

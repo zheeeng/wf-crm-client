@@ -1,16 +1,16 @@
-import { useCallback, useContext, useEffect } from 'react'
-import createContainer from 'constate'
+import { useCallback, useEffect } from 'react'
+import createUseContext from 'constate'
 import { useGet } from '~src/hooks/useRequest'
 import { Pagination } from '~src/types/Pagination'
-import AccountContainer from './Account'
+import useAccount from '~src/containers/useAccount'
 import useInfoCallback from '~src/hooks/useInfoCallback'
 
-const ContactsCountContainer = createContainer(() => {
+const useContactsCount = createUseContext(() => {
   const { data: contactsData, request: getContactsData } = useGet<{ pagination: Pagination}>()
   const { data: starredData, request: getStarredData } = useGet<{ pagination: Pagination}>()
   const [ refreshPage, refreshPageMutation ] = useInfoCallback(() => Promise.resolve(), [])
 
-  const { authored } = useContext(AccountContainer.Context)
+  const { authored } = useAccount()
 
   const refreshCounts = useCallback(
     () => {
@@ -35,4 +35,4 @@ const ContactsCountContainer = createContainer(() => {
   }
 })
 
-export default ContactsCountContainer
+export default useContactsCount

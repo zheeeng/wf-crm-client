@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -7,7 +7,7 @@ import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import cssTips from '~src/utils/cssTips'
 
-import GroupsContainer from '~src/containers/Groups'
+import useGroups from '~src/containers/useGroups'
 
 export const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -54,7 +54,7 @@ const RemoveContactsFromGroupForm: React.FC<Props> = React.memo(
   ({ open, onClose, onOk }) => {
     const classes = useStyles({})
 
-    const { groupIdState } = useContext(GroupsContainer.Context)
+    const { groupIdState } = useGroups()
 
     const handleOkClick = useCallback(
       async () => {

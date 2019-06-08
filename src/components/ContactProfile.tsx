@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/styles'
@@ -15,8 +15,9 @@ import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 
 import SplitWaiverThemeProvider from '~src/theme/SplitWaiverThemeProvider'
-import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
+import useWaiverSplitter from '~src/containers/useWaiverSplitter'
 import useContact from '~src/containers/useContact'
+
 import ContactFieldInput, { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
 import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
@@ -321,7 +322,7 @@ export interface Props {
 
 const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   const theme = useTheme<Theme>()
-  const { toSplitWaiver, cancelSplitWaiver, splitDone } = useContext(WaiverSplitterContainer.Context)
+  const { toSplitWaiver, cancelSplitWaiver, splitDone } = useWaiverSplitter()
 
   const {
     contact,

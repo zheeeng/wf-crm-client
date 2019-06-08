@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
-import createContainer from 'constate'
+import createUseContext from 'constate'
 
-const NotificationContainer = createContainer(() => {
+const useNotification = createUseContext(() => {
   const [message, updateMessage] = useState<React.ReactNode>(null)
 
   const notify = useCallback(
@@ -21,4 +21,4 @@ const NotificationContainer = createContainer(() => {
   }
 })
 
-export default NotificationContainer
+export default useNotification

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext, useRef, useMemo } from 'react'
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
@@ -16,7 +16,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
-import AlertContainer from '~src/containers/Alert'
+import useAlert from '~src/containers/useAlert'
 import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 
@@ -161,7 +161,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
   const classes2 = useStyles2({})
 
-  const { fail } = useContext(AlertContainer.Context)
+  const { fail } = useAlert()
 
   const [ notes, setNotes ] = useState<Note[]>([])
 

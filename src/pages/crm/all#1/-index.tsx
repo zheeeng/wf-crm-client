@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useContext, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { ComponentProps } from '@roundation/roundation'
 import PeopleList from '~src/components/PeopleList'
-import ContactsContainer from '~src/containers/Contacts'
+import useContacts from '~src/containers/useContacts'
 
 export interface Props extends ComponentProps<'', 'page' | 'search'> {}
 
 const AllMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries }) => {
-  const { pagination } = useContext(ContactsContainer.Context)
+  const { pagination } = useContacts()
 
   const searchContacts = useCallback(
     ({page, searchTerm }: { page: number, searchTerm: string }) => {

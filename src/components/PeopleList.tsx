@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useContext, useRef } from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
@@ -19,8 +19,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import cssTips from '~src/utils/cssTips'
 import { Contact, ContactFields } from '~src/types/Contact'
 
-import AlertContainer from '~src/containers/Alert'
-import ContactsContainer from '~src/containers/Contacts'
+import useAlert from '~src/containers/useAlert'
+import useContacts from '~src/containers/useContacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import ProgressLoading from '~src/units/ProgressLoading'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
@@ -253,13 +253,13 @@ const PeopleList: React.FC<Props> = React.memo(({
 }) => {
   const classes = useStyles({})
 
-  const { success } = useContext(AlertContainer.Context)
+  const { success } = useAlert()
   const {
     contacts, isFetchingContacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
     fromContactIdState,
-  } = useContext(ContactsContainer.Context)
+  } = useContacts()
 
   const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
 

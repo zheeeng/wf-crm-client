@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import useMount from 'react-use/lib/useMount'
-import createContainer from 'constate'
+import createUseContext from 'constate'
 import { usePost } from '~src/hooks/useRequest'
 import useLatest from '~src/hooks/useLatest'
 
@@ -10,7 +10,7 @@ type AuthData = { id: string, username: string }
 
 const getDefaultAuthData = (): AuthData => ({ id: '', username: '' })
 
-const AccountContainer = createContainer(() => {
+const useAccount = createUseContext(() => {
   const { data: authData, /* request: postAuthentication */ } = usePost<AuthData>()
   const { data: loginData, request: postLogin } = usePost<AuthData>()
 
@@ -32,4 +32,4 @@ const AccountContainer = createContainer(() => {
   }
 })
 
-export default AccountContainer
+export default useAccount

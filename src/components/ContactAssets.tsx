@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
@@ -12,11 +12,12 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Skeleton from 'react-skeleton-loader'
 
 import ExportContactsForm from '~src/components/ExportContactsForm'
-import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useContact from '~src/containers/useContact'
-import WaiverSplitterContainer from '~src/containers/WaiverSplitter'
 import { getDateAndTime } from '~src/utils/getDate'
 import cssTips from '~src/utils/cssTips'
+
+import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
+import useWaiverSplitter from '~src/containers/useWaiverSplitter'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
@@ -131,9 +132,10 @@ export interface Props {
 const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
 
-  const { readyToSplitWaiver, splitMutation } = useContext(WaiverSplitterContainer.Context)
 
   const [currentTab, setCurrentTab] = useState(0)
+
+  const { readyToSplitWaiver, splitMutation } = useWaiverSplitter()
 
   const handleCurrentTabChange = useCallback(
     (_: any, value: number) => setCurrentTab(value),

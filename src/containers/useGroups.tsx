@@ -1,22 +1,21 @@
-import React, { useMemo, useCallback, useEffect, useContext } from 'react'
+import React, { useMemo, useCallback, useEffect } from 'react'
 import { useInput } from 'react-hanger';
-import createContainer from 'constate'
+import createUseContext from 'constate'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import { groupInputAdapter, GroupFields, GroupAPI, groupFieldAdapter } from '~src/types/Contact'
-import useInfoCallback from '~src/hooks/useInfoCallback'
-import AlertContainer from './Alert'
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
-import AccountContainer from './Account'
+import useAlert from '~src/containers/useAlert'
+import useAccount from '~src/containers/useAccount'
 
-const GroupsContainer = createContainer(() => {
+const useGroups = createUseContext(() => {
   const groupIdState = useInput('')
   const { data: groupsData, request: getGroupsData } = useGet<GroupAPI[]>()
   const { request: postGroup, error: postGroupError } = usePost()
   const { request: putGroup, error: putGroupError } = usePut()
   const { data: deleteGroupData, request: deleteGroup, error: deleteGroupError } = useDelete()
-  const { authored } = useContext(AccountContainer.Context)
+  const { authored } = useAccount()
 
-  const [addGroup, addGroupMutation] = useInfoCallback(
+  const addGroup = useCallback(
     async (group: GroupFields) => {
       const { id } = await postGroup('/api/group')(groupFieldAdapter(group))
       return id as string
@@ -24,7 +23,7 @@ const GroupsContainer = createContainer(() => {
     [postGroup],
   )
 
-  const [updateGroup, updateGroupMutation] = useInfoCallback(
+  const updateGroup = useCallback(
     async (group: GroupFields) => {
       if (groupIdState.value) {
         await putGroup(`/api/group/${groupIdState.value}`)(groupFieldAdapter(group))
@@ -33,7 +32,7 @@ const GroupsContainer = createContainer(() => {
     [putGroup, groupIdState.value],
   )
 
-  const [removeGroup, removeGroupMutation] = useInfoCallback(
+  const removeGroup = useCallback(
     async () => {
       if (groupIdState.value) {
         await deleteGroup(`/api/group/${groupIdState.value}`)()
@@ -50,11 +49,11 @@ const GroupsContainer = createContainer(() => {
   )
 
   {
-    const { success, fail } = useContext(AlertContainer.Context)
+    const { success, fail } = useAlert()
 
     useEffect(
       () => { authored && refreshGroupCounts() },
-      [authored, addGroupMutation, updateGroupMutation, removeGroupMutation, refreshGroupCounts],
+      [authored, addGroup, updateGroup, removeGroup, refreshGroupCounts],
     )
 
     useEffect(
@@ -77,12 +76,12 @@ const GroupsContainer = createContainer(() => {
     groupIdState,
     groups,
     refreshGroupCounts,
-    addGroup, addGroupMutation, addGroupError: postGroupError,
-    updateGroup, updateGroupMutation, updateGroupError: putGroupError,
-    removeGroup, removeGroupMutation,
+    addGroup, addGroupError: postGroupError,
+    updateGroup, updateGroupError: putGroupError,
+    removeGroup,
     removeGroupData: deleteGroupData,
     removeGroupError: deleteGroupError,
   }
 })
 
-export default GroupsContainer
+export default useGroups

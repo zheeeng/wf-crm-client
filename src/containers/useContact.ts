@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import {
   PeopleAPI, contactInputAdapter, Contact,
   contactOutputAdapter,
@@ -9,13 +9,13 @@ import {
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useInfoCallback from '~src/hooks/useInfoCallback'
 import useLatest from '~src/hooks/useLatest'
-import ContactsCountContainer from './ContactsCount'
 import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
-import AlertContainer from '~src/containers/Alert'
+import useContactsCount from '~src/containers/useContactsCount'
+import useAlert from '~src/containers/useAlert'
 
 const useContact = (contactId: string) => {
-  const { refreshCounts } = useContext(ContactsCountContainer.Context)
+  const { refreshCounts } = useContactsCount()
   const {
     data: contactData,
     request: getContact,
@@ -57,7 +57,7 @@ const useContact = (contactId: string) => {
   )
   const latestContact = useLatest(freshContact, updatedContact)
 
-  const { fail } = useContext(AlertContainer.Context)
+  const { fail } = useAlert()
 
   useEffect(
     () => { postFieldError && fail(postFieldError.message) },

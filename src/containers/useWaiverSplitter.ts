@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
-import createContainer from 'constate'
+import createUseContext from 'constate'
 
-const WaiverSplitterContainer = createContainer(() => {
+const useWaiverSplitter = createUseContext(() => {
   const [toSplitWaiver, setToSplitWaiver] = useState({
     id: '',
     title: '',
@@ -33,4 +33,4 @@ const WaiverSplitterContainer = createContainer(() => {
   }
 })
 
-export default WaiverSplitterContainer
+export default useWaiverSplitter

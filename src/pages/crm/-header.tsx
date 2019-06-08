@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext } from 'react'
+import React, { useRef, useEffect } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Link, ComponentProps } from '@roundation/roundation'
@@ -17,9 +17,9 @@ import * as vars from '~src/theme/vars'
 
 import logIcon from '~src/assets/logo.svg'
 import cssTips from '~src/utils/cssTips'
-import AppContainer from '~src/containers/App'
-import AccountContainer from '~src/containers/Account'
-import AlertContainer from '~src/containers/Alert'
+import useSideDrawer from '~src/containers/useSideDrawer'
+import useAccount from '~src/containers/useAccount'
+import useAlert from '~src/containers/useAlert'
 import crateGravatar from '~src/utils/createGravatar'
 
 import MenuIcon from '@material-ui/icons/Menu'
@@ -241,9 +241,9 @@ export interface Props extends ComponentProps {}
 const Header: React.FC<Props> = React.memo(() => {
   const classes = useStyles({})
   const mountElRef = useRef(document.querySelector('#header'))
-  const { toggleDrawerExpanded } = useContext(AppContainer.Context)
-  const { message, dismiss } = useContext(AlertContainer.Context)
-  const { username, login } = useContext(AccountContainer.Context)
+  const sideDrawer = useSideDrawer()
+  const { message, dismiss } = useAlert()
+  const { username, login } = useAccount()
 
   // const handleMenuToggle = useCallback(
   //   (forOpen: boolean) => (event: React.MouseEvent<HTMLElement>) => {
@@ -276,7 +276,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="Menu"
-                onClick={toggleDrawerExpanded}
+                onClick={sideDrawer.toggle}
               >
                 <MenuIcon />
               </IconButton>

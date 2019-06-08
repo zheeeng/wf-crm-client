@@ -8,10 +8,12 @@ import registerServiceWorker from '~src/registerServiceWorker'
 import Notification from '~src/components/Notification'
 import InjectIntoGlobalStyles from '~src/components/InjectIntoGlobalStyles'
 import GlobalThemeProvider from '~src/theme/GlobalThemeProvider'
-import AppContainer from '~src/containers/App'
-import NotificationContainer from '~src/containers/Notification'
-import AlertContainer from '~src/containers/Alert'
-import AccountContainer from '~src/containers/Account'
+import useSideDrawer from '~src/containers/useSideDrawer'
+
+import useNotification from '~src/containers/useNotification'
+import useAlert from '~src/containers/useAlert'
+import useAccount from '~src/containers/useAccount'
+
 import { exchangeAPIKey } from '~src/utils/qs3Login'
 
 async function main () {
@@ -31,16 +33,16 @@ async function main () {
       <GlobalThemeProvider>
         <CssBaseline />
         <InjectIntoGlobalStyles />
-        <AppContainer.Provider>
-          <AccountContainer.Provider>
-            <NotificationContainer.Provider>
-              <AlertContainer.Provider>
+        <useSideDrawer.Provider>
+          <useAccount.Provider>
+            <useNotification.Provider>
+              <useAlert.Provider>
                 <Notification />
                 <Roundation />
-              </AlertContainer.Provider>
-            </NotificationContainer.Provider>
-          </AccountContainer.Provider>
-        </AppContainer.Provider>
+              </useAlert.Provider>
+            </useNotification.Provider>
+          </useAccount.Provider>
+        </useSideDrawer.Provider>
       </GlobalThemeProvider>
     )
 

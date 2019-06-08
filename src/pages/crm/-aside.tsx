@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useBoolean } from 'react-hanger'
 import { makeStyles } from '@material-ui/styles'
 import { Link, ComponentProps } from '@roundation/roundation'
@@ -20,9 +20,9 @@ import GroupMenu from '~src/components/GroupMenu'
 import SiderBarThemeProvider from '~src/theme/SiderBarThemeProvider'
 import cssTips from '~src/utils/cssTips'
 import muteClick from '~src/utils/muteClick'
-import ContactsCountContainer from '~src/containers/ContactsCount'
-import GroupsContainer from '~src/containers/Groups'
-import AppContainer from '~src/containers/App'
+import useSideDrawer from '~src/containers/useSideDrawer'
+import useContactsCount from '~src/containers/useContactsCount'
+import useGroups from '~src/containers/useGroups'
 import { GroupFields } from '~src/types/Contact'
 import * as vars from '~src/theme/vars'
 
@@ -77,9 +77,9 @@ export interface Props extends ComponentProps {
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
-  const { contactsCount, starredCount, refreshPage } = useContext(ContactsCountContainer.Context)
-  const { groupIdState, groups, addGroup, updateGroup, removeGroup } = useContext(GroupsContainer.Context)
-  const { drawerExpanded, toggleOffDrawerExpanded } = useContext(AppContainer.Context)
+  const { contactsCount, starredCount, refreshPage } = useContactsCount()
+  const { groupIdState, groups, addGroup, updateGroup, removeGroup } = useGroups()
+  const sideDrawer = useSideDrawer()
 
   const {
     value: groupsOpened,
@@ -279,8 +279,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
         classes={{
           paper: classes.drawerPaper,
         }}
-        open={drawerExpanded}
-        onClose={toggleOffDrawerExpanded}
+        open={sideDrawer.value}
+        onClose={sideDrawer.setFalse}
         BackdropProps={{
           invisible: true,
         }}

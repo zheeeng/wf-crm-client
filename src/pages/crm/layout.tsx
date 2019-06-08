@@ -1,13 +1,14 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { ComponentProps } from '@roundation/roundation'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import cssTips from '~src/utils/cssTips'
-import AccountContainer from '~src/containers/Account'
 import ProgressLoading from '~src/units/ProgressLoading'
-import ContactsCountContainer from '~src/containers/ContactsCount'
-import GroupsContainer from '~src/containers/Groups'
+
+import useAccount from '~src/containers/useAccount'
+import useContactsCount from '~src/containers/useContactsCount'
+import useGroups from '~src/containers/useGroups'
 
 import * as vars from '~src/theme/vars'
 
@@ -46,11 +47,11 @@ export interface Props extends ComponentProps<'aside' | 'header'> {
 
 const CRMLayout: React.FC<Props> = ({ slots, children }) => {
   const classes = useStyles({})
-  const { authored } = useContext(AccountContainer.Context)
+  const { authored } = useAccount()
 
   return (
-    <ContactsCountContainer.Provider>
-      <GroupsContainer.Provider>
+    <useContactsCount.Provider>
+      <useGroups.Provider>
         <div className={classes.root}>
           {slots.header}
           <div className={classes.main}>
@@ -66,8 +67,8 @@ const CRMLayout: React.FC<Props> = ({ slots, children }) => {
             }
           </div>
         </div>
-      </GroupsContainer.Provider>
-    </ContactsCountContainer.Provider>
+      </useGroups.Provider>
+    </useContactsCount.Provider>
   )
 }
 

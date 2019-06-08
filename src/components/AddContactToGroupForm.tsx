@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useBoolean, useInput } from 'react-hanger'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -9,8 +9,8 @@ import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
-import AlertContainer from '~src/containers/Alert'
-import GroupsContainer from '~src/containers/Groups'
+import useAlert from '~src/containers/useAlert'
+import useGroups from '~src/containers/useGroups'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
@@ -61,8 +61,8 @@ export interface Props {
 }
 
 const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
-  const { fail } = useContext(AlertContainer.Context)
-  const { addGroup, addGroupError, groups } = useContext(GroupsContainer.Context)
+  const { fail } = useAlert()
+  const { addGroup, addGroupError, groups } = useGroups()
   const classes = useStyles({})
 
   useEffect(
