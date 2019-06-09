@@ -7,7 +7,6 @@ import {
   WaiverAPI, waiverInputAdapter,
 } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
-import useInfoCallback from '~src/hooks/useInfoCallback'
 import useLatest from '~src/hooks/useLatest'
 import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
@@ -154,21 +153,21 @@ const useContact = (contactId: string) => {
     [contactId, deleteField],
   )
 
-  const [starContact, starMutation] = useInfoCallback(
+  const starContact = useCallback(
     async (star: boolean) => {
       await putContact(`/api/people/${contactId}`)({ favourite: star })
     },
     [contactId, putContact],
   )
 
-  const [updateContactGender, updateContactGenderMutation] = useInfoCallback(
+  const updateContactGender = useCallback(
     async (newGender: 'Male' | 'Female' | 'Other') => {
       await putContactFiled(`/api/people/${contactId}`)({ gender: newGender })
     },
     [contactId, putContactFiled],
   )
 
-  const [removeContact, removeMutation] = useInfoCallback(
+  const removeContact = useCallback(
     async () => {
       await deleteContact(`/api/people/${contactId}`)()
     },
@@ -243,7 +242,7 @@ const useContact = (contactId: string) => {
 
   useEffect(
     () => { refreshCounts() },
-    [refreshCounts, starMutation, removeMutation],
+    [refreshCounts, starContact, removeContact],
   )
 
   return {
@@ -254,9 +253,9 @@ const useContact = (contactId: string) => {
     addField, addFieldError: postFieldError,
     updateField, updateFieldError: putFieldError,
     removeField, removeFieldError: deleteFieldError,
-    starContact, starMutation,
-    updateContactGender, updateContactGenderMutation,
-    removeContact, removeMutation, removeContactError: deleteContactError,
+    starContact,
+    updateContactGender,
+    removeContact, removeContactError: deleteContactError,
     tags, addTag, removeTag,
     gender,
     fetchNotes, isFetchingNotes: isGettingNotes, fetchNotesError: getNotesError,

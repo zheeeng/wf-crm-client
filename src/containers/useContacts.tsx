@@ -5,7 +5,6 @@ import createUseContext from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
-import useInfoCallback from '~src/hooks/useInfoCallback'
 
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 
@@ -35,7 +34,7 @@ type ContainerProps = {
 const useContacts = createUseContext(({
   page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
 }: ContainerProps) => {
-  const { refreshCounts, refreshPageMutation } = useContactsCount()
+  const { refreshCounts, refreshPage } = useContactsCount()
 
   const {
     data: contactsData,
@@ -125,22 +124,22 @@ const useContacts = createUseContext(({
     [getContacts2, page, favourite, groupId, searchTerm],
   )
 
-  const [addContact, addMutation] = useInfoCallback(
+  const addContact = useCallback(
     async (contact: ContactFields) => {
       const contactData = favourite ? { ...contact, favourite } : contact
       await postContact('/api/people')(contactFieldAdapter(contactData))
     },
-    [postContact],
+    [favourite, postContact],
   )
 
-  const [starContact, starMutation] = useInfoCallback(
+  const starContact = useCallback(
     async (id: string, star: boolean) => {
       await putContact(`/api/people/${id}`)({ favourite: star })
     },
     [putContact],
   )
 
-  const [removeContacts, removeMutation] = useInfoCallback(
+  const removeContact = useCallback(
     async (contactIds: string[]) => {
       return await contactIds.reduce(
         async (p, id) => {
@@ -163,7 +162,7 @@ const useContacts = createUseContext(({
     [deleteContactError],
   )
 
-  const [addContactToGroup, addContactToGroupMutation] = useInfoCallback(
+  const addContactToGroup = useCallback(
     async (groupId: string, contactIds: string[]) => {
       await postContactToGroup(`/api/group/${groupId}/people`)({
         people: contactIds,
@@ -172,7 +171,7 @@ const useContacts = createUseContext(({
     [postContactToGroup],
   )
 
-  const [removeContactsFromGroup, removeContactsFromGroupMutation] = useInfoCallback(
+  const removeContactsFromGroup = useCallback(
     async (groupId: string, contactIds: string[]) => {
       await deleteContactsFromGroup(`/api/group/${groupId}/people`)({
         people: contactIds,
@@ -181,7 +180,7 @@ const useContacts = createUseContext(({
     [deleteContactsFromGroup],
   )
 
-  const [mergeContacts, mergeContactsMutation] = useInfoCallback(
+  const mergeContacts = useCallback(
     async ([targetId, ...sourceIds]: string[]) => {
       return await sourceIds.reduce(
         async (chain, sourceId) => {
@@ -230,7 +229,7 @@ const useContacts = createUseContext(({
     () => {
       refreshCounts()
     },
-    [addMutation, starMutation, removeMutation, mergeContactsMutation, refreshCounts],
+    [addContact, starContact, removeContact, mergeContacts, refreshCounts],
   )
 
   // alter effects
@@ -295,12 +294,12 @@ const useContacts = createUseContext(({
 
     useUpdateEffect(
       () => { fetchContactsQuietly(30) },
-      [starMutation]
+      [starContact]
     )
 
     useUpdateEffect(
       () => { fetchContacts(30, 1) },
-      [addMutation, removeMutation, refreshPageMutation, mergeContactsMutation, removeContactsFromGroupMutation]
+      [addContact, removeContact, refreshPage, mergeContacts, removeContactsFromGroup]
     )
   }
 
@@ -340,29 +339,29 @@ const useContacts = createUseContext(({
     fetchContactsQuietly,
     fetchContactsQuietlyError: getContactsError2,
 
-    addContact, addMutation,
+    addContact,
     addContactData: postContactData,
     addContactError: postContactError,
     showAddContactMessage,
 
-    starContact, starMutation,
+    starContact,
     starContactError: putContactError,
 
-    removeContacts, removeMutation,
+    removeContacts: removeContact,
     removeContactError,
 
-    addContactToGroup, addContactToGroupMutation,
+    addContactToGroup,
     addContactToGroupData: postContactToGroupData,
     addContactToGroupError: postContactToGroupError,
 
     exportContacts,
     exportContactsStatus, exportStatusError: getExportStatusError,
 
-    mergeContacts, mergeContactsMutation,
+    mergeContacts,
     mergeContactsData: postMergeContactsData,
     mergeContactsError: postMergeContactsError,
 
-    removeContactsFromGroup, removeContactsFromGroupMutation,
+    removeContactsFromGroup,
     removeContactsFromGroupData: deleteContactsFromGroupData,
     removeContactsFromGroupError: deleteContactsFromGroupError,
 
