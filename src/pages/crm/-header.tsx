@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Link, ComponentProps } from '@roundation/roundation'
@@ -27,6 +28,7 @@ import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   logo: {
+    flexShrink: 0,
     margin: '13px 40px',
     height: 30,
     width: 200,
@@ -83,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   avatarRoot: {
     height: 30,
     width: 30,
-    margin: '0 10px',
+    margin: theme.spacing(0, 1.5),
   },
   arrowDown: {
     display: 'inline-block',
@@ -98,6 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   navList: {
     ...cssTips(theme).casFlex('row'),
+    flex: 1,
     fontSize: 14,
     fontWeight: 600,
     lineHeight: '30px',
@@ -111,16 +114,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
     },
     [theme.breakpoints.down('sm')]: {
-      justifyContent: 'space-around',
-      paddingRight: 0,
-      paddingLeft: 0,
-      ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced(),
+      display: 'block',
+      // justifyContent: 'space-around',
+      // paddingRight: 0,
+      // paddingLeft: 0,
+      // ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced(),
     },
+    ['@media (max-width:600px)']: {
+      visibility: 'hidden',
+    }
   },
   navItem: {
     display: 'inline-block',
     marginLeft: 25,
     marginRight: 25,
+  },
+  navLink: {
+    color: 'inherit',
+    textDecoration: 'none',
   },
   link: {
     color: 'inherit',
@@ -259,6 +270,8 @@ const Header: React.FC<Props> = React.memo(() => {
 
   useEffect(() => { login() }, [login])
 
+  const matchesWidth = useMediaQuery('(max-width:600px)')
+
   return (
     <Portal container={mountElRef.current}>
       <div>
@@ -310,9 +323,33 @@ const Header: React.FC<Props> = React.memo(() => {
                   {username}
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
+
+                {matchesWidth &&
+                  (
+                    <>
+                      <MenuItem className={classes.menuItem}>
+                        <a href="/welcome" className={classes.navLink}>
+                          Dashboard
+                        </a>
+                      </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <a href="/templates" className={classes.navLink}>
+                          Waiver Templates
+                        </a>
+                      </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <a href="/crm" className={classes.navLink}>
+                          My Customers
+                        </a>
+                      </MenuItem>
+                      <Divider className={classes.menuDivider}/>
+                    </>
+                  )
+                }
+
                 <MenuItem className={classes.menuItem}>
                   <a
-                    className={classes.link}
+                    className={classes.navLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     href="https://help.waiverforever.com/"
@@ -320,38 +357,38 @@ const Header: React.FC<Props> = React.memo(() => {
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_self" href="/archive">
+                  <a className={classes.navLink} target="_self" href="/archive">
                     <i className={classnames(classes.menuIcon, classes.menuIconArchive)} />
                     Archives
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_self" href="/settings/general">
+                  <a className={classes.navLink} target="_self" href="/settings/general">
                     <i className={classnames(classes.menuIcon, classes.menuIconSettings)} />
                     Account Settings
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_self" href="/devices">
+                  <a className={classes.navLink} target="_self" href="/devices">
                     <i className={classnames(classes.menuIcon, classes.menuIconPairedDevices)} />
                     Paired Devices
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_self" href="/plan_and_billing">
+                  <a className={classes.navLink} target="_self" href="/plan_and_billing">
                     <i className={classnames(classes.menuIcon, classes.menuIconPlanAndBilling)} />
                     Plan & Billing
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_self" href="/plan_and_billing/referrals">
+                  <a className={classes.navLink} target="_self" href="/plan_and_billing/referrals">
                     <i className={classnames(classes.menuIcon, classes.menuIconReferAndReward)} />
                     Referral & Rewards
                   </a>
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.link} target="_self" href="/auth/signout">
+                  <a className={classes.navLink} target="_self" href="/auth/signout">
                     <i className={classnames(classes.menuIcon, classes.menuIconSignout)} />
                     Sign out
                   </a>
