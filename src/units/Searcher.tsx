@@ -88,6 +88,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
 
   return (
     <OutlinedInput
+      autoFocus
       labelWidth={0}
       notched
       classes={{

@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react'
+import { useBoolean } from 'react-hanger'
+import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 
@@ -78,6 +80,14 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
     [onChangePage],
   )
 
+  const afterUpdate = useBoolean(false)
+
+  useUpdateEffect(
+    () => {
+      !afterUpdate.value && afterUpdate.setTrue()
+    }
+  )
+
   return (
     <RestoreThemeProvider>
       <div className={classes.root}>
@@ -99,7 +109,7 @@ const TablePaginationActions: React.FC<TablePaginationActionsProps> = React.memo
         </IconButton>
         <Hidden smDown>
           <BasicFormInput
-            autoFocus
+            autoFocus={afterUpdate.value}
             placeholder="Jump"
             noLabel
             value={(page + 1).toString()}
