@@ -460,6 +460,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
       await mergeContacts(checked)
 
+      setChecked([])
       fromContactIdState.setValue(target)
     },
     [checked, fromContactIdState, mergeContacts],
