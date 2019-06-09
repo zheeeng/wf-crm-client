@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileBar: {
     ...cssTips(theme).centerFlex('space-between'),
-    marginBottom: theme.spacing(2),
+    margin: theme.spacing(0, 2, 2),
     borderBottom: `solid 1px ${theme.palette.grey[800]}`,
   },
   skeletonProfileBar: {
@@ -181,6 +181,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   profileContent: {
+    padding: theme.spacing(0, 2),
     [theme.breakpoints.up('md')]: {
       flexGrow: 1,
       flexBasis: '100%',
