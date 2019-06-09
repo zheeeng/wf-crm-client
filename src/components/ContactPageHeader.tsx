@@ -1,6 +1,8 @@
 import React from 'react'
 import ToolTip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
+import classnames from 'classnames'
+import { makeStyles } from '@material-ui/styles'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
@@ -13,8 +15,16 @@ export interface Props {
   disableGoNext: boolean
 }
 
+const useStyles = makeStyles(() => ({
+  disabled: {
+    cursor: 'not-allowed',
+  }
+}))
+
 const ContactPageHeader: React.FC<Props> = React.memo(
   ({ onGoBack, onGoPrevious, onGoNext, disableGoPrevious, disableGoNext }) => {
+    const classes = useStyles()
+
     return (
       <>
         <div>
@@ -25,12 +35,22 @@ const ContactPageHeader: React.FC<Props> = React.memo(
           </ToolTip>
           <ToolTip title={disableGoNext ? "" : "next"}>
             <IconButton onClick={onGoNext}>
-              <Icon name={ICONS.ArrowDown} color={disableGoNext ? 'disabled' : "hoverLighten"} size="lg" />
+              <Icon
+                className={classnames(disableGoNext && classes.disabled)}
+                name={ICONS.ArrowDown}
+                color={disableGoNext ? 'disabled' : "hoverLighten"}
+                size="lg"
+              />
             </IconButton>
           </ToolTip>
           <ToolTip title={disableGoPrevious ? "" : "previous"}>
             <IconButton onClick={onGoPrevious}>
-              <Icon name={ICONS.ArrowUp} color={disableGoPrevious ? 'disabled' : "hoverLighten"} size="lg" />
+              <Icon
+                className={classnames(disableGoPrevious && classes.disabled)}
+                name={ICONS.ArrowUp}
+                color={disableGoPrevious ? 'disabled' : "hoverLighten"}
+                size="lg"
+              />
             </IconButton>
           </ToolTip>
         </div>

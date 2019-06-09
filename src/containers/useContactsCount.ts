@@ -7,7 +7,6 @@ import useAccount from '~src/containers/useAccount'
 const useContactsCount = createUseContext(() => {
   const { data: contactsData, request: getContactsData } = useGet<{ pagination: Pagination}>()
   const { data: starredData, request: getStarredData } = useGet<{ pagination: Pagination}>()
-  const refreshPage = useCallback(() => Promise.resolve(), [])
 
   const { authored } = useAccount()
 
