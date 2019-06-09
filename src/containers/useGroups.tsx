@@ -7,8 +7,8 @@ import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import useAlert from '~src/containers/useAlert'
 import useAccount from '~src/containers/useAccount'
 
-const useGroups = createUseContext(() => {
-  const groupIdState = useInput('')
+const useGroups = createUseContext(({ groupId: gid }: { groupId?: string }) => {
+  const groupIdState = useInput(gid || '')
   const { data: groupsData, request: getGroupsData } = useGet<GroupAPI[]>()
   const { request: postGroup, error: postGroupError } = usePost()
   const { request: putGroup, error: putGroupError } = usePut()

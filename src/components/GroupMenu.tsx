@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   activeItem: {
     backgroundColor: theme.palette.grey[100],
   },
+  itemText: {
+    wordBreak: 'break-all',
+  },
   activeItemText: {
     ...{
       '&&': {
@@ -122,7 +125,13 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
       timeout="auto"
       unmountOnExit
     >
-      <ListItem component="div" className={classnames(classes.searchItem, theme === 'simple' && classes.searchItemSimple)}>
+      <ListItem
+        component="div"
+        className={classnames(
+          classes.searchItem,
+          theme === 'simple' && classes.searchItemSimple,
+        )}
+      >
         <Searcher
           placeholder="Type a group name"
           value={searchTermState.value}
@@ -131,7 +140,11 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
         />
       </ListItem>
       <List
-        className={classnames(classes.flexContainer, classes.resultBox, theme === 'simple' && classes.simpleResultBox)}
+        className={classnames(
+          classes.flexContainer,
+          classes.resultBox,
+          theme === 'simple' && classes.simpleResultBox,
+        )}
         disablePadding
       >
         {filteredGroups.map(group => (
@@ -153,6 +166,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
                 primary: (group.id === groupIdState.value || group.id === selectedId)
                   ? classes.activeItemText
                   : undefined,
+                root: classes.itemText
               }}
             >
               {group.info.name}

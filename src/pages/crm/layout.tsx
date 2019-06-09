@@ -51,7 +51,7 @@ const CRMLayout: React.FC<Props> = ({ slots, children }) => {
 
   return (
     <useContactsCount.Provider>
-      <useGroups.Provider>
+      <useGroups.Provider groupId={''}>
         <div className={classes.root}>
           {slots.header}
           <div className={classes.main}>

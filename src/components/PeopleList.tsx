@@ -146,7 +146,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   emptyTextWrapper: {
     ...cssTips(theme).centerFlex(),
-    marginTop: '180px',
+    marginTop: '160px',
   },
   emptyTextCell: {
     display: 'block',

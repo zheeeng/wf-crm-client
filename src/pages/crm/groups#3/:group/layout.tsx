@@ -9,7 +9,7 @@ const Content: React.FC<{ group: string }> = React.memo(({ group, children }) =>
 
   useEffect(
     () => {
-      groupIdState.value && groupIdState.setValue(group)
+      groupIdState.setValue(group)
 
       return groupIdState.clear
     },

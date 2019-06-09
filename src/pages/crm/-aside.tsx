@@ -130,7 +130,9 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     [addGroup, changeGroupFormOpened, groups, navigateToGroup, toggleOnGroupsOpened],
   )
 
-  useEffect(() => { if (groupIdState.value) toggleOnGroupsOpened() }, [groupIdState.value, toggleOnGroupsOpened])
+  useEffect(
+    () => { if (groupIdState.value) toggleOnGroupsOpened() }, [groupIdState.value, toggleOnGroupsOpened],
+  )
 
   const newGroupFormOption: CreateFormOption = {
     title: 'New Group',
@@ -261,7 +263,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
         {renderLinkLabel(name)}
       </ListItem>
       {name === 'Groups' && (
-        <GroupMenu key={name + 'group'}
+        <GroupMenu
+          key={name + 'group'}
           groupsOpened={groupsOpened}
           onClickGroup={navigateToGroup}
         />
