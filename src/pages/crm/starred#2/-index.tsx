@@ -1,43 +1,16 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React from 'react'
 import { ComponentProps } from '@roundation/roundation'
 import PeopleList from '~src/components/PeopleList'
-import useContacts from '~src/containers/useContacts'
+import useQueriesLogic from '~src/containers/useQueriesLogic'
 
 export interface Props extends ComponentProps<'', 'page' | 'search'> {}
 
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries }) => {
-  const { pagination } = useContacts()
-
-  const searchContacts = useCallback(
-    ({page, searchTerm }: { page: number, searchTerm: string }) => {
-      // const queryPage = queries.page ? queries.page[0] : ''
-      const querySearch = queries.search ? queries.search[0] : ''
-      if (searchTerm !== querySearch) {
-        setQueries({ page: ['1'], search: [searchTerm] })
-      } else {
-        setQueries({ page: [page.toString()], search: [searchTerm] })
-      }
-    },
-    [setQueries, queries],
-  )
-
-  const pageRef = useRef(queries.page ? queries.page[0] : undefined)
-
-  useEffect(
-    () => { pageRef.current = queries.page ? queries.page[0] : undefined },
-    [queries]
-  )
-
-  useEffect(
-    () => {
-      if (pagination.page.toString() !== pageRef.current) {
-        setQueries({ page: [pagination.page.toString()] })
-      }
-    },
-    [pagination, setQueries]
-  )
-
-  const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])
+  const {
+    pagination,
+    searchContacts,
+    navigateToProfile,
+  } = useQueriesLogic({ navigate, queries, setQueries })
 
   return (
     <PeopleList
