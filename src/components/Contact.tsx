@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
+import { usePrevious } from 'react-hanger'
 import DetailsPaper from '~src/units/DetailsPaper'
 import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
@@ -10,28 +11,36 @@ import useContacts from '~src/containers/useContacts'
 
 export interface Props {
   contactId: string
-  navigate: (to: string, option: { replace?: boolean }) => void
+  navigate: (to: string, option?: { replace: boolean }) => void
   path: string
 }
 
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId }) => {
-    const { contacts } = useContacts()
+    const { contacts, fromContactIdState } = useContacts()
     const { removeContact } = useContact(contactId)
+
+    const lastContactId = usePrevious(contactId)
 
     const navigateToContact = useCallback(
       () => {
-        window.history.go(-1)
+        const lastUrl = document.referrer
+        const backLevelPath = path ? path.split('/').slice(0, -1).join('/') : ''
+
+        if (lastUrl.includes(backLevelPath)) {
+          window.history.go(-1)
+        } else if (lastContactId) {
+          fromContactIdState.setValue(lastContactId)
+          navigate(backLevelPath)
+        }
       },
-      [],
+      [path, lastContactId, fromContactIdState, navigate],
     )
 
     const previousContactId = useMemo(
       () => {
         const targetIndex = contacts.findIndex(c => c.id === contactId)
         const calculatedIndex = Math.max(targetIndex - 1, -1)
-
-        console.log(contacts, targetIndex, calculatedIndex)
 
         return calculatedIndex === -1 ? null : contacts[calculatedIndex].id
       },
@@ -43,8 +52,6 @@ const ContactIndex: React.FC<Props> = React.memo(
         const len = contacts.length
         const targetIndex = contacts.findIndex(c => c.id === contactId)
         const calculatedIndex = Math.min(targetIndex + 1, len - 1)
-
-        console.log(calculatedIndex)
 
         return calculatedIndex === len - 1 ? null : contacts[calculatedIndex].id
       },

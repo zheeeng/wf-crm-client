@@ -259,11 +259,16 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const { success } = useAlert()
   const {
-    contacts, isFetchingContacts,
+    contacts, fetchContacts, isFetchingContacts,
     addContactData, showAddContactMessage, addContact,
     starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
     fromContactIdState,
   } = useContacts()
+
+  useEffect(
+    () => { fetchContacts(size) },
+    [fetchContacts, size]
+  )
 
   const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
 

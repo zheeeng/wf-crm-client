@@ -335,11 +335,6 @@ const useContacts = createUseContext(({
 
   const fromContactIdState = useInput('')
 
-  useEffect(
-    () => { fetchContacts(size) },
-    [fetchContacts, size]
-  )
-
   return {
     pagination,
 
