@@ -142,9 +142,9 @@ const useContacts = createUseContext(({
       await postContact('/api/people')(contactFieldAdapter(contactData))
 
       refreshCounts()
-      fetchContacts(30, 1)
+      page === 1 ? fetchContactsQuietly(30) : fetchContacts(30, 1)
     },
-    [favourite, fetchContacts, postContact, refreshCounts],
+    [favourite, fetchContacts, fetchContactsQuietly, page, postContact, refreshCounts],
   )
 
   const starContact = useCallback(
@@ -167,19 +167,9 @@ const useContacts = createUseContext(({
         Promise.resolve(),
       )
 
-      fetchContacts(30, 1)
+      page === 1 ? fetchContactsQuietly(30) : fetchContacts(30, 1)
     },
-    [deleteContact, fetchContacts, refreshCounts],
-  )
-
-  const removeContactError = useMemo(
-    () => {
-      // eslint-disable-next-line no-new-wrappers
-      if (deleteContactError) return new String(deleteContactError.message)
-
-      return null
-    },
-    [deleteContactError],
+    [deleteContact, fetchContacts, fetchContactsQuietly, page, refreshCounts],
   )
 
   const addContactToGroup = useCallback(
@@ -197,9 +187,9 @@ const useContacts = createUseContext(({
         people: contactIds,
       })
 
-      fetchContacts(30, 1)
+      page === 1 ? fetchContactsQuietly(30) : fetchContacts(30, 1)
     },
-    [deleteContactsFromGroup, fetchContacts],
+    [deleteContactsFromGroup, fetchContacts, fetchContactsQuietly, page],
   )
 
   const mergeContacts = useCallback(
@@ -217,9 +207,9 @@ const useContacts = createUseContext(({
       )
 
       refreshCounts()
-      fetchContacts(30, 1)
+      page === 1 ? fetchContactsQuietly(30) : fetchContacts(30, 1)
     },
-    [fetchContacts, postMergeContacts, refreshCounts],
+    [fetchContacts, fetchContactsQuietly, page, postMergeContacts, refreshCounts],
   )
 
   const exportContacts = useCallback(
@@ -356,7 +346,7 @@ const useContacts = createUseContext(({
     starContactError: putContactError,
 
     removeContacts: removeContact,
-    removeContactError,
+    removeContactError: deleteContactError,
 
     addContactToGroup,
     addContactToGroupData: postContactToGroupData,
