@@ -153,6 +153,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     borderBottom: 'none',
   },
+  clearBorder: {
+    borderBottom: 'none',
+  },
   emptyText: {
     fontSize: `${theme.spacing(2)}px`,
     padding: theme.spacing(3, 0),
@@ -214,6 +217,7 @@ const ContinueEditing: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 }
 
 export interface Props {
+  searchTerm: string
   page: number
   size: number
   total: number
@@ -249,7 +253,7 @@ const newContactFormOption: CreateFormOption = {
 }
 
 const PeopleList: React.FC<Props> = React.memo(({
-  total, page, size, onSearch, navigateToProfile, isGroupPage = false,
+  total, page, size, searchTerm, onSearch, navigateToProfile, isGroupPage = false,
 }) => {
   const classes = useStyles({})
 
@@ -273,7 +277,7 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const [checked, setChecked] = useState<string[]>([])
-  const searchTermState = useInput('')
+  const searchTermState = useInput(searchTerm)
   const [createForm, setCreateForm] = useState<{
     opened: boolean
     option?: CreateFormOption
@@ -311,9 +315,9 @@ const PeopleList: React.FC<Props> = React.memo(({
     (term: string) => {
       checked.length !== 0 && setChecked([])
 
-      onSearch({ page, size, searchTerm: term })
+      onSearch({ page: 1, size, searchTerm: term })
     },
-    [checked.length, onSearch, page, size],
+    [checked.length, onSearch, size],
   )
 
   const debouncedSearch = useCallback(
@@ -728,7 +732,7 @@ const PeopleList: React.FC<Props> = React.memo(({
               {isFetchingContacts
                 ? (
                   <TableRow className={classes.emptyTextWrapper}>
-                    <TableCell padding="none">
+                    <TableCell padding="none" className={classes.clearBorder}>
                       <ProgressLoading className={classes.progress} />
                     </TableCell>
                   </TableRow>

@@ -1549,10 +1549,10 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@roundation/roundation@^0.0.41":
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.41.tgz#eb12632f3fa1cc03bda65e1725a69e17baeee837"
-  integrity sha512-egw0RQ6ZxdXql3cbmbHqtKlWmGSE3gFytVGB4nI+5XLKf3yMWUwgB6zlkVEl2XFThzVpDaWCa+b999n6AyZ2Tw==
+"@roundation/roundation@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@roundation/roundation/-/roundation-0.0.43.tgz#b15a0fe8fd2473e4f375e369c2c3b7d15eadc542"
+  integrity sha512-eIRorH9GwMmTuKW0Qieuj0ac7lEvvJEDzDbWsLk1vhJFB/qKKHSo0mlhZvB5pvzgaOmADGRi3qz9dywy0GPcKg==
   dependencies:
     "@reach/router" "^1.2.1"
     "@types/reach__router" "^1.2.3"

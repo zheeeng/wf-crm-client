@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
+// import useMount from 'react-use/lib/useMount'
 import useContacts from '~src/containers/useContacts'
 import { ComponentProps } from '@roundation/roundation'
 
@@ -15,7 +16,7 @@ const useQueriesLogic = ({ navigate, queries, setQueries }: Props) => {
       // const queryPage = queries.page ? queries.page[0] : ''
       const querySearch = queries.search ? queries.search[0] : ''
       if (searchTerm !== querySearch) {
-        setQueries({ search: [searchTerm] })
+        setQueries({ search: [searchTerm] }, true)
       } else {
         setQueries({ page: [page.toString()], search: [searchTerm] })
       }
@@ -43,6 +44,7 @@ const useQueriesLogic = ({ navigate, queries, setQueries }: Props) => {
   const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])
 
   return {
+    searchTerm: queries.search ? queries.search[0] : '',
     pagination,
     searchContacts,
     navigateToProfile,

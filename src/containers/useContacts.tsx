@@ -78,11 +78,23 @@ const useContacts = createUseContext(({
 
   const latestContactsData = useLatest(contactsData, contactsData2)
 
-  const pagination = useMemo<Pagination>(
+  const contactsPagination = useMemo<Pagination>(
     () => latestContactsData
       ? latestContactsData.pagination
       : { page, size: 0, total: 0 },
-    [latestContactsData, page]
+    [latestContactsData, page],
+  )
+
+  const queryPagination = useMemo(
+    () => ({ ...contactsPagination, page }),
+    [contactsPagination, page],
+  )
+
+  const latestPagination = useLatest(contactsPagination, queryPagination)
+
+  const pagination = useMemo(
+    () => latestPagination || { page, size: 0, total: 0 },
+    [latestPagination, page],
   )
 
   const contacts = useMemo<Contact[]>(

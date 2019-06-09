@@ -7,6 +7,7 @@ export interface Props extends ComponentProps<'', 'page' | 'search'> {}
 
 const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries }) => {
   const {
+    searchTerm,
     pagination,
     searchContacts,
     navigateToProfile,
@@ -14,6 +15,7 @@ const StarredMyCustomersIndex: React.FC<Props> = React.memo(({ navigate, queries
 
   return (
     <PeopleList
+      searchTerm={searchTerm}
       page={pagination.page}
       size={pagination.size}
       total={pagination.total}
