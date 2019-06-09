@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   skeletonProfileBar: {
     height: theme.spacing(6),
     paddingTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    margin: theme.spacing(0, 2, 2),
   },
   profileTitle: {
     color: theme.palette.grey[800],
@@ -128,6 +128,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   skeletonContent: {
+    padding: theme.spacing(0, 2),
     ...cssTips(theme).centerFlex('normal'),
   },
   skeletonContentIcon: {
