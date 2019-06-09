@@ -6,16 +6,21 @@ import useQueriesLogic from '~src/containers/useQueriesLogic'
 export interface Props extends ComponentProps<'', 'page' | 'search'> {
 }
 
-const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries }) => {
+const GroupIndex: React.FC<Props> = React.memo(({ navigate, queries, setQueries, location }) => {
   const {
     searchTerm,
     pagination,
     searchContacts,
     navigateToProfile,
-  } = useQueriesLogic({ navigate, queries, setQueries })
+    componentKey,
+  } = useQueriesLogic(
+    { navigate, queries, setQueries },
+    location && location.state && location.state.fromAside,
+  )
 
   return (
     <PeopleList
+      key={componentKey}
       searchTerm={searchTerm}
       page={pagination.page}
       size={pagination.size}

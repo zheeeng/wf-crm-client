@@ -30,7 +30,6 @@ const useContactsCount = createUseContext(() => {
     contactsCount: contactsData ? contactsData.pagination.total : 0,
     starredCount: starredData ? starredData.pagination.total : 0,
     refreshCounts,
-    refreshPage,
   }
 })
 

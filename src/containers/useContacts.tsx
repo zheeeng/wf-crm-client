@@ -34,7 +34,7 @@ type ContainerProps = {
 const useContacts = createUseContext(({
   page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
 }: ContainerProps) => {
-  const { refreshCounts, refreshPage } = useContactsCount()
+  const { refreshCounts } = useContactsCount()
 
   const {
     data: contactsData,
@@ -311,7 +311,7 @@ const useContacts = createUseContext(({
 
     useUpdateEffect(
       () => { fetchContacts(30, 1) },
-      [addContact, removeContact, refreshPage, mergeContacts, removeContactsFromGroup]
+      [addContact, removeContact, mergeContacts, removeContactsFromGroup]
     )
   }
 

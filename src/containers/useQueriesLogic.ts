@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 // import useMount from 'react-use/lib/useMount'
 import useContacts from '~src/containers/useContacts'
 import { ComponentProps } from '@roundation/roundation'
@@ -8,17 +8,26 @@ ComponentProps<'', 'page' | 'search'>,
 'navigate' | 'queries' | 'setQueries'
 >
 
-const useQueriesLogic = ({ navigate, queries, setQueries }: Props) => {
+const useQueriesLogic = ({ navigate, queries, setQueries }: Props, formAside: boolean = false) => {
+  const [componentKey, resetComponentKey] = useState(Math.random().toString(16).slice(2))
+
+  useEffect(
+    () => { formAside && resetComponentKey(Math.random().toString(16).slice(2)) },
+    [formAside]
+  )
+
   const { pagination } = useContacts()
 
   const searchContacts = useCallback(
     ({page, searchTerm }: { page: number, searchTerm: string }) => {
       // const queryPage = queries.page ? queries.page[0] : ''
       const querySearch = queries.search ? queries.search[0] : ''
-      if (searchTerm !== querySearch) {
+      const pageStr = page.toString()
+
+      if (searchTerm !== querySearch || pageStr === '1') {
         setQueries({ search: [searchTerm] }, true)
       } else {
-        setQueries({ page: [page.toString()], search: [searchTerm] })
+        setQueries({ page: [pageStr], search: [searchTerm] })
       }
     },
     [setQueries, queries],
@@ -43,8 +52,14 @@ const useQueriesLogic = ({ navigate, queries, setQueries }: Props) => {
 
   const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])
 
+  const searchTerm = useMemo(
+    () => queries.search ? queries.search[0] : '',
+    [queries.search],
+  )
+
   return {
-    searchTerm: queries.search ? queries.search[0] : '',
+    componentKey,
+    searchTerm,
     pagination,
     searchContacts,
     navigateToProfile,

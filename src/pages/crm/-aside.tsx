@@ -77,7 +77,7 @@ export interface Props extends ComponentProps {
 
 const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location }) => {
   const classes = useStyles({})
-  const { contactsCount, starredCount, refreshPage } = useContactsCount()
+  const { contactsCount, starredCount } = useContactsCount()
   const { groupIdState, groups, addGroup, updateGroup, removeGroup } = useGroups()
   const sideDrawer = useSideDrawer()
 
@@ -238,8 +238,8 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   )
 
   const handleLinkClick = useCallback(
-    (name: string) => name === 'Groups' ? toggleGroupsOpened : refreshPage,
-    [refreshPage, toggleGroupsOpened],
+    (name: string) => name === 'Groups' ? toggleGroupsOpened : () => {},
+    [toggleGroupsOpened],
   )
 
   const renderLink = (
@@ -249,6 +249,7 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
     <React.Fragment key={name}>
       <ListItem key={name + 'context'}
         component={Link}
+        state={{ fromAside: true }}
         classes={{ button: (location && location.pathname.startsWith(routeFullPath)) ? 'active' : '' }}
         button
         onClick={handleLinkClick(name)}

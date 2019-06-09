@@ -48,7 +48,9 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
   const textState = useInput(value || '')
 
   useEffect(
-    () => { textState.setValue(value || '') },
+    () => {
+      textState.setValue(value || '')
+    },
     [textState, value],
   )
 
