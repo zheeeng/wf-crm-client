@@ -309,13 +309,11 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const search = useCallback(
     (term: string) => {
-      searchTermState.value !== term && searchTermState.setValue(term)
-
       checked.length !== 0 && setChecked([])
 
       onSearch({ page, size, searchTerm: term })
     },
-    [searchTermState, checked.length, onSearch, page, size],
+    [checked.length, onSearch, page, size],
   )
 
   const debouncedSearch = useCallback(
@@ -323,6 +321,15 @@ const PeopleList: React.FC<Props> = React.memo(({
       search(term)
     }, 600),
     [search],
+  )
+
+  const onChange = useCallback(
+    (term: string) => {
+      searchTermState.value !== term && searchTermState.setValue(term)
+
+      debouncedSearch(term)
+    },
+    [searchTermState, debouncedSearch],
   )
 
   const handleChangePage = useCallback(
@@ -543,8 +550,9 @@ const PeopleList: React.FC<Props> = React.memo(({
   const renderSearcher = () => (
     <Searcher
       className={classes.search}
+      value={searchTermState.value}
       onKeyDown={search}
-      onChange={debouncedSearch}
+      onChange={onChange}
       placeholder="Type a name or email"
     />
   )

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
+import { useInput } from 'react-hanger'
 import classNames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -44,44 +45,43 @@ export interface Props {
 const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, onChange, onKeyDown, theme }) => {
   const classes = useStyles({})
 
-  const [text, setText] = useState(value || '')
+  const textState = useInput(value || '')
 
   useEffect(
-    () => { text !== value && setText(value || '') },
-    [text, value],
+    () => { textState.setValue(value || '') },
+    [textState, value],
   )
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const t = event.target.value
-      setText(t)
+      textState.setValue(t)
       onChange && onChange(t)
     },
-    [onChange],
+    [textState, onChange],
   )
   const handleEnter = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.keyCode === 13) {
-        onKeyDown && onKeyDown(text.trim())
+        onKeyDown && onKeyDown(textState.value.trim())
       }
     },
-    [text, onKeyDown],
+    [textState, onKeyDown],
   )
   const handleClickSearchIcon = useCallback(
     () => {
-      onChange && onChange(text)
-      onKeyDown && onKeyDown(text)
+      onKeyDown && onKeyDown(textState.value)
     },
-    [text, onChange, onKeyDown],
+    [textState, onKeyDown],
   )
 
   const handleClick = useCallback(
     () => {
-      setText('')
+      textState.setValue('')
       onChange && onChange('')
       onKeyDown && onKeyDown('')
     },
-    [onChange, onKeyDown],
+    [textState, onChange, onKeyDown],
   )
 
   return (
@@ -97,7 +97,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
           <Icon name={ICONS.Search} onClick={handleClickSearchIcon} />
         </InputAdornment>
       )}
-      endAdornment={text
+      endAdornment={textState.value
         ? (
           <InputAdornment position="end" className={classes.inputAdornment} onClick={handleClick}>
             <Icon name={ICONS.Close} size="sm" />
@@ -108,7 +108,7 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       inputProps={{
         className: classes.input,
       }}
-      value={text}
+      value={textState.value}
       onChange={handleChange}
       onKeyDown={handleEnter}
       placeholder={placeholder}
