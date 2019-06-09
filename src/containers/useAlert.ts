@@ -27,7 +27,7 @@ const useAlert = createUseContext(() => {
   )
 
   const reset = useCallback(
-    updateMessage.bind(null, initialMessage),
+    () => updateMessage(initialMessage),
     [updateMessage],
   )
 
@@ -39,9 +39,7 @@ const useAlert = createUseContext(() => {
   useDebounce(reset, 1000, [dismiss])
 
   useDebounce(
-    () => {
-      if (message.content) dismiss()
-    },
+    () => message.content && dismiss(),
     defaultDismissTimeout,
     [message, dismiss],
   )
