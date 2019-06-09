@@ -15,12 +15,25 @@ const useGroups = createUseContext(() => {
   const { data: deleteGroupData, request: deleteGroup, error: deleteGroupError } = useDelete()
   const { authored } = useAccount()
 
+  const refreshGroupCounts = useCallback(
+    () => { authored && getGroupsData('/api/group')() },
+    [getGroupsData, authored],
+  )
+
+  useEffect(
+    () => { authored && refreshGroupCounts() },
+    [authored, refreshGroupCounts],
+  )
+
   const addGroup = useCallback(
     async (group: GroupFields) => {
       const { id } = await postGroup('/api/group')(groupFieldAdapter(group))
+
+      refreshGroupCounts()
+
       return id as string
     },
-    [postGroup],
+    [postGroup, refreshGroupCounts],
   )
 
   const updateGroup = useCallback(
@@ -28,8 +41,10 @@ const useGroups = createUseContext(() => {
       if (groupIdState.value) {
         await putGroup(`/api/group/${groupIdState.value}`)(groupFieldAdapter(group))
       }
+
+      refreshGroupCounts()
     },
-    [putGroup, groupIdState.value],
+    [groupIdState.value, refreshGroupCounts, putGroup],
   )
 
   const removeGroup = useCallback(
@@ -37,24 +52,14 @@ const useGroups = createUseContext(() => {
       if (groupIdState.value) {
         await deleteGroup(`/api/group/${groupIdState.value}`)()
       }
-    },
-    [deleteGroup, groupIdState.value],
-  )
 
-  const refreshGroupCounts = useCallback(
-    () => {
-      getGroupsData('/api/group')()
+      refreshGroupCounts()
     },
-    [getGroupsData],
+    [deleteGroup, groupIdState.value, refreshGroupCounts],
   )
 
   {
     const { success, fail } = useAlert()
-
-    useEffect(
-      () => { authored && refreshGroupCounts() },
-      [authored, addGroup, updateGroup, removeGroup, refreshGroupCounts],
-    )
 
     useEffect(
       () => { deleteGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },

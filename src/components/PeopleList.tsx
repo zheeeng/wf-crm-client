@@ -316,7 +316,7 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   // const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
 
-  const search = useCallback(
+  const handleSearchSubmit = useCallback(
     (term: string) => {
       checked.length !== 0 && setChecked([])
 
@@ -327,12 +327,12 @@ const PeopleList: React.FC<Props> = React.memo(({
 
   const debouncedSearch = useCallback(
     debounce((term: string) => {
-      search(term)
+      handleSearchSubmit(term)
     }, 600),
-    [search],
+    [handleSearchSubmit],
   )
 
-  const onChange = useCallback(
+  const handleSearchChange = useCallback(
     (term: string) => {
       searchTermState.value !== term && searchTermState.setValue(term)
 
@@ -342,8 +342,12 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const handleChangePage = useCallback(
-    (_: any, newPage: number) => onSearch({ page: newPage + 1, size, searchTerm: searchTermState.value }),
-    [onSearch, size, searchTermState],
+    (_: any, newPage: number) => {
+      checked.length !== 0 && setChecked([])
+
+      onSearch({ page: newPage + 1, size, searchTerm: searchTermState.value })
+    },
+    [checked.length, onSearch, size, searchTermState.value],
   )
 
   const handleItemCheckedToggle = useCallback(
@@ -414,10 +418,10 @@ const PeopleList: React.FC<Props> = React.memo(({
         lastContactIdsRef.current = contacts.map(contact => contact.id)
         changeCreateContactFormOpened(false)()
         await addContact(contact as ContactFields)
-        search(searchTermState.value)
+        handleSearchSubmit(searchTermState.value)
       }
     },
-    [contacts, addContact, search, changeCreateContactFormOpened, searchTermState],
+    [contacts, addContact, handleSearchSubmit, changeCreateContactFormOpened, searchTermState],
   )
 
   const handleAddContactToGroup = useCallback(
@@ -452,10 +456,13 @@ const PeopleList: React.FC<Props> = React.memo(({
   const handleMergeContacts = useCallback(
     async () => {
       if (checked.length < 2) return
+      const target = checked[0]
 
       await mergeContacts(checked)
+
+      fromContactIdState.setValue(target)
     },
-    [checked, mergeContacts],
+    [checked, fromContactIdState, mergeContacts],
   )
 
   const renderPCLayoutTableRows = (contact: Contact) => (
@@ -560,8 +567,8 @@ const PeopleList: React.FC<Props> = React.memo(({
     <Searcher
       className={classes.search}
       value={searchTermState.value}
-      onKeyDown={search}
-      onChange={onChange}
+      onKeyDown={handleSearchSubmit}
+      onChange={handleSearchChange}
       placeholder="Type a name or email"
     />
   )

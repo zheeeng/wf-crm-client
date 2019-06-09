@@ -111,6 +111,11 @@ const useContact = (contactId: string) => {
   )
 
   useEffect(
+    () => { refreshCounts() },
+    [refreshCounts],
+  )
+
+  useEffect(
     () => { contactId && fetchContact(contactId) },
     [fetchContact, contactId],
   )
@@ -156,8 +161,10 @@ const useContact = (contactId: string) => {
   const starContact = useCallback(
     async (star: boolean) => {
       await putContact(`/api/people/${contactId}`)({ favourite: star })
+
+      refreshCounts()
     },
-    [contactId, putContact],
+    [contactId, putContact, refreshCounts],
   )
 
   const updateContactGender = useCallback(
@@ -170,8 +177,9 @@ const useContact = (contactId: string) => {
   const removeContact = useCallback(
     async () => {
       await deleteContact(`/api/people/${contactId}`)()
+      refreshCounts()
     },
-    [contactId, deleteContact],
+    [contactId, deleteContact, refreshCounts],
   )
 
   const addTag = useCallback(
@@ -238,11 +246,6 @@ const useContact = (contactId: string) => {
     async (id: string) =>
       deleteNote(`/api/people/${contactId}/notes/${id}`)(),
     [contactId, deleteNote],
-  )
-
-  useEffect(
-    () => { refreshCounts() },
-    [refreshCounts, starContact, removeContact],
   )
 
   return {

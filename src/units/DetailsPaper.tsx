@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   leftSider: {
     ...cssTips(theme).casFlex(),
     height: '100%',
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    padding: theme.spacing(2),
     marginRight: theme.spacing(4),
     boxShadow: '0px 0px 8px 0px rgba(127, 136, 158, 0.1)',
     backgroundColor: theme.palette.background.paper,

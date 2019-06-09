@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { useInput } from 'react-hanger'
-import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import createUseContext from 'constate'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
@@ -32,6 +31,7 @@ type ContainerProps = {
 }
 
 const useContacts = createUseContext(({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
 }: ContainerProps) => {
   const { refreshCounts } = useContactsCount()
@@ -140,28 +140,36 @@ const useContacts = createUseContext(({
     async (contact: ContactFields) => {
       const contactData = favourite ? { ...contact, favourite } : contact
       await postContact('/api/people')(contactFieldAdapter(contactData))
+
+      refreshCounts()
+      fetchContacts(30, 1)
     },
-    [favourite, postContact],
+    [favourite, fetchContacts, postContact, refreshCounts],
   )
 
   const starContact = useCallback(
     async (id: string, star: boolean) => {
       await putContact(`/api/people/${id}`)({ favourite: star })
+      refreshCounts()
+      fetchContactsQuietly(30)
     },
-    [putContact],
+    [fetchContactsQuietly, putContact, refreshCounts],
   )
 
   const removeContact = useCallback(
     async (contactIds: string[]) => {
-      return await contactIds.reduce(
+      await contactIds.reduce(
         async (p, id) => {
           await p
           await deleteContact(`/api/people/${id}`)()
+          refreshCounts()
         },
         Promise.resolve(),
       )
+
+      fetchContacts(30, 1)
     },
-    [deleteContact],
+    [deleteContact, fetchContacts, refreshCounts],
   )
 
   const removeContactError = useMemo(
@@ -188,13 +196,15 @@ const useContacts = createUseContext(({
       await deleteContactsFromGroup(`/api/group/${groupId}/people`)({
         people: contactIds,
       })
+
+      fetchContacts(30, 1)
     },
-    [deleteContactsFromGroup],
+    [deleteContactsFromGroup, fetchContacts],
   )
 
   const mergeContacts = useCallback(
     async ([targetId, ...sourceIds]: string[]) => {
-      return await sourceIds.reduce(
+      await sourceIds.reduce(
         async (chain, sourceId) => {
           try {
             await chain
@@ -205,8 +215,11 @@ const useContacts = createUseContext(({
         },
         Promise.resolve() as Promise<any>,
       )
+
+      refreshCounts()
+      fetchContacts(30, 1)
     },
-    [postMergeContacts],
+    [fetchContacts, postMergeContacts, refreshCounts],
   )
 
   const exportContacts = useCallback(
@@ -238,10 +251,8 @@ const useContacts = createUseContext(({
   )
 
   useEffect(
-    () => {
-      refreshCounts()
-    },
-    [addContact, starContact, removeContact, mergeContacts, refreshCounts],
+    () => { refreshCounts() },
+    [refreshCounts],
   )
 
   // alter effects
@@ -302,16 +313,6 @@ const useContacts = createUseContext(({
     useEffect(
       () => { deleteContactsFromGroupError && fail(deleteContactsFromGroupError.message) },
       [deleteContactsFromGroupError, fail]
-    )
-
-    useUpdateEffect(
-      () => { fetchContactsQuietly(30) },
-      [starContact]
-    )
-
-    useUpdateEffect(
-      () => { fetchContacts(30, 1) },
-      [addContact, removeContact, mergeContacts, removeContactsFromGroup]
     )
   }
 
