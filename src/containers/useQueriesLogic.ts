@@ -50,12 +50,14 @@ const useQueriesLogic = ({ navigate, queries, setQueries }: Props, formAside: bo
     [pagination, setQueries]
   )
 
-  const navigateToProfile = useCallback((page: string) => navigate && navigate(page), [navigate])
-
   const searchTerm = useMemo(
     () => queries.search ? queries.search[0] : '',
     [queries.search],
   )
+
+  const navigateToProfile = useCallback((contactId: string) => {
+    navigate && navigate(contactId, { state: { page: pageRef.current, searchTerm } })
+  }, [navigate, searchTerm])
 
   return {
     componentKey,

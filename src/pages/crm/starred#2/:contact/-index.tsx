@@ -13,6 +13,8 @@ const ContactIndex: React.FC<Props> = React.memo(
       contactId={contact}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       navigate={navigate!}
+      page={location && location.state ? location.state.page : ''}
+      searchTerm={location && location.state ? location.state.searchTerm : ''}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       path={location!.pathname}
     />

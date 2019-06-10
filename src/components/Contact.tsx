@@ -13,28 +13,40 @@ export interface Props {
   contactId: string
   navigate: (to: string, option?: { replace: boolean }) => void
   path: string
+  page: string
+  searchTerm: string
 }
 
 const ContactIndex: React.FC<Props> = React.memo(
-  ({ navigate, path, contactId }) => {
+  ({ navigate, path, contactId, page, searchTerm }) => {
     const { contacts, fromContactIdState } = useContacts()
     const { removeContact } = useContact(contactId)
 
     const lastContactId = usePrevious(contactId)
+    const lastPage = usePrevious(page)
+    const lastSearchTerm = usePrevious(searchTerm)
 
     const navigateToContact = useCallback(
       () => {
         const lastUrl = document.referrer
-        const backLevelPath = path ? path.split('/').slice(0, -1).join('/') : ''
+        const pathChunks = path.split('/')
+        const backLevelPath = pathChunks[pathChunks.length - 1] === ''
+          ? pathChunks.slice(0, -2).join('/')
+          : pathChunks.slice(0, -1).join('/')
 
         if (lastUrl.includes(backLevelPath)) {
           window.history.go(-1)
         } else if (lastContactId) {
+          const pageQuery = (lastPage && lastPage !== '1') ? `page=${lastPage}` : ''
+          const searchQuery = lastSearchTerm ? `search=${lastSearchTerm}` : ''
+          const query = [pageQuery, searchQuery].filter(it => it).join('&')
+          const backPath = backLevelPath + (query ? `?${query}` : '')
+
           fromContactIdState.setValue(lastContactId)
-          navigate(backLevelPath)
+          navigate(backPath)
         }
       },
-      [path, lastContactId, fromContactIdState, navigate],
+      [path, lastContactId, lastPage, lastSearchTerm, fromContactIdState, navigate],
     )
 
     const previousContactId = useMemo(
