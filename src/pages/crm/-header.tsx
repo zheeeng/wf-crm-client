@@ -120,6 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       // paddingLeft: 0,
       // ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced(),
     },
+    // eslint-disable-next-line @typescript-eslint/no-useless-computed-key
     ['@media (max-width:600px)']: {
       visibility: 'hidden',
     }
