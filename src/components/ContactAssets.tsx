@@ -235,7 +235,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                         classes={{
                           label: classes.entryButtonIcon,
                         }}
-                        onClick={handleOpenWaiverSplitter(waiver.id, waiver.title)}
+                        onClick={handleOpenWaiverSplitter(waiver.key, waiver.title)}
                       >
                         <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
                       </IconButton>
