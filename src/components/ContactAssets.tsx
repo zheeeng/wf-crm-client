@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   entryIcon: {
+    flexShrink: 0,
     marginRight: theme.spacing(1),
   },
   entryContent: {
@@ -225,6 +226,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
                   <Icon
                     name={ICONS.Waiver}
                     className={classes.entryIcon}
+                    size="sm"
                   />
                   <span className={classes.entryContent}>{waiver.title}</span>
                   <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
