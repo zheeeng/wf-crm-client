@@ -62,7 +62,7 @@ const useGroups = createUseContext(({ groupId: gid }: { groupId?: string }) => {
     const { success, fail } = useAlert()
 
     useEffect(
-      () => { deleteGroupData && success(<><CheckCircle /> Contacts Removed From Group</>) },
+      () => { deleteGroupData && success(<><CheckCircle /> Group Removed!</>) },
       [deleteGroupData, success],
     )
 
