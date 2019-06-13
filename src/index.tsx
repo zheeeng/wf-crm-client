@@ -16,9 +16,15 @@ import useAccount from '~src/containers/useAccount'
 
 import { exchangeAPIKey } from '~src/utils/qs3Login'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 async function main () {
+  if (isDev && document.location.pathname === '/') {
+    document.location.pathname = '/crm'
+  }
+
   try {
-    await exchangeAPIKey()
+    if (!isDev) await exchangeAPIKey()
   } catch {
     if (document.location.pathname !== '/auth/signin') {
       document.location.pathname = '/auth/signin'

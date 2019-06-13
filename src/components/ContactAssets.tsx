@@ -116,7 +116,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(2),
   },
   waiverContent: {
-    margin: theme.spacing(0, 3),
+    margin: theme.spacing(0, 1.5),
+    padding: theme.spacing(0, 1.5),
     [theme.breakpoints.up('md')]: {
       flexGrow: 1,
       flexBasis: '100%',

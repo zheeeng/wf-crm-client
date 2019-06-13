@@ -11,6 +11,7 @@ const crmTokenKey = '@token@'
 const crmUsernameKey = '@username@'
 
 const isDev = process.env.NODE_ENV === 'development'
+
 const devLoginInfo = {
   // eslint-disable-next-line @typescript-eslint/camelcase
   api_key: '',
@@ -52,8 +53,6 @@ export function getFallbackUsername () {
 
 export async function exchangeAPIKey () {
   const authKey = cookie.get(authKeyKey)
-
-  if (isDev) return
 
   if (!authKey) {
     cleanStorage()

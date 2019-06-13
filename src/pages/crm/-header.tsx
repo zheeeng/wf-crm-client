@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       // paddingLeft: 0,
       // ...cssTips(theme, { sizeFactor: 0 }).horizontallySpaced(),
     },
-    // eslint-disable-next-line @typescript-eslint/no-useless-computed-key
+    // eslint-disable-next-line no-useless-computed-key
     ['@media (max-width:600px)']: {
       visibility: 'hidden',
     }
@@ -295,25 +295,23 @@ const Header: React.FC<Props> = React.memo(() => {
                 <MenuIcon />
               </IconButton>
             </Hidden>
-            <Hidden xsDown>
-              <nav className={classes.navList}>
-                <div className={classes.navItem}>
-                  <a href="/welcome" className={classes.link}>
-                    Dashboard
-                  </a>
-                </div>
-                <div className={classes.navItem}>
-                  <a href="/templates" className={classes.link}>
-                    Waiver Templates
-                  </a>
-                </div>
-                <div className={classes.navItem}>
-                  <Link to="/crm" className={classnames(classes.link, 'active')}>
-                    My Customers
-                  </Link>
-                </div>
-              </nav>
-            </Hidden>
+            <nav className={classes.navList}>
+              <div className={classes.navItem}>
+                <a href="/welcome" className={classes.link}>
+                  Dashboard
+                </a>
+              </div>
+              <div className={classes.navItem}>
+                <a href="/templates" className={classes.link}>
+                  Waiver Templates
+                </a>
+              </div>
+              <div className={classes.navItem}>
+                <Link to="/crm" className={classnames(classes.link, 'active')}>
+                  My Customers
+                </Link>
+              </div>
+            </nav>
             <div className={classes.dropdownButton}>
               <Avatar src={crateGravatar(username)} classes={{root: classes.avatarRoot}} />
               <div className={classes.arrowDown} />

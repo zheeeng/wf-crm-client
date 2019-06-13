@@ -73,7 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     wordBreak: 'break-word',
     // ...cssTips(theme).lineClamp(3),
-    whiteSpace: 'pre',
     ...{
       '&:hover': {
         backgroundColor: theme.palette.grey['900'],
@@ -87,7 +86,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.secondary,
   },
   stepper: {
-    margin: `0 ${theme.spacing(4)}px`,
+    margin: theme.spacing(0, 2),
+    padding: theme.spacing(0, 2),
     [theme.breakpoints.up('md')]: {
       flexGrow: 1,
       flexBasis: '100%',
