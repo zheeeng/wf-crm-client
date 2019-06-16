@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     visibility: 'hidden',
   },
   fieldHoverShowingIcon: {
-    'visibility': 'hidden',
+    visibility: 'hidden',
     '$fieldTextBarWrapper:hover &': {
       visibility: 'visible',
     },
@@ -881,6 +881,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
             useDragHandle
             helperContainer={containerRef.current || undefined}
             helperClass={classes.dragged}
+            disabled={!hasValues}
           >
             {sortableItems}
           </SortableList>

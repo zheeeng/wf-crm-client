@@ -61,6 +61,14 @@
         ],
         "react/display-name": [
             "off"
+        ],
+        "comma-dangle": [
+            "error",
+            "always-multiline"
+        ],
+        "quote-props": [
+            "error",
+            "as-needed"
         ]
     },
     "settings": {

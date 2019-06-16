@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
   },
   flexContainer: {
-    ...cssTips(theme).casFlex()
+    ...cssTips(theme).casFlex(),
   },
   simpleFlexContainer: {
     display: 'block',
@@ -49,19 +49,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all',
   },
   activeItemText: {
-    ...{
-      '&&': {
-        color: theme.palette.primary.main,
-        fontWeight: 600,
-      },
+    '&&': {
+      color: theme.palette.primary.main,
+      fontWeight: 600,
     },
   },
   text: {
     color: theme.palette.text.hint,
-    ...{
-      '&&:hover': {
-        backgroundColor: theme.palette.grey.A100,
-      },
+    '&&:hover': {
+      backgroundColor: theme.palette.grey.A100,
     },
   },
 }))
@@ -166,7 +162,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
                 primary: (group.id === groupIdState.value || group.id === selectedId)
                   ? classes.activeItemText
                   : undefined,
-                root: classes.itemText
+                root: classes.itemText,
               }}
             >
               {group.info.name}

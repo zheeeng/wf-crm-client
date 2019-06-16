@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 2,
     borderRadius: 4,
     boxShadow: '0 0 2px 2px',
+    // enable after having multiple task
+    display: 'none',
   },
   title: {
     color: theme.palette.grey[800],
@@ -45,10 +47,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 14,
     fontFamily: 'Helvetica',
     color: theme.palette.grey[800],
-    ...{
-      '&:hover': {
-        backgroundColor: theme.palette.grey[900],
-      },
+    '&:hover': {
+      backgroundColor: theme.palette.grey[900],
     },
   },
   skeletonEntry: {
@@ -82,20 +82,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 128,
     textAlign: 'right',
     fontSize: '0.75rem',
-    ...{
-      '$entry:hover &': {
-        display: 'none',
-      },
-    },
     color: theme.palette.grey[800],
     whiteSpace: 'nowrap',
+    '$entry:hover &': {
+      display: 'none',
+    },
   },
   entryButtons: {
     display: 'none',
-    ...{
-      '$entry:hover &': {
-        display: 'block',
-      },
+    '$entry:hover &': {
+      display: 'block',
     },
   },
   entryButton: {

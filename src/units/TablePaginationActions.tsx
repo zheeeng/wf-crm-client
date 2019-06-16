@@ -37,10 +37,8 @@ const useStyles = makeStyles(
     textFieldInputRoot: {
       padding: '0 8px',
       fontSize: '12px',
-      ...{
-        '&&': {
-          marginTop: theme.spacing(0.5),
-        },
+      '&&': {
+        marginTop: theme.spacing(0.5),
       },
     },
   }),

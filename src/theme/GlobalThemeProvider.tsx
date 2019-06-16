@@ -4,9 +4,6 @@ import { ThemeProvider } from '@material-ui/styles'
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 
 export const defaultTheme = createMuiTheme({
-})
-
-export const themeOptions: ThemeOptions = {
   palette: {
     primary: {
       main: '#4173e3',
@@ -43,7 +40,6 @@ export const themeOptions: ThemeOptions = {
   typography: {
     fontFamily: [
       '"Open sans"',
-      '"Helvetica Neue"',
       'sans-serif',
     ].join(','),
     h4: {
@@ -81,6 +77,10 @@ export const themeOptions: ThemeOptions = {
       disableRipple: true,
     },
   },
+})
+
+export const themeOptions: ThemeOptions = {
+  ...defaultTheme,
   overrides: {
     MuiToolbar: {
       dense: {
@@ -90,13 +90,26 @@ export const themeOptions: ThemeOptions = {
     MuiButton: {
       root: {
         borderRadius: defaultTheme.spacing(2),
-        ...{
-          '&&:hover': {
-            backgroundColor: '#f2f4f7',
-          },
-          '&&:active': {
-            backgroundColor: '#ebedf5',
-          },
+        textTransform: 'initial',
+        color: defaultTheme.palette.text.secondary,
+        '&&:hover': {
+          backgroundColor: '#f2f4f7',
+        },
+        '&&:active': {
+          backgroundColor: '#ebedf5',
+        },
+      },
+      textPrimary: {
+        fontWeight: 600,
+      },
+      outlinedPrimary: {
+        '&&&': {
+          color: 'white',
+          borderColor: defaultTheme.palette.primary.main,
+          backgroundColor: defaultTheme.palette.primary.main,
+        },
+        '&&:hover': {
+          backgroundColor: '#5587f3',
         },
       },
     },

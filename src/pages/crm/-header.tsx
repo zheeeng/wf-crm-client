@@ -76,11 +76,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     margin: '13px 40px',
     cursor: 'pointer',
-    ...{
-      '&:hover $menuList': {
-        display: 'block',
-      }
-    }
+    '&:hover $menuList': {
+      display: 'block',
+    },
   },
   avatarRoot: {
     height: 30,
@@ -123,7 +121,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // eslint-disable-next-line no-useless-computed-key
     ['@media (max-width:600px)']: {
       visibility: 'hidden',
-    }
+    },
   },
   navItem: {
     display: 'inline-block',
@@ -139,13 +137,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 0.6,
     textDecoration: 'none',
     transition: 'opacity 0.5s',
-    ...{
-      '&.active': {
-        opacity: 1,
-      },
-      '&:hover': {
-        opacity: 1,
-      },
+    '&.active': {
+      opacity: 1,
+    },
+    '&:hover': {
+      opacity: 1,
     },
   },
   profileItem: {
@@ -164,19 +160,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '5px 0',
     borderRadius: 4,
     width: 200,
-    ...{
-      '&:after': {
-        content: '""',
-        zIndex: -1,
-        position: 'absolute',
-        right: 6,
-        top: -8,
-        width: 0,
-        height: 0,
-        borderLeft: '20px solid transparent',
-        borderRight: '20px solid transparent',
-        borderBottom: '20px solid #f9f9f9',
-      },
+    '&:after': {
+      content: '""',
+      zIndex: -1,
+      position: 'absolute',
+      right: 6,
+      top: -8,
+      width: 0,
+      height: 0,
+      borderLeft: '20px solid transparent',
+      borderRight: '20px solid transparent',
+      borderBottom: '20px solid #f9f9f9',
     },
   },
   menuPaper: {
@@ -194,29 +188,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'normal',
     lineHeight: `${theme.spacing(2.5)}px`,
     minHeight: theme.spacing(4),
-    ...{
-      '&:hover': {
-        color: theme.palette.primary.main,
-        backgroundColor: 'unset',
-      },
-      '&:hover $menuIconArchive': {
-        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-archives-icon-hover.svg\')',
-      },
-      '&:hover $menuIconSettings': {
-        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-settings-icon-hover.svg\')',
-      },
-      '&:hover $menuIconPairedDevices': {
-        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-paired-devices-icon-hover.svg\')',
-      },
-      '&:hover $menuIconPlanAndBilling': {
-        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-plan-and-billing-icon-hover.svg\')',
-      },
-      '&:hover $menuIconReferAndReward': {
-        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-refer-and-reward-icon-hover.svg\')',
-      },
-      '&:hover $menuIconSignout': {
-        backgroundImage: 'url(\'/app/static/images/navDropdown/nav-signout-icon-hover.svg\')',
-      },
+    '&:hover': {
+      color: theme.palette.primary.main,
+      backgroundColor: 'unset',
+    },
+    '&:hover $menuIconArchive': {
+      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-archives-icon-hover.svg\')',
+    },
+    '&:hover $menuIconSettings': {
+      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-settings-icon-hover.svg\')',
+    },
+    '&:hover $menuIconPairedDevices': {
+      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-paired-devices-icon-hover.svg\')',
+    },
+    '&:hover $menuIconPlanAndBilling': {
+      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-plan-and-billing-icon-hover.svg\')',
+    },
+    '&:hover $menuIconReferAndReward': {
+      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-refer-and-reward-icon-hover.svg\')',
+    },
+    '&:hover $menuIconSignout': {
+      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-signout-icon-hover.svg\')',
     },
   },
   menuIcon: {

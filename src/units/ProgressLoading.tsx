@@ -5,11 +5,9 @@ import Icon, { ICONS, Props as IconProps } from './Icons'
 import { Omit } from '~src/types/utils'
 
 const useStyles = makeStyles(() => ({
-  ...{
-    '@keyframes spin': {
-      to: {
-        transform: 'rotate(360deg)',
-      },
+  '@keyframes spin': {
+    to: {
+      transform: 'rotate(360deg)',
     },
   },
   spin: {

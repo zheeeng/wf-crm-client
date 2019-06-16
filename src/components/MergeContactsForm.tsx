@@ -28,14 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(4, 2),
   },
   buttonZone: {
+    ...cssTips(theme).horizontallySpaced(),
     width: '100%',
     textAlign: 'right',
     marginTop: theme.spacing(4),
-    ...cssTips(theme).horizontallySpaced(),
-    ...{
-      '& button': {
-        fontWeight: 600,
-      },
+    '& button': {
+      fontWeight: 600,
     },
   },
   text: {

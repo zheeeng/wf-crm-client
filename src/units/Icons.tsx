@@ -203,13 +203,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   hoverLightenIcon: {
     color: theme.palette.secondary.main,
-    ...{
-      '&:hover': {
-        color: theme.palette.text.primary,
-      },
-      '&:active': {
-        color: theme.palette.primary.main,
-      },
+    '&:hover': {
+      color: theme.palette.text.primary,
+    },
+    '&:active': {
+      color: theme.palette.primary.main,
     },
   },
   xlIcon : {
@@ -231,7 +229,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   xsIcon: {
     width: theme.spacing(1.5),
     height: theme.spacing(1.5),
-  }
+  },
 }))
 
 export interface Props {
@@ -254,7 +252,7 @@ const SvgIcon: React.FC<Props> = React.memo(({ name, style, className, color /*=
       primary: classes.primaryColorIcon,
       secondary: classes.secondaryColorIcon,
       disabled: classes.disabledIcon,
-      hoverLighten: classes.hoverLightenIcon
+      hoverLighten: classes.hoverLightenIcon,
     }[color || 'primary'],
     {
       xl: classes.xlIcon,

@@ -85,16 +85,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   download: {
     color: theme.palette.text.secondary,
-    ...{
-      '&:hover $downloadIcon': {
-        color: theme.palette.text.primary,
-      }
-    }
+    '&:hover $downloadIcon': {
+      color: theme.palette.text.primary,
+    },
   },
   downloadIcon: {
     marginRight: theme.spacing(1),
   },
   tableRow: {
+    transition: 'backgroundColor .3s',
     '&:hover': {
       backgroundColor: theme.palette.grey[900],
     },
@@ -126,10 +125,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   checkbox: {
     color: theme.palette.grey.A200,
     marginLeft: theme.spacing(1),
-    ...{
-      '&&&': {
-        backgroundColor: 'unset',
-      },
+    '&&&': {
+      backgroundColor: 'unset',
     },
   },
   pointer: {
@@ -185,14 +182,12 @@ const useStyles2 = makeStyles((theme: Theme) => ({
     borderColor: 'white',
     marginRight: theme.spacing(2),
     padding: `0 ${theme.spacing(2)}px`,
-    ...{
-      '&:hover': {
-        color: 'white',
-        borderColor: 'white',
-      },
-      '&&&': {
-        backgroundColor: 'unset',
-      },
+    '&:hover': {
+      color: 'white',
+      borderColor: 'white',
+    },
+    '&&&': {
+      backgroundColor: 'unset',
     },
   },
 }))
@@ -453,6 +448,20 @@ const PeopleList: React.FC<Props> = React.memo(({
   //   [checked],
   // )
 
+  const [hoverCheck, setHoverCheck] = useState('')
+
+  const handleHoverCheck = useCallback(
+    (id: string) => () => setHoverCheck(id),
+    [setHoverCheck],
+  )
+
+  const [hoverStar, setHoverStar] = useState('')
+
+  const handleHoverStar = useCallback(
+    (id: string) => () => setHoverStar(id),
+    [setHoverStar],
+  )
+
   const handleMergeContacts = useCallback(
     async () => {
       if (checked.length < 2) return
@@ -524,11 +533,21 @@ const PeopleList: React.FC<Props> = React.memo(({
               />
             }
             icon={
-              <Icon
-                name={ICONS.Check}
-                size="sm"
-              />
+              hoverCheck === id
+                ? (
+                  <Icon
+                    name={ICONS.CheckChecked}
+                    size="sm"
+                  />
+                ): (
+                  <Icon
+                    name={ICONS.Check}
+                    size="sm"
+                  />
+                )
             }
+            onMouseEnter={handleHoverCheck(id)}
+            onMouseLeave={handleHoverCheck('')}
             onClick={handleItemCheckedToggle(id)}
             checked={isChecked}
             tabIndex={-1}
@@ -536,12 +555,18 @@ const PeopleList: React.FC<Props> = React.memo(({
           />
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>
-          <IconButton onClick={handleStarClick(id, !contact.info.starred)}>
-            {contact.info.starred ? (
-              <Icon name={ICONS.Star} size="sm" />
-            ) : (
-              <Icon name={ICONS.StarStroke} size="sm" />
-            )}
+          <IconButton
+            onClick={handleStarClick(id, !contact.info.starred)}
+            onMouseEnter={handleHoverStar(id)}
+            onMouseLeave={handleHoverStar('')}
+          >
+            {(contact.info.starred || id === hoverStar)
+              ? (
+                <Icon name={ICONS.Star} size="sm" />
+              ) : (
+                <Icon name={ICONS.StarStroke} size="sm" />
+              )
+            }
           </IconButton>
         </TableCell>
         <TableCell padding="none" className={classes.minCell}>
@@ -754,8 +779,16 @@ const PeopleList: React.FC<Props> = React.memo(({
                   contacts.length === 0 && (
                     <TableRow className={classes.emptyTextWrapper}>
                       <TableCell padding="none" className={classes.emptyTextCell}>
-                        <Typography align={"center"} color="secondary" variant="body1" className={classes.emptyText}>
-                          {searchTermState.hasValue ? 'There are no contacts' : 'There are no results that match your search'}
+                        <Typography
+                          align="center"
+                          color="secondary"
+                          variant="body1"
+                          className={classes.emptyText}
+                        >
+                          {searchTermState.hasValue
+                            ? 'here are no results that match your search'
+                            : 'There are no contacts'
+                          }
                         </Typography>
                       </TableCell>
                     </TableRow>

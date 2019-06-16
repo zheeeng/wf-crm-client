@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '&&': {
       marginTop: theme.spacing(1.5),
-    }
+    },
   },
   inputWrapper: {
     border: '1px solid rgba(163, 174, 173, 0.5)',
@@ -37,16 +37,14 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 500,
     marginTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
-    ...{
-      "&[type='number']": {
-        '-moz-appearance': 'textfield',
-      },
-      "&::-webkit-outer-spin-button": {
-        '-webkit-appearance': 'none',
-      },
-      "&::-webkit-inner-spin-button": {
-        '-webkit-appearance': 'none',
-      },
+    "&[type='number']": {
+      '-moz-appearance': 'textfield',
+    },
+    "&::-webkit-outer-spin-button": {
+      '-webkit-appearance': 'none',
+    },
+    "&::-webkit-inner-spin-button": {
+      '-webkit-appearance': 'none',
     },
   },
   shrink: {

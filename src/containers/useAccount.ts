@@ -11,7 +11,7 @@ type AuthData = { id: string, username: string }
 const getDefaultAuthData = (): AuthData => ({ id: '', username: '' })
 
 const useAccount = createUseContext(() => {
-  const { data: authData, /* request: postAuthentication */ } = usePost<AuthData>()
+  const { data: authData /* request: postAuthentication */ } = usePost<AuthData>()
   const { data: loginData, request: postLogin } = usePost<AuthData>()
 
   const login = useCallback(() => postLogin('/api/auth/login')(getLoginParams()), [postLogin])

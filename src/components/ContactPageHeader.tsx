@@ -18,7 +18,7 @@ export interface Props {
 const useStyles = makeStyles(() => ({
   disabled: {
     cursor: 'not-allowed',
-  }
+  },
 }))
 
 const ContactPageHeader: React.FC<Props> = React.memo(

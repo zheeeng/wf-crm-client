@@ -39,24 +39,9 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
       root: {
         textTransform: 'none',
         padding: 0,
-        ...{
-          '&&': {
-            minWidth: 'unset',
-          },
+        '&&': {
+          minWidth: 'unset',
         },
-      },
-    },
-    MuiButton: {
-      root: {
-        textTransform: 'initial',
-        color: globalTheme.palette.text.secondary,
-      },
-      textPrimary: {
-        fontWeight: 600,
-      },
-      outlinedPrimary: {
-        fontWeight: 600,
-        color: globalTheme.palette.text.primary,
       },
     },
     MuiStepper: {
@@ -74,17 +59,15 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
         borderLeftWidth: 2,
         borderLeftColor: globalTheme.palette.primary.light,
         marginLeft: 11,
-        ...{
-          '&:before': {
-            content: '""',
-            position: 'absolute',
-            left: -2,
-            top: -12,
-            height: 12,
-            borderLeftWidth: 2,
-            borderLeftColor: globalTheme.palette.primary.light,
-            borderLeftStyle: 'solid',
-          },
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          left: -2,
+          top: -12,
+          height: 12,
+          borderLeftWidth: 2,
+          borderLeftColor: globalTheme.palette.primary.light,
+          borderLeftStyle: 'solid',
         },
       },
       last: {
@@ -101,31 +84,27 @@ export const contactTableTheme = createMuiTheme(mergeOptions(themeOptions, {
         height: 0,
       },
       lineVertical: {
-        ...{
-          '&:after': {
-            content: '""',
-            position: 'absolute',
-            left: -1,
-            bottom: -4,
-            height: 12,
-            borderLeftWidth: 2,
-            borderLeftColor: globalTheme.palette.primary.light,
-            borderLeftStyle: 'solid',
-          },
-          '&&': {
-            borderLeftWidth: 2,
-            borderLeftColor: globalTheme.palette.primary.light,
-            marginLeft: -1,
-          },
+        '&:after': {
+          content: '""',
+          position: 'absolute',
+          left: -1,
+          bottom: -4,
+          height: 12,
+          borderLeftWidth: 2,
+          borderLeftColor: globalTheme.palette.primary.light,
+          borderLeftStyle: 'solid',
+        },
+        '&&': {
+          borderLeftWidth: 2,
+          borderLeftColor: globalTheme.palette.primary.light,
+          marginLeft: -1,
         },
       },
     },
     MuiStepLabel: {
       active: {
-        ...{
-          '&&': {
-            color: globalTheme.palette.grey[800],
-          },
+        '&&': {
+          color: globalTheme.palette.grey[800],
         },
       },
     },

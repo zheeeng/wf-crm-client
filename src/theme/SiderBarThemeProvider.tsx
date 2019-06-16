@@ -20,14 +20,12 @@ export const siderBarTheme = createMuiTheme(mergeOptions(themeOptions, {
       },
       button: {
         color: globalTheme.palette.text.secondary,
-        ...{
-          '&.active': {
-            color: globalTheme.palette.text.primary,
-          },
-          '&:hover': {
-            color: globalTheme.palette.text.primary,
-            backgroundColor: globalTheme.palette.grey.A100,
-          },
+        '&.active': {
+          color: globalTheme.palette.text.primary,
+        },
+        '&:hover': {
+          color: globalTheme.palette.text.primary,
+          backgroundColor: globalTheme.palette.grey.A100,
         },
       },
     },

@@ -18,22 +18,18 @@ export const useStyles = makeStyles((theme: Theme) => ({
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      ...{
-        '&&': {
-          marginLeft: 0,
-          marginRight: 0,
-        }
-      }
+      '&&': {
+        marginLeft: 0,
+        marginRight: 0,
+      },
     },
   },
   buttonZone: {
+    ...cssTips(theme).horizontallySpaced(),
     textAlign: 'right',
     marginTop: theme.spacing(4),
-    ...cssTips(theme).horizontallySpaced(),
-    ...{
-      '& button': {
-        fontWeight: 600,
-      },
+    '& button': {
+      fontWeight: 600,
     },
   },
   text: {

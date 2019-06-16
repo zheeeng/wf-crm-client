@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
-import { useBoolean, useInput } from 'react-hanger'
+import { useBoolean, useInput, usePrevious } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -52,12 +52,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      ...{
-        '&&': {
-          marginLeft: 0,
-          marginRight: 0,
-        }
-      }
+      '&&': {
+        marginLeft: 0,
+        marginRight: 0,
+      },
     },
   },
   splitPaper: {
@@ -70,8 +68,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileBar: {
     ...cssTips(theme).centerFlex('space-between'),
-    margin: theme.spacing(0, 2, 2),
-    borderBottom: `solid 1px ${theme.palette.grey[800]}`,
+    margin: theme.spacing(0, 2),
+    paddingBottom: theme.spacing(2),
+  },
+  profileBarScrolled: {
+    boxShadow: 'inset 0 -1px 0 0 #ebebeb',
   },
   skeletonProfileBar: {
     height: theme.spacing(6),
@@ -108,10 +109,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing(7),
     width: theme.spacing(7),
     marginRight: theme.spacing(3.5),
-    ...{
-      '& img': {
-        borderRadius: '50%',
-      },
+    '& img': {
+      borderRadius: '50%',
     },
   },
   skeletonAvatarIcon: {
@@ -157,13 +156,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.spacing(1),
     transition: 'all 0.3s ease',
     backgroundColor: theme.palette.grey[900],
-    ...{
-      '&:focus': {
-        backgroundColor: theme.palette.grey[900],
-      },
-      '& svg': {
-        margin: 0,
-      },
+    '&:focus': {
+      backgroundColor: theme.palette.grey[900],
+    },
+    '& svg': {
+      margin: 0,
     },
   },
   tagLabel: {
@@ -523,6 +520,28 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [toSplitWaiver.title, splitWaiverTitle],
   )
 
+  const [scrolled, setScrolled] = useState(false)
+
+  const handleProfileContentScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (scrolled === false && e.currentTarget.scrollTop > 0) {
+        setScrolled(true)
+      } else if (scrolled === true && e.currentTarget.scrollTop === 0) {
+        setScrolled(false)
+      }
+    },
+    [scrolled],
+  )
+
+  const lastContact = usePrevious(contact)
+
+  useEffect(
+    () => {
+      setScrolled(false)
+    },
+    [lastContact]
+  )
+
   const renderFields = (showName: boolean, isEditable: boolean) => (
     <>
       <ContactFieldInput
@@ -696,7 +715,12 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       : contact
         ? (
           <>
-            <div className={classes.profileBar}>
+            <div
+              className={classnames(
+                classes.profileBar,
+                scrolled && classes.profileBarScrolled,
+              )}
+            >
               <Typography variant="h4" className={classes.profileTitle}>
                 Profile
               </Typography>
@@ -709,7 +733,10 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                 </IconButton>
               </Tooltip>
             </div>
-            <div className={classes.profileContent}>
+            <div
+              className={classes.profileContent}
+              onScroll={handleProfileContentScroll}
+            >
               <SplitWaiverThemeProvider>
                 <Dialog
                   open={splitDialogOpened}

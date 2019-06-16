@@ -9,14 +9,11 @@ const useGlobalStyles = makeStyles((theme: Theme) => ({
       ...cssTips(theme).casFlex(),
       height: '100%',
     },
-    ...{
-      body: {
-        fontFamily: [
-          '"Open sans"',
-          '"Helvetica Neue"',
-          'sans-serif',
-        ].join(','),
-      },
+    body: {
+      fontFamily: [
+        '"Open sans"',
+        'sans-serif',
+      ].join(','),
     },
   },
 }))

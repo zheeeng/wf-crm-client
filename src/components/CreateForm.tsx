@@ -20,31 +20,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: '#efefef inset 1px',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      ...{
-        '&&': {
-          marginLeft: 0,
-          marginRight: 0,
-        }
-      }
+      '&&': {
+        marginLeft: 0,
+        marginRight: 0,
+      },
     },
   },
   paper2: {
     width: 352,
   },
   dialogButtonZone: {
+    ...cssTips(theme).horizontallySpaced(),
     textAlign: 'right',
     marginTop: theme.spacing(4),
-    ...cssTips(theme).horizontallySpaced(),
   },
   combinedFormRow: {
     display: 'flex',
   },
   formItem: {
     marginRight: theme.spacing(1),
-    ...{
-      '&:last-child': {
-        marginRight: 0,
-      },
+    '&:last-child': {
+      marginRight: 0,
     },
   },
   text: {
@@ -120,7 +116,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
 
   const {
     title = 'title', tip = '', fields = [],
-    okTextWatch = '', okColor = 'primary', okText = 'Ok', cancelText = 'cancel',
+    okTextWatch = '', okColor = 'primary', okText = 'Ok', cancelText = 'Cancel',
   } = option || {}
 
   const {
@@ -215,7 +211,7 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
                 ...field.nameAndLabels
                   .filter(p => p.validator)
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  .map(p => ({ name: p.name, validator: p.validator! }))
+                  .map(p => ({ name: p.name, validator: p.validator! })),
               ]
             default:
               return acc

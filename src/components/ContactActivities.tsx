@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(4),
   },
   activityLabel: {
-    'fontSize': theme.spacing(2),
+    fontSize: theme.spacing(2),
     '&&': {
       fontWeight: 600,
     },
@@ -73,10 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     wordBreak: 'break-word',
     // ...cssTips(theme).lineClamp(3),
-    ...{
-      '&:hover': {
-        backgroundColor: theme.palette.grey['900'],
-      }
+    '&:hover': {
+      backgroundColor: theme.palette.grey['900'],
     },
   },
   entryInput: {
@@ -123,13 +121,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: theme.spacing(2),
     height: theme.spacing(2),
     color: theme.palette.text.hint,
-    ...{
-      '&:hover': {
-        color: theme.palette.primary.main,
-      },
-      '$entryContent:hover &': {
-        visibility: 'visible',
-      },
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
+    '$entryContent:hover &': {
+      visibility: 'visible',
     },
   },
   entryTime: {
@@ -211,7 +207,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const {
     value: showAddNote,
     setTrue: toggleOnAddNote,
-    setFalse: toggleOffShowAddNote
+    setFalse: toggleOffShowAddNote,
   } = useBoolean(false)
 
   // const toggleShowButtons = useCallback(

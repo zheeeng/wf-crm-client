@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   notchedOutline: {
     borderRadius: theme.spacing(3),
+    '&&&': {
+      borderWidth: '1px',
+    },
   },
   notchedOutlineSimple: {
     border: 'none',
@@ -92,7 +95,10 @@ const Searcher: React.FC<Props> = React.memo(({ className, value, placeholder, o
       labelWidth={0}
       notched
       classes={{
-        notchedOutline: classNames(classes.notchedOutline, theme === 'simple' && classes.notchedOutlineSimple),
+        notchedOutline: classNames(
+          classes.notchedOutline,
+          theme === 'simple' && classes.notchedOutlineSimple
+        ),
       }}
       className={classNames(className, classes.searchBar, theme === 'simple' && classes.searchBarSimple)}
       startAdornment={(
