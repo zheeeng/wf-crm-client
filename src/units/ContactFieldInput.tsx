@@ -405,8 +405,14 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     )
 
     const handleAddEntry = useCallback(
-      () => { addField(getEmptyFieldSegmentValue(name)) },
-      [addField, name],
+      () => {
+        addField(getEmptyFieldSegmentValue(name))
+        // if there a stub field, the first time addField will create a real replacement for the stub filed, we need addField again for create another new field
+        if (!hasValues) {
+          addField(getEmptyFieldSegmentValue(name))
+        }
+      },
+      [addField, name, hasValues],
     )
 
     const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
