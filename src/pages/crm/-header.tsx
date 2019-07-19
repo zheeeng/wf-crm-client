@@ -132,21 +132,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'inline-block',
     marginLeft: 25,
     marginRight: 25,
-    ['@media (max-width:1100px)']: {
+    '@media (max-width:1100px)': {
       marginLeft: 0,
     },
-    ['@media (max-width:991px)']: {
+    '@media (max-width:991px)': {
       marginRight: 20,
     },
-    ['@media (max-width:880px)']: {
+    '@media (max-width:880px)': {
       marginRight: 8,
     },
-    ['@media (max-width:749.9999999px)']: {
+    '@media (max-width:749.9999999px)': {
       display: 'none',
     },
   },
   navItemInMenu: {
-    ['@media (min-width:750px)']: {
+    '@media (min-width:750px)': {
       display: 'none',
     },
   },
