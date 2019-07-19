@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Link, ComponentProps } from '@roundation/roundation'
@@ -17,6 +16,7 @@ import IconButton from '@material-ui/core/IconButton'
 import * as vars from '~src/theme/vars'
 
 import logIcon from '~src/assets/logo.svg'
+import logNoTextIcon from '~src/assets/logo-no-text.svg'
 import cssTips from '~src/utils/cssTips'
 import useSideDrawer from '~src/containers/useSideDrawer'
 import useAccount from '~src/containers/useAccount'
@@ -36,6 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center left',
     backgroundImage: `url(${logIcon})`,
+    [theme.breakpoints.down('md')]: {
+      width: 50,
+      backgroundSize: '36px 22px',
+      backgroundImage: `url(${logNoTextIcon})`,
+    },
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 2,
@@ -127,6 +132,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'inline-block',
     marginLeft: 25,
     marginRight: 25,
+    ['@media (max-width:1100px)']: {
+      marginLeft: 0,
+    },
+    ['@media (max-width:991px)']: {
+      marginRight: 20,
+    },
+    ['@media (max-width:880px)']: {
+      marginRight: 8,
+    },
+    ['@media (max-width:749.9999999px)']: {
+      display: 'none',
+    },
+  },
+  navItemInMenu: {
+    ['@media (min-width:750px)']: {
+      display: 'none',
+    },
   },
   navLink: {
     color: 'inherit',
@@ -263,8 +285,6 @@ const Header: React.FC<Props> = React.memo(() => {
 
   useEffect(() => { login() }, [login])
 
-  const matchesWidth = useMediaQuery('(max-width:600px)')
-
   return (
     <Portal container={mountElRef.current}>
       <div>
@@ -303,6 +323,11 @@ const Header: React.FC<Props> = React.memo(() => {
                   My Customers
                 </Link>
               </div>
+              <div className={classes.navItem}>
+                <Link to="/waiver-list" className={classes.link}>
+                  My Waiver List
+                </Link>
+              </div>
             </nav>
             <div className={classes.dropdownButton}>
               <Avatar src={crateGravatar(username)} classes={{root: classes.avatarRoot}} />
@@ -315,28 +340,27 @@ const Header: React.FC<Props> = React.memo(() => {
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
 
-                {matchesWidth &&
-                  (
-                    <>
-                      <MenuItem className={classes.menuItem}>
-                        <a href="/welcome" className={classes.navLink}>
-                          Dashboard
-                        </a>
-                      </MenuItem>
-                      <MenuItem className={classes.menuItem}>
-                        <a href="/templates" className={classes.navLink}>
-                          Waiver Templates
-                        </a>
-                      </MenuItem>
-                      <MenuItem className={classes.menuItem}>
-                        <a href="/crm" className={classes.navLink}>
-                          My Customers
-                        </a>
-                      </MenuItem>
-                      <Divider className={classes.menuDivider}/>
-                    </>
-                  )
-                }
+                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                  <a href="/welcome" className={classes.navLink}>
+                    Dashboard
+                  </a>
+                </MenuItem>
+                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                  <a href="/templates" className={classes.navLink}>
+                    Waiver Templates
+                  </a>
+                </MenuItem>
+                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                  <a href="/crm" className={classes.navLink}>
+                    My Customers
+                  </a>
+                </MenuItem>
+                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                  <a href="/waiver-list" className={classes.navLink}>
+                    My Waiver List
+                  </a>
+                </MenuItem>
+                <Divider className={classnames(classes.menuDivider, classes.navItemInMenu)}/>
 
                 <MenuItem className={classes.menuItem}>
                   <a
