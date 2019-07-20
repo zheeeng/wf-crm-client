@@ -25,7 +25,7 @@ export const datePickerTheme = createMuiTheme(mergeOptions(themeOptions, {
     MuiButton: {
       root: {
         '&&:hover': {
-          backgroundColor: 'unset',
+          // backgroundColor: 'unset',
         },
         '&&:active': {
           backgroundColor: 'unset',

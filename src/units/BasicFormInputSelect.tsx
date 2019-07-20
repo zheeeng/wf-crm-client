@@ -55,8 +55,11 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
     flexWrap: 'wrap',
     alignItems: 'center',
     overflow: 'hidden',
-    color: theme.palette.text.secondary,
     fontWeight: 500,
+    color: theme.palette.text.secondary,
+    '& div': {
+      color: theme.palette.text.secondary,
+    },
   },
   option: {
     fontSize: 14,
@@ -71,6 +74,7 @@ export const useStyles2 = makeStyles((theme: Theme) => ({
   },
   optionButtonSelected: {
     '&&': {
+      color: theme.palette.primary.main,
       backgroundColor: theme.palette.grey[200],
     },
   },

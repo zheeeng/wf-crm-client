@@ -222,7 +222,7 @@ export interface Props {
 }
 
 const newContactFormOption: CreateFormOption = {
-  title: 'New Contact',
+  title: 'New contact',
   fields: [
     {
       type: 'combinedText', keyName: 'name', nameAndLabels: [
@@ -786,7 +786,7 @@ const PeopleList: React.FC<Props> = React.memo(({
                           className={classes.emptyText}
                         >
                           {searchTermState.hasValue
-                            ? 'here are no results that match your search'
+                            ? 'There are no results that match your search'
                             : 'There are no contacts'
                           }
                         </Typography>

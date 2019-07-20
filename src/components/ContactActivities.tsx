@@ -112,9 +112,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: theme.spacing(0.5),
     bottom: theme.spacing(1.25),
   },
-  noteRemover: {
+  noteRemoveButton: {
     position: 'absolute',
     padding: 0,
+    paddingTop: theme.spacing(0.25),
     right: theme.spacing(1),
     bottom: theme.spacing(1),
     visibility: 'hidden',
@@ -421,10 +422,10 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                           {note.content}
                           <Tooltip title="remove">
                             <IconButton
-                              className={classes.noteRemover}
+                              className={classes.noteRemoveButton}
                               onClick={showRemoveConfirmationForId.setValue.bind(null, note.id)}
                             >
-                              <Icon name={ICONS.Delete} color={'hoverLighten'}/>
+                              <Icon name={ICONS.Remove} color={'hoverLighten'}/>
                             </IconButton>
                           </Tooltip>
                         </div>

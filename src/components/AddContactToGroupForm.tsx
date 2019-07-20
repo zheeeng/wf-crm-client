@@ -142,7 +142,7 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         Add contact to
       </Typography>
       <BasicFormInput
-        placeholder="New Group"
+        placeholder="New group"
         onChange={handleNewGroupNameChange}
         onEnterPress={handleGroupInputEnterPress}
       />

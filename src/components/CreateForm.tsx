@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...cssTips(theme).horizontallySpaced(),
     textAlign: 'right',
     marginTop: theme.spacing(4),
+    '& button': {
+      fontWeight: 600,
+    },
   },
   combinedFormRow: {
     display: 'flex',

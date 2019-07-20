@@ -135,11 +135,11 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   )
 
   const newGroupFormOption: CreateFormOption = {
-    title: 'New Group',
+    title: 'New group',
     fields: [{
       type: 'text',
       name: 'name',
-      label: 'Group Name',
+      label: 'Group name',
       required: true,
     }],
     okTextWatch: 'name',
@@ -150,18 +150,18 @@ const Aside: React.FC<Props> = React.memo(({ navigate, locationInfo, location })
   }
 
   const updateGroupFormOption: CreateFormOption = {
-    title: 'Update Group',
+    title: 'Update group',
     fields: [{
       type: 'text',
       name: 'name',
-      label: 'Group Name',
+      label: 'Group name',
       required: true,
     }],
     okText: 'Ok',
   }
 
   const removeGroupFormOption: CreateFormOption = {
-    title: 'Remove Group',
+    title: 'Remove group',
     tip: 'Are you sure you want to remove the selected group?',
     fields: [],
     okText: 'Ok',

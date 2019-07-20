@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20,
   },
   editIconBox: {
-    transform: `translateX(${theme.spacing(1.5)})`,
+    transform: `translateX(${theme.spacing(.5)}px)`,
   },
   avatarBar: {
     ...cssTips(theme).centerFlex('normal'),
@@ -150,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tags: {},
   tagChip: {
     fontSize: 14,
-    padding: theme.spacing(0.5, 0.5, 0.5, 1),
+    padding: theme.spacing(0, 0.5, 0, 2.5),
     marginRight: theme.spacing(0.5),
     marginBottom: theme.spacing(0.5),
     borderRadius: theme.spacing(1),
@@ -159,7 +159,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: theme.palette.grey[900],
     },
+    '&:hover svg': {
+      visibility: 'visible',
+    },
     '& svg': {
+      transition: 'color .3s',
+      width: theme.spacing(2.25),
+      height: theme.spacing(2.25),
+      marginTop: 2,
+      visibility: 'hidden',
+      margin: 0,
+    },
+    '& svg:hover': {
+      color: theme.palette.primary.main,
       margin: 0,
     },
   },

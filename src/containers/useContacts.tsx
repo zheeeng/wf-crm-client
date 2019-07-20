@@ -252,7 +252,7 @@ const useContacts = createUseContext(({
     useEffect(
       () => {
         if (exportContactsStatus && exportContactsStatus.ready === true) {
-          success(<><CheckCircle /> Contacts Exported</>)
+          success(<><CheckCircle /> Start exporting contacts</>)
         }
       },
       [exportContactsStatus, success],

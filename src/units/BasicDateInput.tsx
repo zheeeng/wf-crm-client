@@ -4,6 +4,7 @@ import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
+import Typography from '@material-ui/core/Typography'
 import DatePickerThemeProvider from '~src/theme/DatePickerThemeProvider'
 
 export const useStyles = makeStyles((theme: Theme) => ({
@@ -59,6 +60,9 @@ const BasicDateInput: React.FC<Props> = React.memo(({ className, placeholder, da
           onChange={setLocalDate}
           onAccept={submitLocalDate}
           clearable
+          clearLabel={<Typography color="secondary">Clear</Typography>}
+          cancelLabel={<Typography color="secondary">Cancel</Typography>}
+          okLabel={<Typography color="primary">OK</Typography>}
         />
       </MuiPickersUtilsProvider>
     </DatePickerThemeProvider>

@@ -26,6 +26,7 @@ import { ReactComponent as EditIcon } from '~src/assets/icons/edit.svg'
 import { ReactComponent as EnterIcon } from '~src/assets/icons/enter.svg'
 import { ReactComponent as NoteEditIcon } from '~src/assets/icons/note-edit.svg'
 import { ReactComponent as DeleteIcon } from '~src/assets/icons/delete.svg'
+import { ReactComponent as RemoveIcon } from '~src/assets/icons/remove.svg'
 import { ReactComponent as AddCircleIcon } from '~src/assets/icons/add-circle.svg'
 import { ReactComponent as NoteIcon } from '~src/assets/icons/note.svg'
 import { ReactComponent as EyeIcon } from '~src/assets/icons/eye.svg'
@@ -72,6 +73,7 @@ export enum ICONS {
   Enter,
   NoteEdit,
   Delete,
+  Remove,
   AddCircle,
   Note,
   Eye,
@@ -138,6 +140,8 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return NoteEditIcon
     case ICONS.Delete:
       return DeleteIcon
+    case ICONS.Remove:
+      return RemoveIcon
     case ICONS.AddCircle:
       return AddCircleIcon
     case ICONS.Note:

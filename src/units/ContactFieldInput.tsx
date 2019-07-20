@@ -49,7 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   disabled: {
     cursor: 'not-allowed',
-    opacity: 0.3,
+  },
+  weakenEffect: {
+    opacity: 0.4,
   },
   breaker: {
     width: '100%',
@@ -104,7 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filedIconBox: {
     display: 'flex',
-    margin: 0,
+    marginTop: theme.spacing(1),
   },
   fieldControlIcon: {
     margin: theme.spacing(1),
@@ -202,7 +204,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   fieldDisabled: {
-    cursor: 'not-allowed',
+    '&&': {
+      cursor: 'not-allowed',
+    },
+    '&:before': {
+      borderBottomStyle: 'solid',
+    },
   },
 }))
 
@@ -679,7 +686,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               <>
                 {type === 'calendar' && (
                   <BasicDateInput
-                    className={classes.fieldTypeText}
+                    className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
                     date={getFieldDate(values)}
                     onDateChange={onDateChange(fieldValue.id)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
@@ -700,6 +707,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       className={classnames(
                         classes.fieldTypeText,
                         isAppend && classes.takeQuarter,
+                        editable && fieldValue.priority === 0 && classes.weakenEffect,
                       )}
                       classes={{
                         disabled: classes.fieldDisabled,
@@ -724,7 +732,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 {!isAppend && hasTitle &&(
                   <Input
                     autoComplete="no"
-                    className={classes.fieldTypeText}
+                    className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
                     classes={{disabled: classes.fieldDisabled}}
                     defaultValue={getFieldDefaultTitle(fieldValue)}
                     onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '', '')}
@@ -758,7 +766,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 >
                   <SvgIcon
                     name={ICONS.Eye}
-                    color={fieldValue.priority === 0 ? 'hoverLighten' : 'secondary'}
+                    color={fieldValue.priority === 0 ? 'primary' : 'hoverLighten'}
                     size="sm"
                   />
                 </IconButton>
@@ -800,7 +808,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                   </Tooltip>
                 )
                 : (
-                  <Tooltip title="delete">
+                  <Tooltip title="remove">
                     <IconButton
                       className={classnames(
                         classes.fieldControlIcon,
@@ -808,7 +816,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       )}
                       onClick={handleEntryDelete(fieldValue.id || '')}>
                       <SvgIcon
-                        name={ICONS.Delete}
+                        name={ICONS.Remove}
                         color="hoverLighten" size="sm"
                       />
                     </IconButton>
@@ -819,7 +827,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
           )}
         </div>
       ),
-      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, handleEntryToggleHide, expandable, handleAddEntry, handleEntryDelete, hasErrorKeys]
+      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.weakenEffect, classes.fieldTypeText, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, handleEntryToggleHide, expandable, handleAddEntry, handleEntryDelete, hasErrorKeys]
     )
 
     const sortableItems = useMemo(
