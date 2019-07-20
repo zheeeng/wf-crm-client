@@ -324,9 +324,9 @@ const Header: React.FC<Props> = React.memo(() => {
                 </Link>
               </div>
               <div className={classes.navItem}>
-                <Link to="/waiver-list" className={classes.link}>
+                <a href="/waiver-list" className={classes.link}>
                   My Waiver List
-                </Link>
+                </a>
               </div>
             </nav>
             <div className={classes.dropdownButton}>
