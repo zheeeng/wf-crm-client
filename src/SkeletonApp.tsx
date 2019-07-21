@@ -4,7 +4,6 @@ import Toolbar from '@material-ui/core/Toolbar'
 import ProgressLoading from '~src/units/ProgressLoading'
 import Portal from '@material-ui/core/Portal'
 import AppBar from '@material-ui/core/AppBar'
-import Hidden from '@material-ui/core/Hidden'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -12,8 +11,8 @@ import IconButton from '@material-ui/core/IconButton'
 import { Divider } from '@material-ui/core'
 
 import { Link } from '@roundation/roundation'
-import { useStyles as useLayoutStyles } from '~src/pages/crm/layout'
-import { useStyles as useHeaderStyles } from '~src/pages/crm/-header'
+import useHeaderStyles from '~src/styles/useHeaderStyles'
+import useLayoutStyles from '~src/styles/useLayoutStyles'
 
 const SkeletonHeader: React.FC = () => {
   const classes = useHeaderStyles()
@@ -28,18 +27,14 @@ const SkeletonHeader: React.FC = () => {
           classes={{root: classes.appBarRoot}}
         >
           <Toolbar variant="dense" className={classes.toolBar}>
-            <Hidden mdDown>
-              <div className={classes.logo} />
-            </Hidden>
-            <Hidden lgUp>
-              <IconButton
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-              >
-                <MenuIcon />
-              </IconButton>
-            </Hidden>
+            <div className={classes.logo} />
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <MenuIcon />
+            </IconButton>
             <nav className={classes.navList}>
               <div className={classes.navItem}>
                 <a href="/welcome" className={classes.link}>

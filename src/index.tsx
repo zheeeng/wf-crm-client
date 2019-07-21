@@ -7,6 +7,12 @@ import App from '~src/App'
 const isDev = process.env.NODE_ENV === 'development'
 const $mountEl = document.querySelector('#content')
 
-$mountEl && ReactDOM.render(<App isDev={isDev} />, $mountEl)
+$mountEl && ReactDOM.render(
+  <App isDev={isDev} />,
+  $mountEl,
+  () => Array.from(document.querySelectorAll('[data-jss-snap]')).forEach(elem => elem && elem.parentNode && elem.parentNode.removeChild(elem)),
+)
+
+;(window as any).snapSaveState = () => Array.from(document.querySelectorAll('[data-jss]')).forEach(elem => elem.setAttribute('data-jss-snap', ''))
 
 registerServiceWorker()
