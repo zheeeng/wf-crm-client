@@ -20,7 +20,7 @@ const SkeletonHeader: React.FC = () => {
 
   return (
     <Portal container={mountElRef.current}>
-      <div>
+      <div data-portal>
         <AppBar
           position="absolute"
           className={classes.appBar}
