@@ -43,6 +43,7 @@
     "preinstall": "unlink node_modules/~src || true",
     "postinstall": "ln -s `pwd`/src node_modules/~src",
     "start": "react-app-rewired start",
+    "build:preview": "react-app-rewired build",
     "prebuild": "sentry-cli releases new $SENTRY_PROJECT@$SOURCE_VERSION",
     "build": "REACT_APP_VERSION=$SOURCE_VERSION react-app-rewired build",
     "postbuild": "react-snap && sentry-cli releases files $SENTRY_PROJECT@$SOURCE_VERSION upload-sourcemaps build --no-rewrite && find build -name *.js.map -exec rm {} \\; && sentry-cli releases finalize $SENTRY_PROJECT@$SOURCE_VERSION ",
