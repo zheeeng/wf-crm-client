@@ -74,6 +74,7 @@
     "not op_mini all"
   ],
   "reactSnap": {
+    "skipThirdPartyRequests": true,
     "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"]
   }
 }
