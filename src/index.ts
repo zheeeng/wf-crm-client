@@ -28,6 +28,6 @@ function side () {
   $mountEl && ReactDOM.render(Skeleton(), $mountEl)
 }
 
-navigator.userAgent !== "ReactSnap" ? main() : side()
+navigator.userAgent !== 'ReactSnap' ? main() : side()
 
 registerServiceWorker()
