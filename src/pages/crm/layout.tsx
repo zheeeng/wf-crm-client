@@ -12,7 +12,7 @@ import useGroups from '~src/containers/useGroups'
 
 import * as vars from '~src/theme/vars'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     ...cssTips(theme).casFlex(),
     height: '100%',

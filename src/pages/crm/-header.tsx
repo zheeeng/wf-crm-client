@@ -11,7 +11,9 @@ import Typography from '@material-ui/core/Typography'
 import Hidden from '@material-ui/core/Hidden'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
+import MenuIcon from '@material-ui/icons/Menu'
 import IconButton from '@material-ui/core/IconButton'
+import { Divider } from '@material-ui/core'
 
 import * as vars from '~src/theme/vars'
 
@@ -23,10 +25,7 @@ import useAccount from '~src/containers/useAccount'
 import useAlert from '~src/containers/useAlert'
 import crateGravatar from '~src/utils/createGravatar'
 
-import MenuIcon from '@material-ui/icons/Menu'
-import { Divider } from '@material-ui/core';
-
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   logo: {
     flexShrink: 0,
     margin: '13px 40px',
