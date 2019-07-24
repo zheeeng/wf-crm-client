@@ -234,9 +234,9 @@ const newContactFormOption: CreateFormOption = {
     { type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'], required: false },
     { type: 'text', name: 'first_line', label: 'Address Line1', required: false },
     { type: 'text', name: 'second_line', label: 'Address Line2', required: false },
-    { type: 'text', name: 'country', label: 'Country', required: false },
-    { type: 'text', name: 'state', label: 'State', required: false },
     { type: 'text', name: 'city', label: 'City', required: false },
+    { type: 'text', name: 'state', label: 'State', required: false },
+    { type: 'text', name: 'country', label: 'Country', required: false },
     {
       type: 'combinedText', keyName: 'communication', nameAndLabels: [
         { isNumber: true, name: 'zipcode', label: 'Zip', span: 1, required: false },

@@ -268,9 +268,9 @@ const addressFieldMap = ({ id, firstLine, secondLine, country, state, city, zipc
       { key: 'title', value: title || '', fieldType: 'address' },
     ],
     appendValues: [
-      { key: 'country', value: country || '', fieldType: 'address' },
-      { key: 'state', value: state || '', fieldType: 'address' },
       { key: 'city', value: city || '', fieldType: 'address' },
+      { key: 'state', value: state || '', fieldType: 'address' },
+      { key: 'country', value: country || '', fieldType: 'address' },
       { key: 'zipcode', value: zipcode || '', fieldType: 'address' },
     ],
     id,

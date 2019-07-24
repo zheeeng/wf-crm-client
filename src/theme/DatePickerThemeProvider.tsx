@@ -6,6 +6,15 @@ import mergeOptions from '~src/utils/mergeOptions'
 import { MuiPickersOverrides } from 'material-ui-pickers/typings/overrides'
 
 const getPickerOverrides = (): MuiPickersOverrides => ({
+  MuiPickersToolbarButton: {
+    toolbarBtn: {
+      borderRadius: 4,
+      padding: '2px 6px 2px 4px',
+      '&&:hover': {
+        backgroundColor: '#4162e3',
+      },
+    },
+  },
   MuiPickersCalendarHeader: {
     iconButton: {
       backgroundColor: 'unset',

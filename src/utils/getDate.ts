@@ -59,3 +59,11 @@ export function getDateAndTime (time: number): string {
 
   return `${month} ${date}, ${year}, ${formattedTime}`
 }
+
+export function getPlaceholderDate (time: Date = new Date()): string {
+  const month = (time.getMonth() + 1).toString()
+  const date = time.getDate().toString()
+  const year = time.getFullYear().toString()
+
+  return `${month.padStart(2, '0')}/${date.padStart(2, '0')}/${year}`
+}

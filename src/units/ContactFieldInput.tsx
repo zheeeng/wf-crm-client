@@ -445,11 +445,9 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     )
 
     const handleEntryUpdateByBlur = useCallback(
-      (key: string, id: string, defaultValue: string) =>
+      (key: string, id: string) =>
         async (event: React.FocusEvent<HTMLInputElement>) => {
           const value = event.target.value.trim()
-
-          if (!value || value === defaultValue) return
 
           if (key !== 'title' && type === 'email' && !isEmail(value)) {
             setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
@@ -504,14 +502,12 @@ const ContactFieldInput: React.FC<Props> = React.memo(
     )
 
     const handleEntryUpdateByKeydown = useCallback(
-      (key: string, id: string, defaultValue: string) =>
+      (key: string, id: string) =>
         (event: React.KeyboardEvent<HTMLInputElement>) => {
           key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
 
           if (event.keyCode !== 13) return
           const value = event.currentTarget.value.trim()
-
-          if (!value || value === defaultValue) return
 
           if (key !== 'title' && type === 'email' && !isEmail(value)) {
             setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
@@ -690,7 +686,6 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     date={getFieldDate(values)}
                     onDateChange={onDateChange(fieldValue.id)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                    placeholder="date"
                   />
                 )}
                 {type !== 'calendar' && values.filter(segmentValue => segmentValue.key !== 'title')
@@ -718,12 +713,10 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       onBlur={handleEntryUpdateByBlur(
                         segmentValue.key,
                         fieldValue.id || '',
-                        segmentValue.value,
                       )}
                       onKeyDown={handleEntryUpdateByKeydown(
                         segmentValue.key,
                         fieldValue.id || '',
-                        segmentValue.value,
                       )}
                       disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                     />
@@ -735,8 +728,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
                     classes={{disabled: classes.fieldDisabled}}
                     defaultValue={getFieldDefaultTitle(fieldValue)}
-                    onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '', '')}
-                    onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id || '', '')}
+                    onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '')}
+                    onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id || '')}
                     placeholder={getLabelExample(type)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                   />
@@ -933,16 +926,14 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
     (event: React.FocusEvent<HTMLInputElement>) => {
       const val = event.target.value.trim()
 
-      if (!val || val === value) return
-
-      if (type === 'email' && !isEmail(value)) {
+      if (type === 'email' && !isEmail(val) && (val !== '')) {
         setHasError(true)
         return
       }
 
       updateField(val)
     },
-    [value, type, updateField],
+    [type, updateField],
   )
   const handleEntryUpdateByKeydown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -951,16 +942,14 @@ export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
       if (event.keyCode !== 13) return
       const val = event.currentTarget.value.trim()
 
-      if (!val || val === value) return
-
-      if (type === 'email' && !isEmail(value)) {
+      if (type === 'email' && !isEmail(val) && (val !== '')) {
         setHasError(true)
         return
       }
 
       updateField(val)
     },
-    [type, updateField, value],
+    [type, updateField],
   )
 
   return (
