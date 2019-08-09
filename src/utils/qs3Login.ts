@@ -69,7 +69,7 @@ export async function exchangeAPIKey () {
   // This userName is email format
   let userName!: string
   {
-    const UserResponse = await fetch(GET_USER_URL,requestOption)
+    const UserResponse = await fetch(GET_USER_URL, requestOption)
 
     if (!UserResponse.ok) throw Error(UserResponse.statusText)
 
@@ -94,7 +94,7 @@ export async function exchangeAPIKey () {
   // Block 3: fetch fresh API key
   let apiKey!: string
   {
-    const ApiKeyResponse = await fetch(API_KEY_URL,requestOption)
+    const ApiKeyResponse = await fetch(API_KEY_URL, requestOption)
 
     if (!ApiKeyResponse.ok) throw Error(ApiKeyResponse.statusText)
 

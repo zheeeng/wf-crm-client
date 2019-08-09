@@ -693,11 +693,6 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     <Input
                       autoComplete="no"
                       key={segmentValue.key}
-                      type={
-                        (type === 'address' && segmentValue.key === 'zipcode')
-                          ? 'number'
-                          : type
-                      }
                       error={hasErrorKeys.includes(fieldValue.id || '')}
                       className={classnames(
                         classes.fieldTypeText,
@@ -855,7 +850,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         className={classnames(
           classes.fieldBar,
           showName && classes.fieldSimpleBar,
-          (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values)).length === 0) && classes.hidden,
+          (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values.concat(value.appendValues || []))).length === 0) && classes.hidden,
         )}
         ref={containerRef}
       >

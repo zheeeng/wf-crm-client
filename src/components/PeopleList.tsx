@@ -239,7 +239,7 @@ const newContactFormOption: CreateFormOption = {
     { type: 'text', name: 'country', label: 'Country', required: false },
     {
       type: 'combinedText', keyName: 'communication', nameAndLabels: [
-        { isNumber: true, name: 'zipcode', label: 'Zip', span: 1, required: false },
+        { isNumber: false, name: 'zipcode', label: 'Zipcode', span: 1, required: false },
         { isNumber: true, name: 'phone', label: 'Phone', span: 2, required: false },
       ],
     },
