@@ -15,7 +15,7 @@ export const getQuery = (query: object): string => {
 }
 
 const base = process.env.NODE_ENV === 'development'
-  ? 'https://crm-api-dev.waiverforeverk8s.com'
+  ? 'https://crm-api.dev-waiverforeverk8s.com'
   : 'https://crm-api.waiverforeverk8s.com'
 
 export default async function fetchData<T> (url: string, option?: Option): Promise<T> {

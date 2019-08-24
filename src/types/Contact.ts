@@ -49,37 +49,33 @@ export interface WaiverAPI {
 }
 
 export interface ContactField {
-  fieldType: string
   id?: string
   priority: number
   title?: string
   waiver?: any
 }
 
+export type FieldType = 'name' | 'email' | 'address' | 'phone' | 'date' | 'other'
+
 export interface NameField extends ContactField {
-  fieldType: 'name'
   firstName?: string
   middleName?: string
   lastName?: string
 }
 
 export interface EmailField extends ContactField {
-  fieldType: 'email'
   email?: string
 }
 export interface PhoneField extends ContactField {
-  fieldType: 'phone'
   number?: string
 }
 export interface DateField extends ContactField {
-  fieldType: 'date'
   year?: number
   month?: number
   day?: number
 }
 
 export interface AddressField extends ContactField {
-  fieldType: 'address'
   firstLine?: string
   secondLine?: string
   city?: string
@@ -89,38 +85,41 @@ export interface AddressField extends ContactField {
 }
 
 export interface OtherField extends ContactField {
-  fieldType: 'other'
   content?: string
   title?: string
 }
 
 export type ContactFields = Pick<PeopleAPI, 'first_name' | 'last_name' | 'country' | 'state' | 'city' | 'zipcode' | 'email' | 'phone' | 'favourite'>
 
-export type CommonField = NameField | EmailField | PhoneField | AddressField | DateField | OtherField
+export type CommonField = (NameField | EmailField | PhoneField | AddressField | DateField | OtherField) & {
+  fieldType: string
+}
 
+export type PluralInfo = {
+  names: NameField[]
+  dates: any[]
+  emails: EmailField[]
+  addresses: AddressField[]
+  phones: PhoneField[]
+  tags: string[]
+  pictures: string[]
+  waivers: any[]
+  activities: Activity[]
+  notes: Note[]
+  others: OtherField[]
+}
 export interface Contact {
   id: string
   info: {
     avatar: string
     starred: boolean
     name: string
-    names: NameField[]
     gender: 'Male' | 'Female' | 'Other' | null
     birthDay: string
-    dates: any[]
     email: string
-    emails: EmailField[]
     address: string
-    addresses: AddressField[]
     phone: string
-    phones: PhoneField[]
-    tags: string[]
-    pictures: string[]
-    waivers: any[]
-    activities: Activity[]
-    notes: Note[]
-    others: OtherField[]
-  }
+  } & PluralInfo
 }
 
 export interface Group {

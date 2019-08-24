@@ -16,10 +16,9 @@ export const SortableItem = SortableElement(({ element }: ItemProps) => element)
 
 interface ListProps {
   children: ItemProps[]
-  disabled?: boolean
 }
 
-const SortableList = SortableContainer(({ children, disabled = false }: ListProps) => (
+const SortableList = SortableContainer(({ children }: ListProps) => (
   <div>
     {children.map((item, index) => (
       <SortableItem
@@ -27,7 +26,6 @@ const SortableList = SortableContainer(({ children, disabled = false }: ListProp
         index={index}
         id={item.id}
         element={item.element}
-        disabled={disabled}
       />
     ))}
   </div>

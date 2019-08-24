@@ -18,8 +18,9 @@ import SplitWaiverThemeProvider from '~src/theme/SplitWaiverThemeProvider'
 import useWaiverSplitter from '~src/containers/useWaiverSplitter'
 import useContact from '~src/containers/useContact'
 
-import ContactFieldInput, { ContactSelectedFieldInput, FieldValue, FieldSegmentValue } from '~src/units/ContactFieldInput'
-import { NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
+import { ContactFieldInput, ContactSelectedFieldInput } from '~src/units/ContactFieldInput'
+import { FieldValue } from '~src/units/ContactFieldInputUtils'
+import { FieldType, NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
 
 import Icon, { ICONS } from '~src/units/Icons'
@@ -204,23 +205,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 const nameFieldMap = ({ id, firstName, middleName, lastName, title, priority, waiver }: NameField): FieldValue =>
   ({
     values: [
-      { key: 'firstName', value: firstName || '', fieldType: 'name' },
-      { key: 'middleName', value: middleName || '', fieldType: 'name' },
-      { key: 'lastName', value: lastName || '', fieldType: 'name' },
-      { key: 'title', value: title || '', fieldType: 'name' },
+      { key: 'firstName', value: firstName || '' },
+      { key: 'middleName', value: middleName || '' },
+      { key: 'lastName', value: lastName || '' },
+      { key: 'title', value: title || '' },
     ],
     id,
     priority,
     waiver,
   })
+
 const backupNameField =
-  nameFieldMap({ id: '', firstName: '', middleName: '', lastName: '', title: '', fieldType: 'name', priority: 100 })
+  nameFieldMap({ id: '', firstName: '', middleName: '', lastName: '', title: '', priority: 100 })
 
 const emailFieldMap = ({ id, email, title, priority, waiver }: EmailField): FieldValue =>
   ({
     values: [
-      { key: 'email', value: email || '', fieldType: 'email' },
-      { key: 'title', value: title || '', fieldType: 'email' },
+      { key: 'email', value: email || '' },
+      { key: 'title', value: title || '' },
     ],
     id,
     priority,
@@ -228,13 +230,13 @@ const emailFieldMap = ({ id, email, title, priority, waiver }: EmailField): Fiel
   })
 
 const backupEmailField =
-  emailFieldMap({ id: '', email: '', title: '', fieldType: 'email', priority: 100 })
+  emailFieldMap({ id: '', email: '', title: '', priority: 100 })
 
 const phoneFieldMap = ({ id, number, title, priority, waiver }: PhoneField): FieldValue =>
   ({
     values: [
-      { key: 'number', value: number || '', fieldType: 'phone' },
-      { key: 'title', value: title || '', fieldType: 'phone' },
+      { key: 'number', value: number || '' },
+      { key: 'title', value: title || '' },
     ],
     id,
     priority,
@@ -242,15 +244,15 @@ const phoneFieldMap = ({ id, number, title, priority, waiver }: PhoneField): Fie
   })
 
 const backupPhoneField =
-  phoneFieldMap({ id: '', number: '', title: '', fieldType: 'phone', priority: 100 })
+  phoneFieldMap({ id: '', number: '', title: '', priority: 100 })
 
 const dateFieldMap = ({ id, year, month, day, title, priority, waiver }: DateField): FieldValue =>
   ({
     values: [
-      { key: 'year', value: year ? `${year}` : '', fieldType: 'date' },
-      { key: 'month', value: month ? `${month}` : '', fieldType: 'date' },
-      { key: 'day', value: day ? `${day}` : '', fieldType: 'date' },
-      { key: 'title', value: title || '', fieldType: 'date' },
+      { key: 'year', value: year ? `${year}` : '' },
+      { key: 'month', value: month ? `${month}` : '' },
+      { key: 'day', value: day ? `${day}` : '' },
+      { key: 'title', value: title || '' },
     ],
     id,
     priority,
@@ -258,20 +260,20 @@ const dateFieldMap = ({ id, year, month, day, title, priority, waiver }: DateFie
   })
 
 const backupDateField =
-  dateFieldMap({ id: '', year: 0, month: 0, day: 0, fieldType: 'date', priority: 100 })
+  dateFieldMap({ id: '', year: 0, month: 0, day: 0, priority: 100 })
 
 const addressFieldMap = ({ id, firstLine, secondLine, country, state, city, zipcode, title, priority, waiver }: AddressField): FieldValue =>
   ({
     values: [
-      { key: 'firstLine', value: firstLine || '', fieldType: 'address' },
-      { key: 'secondLine', value: secondLine || '', fieldType: 'address' },
-      { key: 'title', value: title || '', fieldType: 'address' },
+      { key: 'firstLine', value: firstLine || ''  },
+      { key: 'secondLine', value: secondLine || '' },
+      { key: 'title', value: title || '' },
     ],
     appendValues: [
-      { key: 'city', value: city || '', fieldType: 'address' },
-      { key: 'state', value: state || '', fieldType: 'address' },
-      { key: 'country', value: country || '', fieldType: 'address' },
-      { key: 'zipcode', value: zipcode || '', fieldType: 'address' },
+      { key: 'city', value: city || '' },
+      { key: 'state', value: state || '' },
+      { key: 'country', value: country || '' },
+      { key: 'zipcode', value: zipcode || '' },
     ],
     id,
     priority,
@@ -279,13 +281,13 @@ const addressFieldMap = ({ id, firstLine, secondLine, country, state, city, zipc
   })
 
 const backupAddressField =
-  addressFieldMap({ id: '', firstLine: '', secondLine: '', title: '', fieldType: 'address', priority: 100 })
+  addressFieldMap({ id: '', firstLine: '', secondLine: '', title: '', priority: 100 })
 
 const otherFieldMap = ({ id, content, title, priority, waiver }: OtherField): FieldValue =>
   ({
     values: [
-      { key: 'content', value: content || '', fieldType: 'other' },
-      { key: 'title', value: title || '', fieldType: 'other' },
+      { key: 'content', value: content || '' },
+      { key: 'title', value: title || '' },
     ],
     id,
     priority,
@@ -293,16 +295,14 @@ const otherFieldMap = ({ id, content, title, priority, waiver }: OtherField): Fi
   })
 
 const backupOtherField =
-  otherFieldMap({ id: '', content: '', title: '', fieldType: 'other', priority: 100 })
+  otherFieldMap({ id: '', content: '', title: '', priority: 100 })
 
-const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'phone' | 'date' | 'other') => (
+const specificFieldToInputField = (fieldType: FieldType) => (
   specificField: NameField | EmailField | AddressField | PhoneField | DateField | OtherField | null,
 ): FieldValue | null => {
   if (specificField === null) return null
 
-  specificField.fieldType = fieldType
-
-  switch (specificField.fieldType) {
+  switch (fieldType) {
     case 'name': {
       return nameFieldMap(specificField)
     }
@@ -326,7 +326,6 @@ const specificFieldToInputField = (fieldType: 'name' | 'address' | 'email' | 'ph
     }
   }
 }
-
 export interface Props {
   contactId: string
 }
@@ -341,14 +340,14 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     fetchFields,
     tags, addTag, removeTag,
     gender,
-    addField,
     updateContactGender,
+    addField,
     updateField,
     removeField,
     splitWaiver,
   } = useContact(contactId)
 
-  const handleWaiverSplit = useCallback(
+  const handleSplitWaiver = useCallback(
     async () => {
       cancelSplitWaiver()
       await splitWaiver(toSplitWaiver.id)
@@ -360,7 +359,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
   const { value: editable, toggle: toggleEditable, setFalse: toggleOffEditable } = useBoolean(false)
   const classes = useStyles({})
 
-  const handleTagsAdd = useCallback(
+  const handleAddTags = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.keyCode !== 13) return
       const newTag = event.currentTarget.value.trim()
@@ -370,165 +369,70 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [addTag],
   )
 
-  const handleTagDelete = useCallback((tag: string) => () => removeTag(tag), [removeTag])
+  const handleDeleteTag = useCallback((tag: string) => () => removeTag(tag), [removeTag])
 
   const handleUpdateContactGender = useCallback(
-    (value: string) => {
-      if (value !== 'Male' && value !== 'Female' && value !== 'Other') return
-
-      updateContactGender(value)
-    },
+    (value: 'Male' | 'Female' | 'Other') => ['Male', 'Female', 'Other'].includes(value) && updateContactGender(value),
     [updateContactGender],
   )
 
-  const handleFieldAdd = useCallback(
-    async (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other',
-      { key, value }: FieldSegmentValue, priority: number,
-    ) => {
-      const params: any = name !== 'date'
-        ? { fieldType: name, [key]: value, priority }
-        : { fieldType: name, [key]: value, priority, year: 0, month: 0, day: 0 }
-      const result = await addField(params)
-
-      return specificFieldToInputField(name)(result)
-    },
+  const handleAddField = useCallback(
+    async (fieldType: FieldType, obj: object, priority: number) =>
+      specificFieldToInputField(fieldType)(await addField({ ...obj, fieldType, priority })),
     [addField],
   )
 
-  const handleFieldUpdate = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone' | 'date'  | 'other',
-      { key, value }: FieldSegmentValue,
-      id: string,
-      priority: number,
-    ) =>
-      updateField(
-        {
-          id,
-          fieldType: name,
-          [key]: value,
-          priority,
-        } as any
-      ).then(specificFieldToInputField(name)),
+  const handleUpdateField = useCallback(
+    async (fieldType: FieldType, updateObj: object, id: string, priority: number) =>
+      specificFieldToInputField(fieldType)(await updateField({ ...updateObj, id, fieldType, priority })),
     [updateField],
   )
 
-  const handleBatchUpdateFields = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone' | 'date'  | 'other',
-      updateObj: any,
-      id: string,
-      priority: number,
-    ) => updateField({ ...updateObj, id, priority, fieldType: name }).then(specificFieldToInputField(name)),
-    [updateField],
-  )
-
-  const handleAddDateField = useCallback(
-    ({ year, month, day }: { year: number, month: number, day: number }, priority: number) =>
-      addField({
-        fieldType: 'date',
-        year,
-        month,
-        day,
-        priority,
-      } as any).then(specificFieldToInputField('date')),
-    [addField],
-  )
-  const handleUpdateDateField = useCallback(
-    ({ year, month, day }: { year: number, month: number, day: number }, id: string, priority: number,
-    ) =>
-      updateField({
-        id,
-        fieldType: 'date',
-        year: year,
-        month: month,
-        day: day,
-        priority,
-      } as any).then(specificFieldToInputField('date')),
-    [updateField],
-  )
-
-  const handleFieldRemove = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other', id: string) =>
-      removeField({
-        id,
-        fieldType: name,
-        priority: 0,
-      } as any),
+  const handleRemoveField = useCallback(
+    async (fieldType: FieldType, id: string) =>
+      await removeField({ fieldType, id, priority: 0 } as any),
     [removeField],
   )
 
-  const handleFieldPriorityChange = useCallback(
-    (name: 'name' | 'email' | 'address' | 'phone' | 'date' | 'other', id: string, priority: number) =>
-      updateField({
-        id,
-        fieldType: name,
-        priority,
-      } as any).then(specificFieldToInputField(name)),
+  const handleChangeFieldPriority = useCallback(
+    async (fieldType: FieldType, id: string, priority: number) =>
+      specificFieldToInputField(fieldType)(await updateField({ id, fieldType, priority } as any)),
     [updateField],
   )
 
-  const names = useMemo<FieldValue[]>(
-    () => contact
-      ? contact.info.names.map(nameFieldMap)
-      : [],
-    [contact],
-  )
-  const emails = useMemo<FieldValue[]>(
-    () => contact
-      ? contact.info.emails.map(emailFieldMap)
-      : [],
-    [contact],
-  )
-  const phones = useMemo<FieldValue[]>(
-    () => contact
-      ? contact.info.phones.map(phoneFieldMap)
-      : [],
-    [contact],
-  )
-  const dates = useMemo<FieldValue[]>(
-    () => contact
-      ? contact.info.dates.map(dateFieldMap)
-      : [],
-    [contact],
-  )
-  const addresses = useMemo<FieldValue[]>(
-    () => contact
-      ? contact.info.addresses.map(addressFieldMap)
-      : [],
-    [contact],
-  )
-  const others = useMemo<FieldValue[]>(
-    () => contact
-      ? contact.info.others.map(otherFieldMap)
-      : [],
+  const infoFields = useMemo<Record<'names' | 'emails' | 'phones' | 'dates' | 'addresses' | 'others', FieldValue[]>>(
+    () => ({
+      names: contact ? contact.info.names.map(nameFieldMap) : [],
+      emails: contact ? contact.info.emails.map(emailFieldMap) : [],
+      phones: contact ? contact.info.phones.map(phoneFieldMap) : [],
+      dates: contact ? contact.info.dates.map(dateFieldMap) : [],
+      addresses: contact ? contact.info.addresses.map(addressFieldMap) : [],
+      others: contact ? contact.info.others.map(otherFieldMap) : [],
+    }),
     [contact],
   )
 
   const [splitDialogOpened, setSplitDialogOpened] = useState(false)
 
-  useEffect(
-    () => {
-      (async () => {
-        if (!toSplitWaiver.id) {
-          setSplitDialogOpened(false)
-          toggleOffEditable()
-        } else {
-          await fetchFields()
-          setSplitDialogOpened(true)
-        }
-      })()
-
+  const toggleSplitter = useCallback(
+    async () => {
+      if (!toSplitWaiver.id) {
+        setSplitDialogOpened(false)
+        toggleOffEditable()
+      } else {
+        await fetchFields()
+        setSplitDialogOpened(true)
+      }
     },
     [fetchFields, toSplitWaiver.id, toggleOffEditable],
   )
 
+  useEffect(() => { toggleSplitter() }, [toggleSplitter])
+
   const splitWaiverTitle = useInput('')
 
   useEffect(
-    () => {
-      if (toSplitWaiver.title) {
-        splitWaiverTitle.setValue(toSplitWaiver.title)
-      }
-    },
+    () => { if (toSplitWaiver.title) splitWaiverTitle.setValue(toSplitWaiver.title) },
     [toSplitWaiver.title, splitWaiverTitle],
   )
 
@@ -562,14 +466,13 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         showName={showName}
         Icon={NameIcon}
         hasTitle={false}
-        expandable={true}
-        fieldValues={names}
+        isMultiple={true}
+        fieldValues={infoFields.names}
         backupFieldValue={backupNameField}
-        onAddField={handleFieldAdd}
-        onUpdateField={handleFieldUpdate}
-        onBatchUpdateFields={handleBatchUpdateFields}
-        onDeleteField={handleFieldRemove}
-        onChangePriority={handleFieldPriorityChange}
+        onAdd={handleAddField}
+        onUpdate={handleUpdateField}
+        onDelete={handleRemoveField}
+        onChangePriority={handleChangeFieldPriority}
       />
       <ContactFieldInput
         key="email" name="email" editable={isEditable}
@@ -578,14 +481,13 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         showName={showName}
         Icon={EmailIcon}
         hasTitle={true}
-        expandable={true}
-        fieldValues={emails}
+        isMultiple={true}
+        fieldValues={infoFields.emails}
         backupFieldValue={backupEmailField}
-        onAddField={handleFieldAdd}
-        onUpdateField={handleFieldUpdate}
-        onBatchUpdateFields={handleBatchUpdateFields}
-        onDeleteField={handleFieldRemove}
-        onChangePriority={handleFieldPriorityChange}
+        onAdd={handleAddField}
+        onUpdate={handleUpdateField}
+        onDelete={handleRemoveField}
+        onChangePriority={handleChangeFieldPriority}
       />
       <ContactFieldInput
         key="phone" name="phone" editable={isEditable}
@@ -594,14 +496,13 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         showName={showName}
         Icon={PhoneIcon}
         hasTitle={true}
-        expandable={true}
-        fieldValues={phones}
+        isMultiple={true}
+        fieldValues={infoFields.phones}
         backupFieldValue={backupPhoneField}
-        onAddField={handleFieldAdd}
-        onUpdateField={handleFieldUpdate}
-        onBatchUpdateFields={handleBatchUpdateFields}
-        onDeleteField={handleFieldRemove}
-        onChangePriority={handleFieldPriorityChange}
+        onAdd={handleAddField}
+        onUpdate={handleUpdateField}
+        onDelete={handleRemoveField}
+        onChangePriority={handleChangeFieldPriority}
       />
       <ContactFieldInput
         key="date" name="date" editable={isEditable}
@@ -610,16 +511,13 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         showName={showName}
         Icon={BirthdayIcon}
         hasTitle={true}
-        expandable={true}
-        fieldValues={dates}
+        isMultiple={true}
+        fieldValues={infoFields.dates}
         backupFieldValue={backupDateField}
-        onAddField={handleFieldAdd}
-        onUpdateField={handleFieldUpdate}
-        onUpdateDateField={handleUpdateDateField}
-        onBatchUpdateFields={handleBatchUpdateFields}
-        onAddDateField={handleAddDateField}
-        onDeleteField={handleFieldRemove}
-        onChangePriority={handleFieldPriorityChange}
+        onAdd={handleAddField}
+        onUpdate={handleUpdateField}
+        onDelete={handleRemoveField}
+        onChangePriority={handleChangeFieldPriority}
       />
       <ContactSelectedFieldInput
         key="gender" name="gender" editable={isEditable}
@@ -638,28 +536,27 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         showName={showName}
         Icon={LocationIcon}
         hasTitle={true}
-        expandable={true}
-        fieldValues={addresses}
+        isMultiple={true}
+        fieldValues={infoFields.addresses}
         backupFieldValue={backupAddressField}
-        onAddField={handleFieldAdd}
-        onUpdateField={handleFieldUpdate}
-        onBatchUpdateFields={handleBatchUpdateFields}
-        onDeleteField={handleFieldRemove}
-        onChangePriority={handleFieldPriorityChange}
+        onAdd={handleAddField}
+        onUpdate={handleUpdateField}
+        onDelete={handleRemoveField}
+        onChangePriority={handleChangeFieldPriority}
       />
       <ContactFieldInput
         key="other" name="other" editable={isEditable}
+        fieldName="Other"
         showName={showName}
         Icon={DescriptionIcon}
         hasTitle={true}
-        expandable={true}
-        fieldValues={others}
+        isMultiple={true}
+        fieldValues={infoFields.others}
         backupFieldValue={backupOtherField}
-        onAddField={handleFieldAdd}
-        onUpdateField={handleFieldUpdate}
-        onBatchUpdateFields={handleBatchUpdateFields}
-        onDeleteField={handleFieldRemove}
-        onChangePriority={handleFieldPriorityChange}
+        onAdd={handleAddField}
+        onUpdate={handleUpdateField}
+        onDelete={handleRemoveField}
+        onChangePriority={handleChangeFieldPriority}
       />
     </>
   )
@@ -672,14 +569,14 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
             placeholder="Click to add tag"
             disableUnderline
             startAdornment={<Icon name={ICONS.Tag} className={classes.addTagIcon} />}
-            onKeyDown={handleTagsAdd}
+            onKeyDown={handleAddTags}
           />
         </div>
         <div className={classes.tags}>
           {tags.map((tag, index) => (
             <Chip
               key={`${tag}-${index}`}
-              onDelete={handleTagDelete(tag)}
+              onDelete={handleDeleteTag(tag)}
               className={classes.tagChip}
               classes={{ label: classes.tagLabel }}
               label={tag}
@@ -721,9 +618,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
       </>
     )
     : fetchContactError
-      ? (
-        <Typography align="center">Oops, an error occurred!</Typography>
-      )
+      ? <Typography align="center">Oops, an error occurred!</Typography>
       : contact
         ? (
           <>
@@ -764,7 +659,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
                   {renderFields(true, false)}
                   <div className={classes.dialogButtonZone}>
                     <Button onClick={cancelSplitWaiver}>Cancel</Button>
-                    <Button color="primary" onClick={handleWaiverSplit}>Split</Button>
+                    <Button color="primary" onClick={handleSplitWaiver}>Split</Button>
                   </div>
                 </Dialog>
               </SplitWaiverThemeProvider>
