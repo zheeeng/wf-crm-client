@@ -13,35 +13,20 @@ import BasicDateInput from '~src/units/BasicDateInput'
 import SortableList, { SortHandler } from '~src/units/SortableList'
 import arrayMove from 'array-move'
 import cssTips from '~src/utils/cssTips'
-import { isEmail, isValidDate } from '~src/utils/validation'
+import { isEmail } from '~src/utils/validation'
 import camelToWords from '~src/utils/camelToWords'
 import SvgIcon, { ICONS } from '~src/units/Icons'
-
-const joinSegmentFieldValues = (values: FieldSegmentValue[]) =>  {
-  if (values[0].fieldType === 'date') {
-    const dateField = [
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      values.find(v => v.key === 'month')!.value.padStart(2, '0'),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      values.find(v => v.key === 'day')!.value.padStart(2, '0'),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      values.find(v => v.key === 'year')!.value.padStart(4, '0'),
-    ].join('/').trim()
-
-    return dateField !== '00/00/0000' ? dateField : ''
-  }
-
-  return values
-    .filter(value => value.key !== 'title')
-    .map(value => value.value)
-    .join(' ').trim()
-}
+import { FieldType } from '~src/types/Contact'
+import {
+  FieldSegmentValue, FieldValue,
+  joinSegmentFieldValues,
+  getLabelExample, getFieldDefaultTitle, getFieldDefaultTitleWidthDec,
+  mapOption2SelectOption,
+  getLowerPriority, getFieldDateFromValues,
+} from './ContactFieldInputUtils'
+import { LabelWithIcon, LabelWithText } from './ContactFieldInputs/Label'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  toolTip: {
-    marginTop: theme.spacing(-1),
-    marginLeft: theme.spacing(-2),
-  },
   hidden: {
     '&&': {
       display: 'none',
@@ -69,8 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   fieldSimpleBar: {
     marginBottom: 0,
   },
-  fieldNameWrapper: {
-  },
   fieldTextWrapper: {
     flexGrow: 1,
     flexBasis: '100%',
@@ -90,19 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: theme.spacing(1),
     ...cssTips(theme, { sizeFactor: 2 }).horizontallySpaced(),
-  },
-  fieldName: {
-    padding: theme.spacing(2.5),
-    height: theme.spacing(8),
-    width: theme.spacing(16),
-    marginRight: theme.spacing(2.5),
-    textAlign: 'left',
-  },
-  fieldIcon: {
-    padding: theme.spacing(2.5),
-    height: theme.spacing(8),
-    width: theme.spacing(8),
-    marginRight: theme.spacing(2.5),
   },
   filedIconBox: {
     display: 'flex',
@@ -148,16 +118,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   takeQuarter: {
     flex: 0.25,
-  },
-  fieldTitle: {
-    display: 'flex',
-  },
-  fieldTitleIcon: {
-    paddingLeft: 0,
-    marginRight: 0,
-  },
-  fieldTitleName: {
-    paddingLeft: 0,
   },
   input: {
     "&[type='number']": {
@@ -213,90 +173,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export interface FieldSegmentValue { key: string, value: string, fieldType: string }
-
-const getEmptyFieldSegmentValue = (fieldType: string): FieldSegmentValue => ({
-  key: 'title',
-  value: '',
-  fieldType,
-})
-
-const getFieldDefaultTitle = (fieldValue: FieldValue) =>
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  fieldValue.values.find(sv => sv.key === 'title')!.value
-
-const getFieldDefaultTitleWidthDec = (fieldValue: FieldValue) => {
-  const defaultTitle = getFieldDefaultTitle(fieldValue).trim()
-  if (defaultTitle) {
-    return '• ' + defaultTitle
-  }
-
-  return
-}
-
-const getLabelExample = (fieldType?: string) => {
-  switch (fieldType) {
-    case 'calendar':
-      return 'label: e.g. Birthday'
-    case 'email':
-      return 'label: e.g. Person'
-    case 'number':
-      return 'label: e.g. Person'
-    case 'address':
-      return 'label: e.g. Home'
-    default:
-      return 'label'
-  }
-}
-export interface FieldValue {
-  values: FieldSegmentValue[]
-  appendValues?: FieldSegmentValue[]
-  id?: string
-  priority: number
-  waiver?: any
-}
-
 export type InputProps = {
-  fieldName?: string
+  fieldName: string
   showName?: boolean
   Icon?: React.ComponentType<{ className?: string, color?: any }>
-  name: string
+  name: FieldType
   hasTitle: boolean
   editable?: boolean
   type?: string
 }
 
+// ------------------------ Text Input Start ------------------------
 export type Props = InputProps & {
   fieldValues: FieldValue[]
   backupFieldValue: FieldValue
-  expandable: boolean
-  onAddField (name: string, value: FieldSegmentValue, priority: number): Promise<FieldValue | null>
-  onUpdateField (name: string, value: FieldSegmentValue, id: string,  priority: number): Promise<FieldValue | null>
-  onBatchUpdateFields(name: string, updateObj: any, id: string, priority: number): Promise<FieldValue | null>
-  onUpdateDateField?: (date: { year: number, month: number, day: number }, id: string,  priority: number) => Promise<FieldValue | null>
-  onAddDateField?: (date: { year: number, month: number, day: number }, priority: number) => Promise<FieldValue | null>
-  onDeleteField (name: string, id: string): Promise<string | null>
+  isMultiple: boolean
+  onAdd (fieldType: string, addObj: any, priority: number): Promise<FieldValue | null>
+  onUpdate (fieldType: string, updateObj: any, id: string, priority: number): Promise<FieldValue | null>
+  onDelete (name: string, id: string): Promise<string | null>
   onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>
 }
 
-const getFieldDate = (values: FieldSegmentValue[]) => {
-  const year = values.find(v => v.key === 'year')
-  const month = values.find(v => v.key === 'month')
-  const day = values.find(v => v.key === 'day')
-  if (!year || !month || !day) return null
-  if (!isValidDate(+day.value, +month.value, +year.value)) return null
-
-  const d = new Date()
-  d.setFullYear(+year.value)
-  d.setMonth(+month.value - 1)
-  d.setDate(+day.value)
-  return d
-}
-
-const ContactFieldInput: React.FC<Props> = React.memo(
+export const ContactFieldInput: React.FC<Props> = React.memo(
   ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
-    editable = false, type, hasTitle, expandable,
-    onAddField, onUpdateField, onBatchUpdateFields, onUpdateDateField, onAddDateField, onDeleteField, onChangePriority,
+    editable = false, type, hasTitle, isMultiple,
+    onAdd, onUpdate, onDelete, onChangePriority,
   }) => {
 
     const classes = useStyles({})
@@ -310,273 +211,97 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
     const containerRef = useRef<HTMLDivElement>(null)
 
-    const hasValues = useMemo(
-      () => !!fieldValues.length || !!localFieldValues.length,
-      [fieldValues, localFieldValues],
-    )
-
-    const addHiddenField = useCallback(
-      async () => {
-        const field = await onAddField(name, getEmptyFieldSegmentValue(name), 0)
-        if (field) setLocalFieldValues(values => values.concat(field))
-        return field
-      },
-      [onAddField, name, setLocalFieldValues],
-    )
-
     const addField = useCallback(
-      async (segmentValue: FieldSegmentValue) => {
-        const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
-        const field = await onAddField(name, segmentValue, newPriority)
+      async () => {
+        // TODO: collect data
+        const field = await onAdd(name, {}, getLowerPriority(localFieldValues))
         if (field) setLocalFieldValues(values => values.concat(field))
         return field
       },
-      [localFieldValues, onAddField, name, setLocalFieldValues],
+      [localFieldValues, onAdd, name, setLocalFieldValues],
     )
+
     const updateField = useCallback(
       async (segmentValue: FieldSegmentValue, id: string) => {
         if (!id) return
         const fieldValue = localFieldValues.find(value => value.id === id)
         if (!fieldValue) return
-        const priority = fieldValue.priority
 
-        const field = await onUpdateField(name, segmentValue, id, priority)
+        const field = await onUpdate(name, { [segmentValue.key]: segmentValue.value }, id, fieldValue.priority)
         if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
         return field
       },
-      [localFieldValues, onUpdateField, name, setLocalFieldValues],
+      [localFieldValues, onUpdate, name, setLocalFieldValues],
     )
 
     const addDateField = useCallback(
       async (year: number, month: number, day: number) => {
-        if (!onAddDateField) return
-        const newPriority = ((localFieldValues[0] || {}).priority || 80) + 1
-        const field = await onAddDateField({ year, month, day }, newPriority)
+        const field = await onAdd(name, { year, month, day }, getLowerPriority(localFieldValues))
         if (field) setLocalFieldValues(values => values.concat(field))
         return field
       },
-      [localFieldValues, onAddDateField, setLocalFieldValues],
+      [localFieldValues, name, onAdd, setLocalFieldValues],
     )
     const updateDateField = useCallback(
       async (year: number, month: number, day: number, id: string) => {
-        if (!onUpdateDateField) return
         if (!id) return
         const fieldValue = localFieldValues.find(value => value.id === id)
         if (!fieldValue) return
-        const priority = fieldValue.priority
 
-        const field = await onUpdateDateField({ year, month, day }, id, priority)
+        const field = await onUpdate(name, { year, month, day }, id, fieldValue.priority)
         if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
       },
-      [localFieldValues, onUpdateDateField, setLocalFieldValues]
+      [localFieldValues, name, onUpdate, setLocalFieldValues]
     )
+
     const removeField = useCallback(
-      async (id: string) => {
+      (id: string) => async () => {
         if (!id) return
-        const removedId = await onDeleteField(name, id)
+
+        const removedId = await onDelete(name, id)
 
         if (removedId) setLocalFieldValues(values => values.filter(v => v.id !== removedId))
       },
-      [onDeleteField, name, setLocalFieldValues],
+      [onDelete, name, setLocalFieldValues],
     )
+
     const toggleHideField = useCallback(
-      async (id: string) => {
-        if (!id) {
-          await addHiddenField()
-          return
-        }
+      (id: string) => async () => {
+        if (!id) return
 
         const targetField = localFieldValues.find(v => v.id === id)
 
         if (!targetField) return
 
-        const newPriority = targetField.priority !== 0
-          ? 0
-          : Math.max(
-            Math.min.apply(
-              null,
-              localFieldValues.map(v => v.priority).filter(p => typeof p !== 'undefined'),
-            ) - 1,
-            1,
-          )
-        const field = await onChangePriority(name, id, newPriority)
-        if (field) {
-          setLocalFieldValues(
-            values => values
-              .map(v => v.id === id ? field : v)
-              .sort((p, c) => c.priority - p.priority),
-          )
-        }
-      },
-      [localFieldValues, onChangePriority, name, addHiddenField],
-    )
+        const newPriority = targetField.priority !== 0 ? 0 : getLowerPriority(localFieldValues)
 
-    const handleAddEntry = useCallback(
-      () => {
-        addField(getEmptyFieldSegmentValue(name))
-        // if there a stub field, the first time addField will create a real replacement for the stub filed, we need addField again for create another new field
-        if (!hasValues) {
-          addField(getEmptyFieldSegmentValue(name))
-        }
+        const field = await onChangePriority(name, id, newPriority)
+
+        if (!field) return
+
+        setLocalFieldValues(values => values.map(v => v.id === id ? field : v).sort((p, c) => c.priority - p.priority))
       },
-      [addField, name, hasValues],
+      [localFieldValues, onChangePriority, name],
     )
 
     const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
-
-    const queueRef = useRef({ queue: [] as FieldSegmentValue[], isAdding: false })
-
-    const batchUpdateFields = useCallback(
-      async (fields: FieldSegmentValue[], id: string, priority: number) => {
-        const fieldType = fields[0].fieldType
-        const updateObj = fields.reduce(
-          (acc: any, field) => {
-            acc[field.key] = field.value
-            return acc
-          },
-          {},
-        )
-
-        const field = await onBatchUpdateFields(fieldType, updateObj, id, priority)
-
-        if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
-      },
-      [onBatchUpdateFields],
-    )
-
-    const handleEntryUpdateByBlur = useCallback(
-      (key: string, id: string) =>
-        async (event: React.FocusEvent<HTMLInputElement>) => {
-          const value = event.target.value.trim()
-
-          if (key !== 'title' && type === 'email' && !isEmail(value)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
-
-          // if (type === 'calendar') {
-          //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
-          //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
-          //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
-
-          //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
-          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          //     return
-          //   }
-
-          //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
-          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          //     return
-          //   }
-
-          //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
-          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          //     return
-          //   }
-          // }
-
-          const fieldData = { key, value, fieldType: name }
-          if (hasValues) {
-            updateField(fieldData, id)
-          } else {
-            if (queueRef.current.isAdding) {
-              queueRef.current.queue.push(fieldData)
-              return
-            }
-
-            queueRef.current = { queue: [], isAdding: true }
-            const result = await addField(fieldData)
-            if (!result || !result.id) {
-              queueRef.current = { queue: [], isAdding: false }
-              return
-            }
-
-            while (queueRef.current.queue.length) {
-              await batchUpdateFields(queueRef.current.queue, result.id, result.priority)
-            }
-
-            queueRef.current = { queue: [], isAdding: false }
-          }
-        },
-      [type, name, hasValues, updateField, addField, batchUpdateFields],
-    )
-
-    const handleEntryUpdateByKeydown = useCallback(
-      (key: string, id: string) =>
-        (event: React.KeyboardEvent<HTMLInputElement>) => {
-          key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
-
-          if (event.keyCode !== 13) return
-          const value = event.currentTarget.value.trim()
-
-          if (key !== 'title' && type === 'email' && !isEmail(value)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-            return
-          }
-
-          // if (type === 'calendar') {
-          //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
-          //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
-          //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
-
-          //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
-          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          //     return
-          //   }
-
-          //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
-          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          //     return
-          //   }
-
-          //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
-          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
-          //     return
-          //   }
-          // }
-
-          if (hasValues) {
-            updateField({ key, value, fieldType: name }, id)
-          } else {
-            addField({ key, value, fieldType: name })
-          }
-        },
-      [addField, hasValues, name, type, updateField],
-    )
-
-    // const handleEntryUpdate = useCallback(
-    //   (key: string, id: string, defaultValue: string) =>
-    //     (value: string) => { updateField({ key, value, fieldType: name }, id) },
-    //   [updateField],
-    // )
-
-    const handleEntryDelete = useCallback(
-      (id: string) => () => removeField(id),
-      [removeField],
-    )
-    const handleEntryToggleHide = useCallback(
-      (id: string) => () => toggleHideField(id),
-      [toggleHideField],
-    )
 
     const sortingId = useInput('')
 
     const calculatedFieldValues = useMemo(
       () => {
-        const values1 = hasValues ? localFieldValues : [backupFieldValue]
+        if (editable) return localFieldValues
 
-        if (editable) return values1
-        const records = values1.map(it => (
+        const records = localFieldValues.map(it => (
           [
-            joinSegmentFieldValues(it.values),
+            joinSegmentFieldValues(name, it.values),
             (it.values.find(v => v.key === 'title') || { value: '' }).value,
             it,
           ] as [string, string, FieldValue])
         ).reduce(
           (obj, [key, title, fieldValue]) => {
-            if (fieldValue.priority === 0) {
-              return obj
-            }
+            if (fieldValue.priority === 0) return obj
+
             const newItem = { title, value: fieldValue, priority: fieldValue.priority }
             if (!obj[key]) {
               obj[key] = [newItem]
@@ -603,7 +328,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
         return values2
       },
-      [editable, hasValues, localFieldValues, backupFieldValue]
+      [editable, localFieldValues, name]
     )
 
     const onSortEnd = useCallback(
@@ -631,50 +356,22 @@ const ContactFieldInput: React.FC<Props> = React.memo(
 
     const onDateChange = useCallback(
       (id?: string) => async (date: Date | null) => {
-        if (!date) {
-          if (hasValues && id) {
-            updateDateField(0, 0 , 0, id)
-          }
-          return
-        }
+        if (!date || !id) return
 
         const year = date.getFullYear()
         const month = date.getMonth() + 1
         const day = date.getDate()
 
-        if (hasValues && id) {
-          updateDateField(year, month, day, id)
-        } else {
-          const fieldData = [{ key: 'year', value: year, fieldType: name }, { key: 'month', value: month, fieldType: name }, { key: 'day', value: day, fieldType: name }]
-
-          if (queueRef.current.isAdding) {
-            // Note: type unsafe, but implementation works
-            queueRef.current.queue.push(...fieldData as any)
-            return
-          }
-
-          queueRef.current = { queue: [], isAdding: true }
-          const result = await addDateField(year, month, day)
-          if (!result || !result.id) {
-            queueRef.current = { queue: [], isAdding: false }
-            return
-          }
-
-          while (queueRef.current.queue.length) {
-            await batchUpdateFields(queueRef.current.queue, result.id, result.priority)
-          }
-
-          queueRef.current = { queue: [], isAdding: false }
-        }
+        updateDateField(year, month, day, id)
       },
-      [hasValues, updateDateField, name, addDateField, batchUpdateFields],
+      [updateDateField],
     )
 
     const renderField = useCallback(
-      (values: FieldSegmentValue[], fieldValue: FieldValue, isFirst: boolean, isAppend: boolean) => (
+      (values: FieldSegmentValue[], fieldValue: FieldValue, isStub: boolean, isAppend: boolean) => (
         <div className={classnames(
           classes.fieldTextBar,
-          !editable && !joinSegmentFieldValues(values) && classes.hidden,
+          !editable && !joinSegmentFieldValues(name, values) && classes.hidden,
           editable && fieldValue.priority === 0 && classes.disabled,
         )}>
           {editable
@@ -683,7 +380,7 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                 {type === 'calendar' && (
                   <BasicDateInput
                     className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
-                    date={getFieldDate(values)}
+                    date={getFieldDateFromValues(values)}
                     onDateChange={onDateChange(fieldValue.id)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                   />
@@ -705,14 +402,6 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                       }}
                       placeholder={camelToWords(segmentValue.key)}
                       defaultValue={segmentValue.value}
-                      onBlur={handleEntryUpdateByBlur(
-                        segmentValue.key,
-                        fieldValue.id || '',
-                      )}
-                      onKeyDown={handleEntryUpdateByKeydown(
-                        segmentValue.key,
-                        fieldValue.id || '',
-                      )}
                       disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                     />
                   ))
@@ -723,8 +412,6 @@ const ContactFieldInput: React.FC<Props> = React.memo(
                     className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
                     classes={{disabled: classes.fieldDisabled}}
                     defaultValue={getFieldDefaultTitle(fieldValue)}
-                    onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '')}
-                    onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id || '')}
                     placeholder={getLabelExample(type)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
                   />
@@ -732,11 +419,8 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               </>
             )
             : (
-              <span className={classnames(
-                classes.fieldDisplayText,
-                showName && classes.fieldSimpleDisplayText,
-              )}>
-                {joinSegmentFieldValues(values)}
+              <span className={classnames(classes.fieldDisplayText, showName && classes.fieldSimpleDisplayText)}>
+                {joinSegmentFieldValues(name, values)}
               </span>
             )
           }
@@ -745,103 +429,85 @@ const ContactFieldInput: React.FC<Props> = React.memo(
               {getFieldDefaultTitleWidthDec(fieldValue)}
             </Typography>
           )}
-          {editable && !isAppend && (
+          {editable && !isAppend && isMultiple && (
             <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
-              <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hide'}>
-                <IconButton
-                  className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                  onClick={handleEntryToggleHide(fieldValue.id || '')}
-                >
-                  <SvgIcon
-                    name={ICONS.Eye}
-                    color={fieldValue.priority === 0 ? 'primary' : 'hoverLighten'}
-                    size="sm"
+              {!isStub ? (
+                <>
+                  <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hide'}>
+                    <IconButton
+                      className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
+                      onClick={toggleHideField(fieldValue.id || '')}
+                    >
+                      <SvgIcon name={ICONS.Eye} color={fieldValue.priority === 0 ? 'primary' : 'hoverLighten'} size="sm"/>
+                    </IconButton>
+                  </Tooltip>
+                  <SortHandler
+                    element={
+                      <Tooltip title="reorder">
+                        <IconButton
+                          className={classnames(
+                            classes.fieldControlIcon,
+                            classes.fieldHoverShowingIcon,
+                            classes.fieldDragIcon,
+                            classes.showInDragged,
+                          )}
+                        >
+                          <SvgIcon name={ICONS.Reorder} color="hoverLighten" size="sm" />
+                        </IconButton>
+                      </Tooltip>
+                    }
                   />
-                </IconButton>
-              </Tooltip>
-              <SortHandler
-                element={
-                  <Tooltip title="reorder">
-                    <IconButton
-                      className={classnames(
-                        classes.fieldControlIcon,
-                        classes.fieldHoverShowingIcon,
-                        classes.fieldDragIcon,
-                        classes.showInDragged,
-                      )}
-                    >
-                      <SvgIcon
-                        name={ICONS.Reorder}
-                        color="hoverLighten" size="sm"
-                      />
-                    </IconButton>
-                  </Tooltip>
-                }
-              />
-              {expandable && (isFirst
-                ? (
-                  <Tooltip title="add">
-                    <IconButton
-                      className={classnames(
-                        classes.fieldControlIcon,
-                        classes.hiddenInDragged,
-                      )}
-                      onClick={handleAddEntry}
-                    >
-                      <SvgIcon
-                        name={ICONS.AddCircle}
-                        color="hoverLighten" size="sm"
-                      />
-                    </IconButton>
-                  </Tooltip>
-                )
-                : (
                   <Tooltip title="remove">
                     <IconButton
-                      className={classnames(
-                        classes.fieldControlIcon,
-                        classes.hiddenInDragged,
-                      )}
-                      onClick={handleEntryDelete(fieldValue.id || '')}>
-                      <SvgIcon
-                        name={ICONS.Remove}
-                        color="hoverLighten" size="sm"
-                      />
+                      className={classnames(classes.fieldControlIcon, classes.hiddenInDragged)}
+                      onClick={removeField(fieldValue.id || '')}>
+                      <SvgIcon name={ICONS.Remove} color="hoverLighten" size="sm" />
                     </IconButton>
                   </Tooltip>
-                )
+                </>
+              ) : (
+                <Tooltip title="add">
+                  <IconButton
+                    className={classnames(classes.fieldControlIcon)}
+                    onClick={addField}>
+                    <SvgIcon name={ICONS.AddCircle} color="hoverLighten" size="sm" />
+                  </IconButton>
+                </Tooltip>
               )}
             </div>
           )}
         </div>
       ),
-      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.weakenEffect, classes.fieldTypeText, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, handleEntryToggleHide, expandable, handleAddEntry, handleEntryDelete, hasErrorKeys]
+      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.weakenEffect, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, name, type, onDateChange, hasTitle, showName, isMultiple, toggleHideField, removeField, addField, hasErrorKeys]
+    )
+
+    const renderCombinedField = useCallback(
+      (fieldValue: FieldValue, isStub: boolean) => (
+        <div className={classnames(
+          classes.fieldTextBarWrapper,
+          !editable && fieldValue.priority === 0 && classes.hidden,
+        )}>
+          {renderField(fieldValue.values, fieldValue, isStub, false)}
+          {fieldValue.appendValues
+            && fieldValue.appendValues.length
+            && renderField(fieldValue.appendValues, fieldValue, isStub, true)}
+        </div>
+      ),
+      [classes.fieldTextBarWrapper, classes.hidden, editable, renderField],
     )
 
     const sortableItems = useMemo(
       () => calculatedFieldValues.map(
-        (fieldValue, index) => ({
-          element: (
-            <div className={classnames(
-              classes.fieldTextBarWrapper,
-              !editable && fieldValue.priority === 0 && classes.hidden,
-            )}>
-              {renderField(fieldValue.values, fieldValue, index === 0, false)}
-              {fieldValue.appendValues
-                && fieldValue.appendValues.length
-                && renderField(fieldValue.appendValues, fieldValue, index === 0, true)}
-            </div>
-          ),
+        fieldValue => ({
+          element: renderCombinedField(fieldValue, false),
           id: fieldValue.id,
         }),
       ),
-      [calculatedFieldValues, classes.fieldTextBarWrapper, classes.hidden, editable, renderField],
+      [calculatedFieldValues, renderCombinedField],
     )
 
     const onSortStart = useCallback(
-      ({ index }: { index: number }) => {
-        sortingId.setValue(calculatedFieldValues[index].id || '')
-      },
+      ({ index }: { index: number }) => sortingId.setValue(calculatedFieldValues[index].id || ''),
       [calculatedFieldValues, sortingId],
     )
 
@@ -850,223 +516,51 @@ const ContactFieldInput: React.FC<Props> = React.memo(
         className={classnames(
           classes.fieldBar,
           showName && classes.fieldSimpleBar,
-          (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(value.values.concat(value.appendValues || []))).length === 0) && classes.hidden,
+          (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(name, value.values.concat(value.appendValues || []))).length === 0) && classes.hidden,
         )}
         ref={containerRef}
       >
-        {!showName && Icon &&
-          <div className={classes.fieldNameWrapper}>
-            <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
-              <div><Icon className={classes.fieldIcon} /></div>
-            </Tooltip>
-          </div>
-        }
+        {!showName && Icon && <LabelWithIcon Icon={Icon} fieldName={fieldName} />}
         <div className={classnames(
           classes.fieldTextWrapper,
           sortingId.hasValue && classes.isSorting,
         )}>
-          {showName
-            && (
-              <div className={classes.fieldTitle}>
-                {Icon && (
-                  <Tooltip title={fieldName}>
-                    <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-                  </Tooltip>
-                )}
-                <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
-              </div>
-            )
-          }
+          {showName && <LabelWithText Icon={Icon} fieldName={fieldName} />}
           <SortableList
             onSortStart={onSortStart}
             onSortEnd={onSortEnd}
             useDragHandle
             helperContainer={containerRef.current || undefined}
             helperClass={classes.dragged}
-            disabled={!hasValues}
           >
             {sortableItems}
           </SortableList>
+          {renderCombinedField(backupFieldValue, true)}
         </div>
       </div>
     )
   })
+// ------------------------ Text Input End ------------------------
 
-export default ContactFieldInput
-
-export type TextInputProps = InputProps & {
-  value: string
-  updateField: (value: string) => void
+// ------------------------ Select Input Begin ------------------------
+type MergeFields<T1, T2> = {
+  [P in keyof (T1 & T2)]: (P extends keyof T1 ? T1[P] : never) | (P extends keyof T2 ? T2[P] : never)
 }
 
-export type SelectedInputProps = InputProps & {
+export type SelectedInputProps = MergeFields<InputProps, { name: 'gender' }> & {
   value: string
   options: string[]
-  updateField: (value: string) => void
+  updateField: (value: 'Male' | 'Female' | 'Other') => void
 }
-
-export type DataInputProps = InputProps & {
-  value: string
-  updateField: (value: string) => void
-}
-
-export const ContactTextFieldInput: React.FC<TextInputProps> = React.memo(({
-  fieldName = '', showName = false, Icon, editable, type, hasTitle, name, value, updateField,
-}) => {
-  const classes = useStyles({})
-
-  const [hasError, setHasError] = useState(true)
-
-  const handleEntryUpdateByBlur = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) => {
-      const val = event.target.value.trim()
-
-      if (type === 'email' && !isEmail(val) && (val !== '')) {
-        setHasError(true)
-        return
-      }
-
-      updateField(val)
-    },
-    [type, updateField],
-  )
-  const handleEntryUpdateByKeydown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      setHasError(false)
-
-      if (event.keyCode !== 13) return
-      const val = event.currentTarget.value.trim()
-
-      if (type === 'email' && !isEmail(val) && (val !== '')) {
-        setHasError(true)
-        return
-      }
-
-      updateField(val)
-    },
-    [type, updateField],
-  )
-
-  return (
-    <div
-      className={classnames(
-        classes.fieldBar,
-        showName && classes.fieldSimpleBar,
-        (!editable && value === '') && classes.hidden,
-      )}
-    >
-      {!showName && Icon && (
-        <div className={classes.fieldNameWrapper}>
-          <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
-            <div><Icon className={classes.fieldIcon} /></div>
-          </Tooltip>
-        </div>
-      )}
-      <div className={classes.fieldTextWrapper}>
-        {showName
-          && (
-            <>
-              {Icon && (
-                <div>
-                  <Tooltip title={fieldName}>
-                    <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-                  </Tooltip>
-                </div>
-              )}
-              <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
-            </>
-          )
-        }
-        <div
-          className={classnames(
-            classes.fieldTextBarWrapper,
-          )}
-        >
-          <div className={classes.fieldTextBar}>
-            {(hasTitle && !editable) && (
-              <Typography variant="h6" className={classes.fieldTypeText}>
-                {name}
-              </Typography>
-            )}
-            {editable
-              ? (
-                <Input
-                  autoComplete="no"
-                  key={name}
-                  type={type}
-                  error={hasError}
-                  className={classes.fieldInput}
-                  classes={{
-                    input: classes.input,
-                  }}
-                  placeholder={name}
-                  defaultValue={value}
-                  onBlur={handleEntryUpdateByBlur}
-                  onKeyDown={handleEntryUpdateByKeydown}
-                />
-              )
-              : (
-                <Input
-                  autoComplete="no"
-                  disabled={true}
-                  disableUnderline={true}
-                  className={classes.fieldInput}
-                  value={value}
-                />
-              )
-            }
-          </div>
-          {editable && (
-            <div className={classes.filedIconBox}>
-              <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon
-                  name={ICONS.Eye}
-                  className={classes.placeholderIcon}
-                  color="hoverLighten" size="sm"
-                />
-              </IconButton>
-              <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon
-                  name={ICONS.Reorder}
-                  className={classes.placeholderIcon}
-                  color="hoverLighten" size="sm"
-                />
-              </IconButton>
-              <IconButton className={classes.fieldControlIcon}>
-                <SvgIcon
-                  name={ICONS.AddCircle}
-                  className={classes.placeholderIcon}
-                  color="hoverLighten" size="sm"
-                />
-              </IconButton>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-})
-
-const mapOption2SelectOption = (option: string) => option === ''
-  ? ({ value: '', label: 'None' })
-  : ({ value: option, label: option })
 
 export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
   fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
 }) => {
   const classes = useStyles({})
 
-  const handleEntryUpdate = useCallback(
-    (input: any) => {
-      updateField(input.value)
-    },
-    [updateField],
-  )
+  const handleEntryUpdate = useCallback((input: any) => updateField(input.value), [updateField])
 
-  const selectOptions = useMemo(
-    () => options.map(mapOption2SelectOption),
-    [options]
-  )
+  const selectOptions = useMemo(() => options.map(mapOption2SelectOption), [options])
 
   return (
     <div
@@ -1075,54 +569,20 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
         showName && classes.fieldSimpleBar,
         (!editable && value === '') && classes.hidden,
       )}>
-      {!showName && Icon && (
-        <div className={classes.fieldNameWrapper}>
-          <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
-            <div><Icon className={classes.fieldIcon} /></div>
-          </Tooltip>
-        </div>
-      )}
+      {!showName && Icon && <LabelWithIcon Icon={Icon} fieldName={fieldName} />}
       <div className={classes.fieldTextWrapper}>
-        {showName && (
-          <div className={classes.fieldTitle}>
-            {Icon && (
-              <div>
-                <Tooltip title={fieldName}>
-                  <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
-                </Tooltip>
-              </div>
-            )}
-            <Typography
-              variant="h6"
-              className={classnames(
-                classes.fieldName,
-                classes.fieldTitleName,
-              )}
-              color="textSecondary"
-            >
-              {fieldName}
-            </Typography>
-          </div>
-        )}
-        <div
-          className={classnames(
-            classes.fieldTextBarWrapper,
-          )}
-        >
+        {showName && <LabelWithText Icon={Icon} fieldName={fieldName} />}
+        <div className={classnames(classes.fieldTextBarWrapper)}>
           <div className={classes.fieldTextBar}>
             {(hasTitle && !editable) && (
-              <Typography variant="h6" className={classes.fieldTypeText}>
-                {name}
-              </Typography>
+              <Typography variant="h6" className={classes.fieldTypeText}>{name}</Typography>
             )}
             {editable ? (
               <Select
                 className={classes.fieldInput}
                 classes={classes}
                 components={components}
-                props={{
-                  placeholder: fieldName,
-                }}
+                props={{ placeholder: fieldName }}
                 isSearchable={false}
                 isClearable={false}
                 options={selectOptions}
@@ -1135,9 +595,7 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
                 disabled={true}
                 disableUnderline={true}
                 className={classes.fieldInput}
-                classes={{
-                  input: classes.fieldDisplayText,
-                }}
+                classes={{ input: classes.fieldDisplayText }}
                 value={value}
               />
             )}
@@ -1147,79 +605,4 @@ export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.mem
     </div>
   )
 })
-
-// export const ContactDateFieldInput: React.FC<SelectedInputProps> = React.memo(({
-//   fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
-// }) => {
-//   const classes = useStyles({})
-
-//   const handleEntryUpdate = useCallback(
-//     (event: React.ChangeEvent<HTMLSelectElement>) => {
-//       const val = event.target.value.trim()
-
-//       updateField(val)
-//     },
-//     [],
-//   )
-
-//   return (
-//     <div className={classnames(classes.fieldBar, showName && classes.fieldSimpleBar)}>
-//       {showName
-//         ? <Typography variant="h6" className={classnames(classes.fieldName, classes.fieldTitleName)} color="textSecondary">{fieldName}</Typography>
-//         : Icon && <Icon className={classes.fieldIcon} />}
-//       <div className={classes.fieldTextWrapper}>
-//         <div
-//           className={classnames(
-//             classes.fieldTextBarWrapper,
-//             !editable && classes.hidden,
-//           )}
-//         >
-//           <div className={classes.fieldTextBar}>
-//             {(hasTitle && !editable) && (
-//               <Typography variant="h6" className={classes.fieldTypeText}>
-//                 {name}
-//               </Typography>
-//             )}
-//             {editable
-//               ? (
-//                 <Select
-//                   className={classes.fieldInput}
-//                   defaultValue={value}
-//                   onChange={handleEntryUpdate}
-//                 >
-//                   {options.map(option => (
-//                     <MenuItem value={option} key={option}>
-//                       <em>{option || 'None'}</em>
-//                     </MenuItem>
-//                   ))}
-//                 </Select>
-//               )
-//               : (
-//                 <Input
-//                   autoComplete="no"
-//                   disabled={true}
-//                   disableUnderline={true}
-//                   className={classes.fieldInput}
-//                   value={value}
-//                 />
-//               )
-//             }
-//           </div>
-//           {editable && (
-//             <div className={classes.filedIconBox}>
-//               <IconButton className={classes.fieldControlIcon}>
-//                 <Eye className={classes.placeholderIcon} />
-//               </IconButton>
-//               <IconButton className={classes.fieldControlIcon}>
-//                 <Reorder className={classes.placeholderIcon} />
-//               </IconButton>
-//               <IconButton className={classes.fieldControlIcon}>
-//                 <AddCircleIcon className={classes.placeholderIcon} />
-//               </IconButton>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   )
-// })
+// ------------------------ Select Input End ------------------------
