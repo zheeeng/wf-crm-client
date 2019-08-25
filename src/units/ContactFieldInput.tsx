@@ -210,6 +210,11 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
     const [ localFieldValues, setLocalFieldValues ] = useState(fieldValues)
 
     useEffect(
+      () => { localAddingValue.setState({}) },
+      [addTimesCount.value, localAddingValue],
+    )
+
+    useEffect(
       () => setLocalFieldValues(fieldValues),
       [fieldValues],
     )
