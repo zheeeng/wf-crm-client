@@ -220,22 +220,28 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
       async () => {
         const priority = getLowerPriority(localFieldValues)
         if (type !== 'calendar') {
+          const fields = localAddingValue.state
+          if (type === 'email' && !isEmail(fields.email || '')) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(''))
+            return
+          }
           const field = await onAdd(name, localAddingValue.state, priority)
           if (field) {
             setLocalFieldValues(values => values.concat(field))
             addTimesCount.increase()
           }
-          return field
+          return
         }
 
+        const fields = localAddingValue.state
         const [year, month, day] = localAddingDate
-        const field = await onAdd(name, { year, month, day }, priority)
+        const field = await onAdd(name, { ...fields, year, month, day }, priority)
         if (field) {
           setLocalFieldValues(values => values.concat(field))
           addTimesCount.increase()
         }
 
-        return field
+        return
 
       },
       [localFieldValues, type, localAddingDate, onAdd, name, localAddingValue.state, addTimesCount],
@@ -468,9 +474,9 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
     )
 
     const renderField = useCallback(
-      (values: FieldSegmentValue[], fieldValue: FieldValue, isStub: boolean, isAppend: boolean) => (
+      (values: FieldSegmentValue[], fieldValue: FieldValue, isStub: boolean, isAppend: boolean, key?: string) => (
         <div
-          key={isStub ? addTimesCount.value : undefined}
+          key={key}
           className={classnames(
             classes.fieldTextBar,
             !editable && !joinSegmentFieldValues(name, values) && classes.hidden,
@@ -591,7 +597,7 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
           )}
         </div>
       ),
-      [addTimesCount, classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.weakenEffect, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, name, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, isMultiple, toggleHideField, removeField, addField, hasErrorKeys]
+      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.weakenEffect, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, name, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, isMultiple, toggleHideField, removeField, addField, hasErrorKeys]
     )
 
     const renderCombinedField = useCallback(
@@ -600,13 +606,13 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
           classes.fieldTextBarWrapper,
           !editable && fieldValue.priority === 0 && classes.hidden,
         )}>
-          {renderField(fieldValue.values, fieldValue, isStub, false)}
+          {renderField(fieldValue.values, fieldValue, isStub, false, addTimesCount.value.toString())}
           {fieldValue.appendValues
             && fieldValue.appendValues.length
-            && renderField(fieldValue.appendValues, fieldValue, isStub, true)}
+            && renderField(fieldValue.appendValues, fieldValue, isStub, true,  addTimesCount.value.toString() + '-append')}
         </div>
       ),
-      [classes.fieldTextBarWrapper, classes.hidden, editable, renderField],
+      [addTimesCount.value, classes.fieldTextBarWrapper, classes.hidden, editable, renderField],
     )
 
     const sortableItems = useMemo(
