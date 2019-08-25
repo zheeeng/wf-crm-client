@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import Select, { createFilter } from 'react-select'
-import { SelectComponentsConfig } from 'react-select/lib/components'
+import { SelectComponentsConfig } from 'react-select/src/components'
 import classnames from 'classnames'
 import { Theme } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
