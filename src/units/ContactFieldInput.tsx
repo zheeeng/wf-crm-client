@@ -585,13 +585,21 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
                   </Tooltip>
                 </>
               ) : (
-                <Tooltip title="add">
-                  <IconButton
-                    className={classnames(classes.fieldControlIcon)}
-                    onClick={addField}>
-                    <SvgIcon name={ICONS.AddCircle} color="hoverLighten" size="sm" />
+                <>
+                  <IconButton className={classnames(classes.fieldControlIcon, classes.takePlace)}>
+                    <SvgIcon name={ICONS.Eye} color="hoverLighten" size="sm" />
                   </IconButton>
-                </Tooltip>
+                  <IconButton className={classnames(classes.fieldControlIcon, classes.takePlace)}>
+                    <SvgIcon name={ICONS.Eye} color="hoverLighten" size="sm" />
+                  </IconButton>
+                  <Tooltip title="add">
+                    <IconButton
+                      className={classnames(classes.fieldControlIcon)}
+                      onClick={addField}>
+                      <SvgIcon name={ICONS.AddCircle} color="hoverLighten" size="sm" />
+                    </IconButton>
+                  </Tooltip>
+                </>
               )}
             </div>
           )}
