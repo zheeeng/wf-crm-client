@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
-import { useInput } from 'react-hanger'
+import { useInput, useNumber, useSetState } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -202,6 +202,11 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
     const classes = useStyles({})
 
+    const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
+
+    const addTimesCount = useNumber(0)
+    const localAddingValue = useSetState<Record<string, string>>({})
+    const [localAddingDate, setLocalAddingDate] = useState<[number, number, number]>([0, 0, 0])
     const [ localFieldValues, setLocalFieldValues ] = useState(fieldValues)
 
     useEffect(
@@ -213,12 +218,27 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
     const addField = useCallback(
       async () => {
-        // TODO: collect data
-        const field = await onAdd(name, {}, getLowerPriority(localFieldValues))
-        if (field) setLocalFieldValues(values => values.concat(field))
+        const priority = getLowerPriority(localFieldValues)
+        if (type !== 'calendar') {
+          const field = await onAdd(name, localAddingValue.state, priority)
+          if (field) {
+            setLocalFieldValues(values => values.concat(field))
+            addTimesCount.increase()
+          }
+          return field
+        }
+
+        const [year, month, day] = localAddingDate
+        const field = await onAdd(name, { year, month, day }, priority)
+        if (field) {
+          setLocalFieldValues(values => values.concat(field))
+          addTimesCount.increase()
+        }
+
         return field
+
       },
-      [localFieldValues, onAdd, name, setLocalFieldValues],
+      [localFieldValues, type, localAddingDate, onAdd, name, localAddingValue.state, addTimesCount],
     )
 
     const updateField = useCallback(
@@ -234,14 +254,6 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
       [localFieldValues, onUpdate, name, setLocalFieldValues],
     )
 
-    const addDateField = useCallback(
-      async (year: number, month: number, day: number) => {
-        const field = await onAdd(name, { year, month, day }, getLowerPriority(localFieldValues))
-        if (field) setLocalFieldValues(values => values.concat(field))
-        return field
-      },
-      [localFieldValues, name, onAdd, setLocalFieldValues],
-    )
     const updateDateField = useCallback(
       async (year: number, month: number, day: number, id: string) => {
         if (!id) return
@@ -252,6 +264,92 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
         if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
       },
       [localFieldValues, name, onUpdate, setLocalFieldValues]
+    )
+
+
+    const handleEntryUpdateByBlur = useCallback(
+      (key: string, id: string) =>
+        async (event: React.FocusEvent<HTMLInputElement>) => {
+          const value = event.target.value.trim()
+
+          if (key !== 'title' && type === 'email' && !isEmail(value)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          // if (type === 'calendar') {
+          //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+          //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+          //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+
+          //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+          // }
+
+          const fieldData: FieldSegmentValue = { key, value }
+          if (id) {
+            updateField(fieldData, id)
+          } else {
+            localAddingValue.setState({ [key]: value })
+          }
+        },
+      [localAddingValue, type, updateField],
+    )
+
+    const handleEntryUpdateByKeydown = useCallback(
+      (key: string, id: string) =>
+        (event: React.KeyboardEvent<HTMLInputElement>) => {
+          key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
+
+          if (event.keyCode !== 13) return
+          const value = event.currentTarget.value.trim()
+
+          if (key !== 'title' && type === 'email' && !isEmail(value)) {
+            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+            return
+          }
+
+          // if (type === 'calendar') {
+          //   const year = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'year')!.value
+          //   const month = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'month')!.value
+          //   const day = localFieldValues.find(f => f.id === id)!.values.find(v => v.key === 'day')!.value
+
+          //   if (key === 'year' && !isValidDate(+day, +month, +value)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'month' && !isValidDate(+day, +value, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+
+          //   if (key === 'day' && !isValidDate(+value, +month, +year)) {
+          //     setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          //     return
+          //   }
+          // }
+
+          const fieldData: FieldSegmentValue = { key, value }
+          if (id) {
+            updateField(fieldData, id)
+          } else {
+            localAddingValue.setState({ [key]: value })
+          }
+        },
+      [localAddingValue, type, updateField],
     )
 
     const removeField = useCallback(
@@ -283,8 +381,6 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
       },
       [localFieldValues, onChangePriority, name],
     )
-
-    const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
 
     const sortingId = useInput('')
 
@@ -356,24 +452,31 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
     const onDateChange = useCallback(
       (id?: string) => async (date: Date | null) => {
-        if (!date || !id) return
+        if (!date) return
 
         const year = date.getFullYear()
         const month = date.getMonth() + 1
         const day = date.getDate()
 
-        updateDateField(year, month, day, id)
+        if (id) {
+          updateDateField(year, month, day, id)
+        } else {
+          setLocalAddingDate([year, month, day])
+        }
       },
       [updateDateField],
     )
 
     const renderField = useCallback(
       (values: FieldSegmentValue[], fieldValue: FieldValue, isStub: boolean, isAppend: boolean) => (
-        <div className={classnames(
-          classes.fieldTextBar,
-          !editable && !joinSegmentFieldValues(name, values) && classes.hidden,
-          editable && fieldValue.priority === 0 && classes.disabled,
-        )}>
+        <div
+          key={isStub ? addTimesCount.value : undefined}
+          className={classnames(
+            classes.fieldTextBar,
+            !editable && !joinSegmentFieldValues(name, values) && classes.hidden,
+            editable && fieldValue.priority === 0 && classes.disabled,
+          )}
+        >
           {editable
             ? (
               <>
@@ -403,6 +506,14 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
                       placeholder={camelToWords(segmentValue.key)}
                       defaultValue={segmentValue.value}
                       disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                      onBlur={handleEntryUpdateByBlur(
+                        segmentValue.key,
+                        fieldValue.id || '',
+                      )}
+                      onKeyDown={handleEntryUpdateByKeydown(
+                        segmentValue.key,
+                        fieldValue.id || '',
+                      )}
                     />
                   ))
                 }
@@ -414,6 +525,8 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
                     defaultValue={getFieldDefaultTitle(fieldValue)}
                     placeholder={getLabelExample(type)}
                     disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                    onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '')}
+                    onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id || '')}
                   />
                 )}
               </>
@@ -478,7 +591,7 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
           )}
         </div>
       ),
-      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.weakenEffect, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, name, type, onDateChange, hasTitle, showName, isMultiple, toggleHideField, removeField, addField, hasErrorKeys]
+      [addTimesCount, classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.weakenEffect, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, name, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, isMultiple, toggleHideField, removeField, addField, hasErrorKeys]
     )
 
     const renderCombinedField = useCallback(
