@@ -40,7 +40,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
-    "preinstall": "unlink node_modules/~src || true",
+    "preinstall": "unlink node_modules/~src 2> /dev/null || true",
     "postinstall": "ln -s `pwd`/src node_modules/~src",
     "start": "react-app-rewired start",
     "build:preview": "react-app-rewired build",
