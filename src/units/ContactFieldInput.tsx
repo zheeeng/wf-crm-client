@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
-import { useInput, useNumber, useSetState } from 'react-hanger'
+import { useInput, useNumber } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -205,14 +205,25 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
     const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
 
     const addTimesCount = useNumber(0)
-    const localAddingValue = useSetState<Record<string, string>>({})
-    const [localAddingDate, setLocalAddingDate] = useState<[number, number, number]>([0, 0, 0])
-    const [ localFieldValues, setLocalFieldValues ] = useState(fieldValues)
 
-    useEffect(
-      () => { localAddingValue.setState({}) },
-      [addTimesCount.value, localAddingValue],
+    // localAddingValue && setLocalAddingValue
+    const _localAddingValue = useState<Record<string, string>>({})
+    const localAddingValue = useMemo(
+      () => {
+        const [state, setter] = _localAddingValue
+        const setState = (partialState: Record<string, string>) => setter(prevState => ({ ...prevState, ...partialState }))
+        const resetState = () => setter({})
+
+        return {
+          state,
+          setState,
+          resetState,
+        }
+      },
+      [_localAddingValue],
     )
+    const [localAddingDate, setLocalAddingDate] = useState<[number, number, number]>([0, 0, 0])
+    const [localFieldValues, setLocalFieldValues] = useState(fieldValues)
 
     useEffect(
       () => setLocalFieldValues(fieldValues),
@@ -223,9 +234,13 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
     const addField = useCallback(
       async () => {
+        const fields = localAddingValue.state
+
+        if (Object.values(fields).filter(i => i).length === 0) return
+
         const priority = getLowerPriority(localFieldValues)
+
         if (type !== 'calendar') {
-          const fields = localAddingValue.state
           if (type === 'email' && !isEmail(fields.email || '')) {
             setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(''))
             return
@@ -233,23 +248,25 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
           const field = await onAdd(name, localAddingValue.state, priority)
           if (field) {
             setLocalFieldValues(values => values.concat(field))
+            localAddingValue.resetState()
             addTimesCount.increase()
           }
           return
         }
 
-        const fields = localAddingValue.state
         const [year, month, day] = localAddingDate
         const field = await onAdd(name, { ...fields, year, month, day }, priority)
         if (field) {
           setLocalFieldValues(values => values.concat(field))
+          setLocalAddingDate([0, 0, 0])
+          localAddingValue.resetState()
           addTimesCount.increase()
         }
 
         return
 
       },
-      [localFieldValues, type, localAddingDate, onAdd, name, localAddingValue.state, addTimesCount],
+      [localAddingValue, localFieldValues, type, localAddingDate, onAdd, name, addTimesCount],
     )
 
     const updateField = useCallback(
