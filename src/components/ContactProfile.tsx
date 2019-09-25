@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useBoolean, useInput, usePrevious } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/styles'
@@ -22,6 +22,7 @@ import { ContactFieldInput, ContactSelectedFieldInput } from '~src/units/Contact
 import { FieldValue } from '~src/units/ContactFieldInputUtils'
 import { FieldType, NameField, PhoneField, AddressField, DateField, EmailField, OtherField } from '~src/types/Contact'
 import cssTips from '~src/utils/cssTips'
+import createEventEntry from '~src/utils/eventEntry'
 
 import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
@@ -356,7 +357,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     [toSplitWaiver.id, cancelSplitWaiver, splitWaiver, splitDone],
   )
 
-  const { value: editable, toggle: toggleEditable, setFalse: toggleOffEditable } = useBoolean(false)
+  const { value: editable, setTrue: toggleOnEditable, setFalse: toggleOffEditable } = useBoolean(false)
   const classes = useStyles({})
 
   const handleAddTags = useCallback(
@@ -380,6 +381,28 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
     async (fieldType: FieldType, obj: object, priority: number) =>
       specificFieldToInputField(fieldType)(await addField({ ...obj, fieldType, priority })),
     [addField],
+  )
+
+  const addFieldsEvents = useRef<ReturnType<typeof createEventEntry>>()
+
+  useEffect(
+    () => {
+      addFieldsEvents.current = createEventEntry()
+
+      return () => addFieldsEvents.current && addFieldsEvents.current.clean()
+    },
+    [],
+  )
+
+  const toggleEditable = useCallback(
+    () => {
+      if (!editable) return toggleOnEditable()
+
+      addFieldsEvents.current && addFieldsEvents.current.trigger()
+
+      toggleOffEditable()
+    },
+    [addFieldsEvents, editable, toggleOnEditable, toggleOffEditable],
   )
 
   const handleUpdateField = useCallback(
@@ -470,6 +493,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldValues={infoFields.names}
         backupFieldValue={backupNameField}
         onAdd={handleAddField}
+        bufferAdd={addFieldsEvents.current && addFieldsEvents.current.subscribe}
         onUpdate={handleUpdateField}
         onDelete={handleRemoveField}
         onChangePriority={handleChangeFieldPriority}
@@ -485,6 +509,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldValues={infoFields.emails}
         backupFieldValue={backupEmailField}
         onAdd={handleAddField}
+        bufferAdd={addFieldsEvents.current && addFieldsEvents.current.subscribe}
         onUpdate={handleUpdateField}
         onDelete={handleRemoveField}
         onChangePriority={handleChangeFieldPriority}
@@ -500,6 +525,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldValues={infoFields.phones}
         backupFieldValue={backupPhoneField}
         onAdd={handleAddField}
+        bufferAdd={addFieldsEvents.current && addFieldsEvents.current.subscribe}
         onUpdate={handleUpdateField}
         onDelete={handleRemoveField}
         onChangePriority={handleChangeFieldPriority}
@@ -515,6 +541,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldValues={infoFields.dates}
         backupFieldValue={backupDateField}
         onAdd={handleAddField}
+        bufferAdd={addFieldsEvents.current && addFieldsEvents.current.subscribe}
         onUpdate={handleUpdateField}
         onDelete={handleRemoveField}
         onChangePriority={handleChangeFieldPriority}
@@ -540,6 +567,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldValues={infoFields.addresses}
         backupFieldValue={backupAddressField}
         onAdd={handleAddField}
+        bufferAdd={addFieldsEvents.current && addFieldsEvents.current.subscribe}
         onUpdate={handleUpdateField}
         onDelete={handleRemoveField}
         onChangePriority={handleChangeFieldPriority}
@@ -554,6 +582,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
         fieldValues={infoFields.others}
         backupFieldValue={backupOtherField}
         onAdd={handleAddField}
+        bufferAdd={addFieldsEvents.current && addFieldsEvents.current.subscribe}
         onUpdate={handleUpdateField}
         onDelete={handleRemoveField}
         onChangePriority={handleChangeFieldPriority}
@@ -631,7 +660,7 @@ const ContactProfile: React.FC<Props> = React.memo(({ contactId }) => {
               <Typography variant="h4" className={classes.profileTitle}>
                 Profile
               </Typography>
-              <Tooltip title={editable ? 'display' : 'edit'}>
+              <Tooltip title={editable ? 'done' : 'edit'}>
                 <IconButton onClick={toggleEditable} className={classes.editIconBox}>
                   {editable
                     ? <Icon name={ICONS.CheckCircle} size="lg" color="hoverLighten" />

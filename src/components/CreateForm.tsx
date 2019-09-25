@@ -238,14 +238,14 @@ const CreateForm: React.FC<Props> = React.memo(({ option, open, onClose, onOk, d
         name => !values[name]
       )
 
-      const inValidFieldNames = validators.filter(
+      const invalidFieldNames = validators.filter(
         v => values[v.name] && !v.validator(values[v.name])
       ).map(v => v.name)
 
-      if (missedFieldNames.length === 0 && inValidFieldNames.length === 0) {
+      if (missedFieldNames.length === 0 && invalidFieldNames.length === 0) {
         await onOk(fieldValues.current)
       } else {
-        setToWarnFields(missedFieldNames.concat(inValidFieldNames))
+        setToWarnFields(missedFieldNames.concat(invalidFieldNames))
       }
     },
     [onOk, setToWarnFields, validators, requiredFieldNames],

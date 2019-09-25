@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
-import { useInput, useNumber } from 'react-hanger'
+import { useInput, useNumber, useSetState } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -188,6 +188,7 @@ export type Props = InputProps & {
   fieldValues: FieldValue[]
   backupFieldValue: FieldValue
   isMultiple: boolean
+  bufferAdd?: (fn: () => void) => () => void
   onAdd (fieldType: string, addObj: any, priority: number): Promise<FieldValue | null>
   onUpdate (fieldType: string, updateObj: any, id: string, priority: number): Promise<FieldValue | null>
   onDelete (name: string, id: string): Promise<string | null>
@@ -197,7 +198,7 @@ export type Props = InputProps & {
 export const ContactFieldInput: React.FC<Props> = React.memo(
   ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
     editable = false, type, hasTitle, isMultiple,
-    onAdd, onUpdate, onDelete, onChangePriority,
+    onAdd, bufferAdd, onUpdate, onDelete, onChangePriority,
   }) => {
 
     const classes = useStyles({})
@@ -206,22 +207,8 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
     const addTimesCount = useNumber(0)
 
-    // localAddingValue && setLocalAddingValue
-    const _localAddingValue = useState<Record<string, string>>({})
-    const localAddingValue = useMemo(
-      () => {
-        const [state, setter] = _localAddingValue
-        const setState = (partialState: Record<string, string>) => setter(prevState => ({ ...prevState, ...partialState }))
-        const resetState = () => setter({})
+    const localAddingValue = useSetState<Record<string, string>>({})
 
-        return {
-          state,
-          setState,
-          resetState,
-        }
-      },
-      [_localAddingValue],
-    )
     const [localAddingDate, setLocalAddingDate] = useState<[number, number, number]>([0, 0, 0])
     const [localFieldValues, setLocalFieldValues] = useState(fieldValues)
 
@@ -269,6 +256,13 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
       [localAddingValue, localFieldValues, type, localAddingDate, onAdd, name, addTimesCount],
     )
 
+    useEffect(
+      () => {
+        return bufferAdd ? bufferAdd(addField) : undefined
+      },
+      [bufferAdd, addField],
+    )
+
     const updateField = useCallback(
       async (segmentValue: FieldSegmentValue, id: string) => {
         if (!id) return
@@ -300,7 +294,7 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
         async (event: React.FocusEvent<HTMLInputElement>) => {
           const value = event.target.value.trim()
 
-          if (key !== 'title' && type === 'email' && !isEmail(value)) {
+          if (key !== 'title' && type === 'email' && value !== '' && !isEmail(value)) {
             setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
             return
           }
@@ -344,7 +338,7 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
           if (event.keyCode !== 13) return
           const value = event.currentTarget.value.trim()
 
-          if (key !== 'title' && type === 'email' && !isEmail(value)) {
+          if (key !== 'title' && type === 'email' && value !== '' && !isEmail(value)) {
             setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
             return
           }

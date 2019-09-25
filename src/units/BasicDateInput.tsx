@@ -79,7 +79,7 @@ const BasicDateInput: React.FC<Props> = React.memo(({ className, date, onDateCha
     <DatePickerThemeProvider>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
-          views={["day", "month", "year"]} format="dd/MM/yyyy"
+          views={["day", "month", "year"]} format="MM/dd/yyyy"
           placeholder={getPlaceholderDate()}
           className={classnames(className, classes.datePicker, disabled && classes.disabled)}
           margin="normal"
