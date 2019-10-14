@@ -85,10 +85,18 @@ const ContactIndex: React.FC<Props> = React.memo(
       [navigate, path, nextContactId],
     )
 
+    const handleDeleteContact = useCallback(
+      async () => {
+        await removeContact()
+        navigateToContact()
+      },
+      [removeContact, navigateToContact],
+    )
+
     const renderHeader = useCallback(
       () => (
         <ContactPageHeader
-          onDelete={removeContact}
+          onDelete={handleDeleteContact}
           onGoBack={navigateToContact}
           onGoPrevious={goPreviousContact}
           onGoNext={goNextContact}
@@ -96,7 +104,7 @@ const ContactIndex: React.FC<Props> = React.memo(
           disableGoNext={!nextContactId}
         />
       ),
-      [removeContact, navigateToContact, goPreviousContact, goNextContact, previousContactId, nextContactId],
+      [handleDeleteContact, navigateToContact, goPreviousContact, goNextContact, previousContactId, nextContactId],
     )
 
     const renderRightPart1 = useCallback(

@@ -33,13 +33,30 @@ export default async function fetchData<T> (url: string, option?: Option): Promi
 
   const response = await fetch(`${requestUrl}${query}`, { method, headers, ...(body ? { body } : {}) })
 
-  if (!response.ok) {
-    const errorMessage = await response.json()
+  let data: any = null
+  let errorMessage = null
 
-    throw errorMessage
+  try {
+    if (!response.ok) {
+      errorMessage = await response.json()
+    } else {
+      data = await response.json()
+    }
+  } catch {
+    if (response.status >= 500) {
+      errorMessage = {
+        message: 'InternalServer Error'
+      }
+    } else if (response.status >= 400) {
+      errorMessage = {
+        message: response.status === 404 ? 'Not Found Target' : 'Bad Request'
+      }
+    }
   }
 
-  const data = await response.json()
+  if (errorMessage) {
+    throw errorMessage
+  }
 
   const { account, id, token, username } = data
   persistLoginInfo(account, id, token, username)

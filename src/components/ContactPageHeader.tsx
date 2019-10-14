@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const ContactPageHeader: React.FC<Props> = React.memo(
-  ({ onGoBack, onGoPrevious, onGoNext, disableGoPrevious, disableGoNext }) => {
+  ({ onGoBack, onGoPrevious, onGoNext, onDelete, disableGoPrevious, disableGoNext }) => {
     const classes = useStyles()
 
     return (
@@ -54,11 +54,11 @@ const ContactPageHeader: React.FC<Props> = React.memo(
             </IconButton>
           </ToolTip>
         </div>
-        {/* <ToolTip title="delete contact">
+        <ToolTip title="delete contact">
           <IconButton onClick={onDelete}>
             <Icon name={ICONS.Delete} color="hoverLighten" size="lg" />
           </IconButton>
-        </ToolTip> */}
+        </ToolTip>
       </>
     )
   },

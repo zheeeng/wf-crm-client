@@ -374,7 +374,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
         : fetchNotesError
           ? (
             <Typography align="center">
-              Oops, an error occurred!
+              {fetchNotesError.message ? fetchNotesError.message : 'Oops, an error occurred!'}
             </Typography>
           )
           : (
