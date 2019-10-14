@@ -8,6 +8,7 @@ import ContactActivities from '~src/components/ContactActivities'
 import useWaiverSplitter from '~src/containers/useWaiverSplitter'
 import useContact from '~src/containers/useContact'
 import useContacts from '~src/containers/useContacts'
+import useSwitch from '~src/hooks/useSwitch'
 
 export interface Props {
   contactId: string
@@ -85,13 +86,13 @@ const ContactIndex: React.FC<Props> = React.memo(
       [navigate, path, nextContactId],
     )
 
-    const handleDeleteContact = useCallback(
+    const handleDeleteContact = useSwitch(useCallback(
       async () => {
         await removeContact()
         navigateToContact()
       },
       [removeContact, navigateToContact],
-    )
+    ))
 
     const renderHeader = useCallback(
       () => (
