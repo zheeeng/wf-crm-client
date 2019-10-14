@@ -21,7 +21,7 @@ export interface Props {
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId, page, searchTerm }) => {
     const { contacts, fromContactIdState } = useContacts()
-    const { removeContact } = useContact(contactId)
+    const { removeContact, removeContactError } = useContact(contactId)
 
     const lastContactId = usePrevious(contactId)
     const lastPage = usePrevious(page)
@@ -89,9 +89,9 @@ const ContactIndex: React.FC<Props> = React.memo(
     const handleDeleteContact = useSwitch(useCallback(
       async () => {
         await removeContact()
-        navigateToContact()
+        !removeContactError && navigateToContact()
       },
-      [removeContact, navigateToContact],
+      [removeContact, navigateToContact, removeContactError],
     ))
 
     const renderHeader = useCallback(

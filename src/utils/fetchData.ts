@@ -45,7 +45,7 @@ export default async function fetchData<T> (url: string, option?: Option): Promi
   } catch {
     if (response.status >= 500) {
       errorMessage = {
-        message: 'InternalServer Error'
+        message:  response.status === 504 ? 'Gateway timeout' : 'InternalServer Error'
       }
     } else if (response.status >= 400) {
       errorMessage = {
