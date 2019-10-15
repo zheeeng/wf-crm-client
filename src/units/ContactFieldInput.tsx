@@ -592,11 +592,12 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
                       </Tooltip>
                     }
                   />
-                  <Tooltip title="remove">
+                  <Tooltip title={fieldValue.waiver ? 'field from waiver cannot be deleted' : 'remove'}>
                     <IconButton
                       className={classnames(classes.fieldControlIcon, classes.hiddenInDragged)}
-                      onClick={removeField(fieldValue.id || '')}>
-                      <SvgIcon name={ICONS.Remove} color="hoverLighten" size="sm" />
+                      onClick={fieldValue.waiver ? () => {} : removeField(fieldValue.id || '')}
+                    >
+                      <SvgIcon name={ICONS.Remove} color={fieldValue.waiver ? 'disabled' : 'hoverLighten'} size="sm" />
                     </IconButton>
                   </Tooltip>
                 </>
