@@ -70,6 +70,10 @@ const useContact = (contactId: string) => {
     () => { putFieldError && fail(putFieldError.message) },
     [putFieldError, fail],
   )
+  useEffect(
+    () => { deleteFieldError && fail(deleteFieldError.message) },
+    [deleteFieldError, fail],
+  )
 
   useEffect(
     () => { postSplitWaiverError && fail(postSplitWaiverError.message) },
