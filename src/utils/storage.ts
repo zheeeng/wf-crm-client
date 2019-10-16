@@ -38,7 +38,7 @@ export function readStorage (namespace: string, key: string): string | null {
   return value
 }
 
-export function readByPattern (namespace: string, pattern: RegExp): { [key: string]: string } {
+export function readStorageByPattern (namespace: string, pattern: RegExp): { [key: string]: string } {
   const now = +Date.now()
   const pairs = getItem(namespace)
   if (!pairs) return {}
