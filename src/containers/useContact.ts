@@ -12,6 +12,7 @@ import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
 import useContactsCount from '~src/containers/useContactsCount'
 import useAlert from '~src/containers/useAlert'
+import useLocalCache, { TimeUnit } from '~src/hooks/useLocalCache'
 
 const useContact = (contactId: string) => {
   const { refreshCounts } = useContactsCount()
@@ -178,8 +179,11 @@ const useContact = (contactId: string) => {
     [contactId, putContactFiled],
   )
 
+  const { write, rereadByPattern } = useLocalCache('DeleteContactList', TimeUnit.Minute * 30)
+
   const removeContact = useCallback(
     async () => {
+      write(`del:${contactId}`, contactId)
       await deleteContact(`/api/people/${contactId}`)()
       refreshCounts()
     },
