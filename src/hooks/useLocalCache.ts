@@ -1,14 +1,5 @@
 import { useCallback, useEffect } from 'react'
-import { cleanStorage, writeStorage, readStorage, readStorageByPattern } from '~src/utils/storage'
-
-export enum TimeUnit {
-  Ms = 1,
-  Second = TimeUnit.Second * 1000,
-  Minute = TimeUnit.Second * 60,
-  Hour = TimeUnit.Minute * 60,
-  Day = TimeUnit.Hour * 24,
-  Week = TimeUnit.Day * 7,
-}
+import { cleanStorage, writeStorage, readStorage, deleteStorage, readStorageByPattern } from '~src/utils/storage'
 
 export default function useLocalCache(namespace: string, maxAge: number) {
   useEffect(
@@ -24,18 +15,23 @@ export default function useLocalCache(namespace: string, maxAge: number) {
       const now = +new Date()
       writeStorage(namespace, key, value, now + maxAge)
     },
-    [],
+    [namespace, maxAge],
   )
 
   const read = useCallback(
     (key: string) => readStorage(namespace, key),
-    [],
+    [namespace],
+  )
+
+  const remove = useCallback(
+    (key: string) => deleteStorage(namespace, key),
+    [namespace],
   )
 
   const rereadByPattern = useCallback(
     (pattern: RegExp) => readStorageByPattern(namespace, pattern),
-    [],
+    [namespace],
   )
 
-  return { write, read, rereadByPattern }
+  return { write, read, remove, rereadByPattern }
 }
