@@ -38,6 +38,13 @@ export function readStorage (namespace: string, key: string): string | null {
   return value
 }
 
+export function deleteStorage (namespace: string, key: string) {
+  const pairs = getItem(namespace)
+  if (!pairs) return
+  const records = JSON.parse(pairs) as CacheRecords || {}
+  delete records[key]
+}
+
 export function readStorageByPattern (namespace: string, pattern: RegExp): { [key: string]: string } {
   const now = +Date.now()
   const pairs = getItem(namespace)
