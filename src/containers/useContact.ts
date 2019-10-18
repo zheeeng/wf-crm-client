@@ -12,7 +12,12 @@ import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
 import useContactsCount from '~src/containers/useContactsCount'
 import useAlert from '~src/containers/useAlert'
-import useLocalCache, { TimeUnit } from '~src/hooks/useLocalCache'
+import {
+  localStorageKeyForDeletingContacts,
+  localStorageExpirationForDeletingContacts,
+  delContactRecordKey,
+} from '~src/meta/localCacheConfig'
+import useLocalCache from '~src/hooks/useLocalCache'
 
 const useContact = (contactId: string) => {
   const { refreshCounts } = useContactsCount()
@@ -46,6 +51,8 @@ const useContact = (contactId: string) => {
   const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
+
+  const { write, read, remove } = useLocalCache(localStorageKeyForDeletingContacts, localStorageExpirationForDeletingContacts)
 
   const freshContact = useMemo(
     () => contactData ? contactInputAdapter(contactData) : null,
@@ -98,12 +105,18 @@ const useContact = (contactId: string) => {
   )
 
   const contact = useMemo<Contact | undefined>(
-    () => latestContact
-      ? tags.length
-        ? { ...latestContact, info: { ...latestContact.info, tags } }
-        : latestContact
-      : undefined,
-    [latestContact, tags],
+    () => {
+      if (!latestContact) return undefined
+
+      const contactId = read(delContactRecordKey(latestContact.id))
+
+      if (tags.length) {
+        return { ...latestContact, info: { ...latestContact.info, tags }, isDeleting: !!contactId }
+      }
+
+      return { ...latestContact, isDeleting: !!contactId }
+    },
+    [latestContact, tags, read],
   )
 
   const fetchContact = useCallback(
@@ -179,15 +192,15 @@ const useContact = (contactId: string) => {
     [contactId, putContactFiled],
   )
 
-  const { write, rereadByPattern } = useLocalCache('DeleteContactList', TimeUnit.Minute * 30)
-
   const removeContact = useCallback(
     async () => {
-      write(`del:${contactId}`, contactId)
+      const key = delContactRecordKey(contactId)
+      write(key, contactId)
       await deleteContact(`/api/people/${contactId}`)()
+      remove(key)
       refreshCounts()
     },
-    [contactId, deleteContact, refreshCounts],
+    [contactId, deleteContact, refreshCounts, write, remove],
   )
 
   const addTag = useCallback(

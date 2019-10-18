@@ -4,6 +4,9 @@ import { Theme } from '@material-ui/core/styles'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  fullWidth: {
+    width: '100%',
+  },
   main: {
     ...cssTips(theme).casFlex(),
   },
@@ -104,6 +107,31 @@ const DetailsPaper: React.FC<Props> = React.memo(
               {renderRightPart2()}
             </section>
           </aside>
+        </div>
+        <div className={classes.footerPlacer} />
+      </main>
+    )
+  },
+)
+
+export interface EmptyDetailsPaperProps {
+  renderHeader: () => React.ReactNode
+  children: React.ReactNode
+}
+
+export const EmptyDetailsPaper: React.FC<EmptyDetailsPaperProps> = React.memo(
+  ({ renderHeader, children }) => {
+    const classes = useStyles({})
+
+    return (
+      <main className={classes.main}>
+        <header className={classes.header}>
+          {renderHeader()}
+        </header>
+        <div className={classes.content}>
+          <div className={classes.fullWidth}>
+            {children}
+          </div>
         </div>
         <div className={classes.footerPlacer} />
       </main>

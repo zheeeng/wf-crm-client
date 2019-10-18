@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { usePrevious } from 'react-hanger'
-import DetailsPaper from '~src/units/DetailsPaper'
+import Typography from '@material-ui/core/Typography'
+import DetailsPaper, { EmptyDetailsPaper } from '~src/units/DetailsPaper'
 import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
 import ContactAssets from '~src/components/ContactAssets'
@@ -9,6 +10,7 @@ import useWaiverSplitter from '~src/containers/useWaiverSplitter'
 import useContact from '~src/containers/useContact'
 import useContacts from '~src/containers/useContacts'
 import useSwitch from '~src/hooks/useSwitch'
+import useAlert from '~src/containers/useAlert'
 
 export interface Props {
   contactId: string
@@ -21,7 +23,7 @@ export interface Props {
 const ContactIndex: React.FC<Props> = React.memo(
   ({ navigate, path, contactId, page, searchTerm }) => {
     const { contacts, fromContactIdState } = useContacts()
-    const { removeContact, removeContactError } = useContact(contactId)
+    const { contact, removeContact } = useContact(contactId)
 
     const lastContactId = usePrevious(contactId)
     const lastPage = usePrevious(page)
@@ -86,12 +88,15 @@ const ContactIndex: React.FC<Props> = React.memo(
       [navigate, path, nextContactId],
     )
 
+    const { success } = useAlert()
+
     const handleDeleteContact = useSwitch(useCallback(
-      async () => {
-        await removeContact()
-        !removeContactError && navigateToContact()
+      () => {
+        success('Start deleting contact, it may take a while.')
+        removeContact()
+        navigateToContact()
       },
-      [removeContact, navigateToContact, removeContactError],
+      [removeContact, navigateToContact, success],
     ))
 
     const renderHeader = useCallback(
@@ -119,15 +124,26 @@ const ContactIndex: React.FC<Props> = React.memo(
 
     return (
       <useWaiverSplitter.Provider>
-        <DetailsPaper
-          renderHeader={renderHeader}
-          renderRightPart1={renderRightPart1}
-          renderRightPart2={renderRightPart2}
-        >
-          <ContactProfile
-            contactId={contactId}
-          />
-        </DetailsPaper>
+        {(contact && contact.isDeleting)
+          ?(
+            <EmptyDetailsPaper renderHeader={renderHeader}>
+              <Typography align="center">
+                This Contact is in deleting process, please check the result later.
+              </Typography>
+            </EmptyDetailsPaper>
+          )
+          : (
+            <DetailsPaper
+              renderHeader={renderHeader}
+              renderRightPart1={renderRightPart1}
+              renderRightPart2={renderRightPart2}
+            >
+              <ContactProfile
+                contactId={contactId}
+              />
+            </DetailsPaper>
+          )
+        }
       </useWaiverSplitter.Provider>
     )
   },

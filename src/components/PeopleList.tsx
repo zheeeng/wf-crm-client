@@ -101,6 +101,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   checkedRow: {
     backgroundColor: theme.palette.grey[900],
   },
+  isDeleting: {
+    backgroundColor: '#f8f8f8',
+    cursor: 'not-allowed',
+    '&& *': {
+      cursor: 'not-allowed',
+    },
+  },
   contactName: {
     fontWeight: 600,
   },
@@ -509,84 +516,121 @@ const PeopleList: React.FC<Props> = React.memo(({
   )
 
   const renderTableRows = (contact: Contact) => {
-    const { id } = contact
+    const { id, isDeleting } = contact
     const isChecked = checked.includes(id)
     const isHighLighted = fromContactIdState.value === id
 
-    return (
-      <TableRow
-        key={id}
-        onClick={handleShowProfile(id)}
-        className={classnames(
-          classes.tableRow,
-          isChecked && classes.checkedRow,
-          isHighLighted && classes.checkedRow,
-        )}
-        onMouseMove={isHighLighted ? fromContactIdState.clear : undefined}
-      >
-        <TableCell padding="none" className={classes.minCell}>
-          <Checkbox
-            checkedIcon={
-              <Icon
-                name={ICONS.CheckChecked}
-                size="sm"
-              />
-            }
-            icon={
-              hoverCheck === id
+    return isDeleting
+      ? (
+        <TableRow key={id} className={classnames(classes.tableRow, classes.isDeleting)}>
+          <TableCell padding="none" className={classes.minCell}>
+            <Checkbox
+              checkedIcon={
+                <Icon
+                  name={ICONS.CheckChecked}
+                  size="sm"
+                />
+              }
+              icon={
+                hoverCheck === id
+                  ? (
+                    <Icon
+                      name={ICONS.CheckChecked}
+                      size="sm"
+                    />
+                  ): (
+                    <Icon
+                      name={ICONS.Check}
+                      size="sm"
+                    />
+                  )
+              }
+              checked={isChecked}
+              tabIndex={-1}
+              className={classes.checkbox}
+            />
+          </TableCell>
+          <TableCell padding="none" className={classes.minCell} colSpan={100}>
+            <Typography align="center">
+              This contact {contact.info.name} is in deleting process.
+            </Typography>
+          </TableCell>          
+        </TableRow>
+      )
+      : (
+        <TableRow
+          key={id}
+          onClick={handleShowProfile(id)}
+          className={classnames(
+            classes.tableRow,
+            isChecked && classes.checkedRow,
+            isHighLighted && classes.checkedRow,
+          )}
+          onMouseMove={isHighLighted ? fromContactIdState.clear : undefined}
+        >
+          <TableCell padding="none" className={classes.minCell}>
+            <Checkbox
+              checkedIcon={
+                <Icon
+                  name={ICONS.CheckChecked}
+                  size="sm"
+                />
+              }
+              icon={
+                hoverCheck === id
+                  ? (
+                    <Icon
+                      name={ICONS.CheckChecked}
+                      size="sm"
+                    />
+                  ): (
+                    <Icon
+                      name={ICONS.Check}
+                      size="sm"
+                    />
+                  )
+              }
+              onMouseEnter={handleHoverCheck(id)}
+              onMouseLeave={handleHoverCheck('')}
+              onClick={handleItemCheckedToggle(id)}
+              checked={isChecked}
+              tabIndex={-1}
+              className={classes.checkbox}
+            />
+          </TableCell>
+          <TableCell padding="none" className={classes.minCell}>
+            <IconButton
+              onClick={handleStarClick(id, !contact.info.starred)}
+              onMouseEnter={handleHoverStar(id)}
+              onMouseLeave={handleHoverStar('')}
+            >
+              {(contact.info.starred || id === hoverStar)
                 ? (
-                  <Icon
-                    name={ICONS.CheckChecked}
-                    size="sm"
-                  />
-                ): (
-                  <Icon
-                    name={ICONS.Check}
-                    size="sm"
-                  />
+                  <Icon name={ICONS.Star} size="sm" />
+                ) : (
+                  <Icon name={ICONS.StarStroke} size="sm" />
                 )
-            }
-            onMouseEnter={handleHoverCheck(id)}
-            onMouseLeave={handleHoverCheck('')}
-            onClick={handleItemCheckedToggle(id)}
-            checked={isChecked}
-            tabIndex={-1}
-            className={classes.checkbox}
-          />
-        </TableCell>
-        <TableCell padding="none" className={classes.minCell}>
-          <IconButton
-            onClick={handleStarClick(id, !contact.info.starred)}
-            onMouseEnter={handleHoverStar(id)}
-            onMouseLeave={handleHoverStar('')}
-          >
-            {(contact.info.starred || id === hoverStar)
-              ? (
-                <Icon name={ICONS.Star} size="sm" />
-              ) : (
-                <Icon name={ICONS.StarStroke} size="sm" />
-              )
-            }
-          </IconButton>
-        </TableCell>
-        <TableCell padding="none" className={classes.minCell}>
-          <Avatar
-            alt={contact.info.name}
-            src={contact.info.avatar}
-            className={classes.pointer}
-          />
-        </TableCell>
-        <Hidden mdDown>
-          {renderPCLayoutTableRows(contact)}
-        </Hidden>
-        <Hidden lgUp xsDown>
-          {renderTabletLayoutTableRows(contact)}
-        </Hidden>
-        <Hidden smUp>
-          {renderMobileLayoutTableRows(contact)}
-        </Hidden>
-      </TableRow>
-    )
+              }
+            </IconButton>
+          </TableCell>
+          <TableCell padding="none" className={classes.minCell}>
+            <Avatar
+              alt={contact.info.name}
+              src={contact.info.avatar}
+              className={classes.pointer}
+            />
+          </TableCell>
+          <Hidden mdDown>
+            {renderPCLayoutTableRows(contact)}
+          </Hidden>
+          <Hidden lgUp xsDown>
+            {renderTabletLayoutTableRows(contact)}
+          </Hidden>
+          <Hidden smUp>
+            {renderMobileLayoutTableRows(contact)}
+          </Hidden>
+        </TableRow>
+      )
   }
 
   const renderSearcher = () => (

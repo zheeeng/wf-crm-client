@@ -12,6 +12,13 @@ import useAlert from '~src/containers/useAlert'
 import sleep from '~src/utils/sleep'
 import downloadFile from '~src/utils/downloadFile'
 import useLatest from '~src/hooks/useLatest'
+import {
+  localStorageKeyForDeletingContacts,
+  localStorageExpirationForDeletingContacts,
+  delContactRecordKey,
+  delContactRecordPattern,
+} from '~src/meta/localCacheConfig'
+import useLocalCache from '~src/hooks/useLocalCache'
 
 type FetchParams = {
   page?: number
@@ -48,6 +55,7 @@ const useContacts = createUseContext(({
     request: getContacts2,
     error: getContactsError2,
   } = useGet<ContactsResponse>()
+
   const { request: deleteContact, error: deleteContactError } = useDelete()
 
   const { data: postContactData, request: postContact, error: postContactError } = usePost()
@@ -97,13 +105,20 @@ const useContacts = createUseContext(({
     [latestPagination, page],
   )
 
+  const { write, remove, rereadByPattern } = useLocalCache(localStorageKeyForDeletingContacts, localStorageExpirationForDeletingContacts)
+
   const contacts = useMemo<Contact[]>(
-    () => (
-      latestContactsData
-        ? latestContactsData.result
-        : []
-    ).map(contactInputAdapter),
-    [latestContactsData],
+    () => {
+      const contactIdsMap = rereadByPattern(delContactRecordPattern())
+
+      return (
+        latestContactsData
+          ? latestContactsData.result
+          : []
+      ).map(contactInputAdapter)
+      .map(contact => contactIdsMap[delContactRecordKey(contact.id)] ? { ...contact, isDeleting: true } : contact )
+    },
+    [latestContactsData, rereadByPattern],
   )
 
   const fetchContacts = useCallback(
@@ -158,18 +173,24 @@ const useContacts = createUseContext(({
 
   const removeContact = useCallback(
     async (contactIds: string[]) => {
+
       await contactIds.reduce(
-        async (p, id) => {
-          await p
-          await deleteContact(`/api/people/${id}`)()
-          refreshCounts()
+        async (_, id) => {
+          await sleep(35)
+          write(delContactRecordKey(id), id)
+          deleteContact(`/api/people/${id}`)().then(
+            () => {
+              remove(delContactRecordKey(id))
+              refreshCounts()
+            }
+          )
         },
         Promise.resolve(),
       )
 
       page === 1 ? fetchContactsQuietly(30) : fetchContacts(30, 1)
     },
-    [deleteContact, fetchContacts, fetchContactsQuietly, page, refreshCounts],
+    [deleteContact, fetchContacts, fetchContactsQuietly, page, refreshCounts, write, remove],
   )
 
   const addContactToGroup = useCallback(
