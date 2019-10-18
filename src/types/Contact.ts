@@ -110,6 +110,7 @@ export type PluralInfo = {
 }
 export interface Contact {
   id: string
+  isDeleting?: boolean
   info: {
     avatar: string
     starred: boolean
