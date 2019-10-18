@@ -2,10 +2,6 @@ const privateNamespacePrefix = '__@@pnp@__'
 
 const getNamespace = (namespace: string) => privateNamespacePrefix + namespace
 
-function removeItem (namespace: string) {
-  window.localStorage.removeItem(getNamespace(namespace))
-}
-
 function setItem (namespace: string, value: string) {
   window.localStorage.setItem(getNamespace(namespace), value)
 }
@@ -18,12 +14,12 @@ type CacheRecords = { [key: string]: [string, number] }
 
 export function cleanStorage (namespace: string) {
   const now = +Date.now()
-  const records: CacheRecords = JSON.parse(getItem(namespace) || 'null') || {}
+  const records: CacheRecords = JSON.parse(getItem(namespace) || '{}')
   for (let key in records) if (records.hasOwnProperty(key) && now >= records[key][1]) delete records[key]
 }
 
 export function writeStorage (namespace: string, key: string, value: string, exp: number) {
-  const records: CacheRecords = JSON.parse(getItem(namespace) || 'null') || {}
+  const records: CacheRecords = JSON.parse(getItem(namespace) || '{}')
   records[key] = [value, exp]
   setItem(namespace, JSON.stringify(records))
 }
@@ -31,8 +27,12 @@ export function writeStorage (namespace: string, key: string, value: string, exp
 export function readStorage (namespace: string, key: string): string | null {
   const pairs = getItem(namespace)
   if (!pairs) return null
+
   const records = JSON.parse(pairs) as CacheRecords || {}
-  const [value, exp] = records[key]
+  const record = records[key]
+  if (!record) return null
+
+  const [value, exp] = record
   if (+Date.now() >= exp) return null
 
   return value
