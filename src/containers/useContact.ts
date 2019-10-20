@@ -88,10 +88,10 @@ const useContact = (contactId: string) => {
     [postSplitWaiverError, fail],
   )
 
-  useEffect(
-    () => { deleteContactError && fail(deleteContactError.message) },
-    [deleteContactError, fail],
-  )
+  // useEffect(
+  //   () => { deleteContactError && fail(deleteContactError.message) },
+  //   [deleteContactError, fail],
+  // )
 
   const tags = useLatest<string[] | undefined | null>(
     latestContact && latestContact.info.tags,

@@ -29,25 +29,20 @@ const ContactIndex: React.FC<Props> = React.memo(
     const lastPage = usePrevious(page)
     const lastSearchTerm = usePrevious(searchTerm)
 
-    const navigateToContact = useCallback(
+    const navigateToContactList = useCallback(
       () => {
-        const lastUrl = document.referrer
         const pathChunks = path.split('/')
         const backLevelPath = pathChunks[pathChunks.length - 1] === ''
           ? pathChunks.slice(0, -2).join('/')
           : pathChunks.slice(0, -1).join('/')
 
-        if (lastUrl.includes(backLevelPath)) {
-          window.history.go(-1)
-        } else if (lastContactId) {
-          const pageQuery = (lastPage && lastPage !== '1') ? `page=${lastPage}` : ''
-          const searchQuery = lastSearchTerm ? `search=${lastSearchTerm}` : ''
-          const query = [pageQuery, searchQuery].filter(it => it).join('&')
-          const backPath = backLevelPath + (query ? `?${query}` : '')
+        const pageQuery = (lastPage && lastPage !== '1') ? `page=${lastPage}` : ''
+        const searchQuery = lastSearchTerm ? `search=${lastSearchTerm}` : ''
+        const query = [pageQuery, searchQuery].filter(it => it).join('&')
+        const backPath = backLevelPath + (query ? `?${query}` : '')
 
-          fromContactIdState.setValue(lastContactId)
-          navigate(backPath)
-        }
+        if (lastContactId) fromContactIdState.setValue(lastContactId)
+        navigate(backPath)
       },
       [path, lastContactId, lastPage, lastSearchTerm, fromContactIdState, navigate],
     )
@@ -94,23 +89,23 @@ const ContactIndex: React.FC<Props> = React.memo(
       () => {
         success('Start deleting contact, it may take a while.')
         removeContact()
-        navigateToContact()
+        navigateToContactList()
       },
-      [removeContact, navigateToContact, success],
+      [removeContact, navigateToContactList, success],
     ))
 
     const renderHeader = useCallback(
       () => (
         <ContactPageHeader
           onDelete={handleDeleteContact}
-          onGoBack={navigateToContact}
+          onGoBack={navigateToContactList}
           onGoPrevious={goPreviousContact}
           onGoNext={goNextContact}
           disableGoPrevious={!previousContactId}
           disableGoNext={!nextContactId}
         />
       ),
-      [handleDeleteContact, navigateToContact, goPreviousContact, goNextContact, previousContactId, nextContactId],
+      [handleDeleteContact, navigateToContactList, goPreviousContact, goNextContact, previousContactId, nextContactId],
     )
 
     const renderRightPart1 = useCallback(
