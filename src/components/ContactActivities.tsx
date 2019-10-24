@@ -3,8 +3,6 @@ import { useBoolean, useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
-import Dialog from '@material-ui/core/Dialog'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Stepper from '@material-ui/core/Stepper'
@@ -19,11 +17,11 @@ import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import useAlert from '~src/containers/useAlert'
 import useContact from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
+import DialogModal from '~src/units/DialogModal'
 
 import Icon, { ICONS } from '~src/units/Icons'
 import Skeleton from 'react-skeleton-loader'
 // import cssTips from '../utils/cssTips'
-import { useStyles as useStyles2 } from '~src/components/RemoveContactsFromGroupForm'
 import cssTips from '~src/utils/cssTips'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -156,11 +154,10 @@ export interface Props {
 
 const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
-  const classes2 = useStyles2({})
 
   const { fail } = useAlert()
 
-  const [ notes, setNotes ] = useState<Note[]>([])
+  const [notes, setNotes] = useState<Note[]>([])
 
   const {
     fetchNotes, isFetchingNotes, fetchNotesError,
@@ -286,7 +283,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     () => {
       const sortedNotes = notes.slice()
         .sort((p, c) => c.timestamp - p.timestamp)
-        .map(note => ({ ...note, date: getDate(note.timestamp)}))
+        .map(note => ({ ...note, date: getDate(note.timestamp) }))
 
       const groupedMap = sortedNotes.reduce<{ [key: string]: Note[] }>(
         (m, note) => {
@@ -295,7 +292,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
 
           return m
         },
-        {[getDate(+new Date())]: []},
+        { [getDate(+new Date())]: [] },
       )
 
       return Object.keys(groupedMap).map(key => ({
@@ -326,32 +323,15 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
 
   return (
     <ContactTableThemeProvider>
-      <Dialog
+      <DialogModal
         open={showRemoveConfirmationForId.hasValue}
         onClose={showRemoveConfirmationForId.clear}
-        PaperProps={{
-          className: classes2.paper,
-        }}
-      >
-        <Typography variant="h6" align="center" color="textSecondary">
-          Remove note
-        </Typography>
-        <Typography
-          color="textSecondary"
-          className={classnames(classes2.text, classes2.textAlignFixed)}
-        >
-          Are you sure you want to remove this note?
-        </Typography>
-        <div className={classes2.buttonZone}>
-          <Button onClick={showRemoveConfirmationForId.clear}>Cancel</Button>
-          <Button
-            color="primary"
-            onClick={handleNoteRemove}
-          >
-            Ok
-          </Button>
-        </div>
-      </Dialog>
+        handleOkClick={handleNoteRemove}
+        title="Remove note"
+        content="Are you sure you want to remove this note?"
+        cancelText="Cancel"
+        okText="Ok"
+      />
       <div className={classes.headWrapper}>
         {/* <Typography variant="h4" className={classes.title}>Activities</Typography> */}
         <Typography variant="h4" className={classes.title}>Notes</Typography>
@@ -366,7 +346,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
           <div className={classes.stepper}>
             {Array.from(({ length: 5 }), (_, index) => (
               <div key={index} className={classes.skeletonContent}>
-                <Skeleton widthRandomness={0} width="100%"/>
+                <Skeleton widthRandomness={0} width="100%" />
               </div>
             ))}
           </div>
@@ -410,7 +390,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                           />
                           <Tooltip title="submit">
                             <IconButton color="primary" className={classes.noteSubmitter} onClick={handleSubmitUpdate}>
-                              <Icon name={ICONS.Enter} color={'hoverLighten'}/>
+                              <Icon name={ICONS.Enter} color={'hoverLighten'} />
                             </IconButton>
                           </Tooltip>
                         </div>
@@ -425,7 +405,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                               className={classes.noteRemoveButton}
                               onClick={showRemoveConfirmationForId.setValue.bind(null, note.id)}
                             >
-                              <Icon name={ICONS.Remove} color={'hoverLighten'}/>
+                              <Icon name={ICONS.Remove} color={'hoverLighten'} />
                             </IconButton>
                           </Tooltip>
                         </div>
@@ -465,7 +445,7 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               color="primary"
               onClick={toggleOnAddNote}
               size="medium"
-              // onClick={toggleShowButtons}
+            // onClick={toggleShowButtons}
             >
               <Icon size="lg" name={ICONS.AddCircle} />
             </IconButton>
