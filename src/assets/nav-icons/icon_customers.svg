@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>navbar_icon_customers</title>
+    <desc>Created with Sketch.</desc>
+    <g id="窄屏sidebar设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01sidebar_收起" transform="translate(-388.000000, -19.000000)">
+            <g id="navbar_icon_customers" transform="translate(387.000000, 16.000000)">
+                <polygon id="Shape" points="1 0 25 0 25 24 1 24"></polygon>
+                <path d="M19,14 C17.3431458,14 16,12.6568542 16,11 C16,9.34314575 17.3431458,8 19,8 C20.6568542,8 22,9.34314575 22,11 C22,12.6568542 20.6568542,14 19,14 Z" id="Mask" fill="#FFFFFF" fill-rule="nonzero" opacity="0.3"></path>
+                <path d="M10,11 C7.790861,11 6,9.209139 6,7 C6,4.790861 7.790861,3 10,3 C12.209139,3 14,4.790861 14,7 C14,9.209139 12.209139,11 10,11 Z" id="Mask" fill="#FFFFFF" fill-rule="nonzero"></path>
+                <path d="M18.6011961,15.0006174 C22.0077043,15.0378534 24.7891749,16.7601418 24.9984937,20.4 C25.0069246,20.5466056 24.9984937,21 24.4559499,21 L20.6,21 C20.6,18.7490654 19.8562935,16.6718327 18.6011961,15.0006174 Z" id="Combined-Shape" fill="#FFFFFF" fill-rule="nonzero" opacity="0.349999994"></path>
+                <path d="M1.00065168,20.1992055 C1.38825852,15.4265159 6,13 9.98334134,13 C13.9666827,13 18.7048837,15.2931929 18.9979143,20.2 C19.0095879,20.3954741 18.9979143,21 18.2466999,21 C14.541124,21 9.03472472,21 1.72750223,21 C1,21 0.97953825,20.45918 1.00065168,20.1992055 Z" id="Mask-Copy" fill="#FFFFFF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

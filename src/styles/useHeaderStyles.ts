@@ -16,6 +16,9 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center left',
     backgroundImage: `url(${logIcon})`,
+    ['@media (max-width:1100px)']: {
+      marginRight: 20,
+    },
     [theme.breakpoints.down('md')]: {
       display: 'none',
       width: 50,
@@ -24,8 +27,10 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     },
   },
   menuButton: {
+    ...cssTips(theme).centerFlex(),
     marginLeft: 12,
     marginRight: 20,
+    height: '100%',
     [theme.breakpoints.up('lg')]: {
       display: 'none',
     },
@@ -72,11 +77,11 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
   avatarRoot: {
     height: 30,
     width: 30,
-    margin: theme.spacing(0, 1.5),
+    margin: `1px 14px 0`,
   },
   arrowDown: {
     display: 'inline-block',
-    margin: '10px 0',
+    margin: theme.spacing(1.25, 0),
     width: 0,
     height: 0,
     borderLeft: '6px solid transparent',
@@ -88,20 +93,18 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
   navList: {
     ...cssTips(theme).casFlex('row'),
     flex: 1,
+    height: '100%',
     fontSize: 14,
     fontWeight: 600,
-    lineHeight: '30px',
-    margin: '13px 0',
     overflow: 'hidden',
     ...cssTips(theme, { sizeFactor: 8 }).horizontallySpaced(),
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'space-around',
       paddingRight: theme.spacing(4),
-      paddingLeft: theme.spacing(4),
+      paddingLeft: theme.spacing(2.5),
       ...cssTips(theme, { sizeFactor: 4 }).horizontallySpaced(),
     },
     [theme.breakpoints.down('sm')]: {
-      display: 'block',
+      display: 'flex',
       // justifyContent: 'space-around',
       // paddingRight: 0,
       // paddingLeft: 0,
@@ -113,9 +116,10 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     },
   },
   navItem: {
-    display: 'inline-block',
+    ...cssTips(theme).centerFlex(),
     marginLeft: 25,
     marginRight: 25,
+    height: '100%',
     '@media (max-width:1100px)': {
       marginLeft: 0,
     },
@@ -126,7 +130,13 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
       marginRight: 8,
     },
     '@media (max-width:749.9999999px)': {
-      display: 'none',
+      marginRight: 0,
+      ['& $link']: {
+        display: 'none',
+      },
+      ['& $linkIcon']: {
+        display: 'flex',
+      },
     },
   },
   navItemInMenu: {
@@ -139,6 +149,7 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none',
   },
   link: {
+    display: 'flex',
     color: 'inherit',
     opacity: 0.6,
     textDecoration: 'none',
@@ -148,6 +159,32 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     },
     '&:hover': {
       opacity: 1,
+    },
+  },
+  linkIcon: {
+    position: 'relative',
+    ...cssTips(theme).centerFlex(),
+    display: 'none',
+    width: '66px',
+    height: '100%',
+    cursor: 'pointer',
+    ['& svg']: {
+      width: 20,
+      height: 20,
+    },
+    ['&.active']: {
+      background: 'rgba(0, 0, 0, 0.1)',
+      ['&:before']: {
+        content: '""',
+        position: 'absolute',
+        bottom: '0',
+        left: '50%',
+        marginLeft: -4,
+        width: 0,
+        height: '0',
+        border: '4px solid transparent',
+        borderBottomColor: '#f4f4f4',
+      },
     },
   },
   profileItem: {
@@ -193,7 +230,6 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     wordWrap: 'break-word',
     whiteSpace: 'normal',
     lineHeight: `${theme.spacing(2.5)}px`,
-    minHeight: theme.spacing(4),
     '&:hover': {
       color: theme.palette.primary.main,
       backgroundColor: 'unset',

@@ -18,6 +18,11 @@ import useAlert from '~src/containers/useAlert'
 import crateGravatar from '~src/utils/createGravatar'
 import useStyles from '~src/styles/useHeaderStyles'
 
+import { ReactComponent as DashboardIcon } from '~src/assets/nav-icons/icon_dashboard.svg'
+import { ReactComponent as TemplateIcon } from '~src/assets/nav-icons/icon_template.svg'
+import { ReactComponent as CustomersIcon } from '~src/assets/nav-icons/icon_customers.svg'
+import { ReactComponent as WaiverlistIcon } from '~src/assets/nav-icons/icon_waiverlist.svg'
+
 export interface Props extends ComponentProps {}
 
 const Header: React.FC<Props> = React.memo(() => {
@@ -64,21 +69,33 @@ const Header: React.FC<Props> = React.memo(() => {
                 <a href="/welcome" className={classes.link}>
                   Dashboard
                 </a>
+                <div className={classes.linkIcon} >
+                  <DashboardIcon className={classes.linkIcon} />
+                </div>
               </div>
               <div className={classes.navItem}>
                 <a href="/templates" className={classes.link}>
                   Waiver Templates
                 </a>
+                <div className={classes.linkIcon} >
+                  <TemplateIcon className={classes.linkIcon} />
+                </div>
               </div>
               <div className={classes.navItem}>
                 <Link to="/crm" className={classnames(classes.link, 'active')}>
                   My Customers
                 </Link>
+                <div className={classnames(classes.linkIcon, 'active')} >
+                  <CustomersIcon />
+                </div>
               </div>
               <div className={classes.navItem}>
                 <a href="/waiver-list" className={classes.link}>
                   My Waiver List
                 </a>
+                <div className={classes.linkIcon} >
+                  <WaiverlistIcon className={classes.linkIcon} />
+                </div>
               </div>
             </nav>
             <div className={classes.dropdownButton}>
@@ -92,7 +109,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 </MenuItem>
                 <Divider className={classes.menuDivider}/>
 
-                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                {/* <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
                   <a href="/welcome" className={classes.navLink}>
                     Dashboard
                   </a>
@@ -112,7 +129,7 @@ const Header: React.FC<Props> = React.memo(() => {
                     My Waiver List
                   </a>
                 </MenuItem>
-                <Divider className={classnames(classes.menuDivider, classes.navItemInMenu)}/>
+                <Divider className={classnames(classes.menuDivider, classes.navItemInMenu)}/> */}
 
                 <MenuItem className={classes.menuItem}>
                   <a
