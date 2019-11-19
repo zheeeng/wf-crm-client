@@ -8,12 +8,13 @@ const Content: React.FC = React.memo(({ children }) => {
   return <>{children}</>
 })
 
-export interface Props extends ComponentProps<never, 'search' | 'page'> {}
+export interface Props extends ComponentProps<never, 'search' | 'page' | 'export'> {}
 
 const AllLayout: React.FC<Props> = React.memo(
   ({ children, queries }) => {
     return (
       <useContacts.Provider
+        exportAll={queries.export && queries.export[0]  === 'all'}
         searchTerm={queries.search ? queries.search[0] : ''}
         page={queries.page ? parseInt(queries.page[0]) : undefined}>
         <Content>

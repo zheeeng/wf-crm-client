@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { useInput } from 'react-hanger'
 import createUseContext from 'constate'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import { Pagination } from '~src/types/Pagination'
 import { PeopleAPI, ContactFields, contactInputAdapter, Contact, contactFieldAdapter } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
@@ -19,6 +21,7 @@ import {
   delContactRecordPattern,
 } from '~src/meta/localCacheConfig'
 import useLocalCache from '~src/hooks/useLocalCache'
+import useNotification from '~src/containers/useNotification'
 
 type FetchParams = {
   page?: number
@@ -30,6 +33,7 @@ type FetchParams = {
 type ContactsResponse = { pagination: Pagination, result: PeopleAPI[] }
 
 type ContainerProps = {
+  exportAll?: boolean
   page?: number
   size?: number
   searchTerm?: string
@@ -39,9 +43,10 @@ type ContainerProps = {
 
 const useContacts = createUseContext(({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
+  exportAll, page = 1, size = 30, searchTerm = '', groupId = '', favourite = false,
 }: ContainerProps) => {
   const { refreshCounts } = useContactsCount()
+  const { notify } = useNotification()
 
   const {
     data: contactsData,
@@ -234,12 +239,9 @@ const useContacts = createUseContext(({
   )
 
   const exportContacts = useCallback(
-    async (contactIds: string[]) => {
-      const response = await postExportContacts('/api/backgroundTasks/exportPeople')({
-        query: {
-          id: contactIds,
-        },
-      })
+    async (contactIds?: string[]) => {
+      const query = contactIds ? { id: contactIds } : {}
+      const response = await postExportContacts('/api/backgroundTasks/exportPeople')({ query })
 
       if (response) {
         const taskId = response.task_id
@@ -259,6 +261,23 @@ const useContacts = createUseContext(({
       }
     },
     [postExportContacts, getExportStatus],
+  )
+
+  useEffect(
+    () => {
+      exportAll && notify(
+        <>
+          <Typography variant="body1">Do you want to export all contacts?</Typography>
+          <Button
+            color="primary"
+            style={{ marginLeft: 24 }}
+            variant="text"
+            onClick={() => exportContacts()}
+          >Yes</Button>
+        </>
+      )
+    },
+    [exportAll, exportContacts, notify],
   )
 
   useEffect(
