@@ -6,11 +6,11 @@ import ContactPageHeader from '~src/components/ContactPageHeader'
 import ContactProfile from '~src/components/ContactProfile'
 import ContactAssets from '~src/components/ContactAssets'
 import ContactActivities from '~src/components/ContactActivities'
-import useWaiverSplitter from '~src/containers/useWaiverSplitter'
-import useContact from '~src/containers/useContact'
-import useContacts from '~src/containers/useContacts'
+import { UseWaiverSplitterProvider } from '~src/containers/useWaiverSplitter'
+import { useContact } from '~src/containers/useContact'
+import { useContacts } from '~src/containers/useContacts'
+import { useAlert } from '~src/containers/useAlert'
 import useSwitch from '~src/hooks/useSwitch'
-import useAlert from '~src/containers/useAlert'
 
 export interface Props {
   contactId: string
@@ -29,70 +29,72 @@ const ContactIndex: React.FC<Props> = React.memo(
     const lastPage = usePrevious(page)
     const lastSearchTerm = usePrevious(searchTerm)
 
-    const navigateToContactList = useCallback(
-      () => {
-        const pathChunks = path.split('/')
-        const backLevelPath = pathChunks[pathChunks.length - 1] === ''
+    const navigateToContactList = useCallback(() => {
+      const pathChunks = path.split('/')
+      const backLevelPath =
+        pathChunks[pathChunks.length - 1] === ''
           ? pathChunks.slice(0, -2).join('/')
           : pathChunks.slice(0, -1).join('/')
 
-        const pageQuery = (lastPage && lastPage !== '1') ? `page=${lastPage}` : ''
-        const searchQuery = lastSearchTerm ? `search=${lastSearchTerm}` : ''
-        const query = [pageQuery, searchQuery].filter(it => it).join('&')
-        const backPath = backLevelPath + (query ? `?${query}` : '')
+      const pageQuery = lastPage && lastPage !== '1' ? `page=${lastPage}` : ''
+      const searchQuery = lastSearchTerm ? `search=${lastSearchTerm}` : ''
+      const query = [pageQuery, searchQuery].filter((it) => it).join('&')
+      const backPath = backLevelPath + (query ? `?${query}` : '')
 
-        if (lastContactId) fromContactIdState.setValue(lastContactId)
-        navigate(backPath)
-      },
-      [path, lastContactId, lastPage, lastSearchTerm, fromContactIdState, navigate],
-    )
+      if (lastContactId) fromContactIdState.setValue(lastContactId)
+      navigate(backPath)
+    }, [
+      path,
+      lastContactId,
+      lastPage,
+      lastSearchTerm,
+      fromContactIdState,
+      navigate,
+    ])
 
-    const previousContactId = useMemo(
-      () => {
-        const targetIndex = contacts.findIndex(c => c.id === contactId)
-        const calculatedIndex = Math.max(targetIndex - 1, -1)
+    const previousContactId = useMemo(() => {
+      const targetIndex = contacts.findIndex((c) => c.id === contactId)
+      const calculatedIndex = Math.max(targetIndex - 1, -1)
 
-        return calculatedIndex === -1 ? null : contacts[calculatedIndex].id
-      },
-      [contactId, contacts],
-    )
+      return calculatedIndex === -1 ? null : contacts[calculatedIndex].id
+    }, [contactId, contacts])
 
-    const nextContactId = useMemo(
-      () => {
-        const len = contacts.length
-        const targetIndex = contacts.findIndex(c => c.id === contactId)
-        const calculatedIndex = Math.min(targetIndex + 1, len - 1)
+    const nextContactId = useMemo(() => {
+      const len = contacts.length
+      const targetIndex = contacts.findIndex((c) => c.id === contactId)
+      const calculatedIndex = Math.min(targetIndex + 1, len - 1)
 
-        return calculatedIndex === len - 1 ? null : contacts[calculatedIndex].id
-      },
-      [contactId, contacts],
-    )
+      return calculatedIndex === len - 1 ? null : contacts[calculatedIndex].id
+    }, [contactId, contacts])
 
-    const goPreviousContact = useCallback(
-      () => {
-        path && navigate && previousContactId && navigate(`${path.split('/').slice(0, -1).join('/')}/${previousContactId}`, { replace: true })
-      },
-      [navigate, path, previousContactId],
-    )
+    const goPreviousContact = useCallback(() => {
+      path &&
+        navigate &&
+        previousContactId &&
+        navigate(
+          `${path.split('/').slice(0, -1).join('/')}/${previousContactId}`,
+          { replace: true },
+        )
+    }, [navigate, path, previousContactId])
 
-    const goNextContact = useCallback(
-      () => {
-        path && navigate && nextContactId
-          && navigate(`${path.split('/').slice(0, -1).join('/')}/${nextContactId}`, { replace: true })
-      },
-      [navigate, path, nextContactId],
-    )
+    const goNextContact = useCallback(() => {
+      path &&
+        navigate &&
+        nextContactId &&
+        navigate(`${path.split('/').slice(0, -1).join('/')}/${nextContactId}`, {
+          replace: true,
+        })
+    }, [navigate, path, nextContactId])
 
     const { success } = useAlert()
 
-    const handleDeleteContact = useSwitch(useCallback(
-      () => {
+    const handleDeleteContact = useSwitch(
+      useCallback(() => {
         success('Start deleting contact, it may take a while.')
         removeContact()
         navigateToContactList()
-      },
-      [removeContact, navigateToContactList, success],
-    ))
+      }, [removeContact, navigateToContactList, success]),
+    )
 
     const renderHeader = useCallback(
       () => (
@@ -105,7 +107,14 @@ const ContactIndex: React.FC<Props> = React.memo(
           disableGoNext={!nextContactId}
         />
       ),
-      [handleDeleteContact, navigateToContactList, goPreviousContact, goNextContact, previousContactId, nextContactId],
+      [
+        handleDeleteContact,
+        navigateToContactList,
+        goPreviousContact,
+        goNextContact,
+        previousContactId,
+        nextContactId,
+      ],
     )
 
     const renderRightPart1 = useCallback(
@@ -118,28 +127,24 @@ const ContactIndex: React.FC<Props> = React.memo(
     )
 
     return (
-      <useWaiverSplitter.Provider>
-        {(contact && contact.isDeleting)
-          ?(
-            <EmptyDetailsPaper renderHeader={renderHeader}>
-              <Typography align="center">
-                This Contact is in deleting process, please check the result later.
-              </Typography>
-            </EmptyDetailsPaper>
-          )
-          : (
-            <DetailsPaper
-              renderHeader={renderHeader}
-              renderRightPart1={renderRightPart1}
-              renderRightPart2={renderRightPart2}
-            >
-              <ContactProfile
-                contactId={contactId}
-              />
-            </DetailsPaper>
-          )
-        }
-      </useWaiverSplitter.Provider>
+      <UseWaiverSplitterProvider>
+        {contact && contact.isDeleting ? (
+          <EmptyDetailsPaper renderHeader={renderHeader}>
+            <Typography align="center">
+              This Contact is in deleting process, please check the result
+              later.
+            </Typography>
+          </EmptyDetailsPaper>
+        ) : (
+          <DetailsPaper
+            renderHeader={renderHeader}
+            renderRightPart1={renderRightPart1}
+            renderRightPart2={renderRightPart2}
+          >
+            <ContactProfile contactId={contactId} />
+          </DetailsPaper>
+        )}
+      </UseWaiverSplitterProvider>
     )
   },
 )

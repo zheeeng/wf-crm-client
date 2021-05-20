@@ -24,7 +24,14 @@ const useStyles = makeStyles(() => ({
 }))
 
 const ContactPageHeader: React.FC<Props> = React.memo(
-  ({ onGoBack, onGoPrevious, onGoNext, onDelete, disableGoPrevious, disableGoNext }) => {
+  ({
+    onGoBack,
+    onGoPrevious,
+    onGoNext,
+    onDelete,
+    disableGoPrevious,
+    disableGoNext,
+  }) => {
     const classes = useStyles()
 
     const showRemoveConfirmation = useBoolean(false)
@@ -37,22 +44,22 @@ const ContactPageHeader: React.FC<Props> = React.memo(
               <Icon name={ICONS.ArrowLeft} color="hoverLighten" size="lg" />
             </IconButton>
           </ToolTip>
-          <ToolTip title={disableGoNext ? "" : "next"}>
+          <ToolTip title={disableGoNext ? '' : 'next'}>
             <IconButton onClick={onGoNext}>
               <Icon
                 className={classnames(disableGoNext && classes.disabled)}
                 name={ICONS.ArrowDown}
-                color={disableGoNext ? 'disabled' : "hoverLighten"}
+                color={disableGoNext ? 'disabled' : 'hoverLighten'}
                 size="lg"
               />
             </IconButton>
           </ToolTip>
-          <ToolTip title={disableGoPrevious ? "" : "previous"}>
+          <ToolTip title={disableGoPrevious ? '' : 'previous'}>
             <IconButton onClick={onGoPrevious}>
               <Icon
                 className={classnames(disableGoPrevious && classes.disabled)}
                 name={ICONS.ArrowUp}
-                color={disableGoPrevious ? 'disabled' : "hoverLighten"}
+                color={disableGoPrevious ? 'disabled' : 'hoverLighten'}
                 size="lg"
               />
             </IconButton>

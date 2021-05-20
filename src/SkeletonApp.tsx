@@ -24,7 +24,7 @@ const SkeletonHeader: React.FC = () => {
         <AppBar
           position="absolute"
           className={classes.appBar}
-          classes={{root: classes.appBarRoot}}
+          classes={{ root: classes.appBarRoot }}
         >
           <Toolbar variant="dense" className={classes.toolBar}>
             <div className={classes.logo} />
@@ -59,33 +59,56 @@ const SkeletonHeader: React.FC = () => {
             </nav>
             <div className={classes.dropdownButton}>
               <div className={classes.arrowDown} />
-              <MenuList
-                className={classes.menuList}
-              >
+              <MenuList className={classes.menuList}>
                 <MenuItem className={classes.menuItem} />
-                <Divider className={classes.menuDivider}/>
+                <Divider className={classes.menuDivider} />
 
-                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                <MenuItem
+                  className={classnames(
+                    classes.menuItem,
+                    classes.navItemInMenu,
+                  )}
+                >
                   <a href="/welcome" className={classes.navLink}>
                     Dashboard
                   </a>
                 </MenuItem>
-                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                <MenuItem
+                  className={classnames(
+                    classes.menuItem,
+                    classes.navItemInMenu,
+                  )}
+                >
                   <a href="/templates" className={classes.navLink}>
                     Waiver Templates
                   </a>
                 </MenuItem>
-                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                <MenuItem
+                  className={classnames(
+                    classes.menuItem,
+                    classes.navItemInMenu,
+                  )}
+                >
                   <a href="/crm" className={classes.navLink}>
                     My Customers
                   </a>
                 </MenuItem>
-                <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
+                <MenuItem
+                  className={classnames(
+                    classes.menuItem,
+                    classes.navItemInMenu,
+                  )}
+                >
                   <a href="/waiver-list" className={classes.navLink}>
                     My Waiver List
                   </a>
                 </MenuItem>
-                <Divider className={classnames(classes.menuDivider, classes.navItemInMenu)}/>
+                <Divider
+                  className={classnames(
+                    classes.menuDivider,
+                    classes.navItemInMenu,
+                  )}
+                />
 
                 <MenuItem className={classes.menuItem}>
                   <a
@@ -93,43 +116,92 @@ const SkeletonHeader: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     href="https://help.waiverforever.com/"
-                  > Help Center</a>
+                  >
+                    {' '}
+                    Help Center
+                  </a>
                 </MenuItem>
-                <Divider className={classes.menuDivider}/>
+                <Divider className={classes.menuDivider} />
                 <MenuItem className={classes.menuItem}>
                   <a className={classes.navLink} target="_self" href="/archive">
-                    <i className={classnames(classes.menuIcon, classes.menuIconArchive)} />
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconArchive,
+                      )}
+                    />
                     Archives
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/settings/general">
-                    <i className={classnames(classes.menuIcon, classes.menuIconSettings)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/settings/general"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconSettings,
+                      )}
+                    />
                     Account Settings
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
                   <a className={classes.navLink} target="_self" href="/devices">
-                    <i className={classnames(classes.menuIcon, classes.menuIconPairedDevices)} />
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconPairedDevices,
+                      )}
+                    />
                     Paired Devices
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/plan_and_billing">
-                    <i className={classnames(classes.menuIcon, classes.menuIconPlanAndBilling)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/plan_and_billing"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconPlanAndBilling,
+                      )}
+                    />
                     Plan & Billing
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/plan_and_billing/referrals">
-                    <i className={classnames(classes.menuIcon, classes.menuIconReferAndReward)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/plan_and_billing/referrals"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconReferAndReward,
+                      )}
+                    />
                     Referral & Rewards
                   </a>
                 </MenuItem>
-                <Divider className={classes.menuDivider}/>
+                <Divider className={classes.menuDivider} />
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/auth/signout">
-                    <i className={classnames(classes.menuIcon, classes.menuIconSignout)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/auth/signout"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconSignout,
+                      )}
+                    />
                     Sign out
                   </a>
                 </MenuItem>

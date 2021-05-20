@@ -9,8 +9,8 @@ import Button from '@material-ui/core/Button'
 import BasicFormInput from '~src/units/BasicFormInput'
 import cssTips from '~src/utils/cssTips'
 import GroupMenu from '~src/components/GroupMenu'
-import useAlert from '~src/containers/useAlert'
-import useGroups from '~src/containers/useGroups'
+import { useAlert } from '~src/containers/useAlert'
+import { useGroups } from '~src/containers/useGroups'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
@@ -56,49 +56,54 @@ export interface Props {
   onOk: (groupId: string) => Promise<any>
 }
 
-const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
-  const { fail } = useAlert()
-  const { addGroup, addGroupError, groups } = useGroups()
-  const classes = useStyles({})
+const AddContactToGroupForm: React.FC<Props> = React.memo(
+  ({ open, onClose, onOk }) => {
+    const { fail } = useAlert()
+    const { addGroup, addGroupError, groups } = useGroups()
+    const classes = useStyles({})
 
-  useEffect(
-    () => { addGroupError && fail(addGroupError.message) },
-    [addGroupError, fail],
-  )
+    useEffect(() => {
+      addGroupError && fail(addGroupError.message)
+    }, [addGroupError, fail])
 
-  const newGroupNameState = useInput('')
-  const selectedGroupIdState = useInput('')
+    const newGroupNameState = useInput('')
+    const selectedGroupIdState = useInput('')
 
-  const { value: groupsOpened, toggle: toggleGroupsOpened, setTrue: toggleOnGroupsOpened } = useBoolean(true)
+    const {
+      value: groupsOpened,
+      toggle: toggleGroupsOpened,
+      setTrue: toggleOnGroupsOpened,
+    } = useBoolean(true)
 
-  const isGroupExisted = useMemo(
-    () => newGroupNameState.hasValue && groups.some(group => group.info.name === newGroupNameState.value),
-    [groups, newGroupNameState.hasValue, newGroupNameState.value]
-  )
+    const isGroupExisted = useMemo(
+      () =>
+        newGroupNameState.hasValue &&
+        groups.some((group) => group.info.name === newGroupNameState.value),
+      [groups, newGroupNameState.hasValue, newGroupNameState.value],
+    )
 
-  const handleGroupClick = useCallback(
-    (id: string) => {
-      if (selectedGroupIdState.value === id) {
+    const handleGroupClick = useCallback(
+      (id: string) => {
+        if (selectedGroupIdState.value === id) {
+          selectedGroupIdState.clear()
+        } else {
+          selectedGroupIdState.setValue(id)
+        }
+      },
+      [selectedGroupIdState],
+    )
+
+    const handleNewGroupNameChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const name = event.target.value
+
+        newGroupNameState.setValue(name)
         selectedGroupIdState.clear()
-      } else {
-        selectedGroupIdState.setValue(id)
-      }
-    },
-    [selectedGroupIdState],
-  )
+      },
+      [newGroupNameState, selectedGroupIdState],
+    )
 
-  const handleNewGroupNameChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const name = event.target.value
-
-      newGroupNameState.setValue(name)
-      selectedGroupIdState.clear()
-    },
-    [newGroupNameState, selectedGroupIdState],
-  )
-
-  const handleCreateGroupClick = useCallback(
-    async () => {
+    const handleCreateGroupClick = useCallback(async () => {
       const newName = newGroupNameState.value.trim()
       if (newName) {
         const gid = await addGroup({ name: newGroupNameState.value })
@@ -108,86 +113,77 @@ const AddContactToGroupForm: React.FC<Props> = React.memo(({ open, onClose, onOk
         toggleOnGroupsOpened()
       }
       newGroupNameState.clear()
-    },
-    [newGroupNameState, addGroup, selectedGroupIdState, onOk, toggleOnGroupsOpened],
-  )
+    }, [
+      newGroupNameState,
+      addGroup,
+      selectedGroupIdState,
+      onOk,
+      toggleOnGroupsOpened,
+    ])
 
-  const handleAddToGroupClick = useCallback(
-    async () => {
+    const handleAddToGroupClick = useCallback(async () => {
       await onOk(selectedGroupIdState.value)
       newGroupNameState.clear()
-    },
-    [onOk, selectedGroupIdState.value, newGroupNameState]
-  )
+    }, [onOk, selectedGroupIdState.value, newGroupNameState])
 
-  const handleGroupInputEnterPress = useCallback(
-    async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (isGroupExisted || selectedGroupIdState.hasValue) return
-      event.preventDefault()
+    const handleGroupInputEnterPress = useCallback(
+      async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (isGroupExisted || selectedGroupIdState.hasValue) return
+        event.preventDefault()
 
-      handleCreateGroupClick()
-    },
-    [isGroupExisted, selectedGroupIdState.hasValue, handleCreateGroupClick],
-  )
+        handleCreateGroupClick()
+      },
+      [isGroupExisted, selectedGroupIdState.hasValue, handleCreateGroupClick],
+    )
 
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        className: classes.paper,
-      }}
-    >
-      <Typography variant="h6" align="center" color="textSecondary">
-        Add contact to
-      </Typography>
-      <BasicFormInput
-        placeholder="New group"
-        onChange={handleNewGroupNameChange}
-        onEnterPress={handleGroupInputEnterPress}
-      />
-      <div className={classes.label} onClick={toggleGroupsOpened} >
-        Existing group
-        {groupsOpened
-          ? <Icon name={ICONS.ChevronDown} size="sm" />
-          : <Icon name={ICONS.ChevronRight} size="sm" />
-        }
-      </div>
-      <GroupMenu
-        className={classes.groupMenu}
-        selectedId={selectedGroupIdState.value}
-        groupsOpened={groupsOpened}
-        onClickGroup={handleGroupClick}
-        theme="simple"
-      />
-      <div className={classes.buttonZone}>
-        <Button onClick={onClose}>Cancel</Button>
-        {isGroupExisted
-          ? (
-            <Button disabled>
-              Group existed
+    return (
+      <Dialog
+        open={open}
+        onClose={onClose}
+        PaperProps={{
+          className: classes.paper,
+        }}
+      >
+        <Typography variant="h6" align="center" color="textSecondary">
+          Add contact to
+        </Typography>
+        <BasicFormInput
+          placeholder="New group"
+          onChange={handleNewGroupNameChange}
+          onEnterPress={handleGroupInputEnterPress}
+        />
+        <div className={classes.label} onClick={toggleGroupsOpened}>
+          Existing group
+          {groupsOpened ? (
+            <Icon name={ICONS.ChevronDown} size="sm" />
+          ) : (
+            <Icon name={ICONS.ChevronRight} size="sm" />
+          )}
+        </div>
+        <GroupMenu
+          className={classes.groupMenu}
+          selectedId={selectedGroupIdState.value}
+          groupsOpened={groupsOpened}
+          onClickGroup={handleGroupClick}
+          theme="simple"
+        />
+        <div className={classes.buttonZone}>
+          <Button onClick={onClose}>Cancel</Button>
+          {isGroupExisted ? (
+            <Button disabled>Group existed</Button>
+          ) : selectedGroupIdState.hasValue ? (
+            <Button color="primary" onClick={handleAddToGroupClick}>
+              Add to group
             </Button>
-          )
-          : selectedGroupIdState.hasValue
-            ? (
-              <Button
-                color="primary"
-                onClick={handleAddToGroupClick}
-              >
-                Add to group
-              </Button>
-            ) : (
-              <Button
-                color="primary"
-                onClick={handleCreateGroupClick}
-              >
-                Create and add
-              </Button>
-            )
-        }
-      </div>
-    </Dialog>
-  )
-})
+          ) : (
+            <Button color="primary" onClick={handleCreateGroupClick}>
+              Create and add
+            </Button>
+          )}
+        </div>
+      </Dialog>
+    )
+  },
+)
 
 export default AddContactToGroupForm

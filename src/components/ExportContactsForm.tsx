@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
-import useContacts from '~src/containers/useContacts'
+import { useContacts } from '~src/containers/useContacts'
 import shallowEqual from '~src/utils/shallowEqual'
 import cssTips from '~src/utils/cssTips'
 import ProgressLoading from '~src/units/ProgressLoading'
@@ -38,19 +38,15 @@ const ExportContactsForm: React.FC<Props> = React.memo(
     const { exportContacts, exportContactsStatus } = useContacts()
     const classes = useStyles({})
 
-    useEffect(
-      () => {
-        if (exportContactsStatus && exportContactsStatus.ready === true) {
-          onClose()
-        }
-      },
-      [exportContactsStatus, onClose],
-    )
+    useEffect(() => {
+      if (exportContactsStatus && exportContactsStatus.ready === true) {
+        onClose()
+      }
+    }, [exportContactsStatus, onClose])
 
-    useEffect(
-      () => { open && contactIds.length && exportContacts(contactIds) },
-      [open, contactIds, exportContacts],
-    )
+    useEffect(() => {
+      open && contactIds.length && exportContacts(contactIds)
+    }, [open, contactIds, exportContacts])
 
     return (
       <Dialog
@@ -60,14 +56,15 @@ const ExportContactsForm: React.FC<Props> = React.memo(
           className: classes.paper,
         }}
       >
-        <Typography variant="h6" align="center"  color="textSecondary">
+        <Typography variant="h6" align="center" color="textSecondary">
           Generating file...
         </Typography>
         <ProgressLoading className={classes.progress} />
       </Dialog>
     )
   },
-  ({ contactIds: _, ...restP }, { contactIds: __, ...restN }) => shallowEqual(restP, restN),
+  ({ contactIds: _, ...restP }, { contactIds: __, ...restN }) =>
+    shallowEqual(restP as any, restN),
 )
 
 export default ExportContactsForm

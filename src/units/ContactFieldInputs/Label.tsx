@@ -10,8 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(-1),
     marginLeft: theme.spacing(-2),
   },
-  fieldNameWrapper: {
-  },
+  fieldNameWrapper: {},
   fieldName: {
     padding: theme.spacing(2.5),
     height: theme.spacing(8),
@@ -37,31 +36,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-
 export type LabelWithIconProps = {
-  Icon: React.ComponentType<{ className?: string, color?: any }>
+  Icon: React.ComponentType<{ className?: string; color?: any }>
   fieldName: string
 }
 
-export const LabelWithIcon: React.FC<LabelWithIconProps> = ({ Icon, fieldName }) =>
-{
+export const LabelWithIcon: React.FC<LabelWithIconProps> = ({
+  Icon,
+  fieldName,
+}) => {
   const classes = useStyles({})
 
   return (
     <div className={classes.fieldNameWrapper}>
       <Tooltip title={fieldName} classes={{ tooltip: classes.toolTip }}>
-        <div><Icon className={classes.fieldIcon} /></div>
+        <div>
+          <Icon className={classes.fieldIcon} />
+        </div>
       </Tooltip>
     </div>
   )
 }
 
 export type LabelWithTextProps = {
-  Icon?: React.ComponentType<{ className?: string, color?: any }>
+  Icon?: React.ComponentType<{ className?: string; color?: any }>
   fieldName: string
 }
 
-export const LabelWithText: React.FC<LabelWithTextProps> = ({ Icon, fieldName }) => {
+export const LabelWithText: React.FC<LabelWithTextProps> = ({
+  Icon,
+  fieldName,
+}) => {
   const classes = useStyles({})
 
   return (
@@ -69,16 +74,20 @@ export const LabelWithText: React.FC<LabelWithTextProps> = ({ Icon, fieldName })
       {Icon && (
         <div>
           <Tooltip title={fieldName}>
-            <div><Icon className={classnames(classes.fieldIcon, classes.fieldTitleIcon)} /></div>
+            <div>
+              <Icon
+                className={classnames(
+                  classes.fieldIcon,
+                  classes.fieldTitleIcon,
+                )}
+              />
+            </div>
           </Tooltip>
         </div>
       )}
       <Typography
         variant="h6"
-        className={classnames(
-          classes.fieldName,
-          classes.fieldTitleName,
-        )}
+        className={classnames(classes.fieldName, classes.fieldTitleName)}
         color="textSecondary"
       >
         {fieldName}

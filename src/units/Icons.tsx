@@ -41,6 +41,7 @@ import { ReactComponent as DescriptionIcon } from '~src/assets/icons/description
 import { ReactComponent as WaiverIcon } from '~src/assets/icons/waiver.svg'
 import { ReactComponent as SplitIcon } from '~src/assets/icons/split.svg'
 import { ReactComponent as DownloadIcon } from '~src/assets/icons/download.svg'
+import { ReactComponent as RequestIcon } from '~src/assets/icons/request.svg'
 import { ReactComponent as TagIcon } from '~src/assets/icons/tag.svg'
 import { ReactComponent as SearchIcon } from '~src/assets/icons/search.svg'
 import { ReactComponent as CloseIcon } from '~src/assets/icons/close.svg'
@@ -88,6 +89,7 @@ export enum ICONS {
   Waiver,
   Split,
   Download,
+  Request,
   Tag,
   Search,
   Close,
@@ -98,7 +100,9 @@ export enum ICONS {
   Loading,
 }
 
-const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>> => {
+const getIcon = (
+  icon: ICONS,
+): React.ComponentType<React.SVGProps<SVGSVGElement>> => {
   switch (icon) {
     case ICONS.SideContact:
       return ContactIcon
@@ -170,6 +174,8 @@ const getIcon = (icon: ICONS): React.ComponentType<React.SVGProps<SVGSVGElement>
       return SplitIcon
     case ICONS.Download:
       return DownloadIcon
+    case ICONS.Request:
+      return RequestIcon
     case ICONS.Tag:
       return TagIcon
     case ICONS.Search:
@@ -214,19 +220,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  xlIcon : {
+  xlIcon: {
     width: theme.spacing(3.5),
     height: theme.spacing(3.5),
   },
-  lgIcon : {
+  lgIcon: {
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
-  mdIcon : {
+  mdIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
-  smIcon : {
+  smIcon: {
     width: theme.spacing(2),
     height: theme.spacing(2),
   },
@@ -247,32 +253,49 @@ export interface Props {
   style?: React.CSSProperties
 }
 
-const SvgIcon: React.FC<Props> = React.memo(({ name, style, className, color /*= 'primary'*/, size /*= 'md'*/, onClick, onMouseEnter, onMouseLeave }) => {
-  const classes = useStyles({})
+const SvgIcon: React.FC<Props> = React.memo(
+  ({
+    name,
+    style,
+    className,
+    color /*= 'primary'*/,
+    size /*= 'md'*/,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+  }) => {
+    const classes = useStyles({})
 
-  const clsName = classnames(
-    classes.svgIcon,
-    {
-      primary: classes.primaryColorIcon,
-      secondary: classes.secondaryColorIcon,
-      disabled: classes.disabledIcon,
-      hoverLighten: classes.hoverLightenIcon,
-    }[color || 'primary'],
-    {
-      xl: classes.xlIcon,
-      lg: classes.lgIcon,
-      md: classes.mdIcon,
-      sm: classes.smIcon,
-      xs: classes.xsIcon,
-    }[size || 'md'],
-    className
-  )
+    const clsName = classnames(
+      classes.svgIcon,
+      {
+        primary: classes.primaryColorIcon,
+        secondary: classes.secondaryColorIcon,
+        disabled: classes.disabledIcon,
+        hoverLighten: classes.hoverLightenIcon,
+      }[color ?? 'primary'],
+      {
+        xl: classes.xlIcon,
+        lg: classes.lgIcon,
+        md: classes.mdIcon,
+        sm: classes.smIcon,
+        xs: classes.xsIcon,
+      }[size ?? 'md'],
+      className,
+    )
 
-  const Comp = getIcon(name)
+    const Comp = getIcon(name)
 
-  return (
-    <Comp style={style} className={clsName} onClick={onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
-  )
-})
+    return (
+      <Comp
+        style={style}
+        className={clsName}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      />
+    )
+  },
+)
 
 export default SvgIcon

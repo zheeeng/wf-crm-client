@@ -1,4 +1,4 @@
-export default function setDomain () {
+export default function setDomain() {
   const originalDomainChunks = document.domain.split('.')
   try {
     while (originalDomainChunks.length > 2 && true) {

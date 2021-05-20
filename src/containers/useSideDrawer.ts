@@ -1,4 +1,6 @@
-import createUseContext from 'constate'
+import constate from 'constate'
 import { useBoolean } from 'react-hanger'
 
-export default createUseContext(() => useBoolean(false))
+export const [UseSideDrawerProvider, useSideDrawer] = constate(() =>
+  useBoolean(false),
+)

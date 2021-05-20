@@ -50,12 +50,16 @@ export interface Props {
   onOk: () => Promise<any>
 }
 
-const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) => {
-  const classes = useStyles({})
-  const { value: isLoading, setTrue: toggleOnLoading, setFalse: toggleOffLoading } = useBoolean(false)
+const MergeContactsForm: React.FC<Props> = React.memo(
+  ({ open, onClose, onOk }) => {
+    const classes = useStyles({})
+    const {
+      value: isLoading,
+      setTrue: toggleOnLoading,
+      setFalse: toggleOffLoading,
+    } = useBoolean(false)
 
-  const handleOkClick = useCallback(
-    async () => {
+    const handleOkClick = useCallback(async () => {
       try {
         toggleOnLoading()
         await onOk()
@@ -63,28 +67,24 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
         onClose()
         toggleOffLoading()
       }
-    },
-    [onOk, onClose, toggleOnLoading, toggleOffLoading],
-  )
+    }, [onOk, onClose, toggleOnLoading, toggleOffLoading])
 
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        className: classes.paper,
-      }}
-    >
-      {isLoading
-        ? (
+    return (
+      <Dialog
+        open={open}
+        onClose={onClose}
+        PaperProps={{
+          className: classes.paper,
+        }}
+      >
+        {isLoading ? (
           <>
-            <Typography variant="h6" align="center"  color="textSecondary">
+            <Typography variant="h6" align="center" color="textSecondary">
               Merging...
             </Typography>
             <ProgressLoading className={classes.progress} />
           </>
-        )
-        : (
+        ) : (
           <>
             <Typography variant="h6" align="center" color="textSecondary">
               Merge contacts
@@ -93,21 +93,20 @@ const MergeContactsForm: React.FC<Props> = React.memo(({ open, onClose, onOk }) 
               color="textSecondary"
               align="left"
               className={classnames(classes.text, classes.textAlignFixed)}
-            >Are you sure you want to merge the selected contacts?</Typography>
+            >
+              Are you sure you want to merge the selected contacts?
+            </Typography>
             <div className={classes.buttonZone}>
               <Button onClick={onClose}>No</Button>
-              <Button
-                color="primary"
-                onClick={handleOkClick}
-              >
+              <Button color="primary" onClick={handleOkClick}>
                 Yes
               </Button>
             </div>
           </>
-        )
-      }
-    </Dialog>
-  )
-})
+        )}
+      </Dialog>
+    )
+  },
+)
 
 export default MergeContactsForm

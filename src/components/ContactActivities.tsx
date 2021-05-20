@@ -14,8 +14,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import { Note } from '~src/types/Contact'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
-import useAlert from '~src/containers/useAlert'
-import useContact from '~src/containers/useContact'
+import { useAlert } from '~src/containers/useAlert'
+import { useContact } from '~src/containers/useContact'
 import getDate, { getTime } from '~src/utils/getDate'
 import DialogModal from '~src/units/DialogModal'
 
@@ -160,35 +160,36 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
   const [notes, setNotes] = useState<Note[]>([])
 
   const {
-    fetchNotes, isFetchingNotes, fetchNotesError,
-    addNote, addNoteError,
+    fetchNotes,
+    isFetchingNotes,
+    fetchNotesError,
+    addNote,
+    addNoteError,
     // updateNote, updateNoteError,
-    removeNote, removeNoteError,
+    removeNote,
+    removeNoteError,
   } = useContact(contactId)
 
-  const freshNotes = useCallback(
-    async () => {
-      const ns = await fetchNotes()
-      const sortedNs = ns.sort((p, c) => c.timestamp - p.timestamp)
-      setNotes(sortedNs)
-    },
-    [fetchNotes, setNotes],
-  )
+  const freshNotes = useCallback(async () => {
+    const ns = await fetchNotes()
+    const sortedNs = ns.sort((p, c) => c.timestamp - p.timestamp)
+    setNotes(sortedNs)
+  }, [fetchNotes, setNotes])
 
-  useEffect(() => { freshNotes() }, [contactId, freshNotes])
+  useEffect(() => {
+    freshNotes()
+  }, [contactId, freshNotes])
 
-  useEffect(
-    () => { addNoteError && fail(addNoteError.message) },
-    [addNoteError, fail],
-  )
+  useEffect(() => {
+    addNoteError && fail(addNoteError.message)
+  }, [addNoteError, fail])
   // useEffect(
   //   () => { updateNoteError && fail(updateNoteError.message) },
   //   [updateNoteError],
   // )
-  useEffect(
-    () => { removeNoteError && fail(removeNoteError.message) },
-    [fail, removeNoteError],
-  )
+  useEffect(() => {
+    removeNoteError && fail(removeNoteError.message)
+  }, [fail, removeNoteError])
 
   const {
     value: showCtlButtons,
@@ -230,23 +231,19 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
     [inputtingNoteRef],
   )
 
-  const handleSubmitUpdate = useCallback(
-    async () => {
-      const value = inputtingNoteRef.current.trim()
+  const handleSubmitUpdate = useCallback(async () => {
+    const value = inputtingNoteRef.current.trim()
 
-      toggleOffShowAddNote()
+    toggleOffShowAddNote()
 
-      if (!value) return
+    if (!value) return
 
-      await addNote(value)
-      await freshNotes()
-    },
-    [addNote, freshNotes, toggleOffShowAddNote],
-  )
+    await addNote(value)
+    await freshNotes()
+  }, [addNote, freshNotes, toggleOffShowAddNote])
 
   const handleNoteUpdateByKeydown = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
-
       if (event.keyCode === 27) {
         toggleOffShowAddNote()
         return
@@ -269,52 +266,44 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
 
   const showRemoveConfirmationForId = useInput('')
 
-  const handleNoteRemove = useCallback(
-    async () => {
-      const noteID = showRemoveConfirmationForId.value
-      showRemoveConfirmationForId.clear()
-      await removeNote(noteID)
-      await freshNotes()
-    },
-    [showRemoveConfirmationForId, removeNote, freshNotes],
-  )
+  const handleNoteRemove = useCallback(async () => {
+    const noteID = showRemoveConfirmationForId.value
+    showRemoveConfirmationForId.clear()
+    await removeNote(noteID)
+    await freshNotes()
+  }, [showRemoveConfirmationForId, removeNote, freshNotes])
 
-  const noteGroups = useMemo(
-    () => {
-      const sortedNotes = notes.slice()
-        .sort((p, c) => c.timestamp - p.timestamp)
-        .map(note => ({ ...note, date: getDate(note.timestamp) }))
+  const noteGroups = useMemo(() => {
+    const sortedNotes = notes
+      .slice()
+      .sort((p, c) => c.timestamp - p.timestamp)
+      .map((note) => ({ ...note, date: getDate(note.timestamp) }))
 
-      const groupedMap = sortedNotes.reduce<{ [key: string]: Note[] }>(
-        (m, note) => {
-          const date = getDate(note.timestamp)
-          m[date] = m[date] ? [...m[date], note] : [note]
+    const groupedMap = sortedNotes.reduce<{ [key: string]: Note[] }>(
+      (m, note) => {
+        const date = getDate(note.timestamp)
+        m[date] = m[date] ? [...m[date], note] : [note]
 
-          return m
-        },
-        { [getDate(+new Date())]: [] },
-      )
+        return m
+      },
+      { [getDate(+new Date())]: [] },
+    )
 
-      return Object.keys(groupedMap).map(key => ({
-        date: key,
-        notes: groupedMap[key],
-      }))
-    },
-    [notes],
-  )
+    return Object.keys(groupedMap).map((key) => ({
+      date: key,
+      notes: groupedMap[key],
+    }))
+  }, [notes])
 
   const [loading, setLoading] = useState({ show: false, triggered: false })
 
-  useEffect(
-    () => {
-      if (!loading.show && !loading.triggered && isFetchingNotes) {
-        setLoading({ show: true, triggered: true })
-      } else if (loading.show && !isFetchingNotes) {
-        setLoading({ ...loading, show: false })
-      }
-    },
-    [loading, setLoading, isFetchingNotes],
-  )
+  useEffect(() => {
+    if (!loading.show && !loading.triggered && isFetchingNotes) {
+      setLoading({ show: true, triggered: true })
+    } else if (loading.show && !isFetchingNotes) {
+      setLoading({ ...loading, show: false })
+    }
+  }, [loading, setLoading, isFetchingNotes])
 
   const isLoading = useMemo(
     () => !showAddNote && !loading.show && loading.triggered,
@@ -334,93 +323,107 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
       />
       <div className={classes.headWrapper}>
         {/* <Typography variant="h4" className={classes.title}>Activities</Typography> */}
-        <Typography variant="h4" className={classes.title}>Notes</Typography>
+        <Typography variant="h4" className={classes.title}>
+          Notes
+        </Typography>
         {/* <Button
           className={classes.manageButton}
           variant="outlined"
           color="primary"
         >Manage</Button> */}
       </div>
-      {loading.show
-        ? (
-          <div className={classes.stepper}>
-            {Array.from(({ length: 5 }), (_, index) => (
-              <div key={index} className={classes.skeletonContent}>
-                <Skeleton widthRandomness={0} width="100%" />
-              </div>
-            ))}
-          </div>
-        )
-        : fetchNotesError
-          ? (
-            <Typography align="center">
-              {fetchNotesError.message ? fetchNotesError.message : 'Oops, an error occurred!'}
-            </Typography>
-          )
-          : (
-            <Stepper orientation="vertical" className={classes.stepper}>
-              {noteGroups.map((group, gIndex) => (
-                <Step key={group.date} active>
-                  <StepLabel
-                    classes={{
-                      label: classes.activityLabel,
-                    }}
-                    icon={<div className={classes.dot} />}
+      {loading.show ? (
+        <div className={classes.stepper}>
+          {Array.from({ length: 5 }, (_, index) => (
+            <div key={index} className={classes.skeletonContent}>
+              <Skeleton widthRandomness={0} width="100%" />
+            </div>
+          ))}
+        </div>
+      ) : fetchNotesError ? (
+        <Typography align="center">
+          {fetchNotesError.message
+            ? fetchNotesError.message
+            : 'Oops, an error occurred!'}
+        </Typography>
+      ) : (
+        <Stepper orientation="vertical" className={classes.stepper}>
+          {noteGroups.map((group, gIndex) => (
+            <Step key={group.date} active>
+              <StepLabel
+                classes={{
+                  label: classes.activityLabel,
+                }}
+                icon={<div className={classes.dot} />}
+              >
+                {group.date}
+              </StepLabel>
+              <StepContent>
+                {isLoading && gIndex === 0 && group.notes.length === 0 && (
+                  <div
+                    className={classes.noteForToday}
+                    onClick={toggleOnAddNote}
                   >
-                    {group.date}
-                  </StepLabel>
-                  <StepContent>
-                    {isLoading && gIndex === 0 && group.notes.length === 0 && (
-                      <div className={classes.noteForToday} onClick={toggleOnAddNote}>Add Note for today!</div>
+                    Add Note for today!
+                  </div>
+                )}
+                {showAddNote && gIndex === 0 && (
+                  <div
+                    className={classnames(
+                      classes.entryContent,
+                      classes.entryInputContent,
                     )}
-                    {showAddNote
-                      && gIndex === 0
-                      && (
-                        <div className={classnames(classes.entryContent, classes.entryInputContent)}>
-                          <Input
-                            className={classes.entryInput}
-                            classes={{ root: classes.entryInputRoot }}
-                            placeholder="Click to add notes..."
-                            disableUnderline
-                            multiline
-                            rowsMax={4}
-                            onBlur={handleNoteUpdateByBlur}
-                            onKeyDown={handleNoteUpdateByKeydown}
-                            autoFocus
-                          />
-                          <Tooltip title="submit">
-                            <IconButton color="primary" className={classes.noteSubmitter} onClick={handleSubmitUpdate}>
-                              <Icon name={ICONS.Enter} color={'hoverLighten'} />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      )
-                    }
-                    {group.notes.map(note => (
-                      <div className={classes.entry} key={note.id}>
-                        <div className={classes.entryContent}>
-                          {note.content}
-                          <Tooltip title="remove">
-                            <IconButton
-                              className={classes.noteRemoveButton}
-                              onClick={showRemoveConfirmationForId.setValue.bind(null, note.id)}
-                            >
-                              <Icon name={ICONS.Remove} color={'hoverLighten'} />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                        <time className={classes.entryTime}>
-                          {getTime(note.timestamp)}
-                        </time>
-                      </div>
-                    ))}
-                  </StepContent>
-                </Step>
-              ))}
-            </Stepper>
-          )}
-      {!loading.show && !fetchNotesError &&
-        (<div className={classes.buttonWrapper}>
+                  >
+                    <Input
+                      className={classes.entryInput}
+                      classes={{ root: classes.entryInputRoot }}
+                      placeholder="Click to add notes..."
+                      disableUnderline
+                      multiline
+                      rowsMax={4}
+                      onBlur={handleNoteUpdateByBlur}
+                      onKeyDown={handleNoteUpdateByKeydown}
+                      autoFocus
+                    />
+                    <Tooltip title="submit">
+                      <IconButton
+                        color="primary"
+                        className={classes.noteSubmitter}
+                        onClick={handleSubmitUpdate}
+                      >
+                        <Icon name={ICONS.Enter} color={'hoverLighten'} />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                )}
+                {group.notes.map((note) => (
+                  <div className={classes.entry} key={note.id}>
+                    <div className={classes.entryContent}>
+                      {note.content}
+                      <Tooltip title="remove">
+                        <IconButton
+                          className={classes.noteRemoveButton}
+                          onClick={showRemoveConfirmationForId.setValue.bind(
+                            null,
+                            note.id,
+                          )}
+                        >
+                          <Icon name={ICONS.Remove} color={'hoverLighten'} />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                    <time className={classes.entryTime}>
+                      {getTime(note.timestamp)}
+                    </time>
+                  </div>
+                ))}
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+      )}
+      {!loading.show && !fetchNotesError && (
+        <div className={classes.buttonWrapper}>
           {false && showCtlButtons && (
             <>
               {/* <IconButton
@@ -431,7 +434,10 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
                 <Icon name={ICONS.Birthday} />
               </IconButton> */}
               <Tooltip title="add note">
-                <IconButton classes={{ label: classes.entryButtonIcon }} onClick={toggleOnAddNote}>
+                <IconButton
+                  classes={{ label: classes.entryButtonIcon }}
+                  onClick={toggleOnAddNote}
+                >
                   <Icon
                     name={ICONS.Note}
                     color={showAddNote ? 'primary' : 'hoverLighten'}
@@ -445,13 +451,13 @@ const ContactActivities: React.FC<Props> = React.memo(({ contactId }) => {
               color="primary"
               onClick={toggleOnAddNote}
               size="medium"
-            // onClick={toggleShowButtons}
+              // onClick={toggleShowButtons}
             >
               <Icon size="lg" name={ICONS.AddCircle} />
             </IconButton>
           </Tooltip>
         </div>
-        )}
+      )}
     </ContactTableThemeProvider>
   )
 })

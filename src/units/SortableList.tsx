@@ -1,9 +1,9 @@
 import React from 'react'
-import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
-
-export {
-  arrayMove,
-}
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+} from 'react-sortable-hoc'
 
 interface ItemProps {
   element: JSX.Element

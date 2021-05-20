@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import Select, { createFilter } from 'react-select'
+import { default as Select, createFilter } from 'react-select'
 import { SelectComponentsConfig } from 'react-select/src/components'
 import classnames from 'classnames'
 import { Theme } from '@material-ui/core/styles'
@@ -93,7 +93,7 @@ export interface Props {
   className?: string
   value?: string
   error?: boolean
-  options: Array<{ label: string, value: string }>
+  options: { label: string; value: string }[]
   onChange?: (value: string) => void
   placeholder?: string
   fullWidth?: boolean
@@ -102,19 +102,40 @@ export interface Props {
   disabled?: boolean
 }
 
-
-const InputComponent: React.FC<{ inputRef: React.LegacyRef<HTMLDivElement> }>
-  = ({ inputRef, ...props }) => <div ref={inputRef} {...props} />
+const InputComponent: React.FC<{ inputRef: React.LegacyRef<HTMLDivElement> }> =
+  ({ inputRef, ...props }) => <div ref={inputRef} {...props} />
 
 const Control: React.FC<{
   hasValue: boolean
   innerRef: React.Ref<HTMLDivElement>
-  selectProps: { props: Partial<Pick<Props, 'className' | 'placeholder'  | 'InputClasses' | 'error' | 'fullWidth' | 'TextFieldClasses'> & { isSimple: boolean }> }
+  selectProps: {
+    props: Partial<
+      Pick<
+        Props,
+        | 'className'
+        | 'placeholder'
+        | 'InputClasses'
+        | 'error'
+        | 'fullWidth'
+        | 'TextFieldClasses'
+      > & { isSimple: boolean }
+    >
+  }
   innerProps: any
-}>
-  = React.memo(({
+}> = React.memo(
+  ({
     innerRef,
-    selectProps: { props: { className, placeholder, InputClasses, error, fullWidth = true, TextFieldClasses, isSimple = false } },
+    selectProps: {
+      props: {
+        className,
+        placeholder,
+        InputClasses,
+        error,
+        fullWidth = true,
+        TextFieldClasses,
+        isSimple = false,
+      },
+    },
     innerProps,
     children,
   }) => {
@@ -157,9 +178,10 @@ const Control: React.FC<{
         label={placeholder}
       />
     )
-  })
+  },
+)
 
-const Menu: React.FC<{ innerProps: any }> = ({ children,innerProps }) => {
+const Menu: React.FC<{ innerProps: any }> = ({ children, innerProps }) => {
   const classes = useStyles2({})
 
   return (
@@ -169,7 +191,10 @@ const Menu: React.FC<{ innerProps: any }> = ({ children,innerProps }) => {
   )
 }
 
-const NoOptionsMessage: React.FC<{ innerProps: any }> = ({ children, innerProps }) => {
+const NoOptionsMessage: React.FC<{ innerProps: any }> = ({
+  children,
+  innerProps,
+}) => {
   const classes = useStyles2({})
 
   return (
@@ -183,7 +208,10 @@ const NoOptionsMessage: React.FC<{ innerProps: any }> = ({ children, innerProps 
   )
 }
 
-const Placeholder: React.FC<{ innerProps: any }> = ({ children, innerProps }) => {
+const Placeholder: React.FC<{ innerProps: any }> = ({
+  children,
+  innerProps,
+}) => {
   const classes = useStyles2({})
 
   return (
@@ -200,42 +228,54 @@ const Placeholder: React.FC<{ innerProps: any }> = ({ children, innerProps }) =>
 const ValueContainer: React.FC = ({ children }) => {
   const classes = useStyles2({})
 
-  return (
-    <div className={classes.valueContainer}>{children}</div>
-  )
+  return <div className={classes.valueContainer}>{children}</div>
 }
 
-const DropdownIndicator: React.FC<{ selectProps: { menuIsOpen?: boolean } }> = ({ selectProps }) => {
-  const classes = useStyles4({})
-
-  return <ArrowDropDown className={classnames(classes.indicator, selectProps.menuIsOpen && classes.rotated)} />
-}
-
-const Option: React.FC<{ innerRef: React.Ref<any>, isSelected: boolean, innerProps: any }>
-  = ({ innerRef, isSelected, children, innerProps }) => {
-    const classes = useStyles2({})
+const DropdownIndicator: React.FC<{ selectProps: { menuIsOpen?: boolean } }> =
+  ({ selectProps }) => {
+    const classes = useStyles4({})
 
     return (
-      <MenuItem
-        buttonRef={innerRef}
-        selected={isSelected}
-        component="div"
-        className={classes.option}
-        classes={{
-          root: classes.optionButtonHover,
-          selected: classes.optionButtonSelected,
-        }}
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-        }}
-        {...innerProps}
-      >
-        {children}
-      </MenuItem>
+      <ArrowDropDown
+        className={classnames(
+          classes.indicator,
+          selectProps.menuIsOpen && classes.rotated,
+        )}
+      />
     )
   }
 
-export const components: SelectComponentsConfig<{ label: string, value: string }> = {
+const Option: React.FC<{
+  innerRef: React.Ref<any>
+  isSelected: boolean
+  innerProps: any
+}> = ({ innerRef, isSelected, children, innerProps }) => {
+  const classes = useStyles2({})
+
+  return (
+    <MenuItem
+      buttonRef={innerRef}
+      selected={isSelected}
+      component="div"
+      className={classes.option}
+      classes={{
+        root: classes.optionButtonHover,
+        selected: classes.optionButtonSelected,
+      }}
+      style={{
+        fontWeight: isSelected ? 500 : 400,
+      }}
+      {...innerProps}
+    >
+      {children}
+    </MenuItem>
+  )
+}
+
+export const components: SelectComponentsConfig<
+  { label: string; value: string },
+  false
+> = {
   Control: Control as any,
   Menu,
   NoOptionsMessage,
@@ -253,75 +293,98 @@ export const filterOption = createFilter({
   matchFrom: 'start',
 })
 
-const BasicFormInputSelect: React.FC<Props> = React.memo(({
-  placeholder = '', className, error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
-}) => {
-  const classes = useStyles({})
-  const classes2 = useStyles2({})
+const BasicFormInputSelect: React.FC<Props> = React.memo(
+  ({
+    placeholder = '',
+    className,
+    error,
+    onChange,
+    fullWidth = true,
+    InputClasses,
+    TextFieldClasses,
+    options,
+    disabled,
+  }) => {
+    const classes = useStyles({})
+    const classes2 = useStyles2({})
 
-  const handleChange = useCallback(
-    (input: any) => {
+    const handleChange = useCallback(
+      (input: any) => {
+        onChange &&
+          input &&
+          input.value &&
+          onChange((input as { value: string; label: string }).value)
+      },
+      [onChange],
+    )
 
-      onChange && input && input.value && onChange((input as { value: string, label: string }).value)
-    },
-    [onChange]
-  )
+    return (
+      <Select
+        className={classnames(classes2.select, className)}
+        classes={classes}
+        options={options}
+        components={components}
+        onChange={handleChange}
+        placeholder={placeholder}
+        props={{
+          TextFieldClasses,
+          fullWidth,
+          InputClasses,
+          placeholder,
+          error,
+        }}
+        filterOption={filterOption}
+        isDisabled={disabled}
+      />
+    )
+  },
+)
 
-  return (
-    <Select
-      className={classnames(classes2.select, className)}
-      classes={classes}
-      options={options}
-      components={components}
-      onChange={handleChange}
-      placeholder={placeholder}
-      props={{
-        TextFieldClasses,
-        fullWidth,
-        InputClasses,
-        placeholder,
-        error,
-      }}
-      filterOption={filterOption}
-      isDisabled={disabled}
-    />
-  )
-})
+export const SimpleFormInputSelect: React.FC<Props> = React.memo(
+  ({
+    placeholder = '',
+    className,
+    error,
+    onChange,
+    fullWidth = true,
+    InputClasses,
+    TextFieldClasses,
+    options,
+    disabled,
+  }) => {
+    const classes = useStyles({})
+    const classes2 = useStyles2({})
 
+    const handleChange = useCallback(
+      (input: any) => {
+        onChange &&
+          input &&
+          input.value &&
+          onChange((input as { value: string; label: string }).value)
+      },
+      [onChange],
+    )
 
-export const SimpleFormInputSelect: React.FC<Props> = React.memo(({
-  placeholder = '', className, error, onChange, fullWidth = true, InputClasses, TextFieldClasses, options, disabled,
-}) => {
-  const classes = useStyles({})
-  const classes2 = useStyles2({})
-
-  const handleChange = useCallback(
-    (input: any) => {
-
-      onChange && input && input.value && onChange((input as { value: string, label: string }).value)
-    },
-    [onChange]
-  )
-
-  return (
-    <Select
-      className={classnames(classes2.select, className)}
-      classes={classes}
-      options={options}
-      components={components}
-      onChange={handleChange}
-      placeholder={placeholder}
-      props={{
-        TextFieldClasses,
-        fullWidth,
-        InputClasses,
-        error,
-        isSimple: true,
-      }}
-      filterOption={filterOption}
-      isDisabled={disabled}
-    />
-  )
-})
+    return (
+      <Select
+        className={classnames(classes2.select, className)}
+        classes={classes}
+        options={options}
+        components={components}
+        onChange={handleChange}
+        placeholder={placeholder}
+        props={{
+          TextFieldClasses,
+          fullWidth,
+          InputClasses,
+          error,
+          isSimple: true,
+        }}
+        filterOption={filterOption}
+        isDisabled={disabled}
+      />
+    )
+  },
+)
 
 export default BasicFormInputSelect

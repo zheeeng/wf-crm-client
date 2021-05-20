@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import classnames from 'classnames'
 import { Link, ComponentProps } from '@roundation/roundation'
 import Portal from '@material-ui/core/Portal'
@@ -12,9 +12,9 @@ import MenuIcon from '@material-ui/icons/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import { Divider } from '@material-ui/core'
 
-import useSideDrawer from '~src/containers/useSideDrawer'
-import useAccount from '~src/containers/useAccount'
-import useAlert from '~src/containers/useAlert'
+import { useSideDrawer } from '~src/containers/useSideDrawer'
+import { useAccount } from '~src/containers/useAccount'
+import { useAlert } from '~src/containers/useAlert'
 import crateGravatar from '~src/utils/createGravatar'
 import useStyles from '~src/styles/useHeaderStyles'
 
@@ -30,7 +30,7 @@ const Header: React.FC<Props> = React.memo(() => {
   const mountElRef = useRef(document.querySelector('#header'))
   const sideDrawer = useSideDrawer()
   const { message, dismiss } = useAlert()
-  const { username, login } = useAccount()
+  const { username } = useAccount()
 
   // const handleMenuToggle = useCallback(
   //   (forOpen: boolean) => (event: React.MouseEvent<HTMLElement>) => {
@@ -44,15 +44,13 @@ const Header: React.FC<Props> = React.memo(() => {
   //   [anchorEl, openAccount],
   // )
 
-  useEffect(() => { login() }, [login])
-
   return (
     <Portal container={mountElRef.current}>
       <div data-portal>
         <AppBar
           position="absolute"
           className={classes.appBar}
-          classes={{root: classes.appBarRoot}}
+          classes={{ root: classes.appBarRoot }}
         >
           <Toolbar variant="dense" className={classes.toolBar}>
             <div className={classes.logo} />
@@ -69,7 +67,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 <a href="/welcome" className={classes.link}>
                   Dashboard
                 </a>
-                <div className={classes.linkIcon} >
+                <div className={classes.linkIcon}>
                   <DashboardIcon className={classes.linkIcon} />
                 </div>
               </div>
@@ -77,7 +75,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 <a href="/templates" className={classes.link}>
                   Waiver Templates
                 </a>
-                <div className={classes.linkIcon} >
+                <div className={classes.linkIcon}>
                   <TemplateIcon className={classes.linkIcon} />
                 </div>
               </div>
@@ -85,7 +83,7 @@ const Header: React.FC<Props> = React.memo(() => {
                 <Link to="/crm" className={classnames(classes.link, 'active')}>
                   My Customers
                 </Link>
-                <div className={classnames(classes.linkIcon, 'active')} >
+                <div className={classnames(classes.linkIcon, 'active')}>
                   <CustomersIcon />
                 </div>
               </div>
@@ -93,21 +91,20 @@ const Header: React.FC<Props> = React.memo(() => {
                 <a href="/waiver-list" className={classes.link}>
                   My Waiver List
                 </a>
-                <div className={classes.linkIcon} >
+                <div className={classes.linkIcon}>
                   <WaiverlistIcon className={classes.linkIcon} />
                 </div>
               </div>
             </nav>
             <div className={classes.dropdownButton}>
-              <Avatar src={crateGravatar(username)} classes={{root: classes.avatarRoot}} />
+              <Avatar
+                src={crateGravatar(username)}
+                classes={{ root: classes.avatarRoot }}
+              />
               <div className={classes.arrowDown} />
-              <MenuList
-                className={classes.menuList}
-              >
-                <MenuItem className={classes.menuItem}>
-                  {username}
-                </MenuItem>
-                <Divider className={classes.menuDivider}/>
+              <MenuList className={classes.menuList}>
+                <MenuItem className={classes.menuItem}>{username}</MenuItem>
+                <Divider className={classes.menuDivider} />
 
                 {/* <MenuItem className={classnames(classes.menuItem, classes.navItemInMenu)}>
                   <a href="/welcome" className={classes.navLink}>
@@ -137,43 +134,92 @@ const Header: React.FC<Props> = React.memo(() => {
                     target="_blank"
                     rel="noopener noreferrer"
                     href="https://help.waiverforever.com/"
-                  > Help Center</a>
+                  >
+                    {' '}
+                    Help Center
+                  </a>
                 </MenuItem>
-                <Divider className={classes.menuDivider}/>
+                <Divider className={classes.menuDivider} />
                 <MenuItem className={classes.menuItem}>
                   <a className={classes.navLink} target="_self" href="/archive">
-                    <i className={classnames(classes.menuIcon, classes.menuIconArchive)} />
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconArchive,
+                      )}
+                    />
                     Archives
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/settings/general">
-                    <i className={classnames(classes.menuIcon, classes.menuIconSettings)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/settings/general"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconSettings,
+                      )}
+                    />
                     Account Settings
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
                   <a className={classes.navLink} target="_self" href="/devices">
-                    <i className={classnames(classes.menuIcon, classes.menuIconPairedDevices)} />
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconPairedDevices,
+                      )}
+                    />
                     Paired Devices
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/plan_and_billing">
-                    <i className={classnames(classes.menuIcon, classes.menuIconPlanAndBilling)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/plan_and_billing"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconPlanAndBilling,
+                      )}
+                    />
                     Plan & Billing
                   </a>
                 </MenuItem>
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/plan_and_billing/referrals">
-                    <i className={classnames(classes.menuIcon, classes.menuIconReferAndReward)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/plan_and_billing/referrals"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconReferAndReward,
+                      )}
+                    />
                     Referral & Rewards
                   </a>
                 </MenuItem>
-                <Divider className={classes.menuDivider}/>
+                <Divider className={classes.menuDivider} />
                 <MenuItem className={classes.menuItem}>
-                  <a className={classes.navLink} target="_self" href="/auth/signout">
-                    <i className={classnames(classes.menuIcon, classes.menuIconSignout)} />
+                  <a
+                    className={classes.navLink}
+                    target="_self"
+                    href="/auth/signout"
+                  >
+                    <i
+                      className={classnames(
+                        classes.menuIcon,
+                        classes.menuIconSignout,
+                      )}
+                    />
                     Sign out
                   </a>
                 </MenuItem>

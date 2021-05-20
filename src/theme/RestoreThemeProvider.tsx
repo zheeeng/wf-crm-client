@@ -23,9 +23,7 @@ export const restoreTheme = createMuiTheme({
 })
 
 const RestoreThemeProvider: React.FC = (props) => (
-  <ThemeProvider theme={restoreTheme}>
-    {props.children}
-  </ThemeProvider>
+  <ThemeProvider theme={restoreTheme}>{props.children}</ThemeProvider>
 )
 
 export default RestoreThemeProvider

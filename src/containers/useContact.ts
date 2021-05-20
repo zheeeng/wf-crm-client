@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import {
-  PeopleAPI, contactInputAdapter, Contact,
+  PeopleAPI,
+  contactInputAdapter,
+  Contact,
   contactOutputAdapter,
   CommonField,
-  NoteAPI, noteInputAdapter,
-  WaiverAPI, waiverInputAdapter,
+  NoteAPI,
+  noteInputAdapter,
+  WaiverAPI,
+  waiverInputAdapter,
 } from '~src/types/Contact'
 import { useGet, usePost, usePut, useDelete } from '~src/hooks/useRequest'
 import useLatest from '~src/hooks/useLatest'
 import { pascal2snake, snake2pascal } from '~src/utils/caseConvert'
 import mapKeys from '~src/utils/mapKeys'
-import useContactsCount from '~src/containers/useContactsCount'
-import useAlert from '~src/containers/useAlert'
+import { useContactsCount } from '~src/containers/useContactsCount'
+import { useAlert } from '~src/containers/useAlert'
 import {
   localStorageKeyForDeletingContacts,
   localStorageExpirationForDeletingContacts,
@@ -19,7 +23,9 @@ import {
 } from '~src/meta/localCacheConfig'
 import useLocalCache from '~src/hooks/useLocalCache'
 
-const useContact = (contactId: string) => {
+const constTags: never[] = []
+
+export const useContact = (contactId: string) => {
   const { refreshCounts } = useContactsCount()
   const {
     data: contactData,
@@ -27,8 +33,13 @@ const useContact = (contactId: string) => {
     isLoading: isGettingContact,
     error: getContactError,
   } = useGet<PeopleAPI>()
-  const { data: updatedContactData, request: putContact, error: putContactError } = usePut<PeopleAPI>()
-  const { data: putContactFiledData, request: putContactFiled } = usePut<PeopleAPI>()
+  const {
+    data: updatedContactData,
+    request: putContact,
+    error: putContactError,
+  } = usePut<PeopleAPI>()
+  const { data: putContactFiledData, request: putContactFiled } =
+    usePut<PeopleAPI>()
   const { request: getFields, error: getFieldsError } = useGet()
   const { request: postField, error: postFieldError } = usePost<CommonField>()
   const { request: putField, error: putFieldError } = usePut<CommonField>()
@@ -47,77 +58,78 @@ const useContact = (contactId: string) => {
     isLoading: isFetchingWaivers,
     error: getWaiversError,
   } = useGet<WaiverAPI[]>()
-  const { request: postSplitWaiver, error: postSplitWaiverError } = usePost<PeopleAPI>()
+  const { request: postSplitWaiver, error: postSplitWaiverError } =
+    usePost<PeopleAPI>()
   const { request: postNote, error: postNoteError } = usePost<NoteAPI>()
   const { request: putNote, error: putNoteError } = usePut<NoteAPI>()
   const { request: deleteNote, error: deleteNoteError } = useDelete()
 
-  const { write, read, remove } = useLocalCache(localStorageKeyForDeletingContacts, localStorageExpirationForDeletingContacts)
+  const { write, read, remove } = useLocalCache(
+    localStorageKeyForDeletingContacts,
+    localStorageExpirationForDeletingContacts,
+  )
 
   const freshContact = useMemo(
-    () => contactData ? contactInputAdapter(contactData) : null,
+    () => (contactData ? contactInputAdapter(contactData) : null),
     [contactData],
   )
   const updatedContact = useMemo(
-    () => updatedContactData ? contactInputAdapter(updatedContactData) : null,
+    () => (updatedContactData ? contactInputAdapter(updatedContactData) : null),
     [updatedContactData],
   )
   const latestContact = useLatest(freshContact, updatedContact)
 
   const { fail } = useAlert()
 
-  useEffect(
-    () => { postFieldError && fail(postFieldError.message) },
-    [postFieldError, fail],
-  )
-  useEffect(
-    () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError, fail],
-  )
-  useEffect(
-    () => { putFieldError && fail(putFieldError.message) },
-    [putFieldError, fail],
-  )
-  useEffect(
-    () => { deleteFieldError && fail(deleteFieldError.message) },
-    [deleteFieldError, fail],
-  )
+  useEffect(() => {
+    postFieldError && fail(postFieldError.message)
+  }, [postFieldError, fail])
+  useEffect(() => {
+    putFieldError && fail(putFieldError.message)
+  }, [putFieldError, fail])
+  useEffect(() => {
+    putFieldError && fail(putFieldError.message)
+  }, [putFieldError, fail])
+  useEffect(() => {
+    deleteFieldError && fail(deleteFieldError.message)
+  }, [deleteFieldError, fail])
 
-  useEffect(
-    () => { postSplitWaiverError && fail(postSplitWaiverError.message) },
-    [postSplitWaiverError, fail],
-  )
+  useEffect(() => {
+    postSplitWaiverError && fail(postSplitWaiverError.message)
+  }, [postSplitWaiverError, fail])
 
   // useEffect(
   //   () => { deleteContactError && fail(deleteContactError.message) },
   //   [deleteContactError, fail],
   // )
 
-  const tags = useLatest<string[] | undefined | null>(
-    latestContact && latestContact.info.tags,
-    afterAddedTags,
-    afterRemovedTags,
-  ) || []
+  const tags =
+    useLatest<string[] | undefined | null>(
+      latestContact && latestContact.info.tags,
+      afterAddedTags,
+      afterRemovedTags,
+    ) ?? constTags
 
   const gender = useLatest<'Male' | 'Female' | 'Other' | ''>(
-    latestContact ? (latestContact.info.gender || '') : '',
-    putContactFiledData ? (putContactFiledData.gender || '') : '',
+    latestContact ? latestContact.info.gender ?? '' : '',
+    putContactFiledData ? putContactFiledData.gender ?? '' : '',
   )
 
-  const contact = useMemo<Contact | undefined>(
-    () => {
-      if (!latestContact) return undefined
+  const contact = useMemo<Contact | undefined>(() => {
+    if (!latestContact) return undefined
 
-      const contactId = read(delContactRecordKey(latestContact.id))
+    const contactId = read(delContactRecordKey(latestContact.id))
 
-      if (tags.length) {
-        return { ...latestContact, info: { ...latestContact.info, tags }, isDeleting: !!contactId }
+    if (tags.length) {
+      return {
+        ...latestContact,
+        info: { ...latestContact.info, tags },
+        isDeleting: !!contactId,
       }
+    }
 
-      return { ...latestContact, isDeleting: !!contactId }
-    },
-    [latestContact, tags, read],
-  )
+    return { ...latestContact, isDeleting: !!contactId }
+  }, [latestContact, tags, read])
 
   const fetchContact = useCallback(
     async (contactId: string) => {
@@ -128,18 +140,17 @@ const useContact = (contactId: string) => {
     [getContact],
   )
 
-  useEffect(
-    () => { refreshCounts() },
-    [refreshCounts],
-  )
+  useEffect(() => {
+    refreshCounts()
+  }, [refreshCounts])
 
-  useEffect(
-    () => { contactId && fetchContact(contactId) },
-    [fetchContact, contactId],
-  )
+  useEffect(() => {
+    contactId && fetchContact(contactId)
+  }, [fetchContact, contactId])
 
   const updateContact = useCallback(
-    async (cont: Contact) => putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
+    async (cont: Contact) =>
+      putContact(`/api/people/${contactId}`)(contactOutputAdapter(cont)),
     [contactId, putContact],
   )
 
@@ -149,29 +160,33 @@ const useContact = (contactId: string) => {
   )
   const addField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
-      const result = await postField(`/api/people/${contactId}/fields`)(mapKeys(pascal2snake, field))
+      const result = await postField(`/api/people/${contactId}/fields`)(
+        mapKeys(pascal2snake, field as unknown as Record<string, unknown>),
+      )
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return mapKeys(snake2pascal, result!)
+      return mapKeys(snake2pascal, result)
     },
     [contactId, postField],
   )
   const updateField = useCallback(
     async (field: CommonField): Promise<CommonField | null> => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const result = await putField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
+      const result = await putField(
+        `/api/people/${contactId}/fields/${field.id ?? ''}`,
+      )(mapKeys(pascal2snake, field as unknown as Record<string, unknown>))
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return mapKeys(snake2pascal, result!)
+      return mapKeys(snake2pascal, result)
     },
     [contactId, putField],
   )
   const removeField = useCallback(
     async (field: CommonField) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const result = await deleteField(`/api/people/${contactId}/fields/${field.id!}`)(mapKeys(pascal2snake, field))
+      const result = await deleteField(
+        `/api/people/${contactId}/fields/${field.id ?? ''}`,
+      )(mapKeys(pascal2snake, field as unknown as Record<string, unknown>))
 
-      return result && (field.id || null)
+      return result && (field.id ?? null)
     },
     [contactId, deleteField],
   )
@@ -192,16 +207,13 @@ const useContact = (contactId: string) => {
     [contactId, putContactFiled],
   )
 
-  const removeContact = useCallback(
-    async () => {
-      const key = delContactRecordKey(contactId)
-      write(key, contactId)
-      await deleteContact(`/api/people/${contactId}`)()
-      remove(key)
-      refreshCounts()
-    },
-    [contactId, deleteContact, refreshCounts, write, remove],
-  )
+  const removeContact = useCallback(async () => {
+    const key = delContactRecordKey(contactId)
+    write(key, contactId)
+    await deleteContact(`/api/people/${contactId}`)()
+    remove(key)
+    refreshCounts()
+  }, [contactId, deleteContact, refreshCounts, write, remove])
 
   const addTag = useCallback(
     async (tag: string) => postTag(`/api/people/${contactId}/tags`)({ tag }),
@@ -214,19 +226,22 @@ const useContact = (contactId: string) => {
   )
 
   const fetchNotes = useCallback(
-    async () => getNotes(`/api/people/${contactId}/notes`)({})
-      .then(notes => (notes || []).map(noteInputAdapter)),
+    async () =>
+      getNotes(`/api/people/${contactId}/notes`)({}).then((notes) =>
+        (notes ?? []).map(noteInputAdapter),
+      ),
     [contactId, getNotes],
   )
 
   const addNote = useCallback(
     async (content: string): Promise<NoteAPI | null> => {
-      const result = await postNote(`/api/people/${contactId}/notes`)({ note: content })
+      const result = await postNote(`/api/people/${contactId}/notes`)({
+        note: content,
+      })
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .then(n => noteInputAdapter(n!))
+        .then((n) => noteInputAdapter(n!))
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return mapKeys(snake2pascal, result!)
+      return mapKeys(snake2pascal, result as unknown) as NoteAPI
     },
     [contactId, postNote],
   )
@@ -237,58 +252,79 @@ const useContact = (contactId: string) => {
   )
 
   const waivers = useMemo(
-    () => (waiversData || []).map(waiverInputAdapter).sort((p, c) => c.signedTimestamp - p.signedTimestamp),
+    () =>
+      (waiversData ?? [])
+        .map(waiverInputAdapter)
+        .sort((p, c) => c.signedTimestamp - p.signedTimestamp),
     [waiversData],
   )
 
   const splitWaiver = useCallback(
     async (waiverId: string): Promise<PeopleAPI | null> => {
-      const result = await postSplitWaiver(`/api/people/${contactId}/splitWaiver/${waiverId}`)()
+      const result = await postSplitWaiver(
+        `/api/people/${contactId}/splitWaiver/${waiverId}`,
+      )()
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return mapKeys(snake2pascal, result!)
+      return mapKeys(snake2pascal, result)
     },
     [contactId, postSplitWaiver],
   )
 
   const updateNote = useCallback(
     async (id: string, content: string): Promise<NoteAPI | null> => {
-      const result = await putNote(`/api/people/${contactId}/notes/${id}`)({ note: content })
+      const result = await putNote(`/api/people/${contactId}/notes/${id}`)({
+        note: content,
+      })
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .then(n => noteInputAdapter(n!))
+        .then((n) => noteInputAdapter(n!))
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return mapKeys(snake2pascal, result!)
+      return mapKeys(snake2pascal, result as unknown) as NoteAPI
     },
     [contactId, putNote],
   )
 
   const removeNote = useCallback(
-    async (id: string) =>
-      deleteNote(`/api/people/${contactId}/notes/${id}`)(),
+    async (id: string) => deleteNote(`/api/people/${contactId}/notes/${id}`)(),
     [contactId, deleteNote],
   )
 
   return {
     contact,
-    fetchContact, isFetchingContact: isGettingContact, fetchContactError: getContactError,
-    updateContact, updateContactError: putContactError,
-    fetchFields, fetchFieldsError: getFieldsError,
-    addField, addFieldError: postFieldError,
-    updateField, updateFieldError: putFieldError,
-    removeField, removeFieldError: deleteFieldError,
+    fetchContact,
+    isFetchingContact: isGettingContact,
+    fetchContactError: getContactError,
+    updateContact,
+    updateContactError: putContactError,
+    fetchFields,
+    fetchFieldsError: getFieldsError,
+    addField,
+    addFieldError: postFieldError,
+    updateField,
+    updateFieldError: putFieldError,
+    removeField,
+    removeFieldError: deleteFieldError,
     starContact,
     updateContactGender,
-    removeContact, removeContactError: deleteContactError,
-    tags, addTag, removeTag,
+    removeContact,
+    removeContactError: deleteContactError,
+    tags,
+    addTag,
+    removeTag,
     gender,
-    fetchNotes, isFetchingNotes: isGettingNotes, fetchNotesError: getNotesError,
-    waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError: getWaiversError,
-    splitWaiver, splitWaiverError: postSplitWaiverError,
-    addNote, addNoteError: postNoteError,
-    updateNote, updateNoteError: putNoteError,
-    removeNote, removeNoteError: deleteNoteError,
+    fetchNotes,
+    isFetchingNotes: isGettingNotes,
+    fetchNotesError: getNotesError,
+    waivers,
+    fetchWaivers,
+    isFetchingWaivers,
+    fetchWaiversError: getWaiversError,
+    splitWaiver,
+    splitWaiverError: postSplitWaiverError,
+    addNote,
+    addNoteError: postNoteError,
+    updateNote,
+    updateNoteError: putNoteError,
+    removeNote,
+    removeNoteError: deleteNoteError,
   }
 }
-
-export default useContact

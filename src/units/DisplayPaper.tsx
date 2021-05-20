@@ -19,11 +19,7 @@ export interface Props {
 const DisplayWrapper: React.FC<Props> = ({ children }) => {
   const classes = useStyles({})
 
-  return (
-    <main className={classes.main}>
-      {children}
-    </main>
-  )
+  return <main className={classes.main}>{children}</main>
 }
 
 export default DisplayWrapper

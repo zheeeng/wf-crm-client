@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import useDebounce from 'react-use/lib/useDebounce'
-import createUseContext from 'constate'
+import constate from 'constate'
 
 const defaultDismissTimeout = 5000
 
@@ -14,15 +14,17 @@ const initialMessage: {
   content: null,
 }
 
-const useAlert = createUseContext(() => {
+export const [UseAlertProvider, useAlert] = constate(() => {
   const [message, updateMessage] = useState(initialMessage)
 
   const success = useCallback(
-    (content: React.ReactNode) => updateMessage({ expand: true, type: 'success', content }),
+    (content: React.ReactNode) =>
+      updateMessage({ expand: true, type: 'success', content }),
     [updateMessage],
   )
   const fail = useCallback(
-    (content: React.ReactNode) => updateMessage({ expand: true, type: 'fail', content }),
+    (content: React.ReactNode) =>
+      updateMessage({ expand: true, type: 'fail', content }),
     [updateMessage],
   )
 
@@ -32,17 +34,16 @@ const useAlert = createUseContext(() => {
   )
 
   const dismiss = useCallback(
-    () => updateMessage(message => ({ ...message, expand: false })),
+    () => updateMessage((message) => ({ ...message, expand: false })),
     [updateMessage],
   )
 
   useDebounce(reset, 1000, [dismiss])
 
-  useDebounce(
-    () => message.content && dismiss(),
-    defaultDismissTimeout,
-    [message, dismiss],
-  )
+  useDebounce(() => message.content && dismiss(), defaultDismissTimeout, [
+    message,
+    dismiss,
+  ])
 
   return {
     message,
@@ -52,5 +53,3 @@ const useAlert = createUseContext(() => {
     reset,
   }
 })
-
-export default useAlert

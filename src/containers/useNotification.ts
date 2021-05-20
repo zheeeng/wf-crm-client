@@ -1,18 +1,19 @@
 import React, { useState, useCallback } from 'react'
-import createUseContext from 'constate'
+import constate from 'constate'
 
-const useNotification = createUseContext(() => {
+export const [UseNotificationProvider, useNotification] = constate(() => {
   const [message, updateMessage] = useState<React.ReactNode>(null)
 
   const notify = useCallback(
-    (msg: React.ReactNode) => { updateMessage(msg) },
+    (msg: React.ReactNode) => {
+      updateMessage(msg)
+    },
     [updateMessage],
   )
 
-  const dismiss = useCallback(
-    () => { updateMessage(null) },
-    [updateMessage],
-  )
+  const dismiss = useCallback(() => {
+    updateMessage(null)
+  }, [updateMessage])
 
   return {
     message,
@@ -20,5 +21,3 @@ const useNotification = createUseContext(() => {
     dismiss,
   }
 })
-
-export default useNotification

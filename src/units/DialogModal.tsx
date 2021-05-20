@@ -42,13 +42,21 @@ export interface Props {
   open: boolean
   onClose: () => void
   handleOkClick: () => void
-  title: string,
+  title: string
   content: string
   okText?: string
   cancelText?: string
 }
 
-const DialogModal: React.FC<Props> = ({ open, onClose, handleOkClick, title, content, okText = 'Yes', cancelText = 'No' }) => {
+const DialogModal: React.FC<Props> = ({
+  open,
+  onClose,
+  handleOkClick,
+  title,
+  content,
+  okText = 'Yes',
+  cancelText = 'No',
+}) => {
   const classes = useStyles({})
 
   return (
@@ -70,10 +78,7 @@ const DialogModal: React.FC<Props> = ({ open, onClose, handleOkClick, title, con
       </Typography>
       <div className={classes.buttonZone}>
         <Button onClick={onClose}>{cancelText}</Button>
-        <Button
-          color="primary"
-          onClick={handleOkClick}
-        >
+        <Button color="primary" onClick={handleOkClick}>
           {okText}
         </Button>
       </div>

@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   main: {
     ...cssTips(theme).casFlex(),
+    height: '100%',
   },
   header: {
     display: 'flex',
@@ -92,13 +93,9 @@ const DetailsPaper: React.FC<Props> = React.memo(
 
     return (
       <main className={classes.main}>
-        <header className={classes.header}>
-          {renderHeader()}
-        </header>
+        <header className={classes.header}>{renderHeader()}</header>
         <div className={classes.content}>
-          <section className={classes.leftSider}>
-            {children}
-          </section>
+          <section className={classes.leftSider}>{children}</section>
           <aside className={classes.rightSider}>
             <section className={classes.rightPart1}>
               {renderRightPart1()}
@@ -125,13 +122,9 @@ export const EmptyDetailsPaper: React.FC<EmptyDetailsPaperProps> = React.memo(
 
     return (
       <main className={classes.main}>
-        <header className={classes.header}>
-          {renderHeader()}
-        </header>
+        <header className={classes.header}>{renderHeader()}</header>
         <div className={classes.content}>
-          <div className={classes.fullWidth}>
-            {children}
-          </div>
+          <div className={classes.fullWidth}>{children}</div>
         </div>
         <div className={classes.footerPlacer} />
       </main>

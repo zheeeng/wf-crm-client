@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import DialogModal from '~src/units/DialogModal'
 
-import useGroups from '~src/containers/useGroups'
+import { useGroups } from '~src/containers/useGroups'
 
 export interface Props {
   open: boolean
@@ -13,13 +13,10 @@ const RemoveContactsFromGroupForm: React.FC<Props> = React.memo(
   ({ open, onClose, onOk }) => {
     const { groupIdState } = useGroups()
 
-    const handleOkClick = useCallback(
-      async () => {
-        onOk && await onOk(groupIdState.value)
-        onClose()
-      },
-      [onOk, groupIdState.value, onClose]
-    )
+    const handleOkClick = useCallback(async () => {
+      onOk && (await onOk(groupIdState.value))
+      onClose()
+    }, [onOk, groupIdState.value, onClose])
 
     return (
       <DialogModal

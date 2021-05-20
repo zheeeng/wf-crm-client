@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useBoolean } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
@@ -12,14 +12,20 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Skeleton from 'react-skeleton-loader'
 
 import ExportContactsForm from '~src/components/ExportContactsForm'
-import useContact from '~src/containers/useContact'
+import { useContact } from '~src/containers/useContact'
 import { getDateAndTime } from '~src/utils/getDate'
 import cssTips from '~src/utils/cssTips'
 
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
-import useWaiverSplitter from '~src/containers/useWaiverSplitter'
+import { useWaiverSplitter } from '~src/containers/useWaiverSplitter'
 
 import Icon, { ICONS } from '~src/units/Icons'
+import {
+  RequestWaiverPopup,
+  SendMoreWaiverPopup,
+} from '@waiverforever/request-waiver-popup'
+import '@waiverforever/request-waiver-popup/dist/style.css'
+import { useRequestWaiver } from '~src/common/useRequestWaiver'
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabsWrapper: {
@@ -64,6 +70,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
   },
+  makeRequestButtonWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  makeRequestButton: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+    cursor: 'pointer',
+  },
   pointer: {
     cursor: 'pointer',
   },
@@ -91,12 +109,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   entryButtons: {
     display: 'none',
     '$entry:hover &': {
-      display: 'block',
+      display: 'flex',
     },
   },
   entryButton: {
     padding: theme.spacing(0.5),
     marginLeft: theme.spacing(0.5),
+    cursor: 'pointer',
   },
   entryButtonIcon: {
     '&:hover': {
@@ -130,7 +149,6 @@ export interface Props {
 const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   const classes = useStyles({})
 
-
   const [currentTab, setCurrentTab] = useState(0)
 
   const { readyToSplitWaiver, splitMutation } = useWaiverSplitter()
@@ -141,10 +159,19 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   )
 
   const {
-    waivers, fetchWaivers, isFetchingWaivers, fetchWaiversError,
+    contact,
+    waivers,
+    fetchWaivers,
+    isFetchingWaivers,
+    fetchWaiversError,
   } = useContact(contactId)
 
-  useEffect(() => { fetchWaivers() }, [contactId, fetchWaivers, splitMutation])
+  const { requestWaiverPopupProps, setRequestNewVisible, setVisible } =
+    useRequestWaiver(fetchWaivers)
+
+  useEffect(() => {
+    fetchWaivers()
+  }, [contactId, fetchWaivers, splitMutation])
 
   const handleOpenWaiverSplitter = useCallback(
     (id: string, title: string) => (e: React.SyntheticEvent) => {
@@ -162,12 +189,56 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   } = useBoolean(false)
 
   const openWaiverExportPage = useCallback(
-    (key: string) => () => { window.open(`/get_signed_doc/${key}`, '_blank') },
+    (key: string) => () => {
+      window.open(`/get_signed_doc/${key}`, '_blank')
+    },
     [],
+  )
+
+  const initialContactEmail = useMemo(
+    () => (contact ? `${contact.info.name}<${contact.info.email}>` : ''),
+    [contact],
+  )
+
+  const requestWaiverRequesting = useCallback(
+    (waiverId: string) => (e: React.SyntheticEvent) => {
+      e.stopPropagation()
+      setVisible(initialContactEmail, waiverId)
+    },
+    [setVisible, initialContactEmail],
+  )
+
+  const requestMoreWaiverRequesting = useCallback(
+    (e: React.SyntheticEvent) => {
+      e.stopPropagation()
+      setRequestNewVisible(initialContactEmail)
+    },
+    [setRequestNewVisible, initialContactEmail],
   )
 
   return (
     <ContactTableThemeProvider>
+      <RequestWaiverPopup
+        initialRecipient={requestWaiverPopupProps.initialRecipient}
+        visible={requestWaiverPopupProps.sendFromWaiverVisible}
+        onVisibleChange={requestWaiverPopupProps.handleVisibleChange}
+        submitData={requestWaiverPopupProps.submitRequest}
+        addEmail={requestWaiverPopupProps.sendEmailRequest}
+        getEmails={requestWaiverPopupProps.getVerifiedEmails}
+        verifyEmail={requestWaiverPopupProps.verifyEmail}
+        getTemplates={requestWaiverPopupProps.getTemplates}
+      />
+      <SendMoreWaiverPopup
+        initialRecipient={requestWaiverPopupProps.initialRecipient}
+        visible={requestWaiverPopupProps.requestVisible}
+        onVisibleChange={requestWaiverPopupProps.handleVisibleChange}
+        submitData={requestWaiverPopupProps.submitRequestWithTemplate}
+        addEmail={requestWaiverPopupProps.sendEmailRequest}
+        getEmails={requestWaiverPopupProps.getVerifiedEmails}
+        verifyEmail={requestWaiverPopupProps.verifyEmail}
+        getTemplates={requestWaiverPopupProps.getTemplates}
+        showHideSignedCheckbox
+      />
       <ExportContactsForm
         open={exportContactsOpened}
         onClose={toggleOffExportContactsOpened}
@@ -184,11 +255,11 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
           }}
         >
           <Tab
-            label={(
-              <Typography variant="h4"
-                className={classes.title}
-              >Waivers</Typography>
-            )}
+            label={
+              <Typography variant="h4" className={classes.title}>
+                Waivers
+              </Typography>
+            }
           />
           {/* <Tab
             label={<Typography variant="h4">Attachments</Typography>}
@@ -199,65 +270,105 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
             className={classes.uploadButton}
             variant="outlined"
             color="primary"
-          >Upload</Button>
+          >
+            Upload
+          </Button>
         )}
       </div>
-      {currentTab === 0 && isFetchingWaivers
-        ? (
+      {currentTab === 0 && isFetchingWaivers ? (
+        <div className={classes.waiverContent}>
+          {Array.from({ length: 3 }, (_, index) => (
+            <div
+              className={classnames(classes.entry, classes.skeletonEntry)}
+              key={index}
+            >
+              <Skeleton widthRandomness={0} width="100%" />
+            </div>
+          ))}
+        </div>
+      ) : fetchWaiversError ? (
+        <Typography align="center">
+          {fetchWaiversError.message
+            ? fetchWaiversError.message
+            : 'Oops, an error occurred!'}
+        </Typography>
+      ) : (
+        <>
           <div className={classes.waiverContent}>
-            {Array.from(({ length: 3 }), (_, index) => (
-              <div className={classnames(classes.entry, classes.skeletonEntry)} key={index} >
-                <Skeleton widthRandomness={0} width="100%"/>
+            {waivers.map((waiver) => (
+              <div
+                key={waiver.key}
+                className={classnames(classes.entry, classes.pointer)}
+                onClick={openWaiverExportPage(waiver.key)}
+              >
+                <Icon
+                  name={ICONS.Waiver}
+                  className={classes.entryIcon}
+                  size="sm"
+                />
+                <span className={classes.entryContent}>{waiver.title}</span>
+                <time className={classes.entryTime}>
+                  {getDateAndTime(waiver.signedTimestamp)}
+                </time>
+                <div className={classes.entryButtons}>
+                  <Tooltip title="request waiver">
+                    <IconButton
+                      className={classes.entryButton}
+                      classes={{
+                        label: classes.entryButtonIcon,
+                      }}
+                      onClick={requestWaiverRequesting(waiver.key)}
+                    >
+                      <Icon
+                        name={ICONS.Request}
+                        size="sm"
+                        color="hoverLighten"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="split">
+                    <IconButton
+                      className={classes.entryButton}
+                      classes={{
+                        label: classes.entryButtonIcon,
+                      }}
+                      onClick={handleOpenWaiverSplitter(
+                        waiver.key,
+                        waiver.title,
+                      )}
+                    >
+                      <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
+                    </IconButton>
+                  </Tooltip>
+                  {/* <Tooltip title="export">
+                        <IconButton
+                          className={classes.entryButton}
+                          classes={{
+                            label: classes.entryButtonIcon,
+                          }}
+                          onClick={openWaiverExportPage(waiver.key)}
+                          // onClick={toggleOnExportContactsOpened}
+                        >
+                          <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
+                        </IconButton>
+                      </Tooltip> */}
+                </div>
               </div>
             ))}
           </div>
-        )
-        : fetchWaiversError
-          ? (
-            <Typography align="center">
-              {fetchWaiversError.message ? fetchWaiversError.message : 'Oops, an error occurred!'}
-            </Typography>
-          )
-          : (
-            <div className={classes.waiverContent}>
-              {waivers.map(waiver => (
-                <div key={waiver.key} className={classnames(classes.entry, classes.pointer)} onClick={openWaiverExportPage(waiver.key)}>
-                  <Icon
-                    name={ICONS.Waiver}
-                    className={classes.entryIcon}
-                    size="sm"
-                  />
-                  <span className={classes.entryContent}>{waiver.title}</span>
-                  <time className={classes.entryTime}>{getDateAndTime(waiver.signedTimestamp)}</time>
-                  <div className={classes.entryButtons}>
-                    <Tooltip title="split">
-                      <IconButton
-                        className={classes.entryButton}
-                        classes={{
-                          label: classes.entryButtonIcon,
-                        }}
-                        onClick={handleOpenWaiverSplitter(waiver.key, waiver.title)}
-                      >
-                        <Icon name={ICONS.Split} size="sm" color="hoverLighten" />
-                      </IconButton>
-                    </Tooltip>
-                    {/* <Tooltip title="export">
-                      <IconButton
-                        className={classes.entryButton}
-                        classes={{
-                          label: classes.entryButtonIcon,
-                        }}
-                        onClick={openWaiverExportPage(waiver.key)}
-                        // onClick={toggleOnExportContactsOpened}
-                      >
-                        <Icon name={ICONS.Download} size="sm" color="hoverLighten" />
-                      </IconButton>
-                    </Tooltip> */}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+
+          <div className={classes.makeRequestButtonWrapper}>
+            <Button
+              className={classes.makeRequestButton}
+              variant="outlined"
+              color="primary"
+              onClick={requestMoreWaiverRequesting}
+            >
+              Create a request
+            </Button>
+          </div>
+        </>
+      )}
       {currentTab === 1 && (
         <div>
           <div className={classes.entry}>

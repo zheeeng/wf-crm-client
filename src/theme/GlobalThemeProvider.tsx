@@ -38,10 +38,7 @@ export const defaultTheme = createMuiTheme({
     // },
   },
   typography: {
-    fontFamily: [
-      '"Open sans"',
-      'sans-serif',
-    ].join(','),
+    fontFamily: ['"Open sans"', 'sans-serif'].join(','),
     h4: {
       fontSize: 20,
       fontWeight: 600,
@@ -138,9 +135,7 @@ export const themeOptions: ThemeOptions = {
 export const globalTheme = createMuiTheme(themeOptions)
 
 const GlobalThemeProvider: React.FC = (props) => (
-  <ThemeProvider theme={globalTheme}>
-    {props.children}
-  </ThemeProvider>
+  <ThemeProvider theme={globalTheme}>{props.children}</ThemeProvider>
 )
 
 export default GlobalThemeProvider

@@ -1,29 +1,25 @@
 import { useCallback, useEffect } from 'react'
-import createUseContext from 'constate'
+import constate from 'constate'
 import { useGet } from '~src/hooks/useRequest'
 import { Pagination } from '~src/types/Pagination'
-import useAccount from '~src/containers/useAccount'
+import { useAccount } from '~src/containers/useAccount'
 
-const useContactsCount = createUseContext(() => {
-  const { data: contactsData, request: getContactsData } = useGet<{ pagination: Pagination}>()
-  const { data: starredData, request: getStarredData } = useGet<{ pagination: Pagination}>()
+export const [UseContactsCountProvider, useContactsCount] = constate(() => {
+  const { data: contactsData, request: getContactsData } =
+    useGet<{ pagination: Pagination }>()
+  const { data: starredData, request: getStarredData } =
+    useGet<{ pagination: Pagination }>()
 
   const { authored } = useAccount()
 
-  const refreshCounts = useCallback(
-    () => {
-      getContactsData('/api/people/search')({ size: 1, page: 1 })
-      getStarredData('/api/people/search')({ size: 1, page: 1, favourite: true })
-    },
-    [getContactsData, getStarredData],
-  )
+  const refreshCounts = useCallback(() => {
+    getContactsData('/api/people/search')({ size: 1, page: 1 })
+    getStarredData('/api/people/search')({ size: 1, page: 1, favourite: true })
+  }, [getContactsData, getStarredData])
 
-  useEffect(
-    () => {
-      authored && refreshCounts()
-    },
-    [authored, refreshCounts],
-  )
+  useEffect(() => {
+    authored && refreshCounts()
+  }, [authored, refreshCounts])
 
   return {
     contactsCount: contactsData ? contactsData.pagination.total : 0,
@@ -31,5 +27,3 @@ const useContactsCount = createUseContext(() => {
     refreshCounts,
   }
 })
-
-export default useContactsCount

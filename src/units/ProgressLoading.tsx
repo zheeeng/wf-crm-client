@@ -19,13 +19,24 @@ interface Props extends Omit<IconProps, 'name' | 'size'> {
   size?: number
 }
 
-const ProgressLoading: React.FC<Props> = React.memo(({ className, size, ...props }) => {
-  const classes = useStyles({})
+const ProgressLoading: React.FC<Props> = React.memo(
+  ({ className, size, ...props }) => {
+    const classes = useStyles({})
 
-  const style = useMemo<React.CSSProperties>(() => ({ width: size, height: size }), [size])
+    const style = useMemo<React.CSSProperties>(
+      () => ({ width: size, height: size }),
+      [size],
+    )
 
-  return <Icon {...props} style={style} name={ICONS.Loading} className={classnames(className, classes.spin )} />
-})
-
+    return (
+      <Icon
+        {...props}
+        style={style}
+        name={ICONS.Loading}
+        className={classnames(className, classes.spin)}
+      />
+    )
+  },
+)
 
 export default ProgressLoading

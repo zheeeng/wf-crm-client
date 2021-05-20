@@ -2,12 +2,11 @@ import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
-import useNotification from '~src/containers/useNotification'
+import { useNotification } from '~src/containers/useNotification'
 
 import Icon, { ICONS } from '~src/units/Icons'
 
-export interface Props {
-}
+export interface Props {}
 
 const useStyles = makeStyles(() => ({
   message: {
@@ -41,16 +40,14 @@ const Notification: React.FC = () => {
       onClose={handleClose}
       message={message}
       action={[
-        (
-          <IconButton
-            key="close"
-            aria-label="Close"
-            color="inherit"
-            onClick={handleClose}
-          >
-            <Icon name={ICONS.Close} />
-          </IconButton>
-        ),
+        <IconButton
+          key="close"
+          aria-label="Close"
+          color="inherit"
+          onClick={handleClose}
+        >
+          <Icon name={ICONS.Close} />
+        </IconButton>,
       ]}
     />
   )

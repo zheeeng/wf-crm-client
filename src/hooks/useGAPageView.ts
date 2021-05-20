@@ -9,7 +9,6 @@ const useGAPageView = (reducer: (p: string) => string, pathName: string) => {
 
     ga('set', 'page', gaPath)
     ga('send', 'pageview')
-
   }, [gaPath])
 }
 

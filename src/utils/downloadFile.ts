@@ -1,4 +1,4 @@
-export default function downloadFile (dataURI: string): void {
+export default function downloadFile(dataURI: string): void {
   const anchor = document.createElement('a')
   anchor.href = dataURI
 

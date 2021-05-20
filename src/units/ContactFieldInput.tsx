@@ -7,22 +7,27 @@ import Typography from '@material-ui/core/Typography'
 import Input from '@material-ui/core/Input'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
-import Select from 'react-select'
+import { default as Select } from 'react-select'
 import { components } from '~src/units/BasicFormInputSelect'
 import BasicDateInput from '~src/units/BasicDateInput'
 import SortableList, { SortHandler } from '~src/units/SortableList'
-import arrayMove from 'array-move'
+import { arrayMove } from 'react-sortable-hoc'
+import { noop } from '~src/utils/noop'
 import cssTips from '~src/utils/cssTips'
 import { isEmail } from '~src/utils/validation'
 import camelToWords from '~src/utils/camelToWords'
 import SvgIcon, { ICONS } from '~src/units/Icons'
 import { FieldType } from '~src/types/Contact'
 import {
-  FieldSegmentValue, FieldValue,
+  FieldSegmentValue,
+  FieldValue,
   joinSegmentFieldValues,
-  getLabelExample, getFieldDefaultTitle, getFieldDefaultTitleWidthDec,
+  getLabelExample,
+  getFieldDefaultTitle,
+  getFieldDefaultTitleWidthDec,
   mapOption2SelectOption,
-  getLowerPriority, getFieldDateFromValues,
+  getLowerPriority,
+  getFieldDateFromValues,
 } from './ContactFieldInputUtils'
 import { LabelWithIcon, LabelWithText } from './ContactFieldInputs/Label'
 
@@ -59,8 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexBasis: '100%',
     paddingTop: theme.spacing(1),
   },
-  isSorting: {
-  },
+  isSorting: {},
   fieldTextBarWrapper: {
     ...cssTips(theme).centerFlex('space-between'),
     flexDirection: 'column',
@@ -123,10 +127,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&[type='number']": {
       '-moz-appearance': 'textfield',
     },
-    "&::-webkit-outer-spin-button": {
+    '&::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',
     },
-    "&::-webkit-inner-spin-button": {
+    '&::-webkit-inner-spin-button': {
       '-webkit-appearance': 'none',
     },
   },
@@ -176,7 +180,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type InputProps = {
   fieldName: string
   showName?: boolean
-  Icon?: React.ComponentType<{ className?: string, color?: any }>
+  Icon?: React.ComponentType<{ className?: string; color?: any }>
   name: FieldType
   hasTitle: boolean
   editable?: boolean
@@ -189,18 +193,43 @@ export type Props = InputProps & {
   backupFieldValue: FieldValue
   isMultiple: boolean
   bufferAdd?: (fn: () => void) => () => void
-  onAdd (fieldType: string, addObj: any, priority: number): Promise<FieldValue | null>
-  onUpdate (fieldType: string, updateObj: any, id: string, priority: number): Promise<FieldValue | null>
-  onDelete (name: string, id: string): Promise<string | null>
-  onChangePriority (name: string, id: string, priority: number): Promise<FieldValue | null>
+  onAdd(
+    fieldType: string,
+    addObj: any,
+    priority: number,
+  ): Promise<FieldValue | null>
+  onUpdate(
+    fieldType: string,
+    updateObj: any,
+    id: string,
+    priority: number,
+  ): Promise<FieldValue | null>
+  onDelete(name: string, id: string): Promise<string | null>
+  onChangePriority(
+    name: string,
+    id: string,
+    priority: number,
+  ): Promise<FieldValue | null>
 }
 
 export const ContactFieldInput: React.FC<Props> = React.memo(
-  ({ fieldName = '', showName = false, Icon, name, fieldValues, backupFieldValue,
-    editable = false, type, hasTitle, isMultiple,
-    onAdd, bufferAdd, onUpdate, onDelete, onChangePriority,
+  ({
+    fieldName = '',
+    showName = false,
+    Icon,
+    name,
+    fieldValues,
+    backupFieldValue,
+    editable = false,
+    type,
+    hasTitle,
+    isMultiple,
+    onAdd,
+    bufferAdd,
+    onUpdate,
+    onDelete,
+    onChangePriority,
   }) => {
-
     const classes = useStyles({})
 
     const [hasErrorKeys, setHasErrorKeys] = useState<string[]>([])
@@ -209,68 +238,76 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
     const localAddingValue = useSetState<Record<string, string>>({})
 
-    const [localAddingDate, setLocalAddingDate] = useState<[number, number, number]>([0, 0, 0])
+    const [localAddingDate, setLocalAddingDate] = useState<
+      [number, number, number]
+    >([0, 0, 0])
     const [localFieldValues, setLocalFieldValues] = useState(fieldValues)
 
-    useEffect(
-      () => setLocalFieldValues(fieldValues),
-      [fieldValues],
-    )
+    useEffect(() => setLocalFieldValues(fieldValues), [fieldValues])
 
     const containerRef = useRef<HTMLDivElement>(null)
 
-    const addField = useCallback(
-      async () => {
-        const fields = localAddingValue.state
+    const addField = useCallback(async () => {
+      const fields = localAddingValue.state
 
-        if (Object.values(fields).filter(i => i).length === 0) return
+      if (Object.values(fields).filter((i) => i).length === 0) return
 
-        const priority = getLowerPriority(localFieldValues)
+      const priority = getLowerPriority(localFieldValues)
 
-        if (type !== 'calendar') {
-          if (type === 'email' && !isEmail(fields.email || '')) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(''))
-            return
-          }
-          const field = await onAdd(name, localAddingValue.state, priority)
-          if (field) {
-            setLocalFieldValues(values => values.concat(field))
-            localAddingValue.resetState()
-            addTimesCount.increase()
-          }
+      if (type !== 'calendar') {
+        if (type === 'email' && !isEmail(fields.email ?? '')) {
+          setHasErrorKeys((hasErrorKeys) => hasErrorKeys.concat(''))
           return
         }
-
-        const [year, month, day] = localAddingDate
-        const field = await onAdd(name, { ...fields, year, month, day }, priority)
+        const field = await onAdd(name, localAddingValue.state, priority)
         if (field) {
-          setLocalFieldValues(values => values.concat(field))
-          setLocalAddingDate([0, 0, 0])
+          setLocalFieldValues((values) => values.concat(field))
           localAddingValue.resetState()
           addTimesCount.increase()
         }
-
         return
+      }
 
-      },
-      [localAddingValue, localFieldValues, type, localAddingDate, onAdd, name, addTimesCount],
-    )
+      const [year, month, day] = localAddingDate
+      const field = await onAdd(name, { ...fields, year, month, day }, priority)
+      if (field) {
+        setLocalFieldValues((values) => values.concat(field))
+        setLocalAddingDate([0, 0, 0])
+        localAddingValue.resetState()
+        addTimesCount.increase()
+      }
 
-    useEffect(
-      () => {
-        return bufferAdd ? bufferAdd(addField) : undefined
-      },
-      [bufferAdd, addField],
-    )
+      return
+    }, [
+      localAddingValue,
+      localFieldValues,
+      type,
+      localAddingDate,
+      onAdd,
+      name,
+      addTimesCount,
+    ])
+
+    useEffect(() => {
+      return bufferAdd ? bufferAdd(addField) : undefined
+    }, [bufferAdd, addField])
 
     const updateField = useCallback(
       async (segmentValue: FieldSegmentValue, id: string) => {
         if (!id) return
-        const fieldValue = localFieldValues.find(value => value.id === id)
+        const fieldValue = localFieldValues.find((value) => value.id === id)
         if (!fieldValue) return
 
-        const field = await onUpdate(name, { [segmentValue.key]: segmentValue.value }, id, fieldValue.priority)
-        if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+        const field = await onUpdate(
+          name,
+          { [segmentValue.key]: segmentValue.value },
+          id,
+          fieldValue.priority,
+        )
+        if (field)
+          setLocalFieldValues((values) =>
+            values.map((v) => (v.id === id ? field : v)),
+          )
         return field
       },
       [localFieldValues, onUpdate, name, setLocalFieldValues],
@@ -279,23 +316,35 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
     const updateDateField = useCallback(
       async (year: number, month: number, day: number, id: string) => {
         if (!id) return
-        const fieldValue = localFieldValues.find(value => value.id === id)
+        const fieldValue = localFieldValues.find((value) => value.id === id)
         if (!fieldValue) return
 
-        const field = await onUpdate(name, { year, month, day }, id, fieldValue.priority)
-        if (field) setLocalFieldValues(values => values.map(v => v.id === id ? field : v))
+        const field = await onUpdate(
+          name,
+          { year, month, day },
+          id,
+          fieldValue.priority,
+        )
+        if (field)
+          setLocalFieldValues((values) =>
+            values.map((v) => (v.id === id ? field : v)),
+          )
       },
-      [localFieldValues, name, onUpdate, setLocalFieldValues]
+      [localFieldValues, name, onUpdate, setLocalFieldValues],
     )
-
 
     const handleEntryUpdateByBlur = useCallback(
       (key: string, id: string) =>
         async (event: React.FocusEvent<HTMLInputElement>) => {
           const value = event.target.value.trim()
 
-          if (key !== 'title' && type === 'email' && value !== '' && !isEmail(value)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          if (
+            key !== 'title' &&
+            type === 'email' &&
+            value !== '' &&
+            !isEmail(value)
+          ) {
+            setHasErrorKeys((hasErrorKeys) => hasErrorKeys.concat(id))
             return
           }
 
@@ -333,13 +382,21 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
     const handleEntryUpdateByKeydown = useCallback(
       (key: string, id: string) =>
         (event: React.KeyboardEvent<HTMLInputElement>) => {
-          key !== 'title' && setHasErrorKeys(hasErrorKeys => hasErrorKeys.filter(k => k !== id))
+          key !== 'title' &&
+            setHasErrorKeys((hasErrorKeys) =>
+              hasErrorKeys.filter((k) => k !== id),
+            )
 
           if (event.keyCode !== 13) return
           const value = event.currentTarget.value.trim()
 
-          if (key !== 'title' && type === 'email' && value !== '' && !isEmail(value)) {
-            setHasErrorKeys(hasErrorKeys => hasErrorKeys.concat(id))
+          if (
+            key !== 'title' &&
+            type === 'email' &&
+            value !== '' &&
+            !isEmail(value)
+          ) {
+            setHasErrorKeys((hasErrorKeys) => hasErrorKeys.concat(id))
             return
           }
 
@@ -380,7 +437,10 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
 
         const removedId = await onDelete(name, id)
 
-        if (removedId) setLocalFieldValues(values => values.filter(v => v.id !== removedId))
+        if (removedId)
+          setLocalFieldValues((values) =>
+            values.filter((v) => v.id !== removedId),
+          )
       },
       [onDelete, name, setLocalFieldValues],
     )
@@ -389,82 +449,95 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
       (id: string) => async () => {
         if (!id) return
 
-        const targetField = localFieldValues.find(v => v.id === id)
+        const targetField = localFieldValues.find((v) => v.id === id)
 
         if (!targetField) return
 
-        const newPriority = targetField.priority !== 0 ? 0 : getLowerPriority(localFieldValues)
+        const newPriority =
+          targetField.priority !== 0 ? 0 : getLowerPriority(localFieldValues)
 
         const field = await onChangePriority(name, id, newPriority)
 
         if (!field) return
 
-        setLocalFieldValues(values => values.map(v => v.id === id ? field : v).sort((p, c) => c.priority - p.priority))
+        setLocalFieldValues((values) =>
+          values
+            .map((v) => (v.id === id ? field : v))
+            .sort((p, c) => c.priority - p.priority),
+        )
       },
       [localFieldValues, onChangePriority, name],
     )
 
     const sortingId = useInput('')
 
-    const calculatedFieldValues = useMemo(
-      () => {
-        if (editable) return localFieldValues
+    const calculatedFieldValues = useMemo(() => {
+      if (editable) return localFieldValues
 
-        const records = localFieldValues.map(it => (
-          [
-            joinSegmentFieldValues(name, it.values),
-            (it.values.find(v => v.key === 'title') || { value: '' }).value,
-            it,
-          ] as [string, string, FieldValue])
-        ).reduce(
-          (obj, [key, title, fieldValue]) => {
-            if (fieldValue.priority === 0) return obj
-
-            const newItem = { title, value: fieldValue, priority: fieldValue.priority }
-            if (!obj[key]) {
-              obj[key] = [newItem]
-            } else {
-              const titleMatched = obj[key].filter(r => r.title === newItem.title)
-              if (titleMatched.length === 0) {
-                obj[key] = obj[key].concat(newItem)
-              } else if (newItem.priority > titleMatched[0].priority) {
-                obj[key] = obj[key].filter(r => r.title !== newItem.title).concat(newItem)
-              }
-            }
-            return obj
-          },
-          // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
-          {} as { [key: string]: Array<{title: string, value: FieldValue, priority: FieldValue['priority'] }> }
+      const records = localFieldValues
+        .map(
+          (it) =>
+            [
+              joinSegmentFieldValues(name, it.values),
+              (it.values.find((v) => v.key === 'title') ?? { value: '' }).value,
+              it,
+            ] as [string, string, FieldValue],
         )
+        .reduce((obj, [key, title, fieldValue]) => {
+          if (fieldValue.priority === 0) return obj
 
-        let values2: FieldValue[] = []
-        for (let key in records) {
-          values2.push(...records[key].map(it => it.value))
-        }
+          const newItem = {
+            title,
+            value: fieldValue,
+            priority: fieldValue.priority,
+          }
+          if (!obj[key]) {
+            obj[key] = [newItem]
+          } else {
+            const titleMatched = obj[key].filter(
+              (r) => r.title === newItem.title,
+            )
+            if (titleMatched.length === 0) {
+              obj[key] = obj[key].concat(newItem)
+            } else if (newItem.priority > titleMatched[0].priority) {
+              obj[key] = obj[key]
+                .filter((r) => r.title !== newItem.title)
+                .concat(newItem)
+            }
+          }
+          return obj
+        }, {} as { [key: string]: { title: string; value: FieldValue; priority: FieldValue['priority'] }[] })
 
-        values2.sort((p, c) => c.priority - p.priority)
+      const values2: FieldValue[] = []
+      for (const key in records) {
+        values2.push(...records[key].map((it) => it.value))
+      }
 
-        return values2
-      },
-      [editable, localFieldValues, name]
-    )
+      values2.sort((p, c) => c.priority - p.priority)
+
+      return values2
+    }, [editable, localFieldValues, name])
 
     const onSortEnd = useCallback(
-      async ({oldIndex, newIndex}) => {
+      async ({ oldIndex, newIndex }) => {
         sortingId.clear()
         const valueOfOld = localFieldValues[oldIndex]
         const valueOfNew = localFieldValues[newIndex]
         const previousValueOfNew = localFieldValues[newIndex - 1]
-        setLocalFieldValues(values => arrayMove(values, oldIndex, newIndex))
+        setLocalFieldValues((values) => arrayMove(values, oldIndex, newIndex))
         const newPriority = !previousValueOfNew
           ? valueOfNew.priority + 1
           : (valueOfNew.priority + previousValueOfNew.priority) / 2
 
-        const field = await onChangePriority(name, valueOfOld.id || '', newPriority)
+        const field = await onChangePriority(
+          name,
+          valueOfOld.id ?? '',
+          newPriority,
+        )
         if (field) {
-          setLocalFieldValues(
-            values => values
-              .map(v => v.id === valueOfOld.id ? field : v)
+          setLocalFieldValues((values) =>
+            values
+              .map((v) => (v.id === valueOfOld.id ? field : v))
               .sort((p, c) => c.priority - p.priority),
           )
         }
@@ -490,36 +563,52 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
     )
 
     const renderField = useCallback(
-      (values: FieldSegmentValue[], fieldValue: FieldValue, isStub: boolean, isAppend: boolean, key?: string) => (
+      (
+        values: FieldSegmentValue[],
+        fieldValue: FieldValue,
+        isStub: boolean,
+        isAppend: boolean,
+        key?: string,
+      ) => (
         <div
           key={key}
           className={classnames(
             classes.fieldTextBar,
-            !editable && !joinSegmentFieldValues(name, values) && classes.hidden,
+            !editable &&
+              !joinSegmentFieldValues(name, values) &&
+              classes.hidden,
             editable && fieldValue.priority === 0 && classes.disabled,
           )}
         >
-          {editable
-            ? (
-              <>
-                {type === 'calendar' && (
-                  <BasicDateInput
-                    className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
-                    date={getFieldDateFromValues(values)}
-                    onDateChange={onDateChange(fieldValue.id)}
-                    disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                  />
-                )}
-                {type !== 'calendar' && values.filter(segmentValue => segmentValue.key !== 'title')
-                  .map(segmentValue => (
+          {editable ? (
+            <>
+              {type === 'calendar' && (
+                <BasicDateInput
+                  className={classnames(
+                    classes.fieldTypeText,
+                    editable &&
+                      fieldValue.priority === 0 &&
+                      classes.weakenEffect,
+                  )}
+                  date={getFieldDateFromValues(values)}
+                  onDateChange={onDateChange(fieldValue.id)}
+                  disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                />
+              )}
+              {type !== 'calendar' &&
+                values
+                  .filter((segmentValue) => segmentValue.key !== 'title')
+                  .map((segmentValue) => (
                     <Input
                       autoComplete="no"
                       key={segmentValue.key}
-                      error={hasErrorKeys.includes(fieldValue.id || '')}
+                      error={hasErrorKeys.includes(fieldValue.id ?? '')}
                       className={classnames(
                         classes.fieldTypeText,
                         isAppend && classes.takeQuarter,
-                        editable && fieldValue.priority === 0 && classes.weakenEffect,
+                        editable &&
+                          fieldValue.priority === 0 &&
+                          classes.weakenEffect,
                       )}
                       classes={{
                         disabled: classes.fieldDisabled,
@@ -527,53 +616,81 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
                       }}
                       placeholder={camelToWords(segmentValue.key)}
                       defaultValue={segmentValue.value}
-                      disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                      disabled={
+                        fieldValue.priority === 0 || !!fieldValue.waiver
+                      }
                       onBlur={handleEntryUpdateByBlur(
                         segmentValue.key,
-                        fieldValue.id || '',
+                        fieldValue.id ?? '',
                       )}
                       onKeyDown={handleEntryUpdateByKeydown(
                         segmentValue.key,
-                        fieldValue.id || '',
+                        fieldValue.id ?? '',
                       )}
                     />
-                  ))
-                }
-                {!isAppend && hasTitle &&(
-                  <Input
-                    autoComplete="no"
-                    className={classnames(classes.fieldTypeText, editable && fieldValue.priority === 0 && classes.weakenEffect)}
-                    classes={{disabled: classes.fieldDisabled}}
-                    defaultValue={getFieldDefaultTitle(fieldValue)}
-                    placeholder={getLabelExample(type)}
-                    disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
-                    onBlur={handleEntryUpdateByBlur('title', fieldValue.id || '')}
-                    onKeyDown={handleEntryUpdateByKeydown('title', fieldValue.id || '')}
-                  />
-                )}
-              </>
-            )
-            : (
-              <span className={classnames(classes.fieldDisplayText, showName && classes.fieldSimpleDisplayText)}>
-                {joinSegmentFieldValues(name, values)}
-              </span>
-            )
-          }
-          {(hasTitle && !editable) && (
+                  ))}
+              {!isAppend && hasTitle && (
+                <Input
+                  autoComplete="no"
+                  className={classnames(
+                    classes.fieldTypeText,
+                    editable &&
+                      fieldValue.priority === 0 &&
+                      classes.weakenEffect,
+                  )}
+                  classes={{ disabled: classes.fieldDisabled }}
+                  defaultValue={getFieldDefaultTitle(fieldValue)}
+                  placeholder={getLabelExample(type)}
+                  disabled={fieldValue.priority === 0 || !!fieldValue.waiver}
+                  onBlur={handleEntryUpdateByBlur('title', fieldValue.id ?? '')}
+                  onKeyDown={handleEntryUpdateByKeydown(
+                    'title',
+                    fieldValue.id ?? '',
+                  )}
+                />
+              )}
+            </>
+          ) : (
+            <span
+              className={classnames(
+                classes.fieldDisplayText,
+                showName && classes.fieldSimpleDisplayText,
+              )}
+            >
+              {joinSegmentFieldValues(name, values)}
+            </span>
+          )}
+          {hasTitle && !editable && (
             <Typography variant="body2" className={classes.fieldLabelText}>
               {getFieldDefaultTitleWidthDec(fieldValue)}
             </Typography>
           )}
           {editable && !isAppend && isMultiple && (
-            <div className={classnames(classes.filedIconBox, isAppend && classes.takePlace)}>
+            <div
+              className={classnames(
+                classes.filedIconBox,
+                isAppend && classes.takePlace,
+              )}
+            >
               {!isStub ? (
                 <>
-                  <Tooltip title={fieldValue.priority === 0 ? 'display' : 'hide'}>
+                  <Tooltip
+                    title={fieldValue.priority === 0 ? 'display' : 'hide'}
+                  >
                     <IconButton
-                      className={classnames(classes.fieldControlIcon, classes.fieldHoverShowingIcon)}
-                      onClick={toggleHideField(fieldValue.id || '')}
+                      className={classnames(
+                        classes.fieldControlIcon,
+                        classes.fieldHoverShowingIcon,
+                      )}
+                      onClick={toggleHideField(fieldValue.id ?? '')}
                     >
-                      <SvgIcon name={ICONS.Eye} color={fieldValue.priority === 0 ? 'primary' : 'hoverLighten'} size="sm"/>
+                      <SvgIcon
+                        name={ICONS.Eye}
+                        color={
+                          fieldValue.priority === 0 ? 'primary' : 'hoverLighten'
+                        }
+                        size="sm"
+                      />
                     </IconButton>
                   </Tooltip>
                   <SortHandler
@@ -587,33 +704,69 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
                             classes.showInDragged,
                           )}
                         >
-                          <SvgIcon name={ICONS.Reorder} color="hoverLighten" size="sm" />
+                          <SvgIcon
+                            name={ICONS.Reorder}
+                            color="hoverLighten"
+                            size="sm"
+                          />
                         </IconButton>
                       </Tooltip>
                     }
                   />
-                  <Tooltip title={fieldValue.waiver ? 'field from waiver cannot be deleted' : 'remove'}>
+                  <Tooltip
+                    title={
+                      fieldValue.waiver
+                        ? 'field from waiver cannot be deleted'
+                        : 'remove'
+                    }
+                  >
                     <IconButton
-                      className={classnames(classes.fieldControlIcon, classes.hiddenInDragged)}
-                      onClick={fieldValue.waiver ? () => {} : removeField(fieldValue.id || '')}
+                      className={classnames(
+                        classes.fieldControlIcon,
+                        classes.hiddenInDragged,
+                      )}
+                      onClick={
+                        fieldValue.waiver
+                          ? noop
+                          : removeField(fieldValue.id ?? '')
+                      }
                     >
-                      <SvgIcon name={ICONS.Remove} color={fieldValue.waiver ? 'disabled' : 'hoverLighten'} size="sm" />
+                      <SvgIcon
+                        name={ICONS.Remove}
+                        color={fieldValue.waiver ? 'disabled' : 'hoverLighten'}
+                        size="sm"
+                      />
                     </IconButton>
                   </Tooltip>
                 </>
               ) : (
                 <>
-                  <IconButton className={classnames(classes.fieldControlIcon, classes.takePlace)}>
+                  <IconButton
+                    className={classnames(
+                      classes.fieldControlIcon,
+                      classes.takePlace,
+                    )}
+                  >
                     <SvgIcon name={ICONS.Eye} color="hoverLighten" size="sm" />
                   </IconButton>
-                  <IconButton className={classnames(classes.fieldControlIcon, classes.takePlace)}>
+                  <IconButton
+                    className={classnames(
+                      classes.fieldControlIcon,
+                      classes.takePlace,
+                    )}
+                  >
                     <SvgIcon name={ICONS.Eye} color="hoverLighten" size="sm" />
                   </IconButton>
                   <Tooltip title="add">
                     <IconButton
                       className={classnames(classes.fieldControlIcon)}
-                      onClick={addField}>
-                      <SvgIcon name={ICONS.AddCircle} color="hoverLighten" size="sm" />
+                      onClick={addField}
+                    >
+                      <SvgIcon
+                        name={ICONS.AddCircle}
+                        color="hoverLighten"
+                        size="sm"
+                      />
                     </IconButton>
                   </Tooltip>
                 </>
@@ -622,36 +775,88 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
           )}
         </div>
       ),
-      [classes.fieldTextBar, classes.hidden, classes.disabled, classes.fieldTypeText, classes.weakenEffect, classes.fieldDisabled, classes.fieldDisplayText, classes.fieldSimpleDisplayText, classes.fieldLabelText, classes.filedIconBox, classes.takePlace, classes.fieldControlIcon, classes.fieldHoverShowingIcon, classes.fieldDragIcon, classes.showInDragged, classes.hiddenInDragged, classes.takeQuarter, classes.input, editable, name, type, onDateChange, hasTitle, handleEntryUpdateByBlur, handleEntryUpdateByKeydown, showName, isMultiple, toggleHideField, removeField, addField, hasErrorKeys]
+      [
+        classes.fieldTextBar,
+        classes.hidden,
+        classes.disabled,
+        classes.fieldTypeText,
+        classes.weakenEffect,
+        classes.fieldDisabled,
+        classes.fieldDisplayText,
+        classes.fieldSimpleDisplayText,
+        classes.fieldLabelText,
+        classes.filedIconBox,
+        classes.takePlace,
+        classes.fieldControlIcon,
+        classes.fieldHoverShowingIcon,
+        classes.fieldDragIcon,
+        classes.showInDragged,
+        classes.hiddenInDragged,
+        classes.takeQuarter,
+        classes.input,
+        editable,
+        name,
+        type,
+        onDateChange,
+        hasTitle,
+        handleEntryUpdateByBlur,
+        handleEntryUpdateByKeydown,
+        showName,
+        isMultiple,
+        toggleHideField,
+        removeField,
+        addField,
+        hasErrorKeys,
+      ],
     )
 
     const renderCombinedField = useCallback(
       (fieldValue: FieldValue, isStub: boolean) => (
-        <div className={classnames(
-          classes.fieldTextBarWrapper,
-          !editable && fieldValue.priority === 0 && classes.hidden,
-        )}>
-          {renderField(fieldValue.values, fieldValue, isStub, false, addTimesCount.value.toString())}
-          {fieldValue.appendValues
-            && fieldValue.appendValues.length
-            && renderField(fieldValue.appendValues, fieldValue, isStub, true,  addTimesCount.value.toString() + '-append')}
+        <div
+          className={classnames(
+            classes.fieldTextBarWrapper,
+            !editable && fieldValue.priority === 0 && classes.hidden,
+          )}
+        >
+          {renderField(
+            fieldValue.values,
+            fieldValue,
+            isStub,
+            false,
+            addTimesCount.value.toString(),
+          )}
+          {fieldValue.appendValues &&
+            fieldValue.appendValues.length &&
+            renderField(
+              fieldValue.appendValues,
+              fieldValue,
+              isStub,
+              true,
+              addTimesCount.value.toString() + '-append',
+            )}
         </div>
       ),
-      [addTimesCount.value, classes.fieldTextBarWrapper, classes.hidden, editable, renderField],
+      [
+        addTimesCount.value,
+        classes.fieldTextBarWrapper,
+        classes.hidden,
+        editable,
+        renderField,
+      ],
     )
 
     const sortableItems = useMemo(
-      () => calculatedFieldValues.map(
-        fieldValue => ({
+      () =>
+        calculatedFieldValues.map((fieldValue) => ({
           element: renderCombinedField(fieldValue, false),
           id: fieldValue.id,
-        }),
-      ),
+        })),
       [calculatedFieldValues, renderCombinedField],
     )
 
     const onSortStart = useCallback(
-      ({ index }: { index: number }) => sortingId.setValue(calculatedFieldValues[index].id || ''),
+      ({ index }: { index: number }) =>
+        sortingId.setValue(calculatedFieldValues[index].id ?? ''),
       [calculatedFieldValues, sortingId],
     )
 
@@ -660,15 +865,26 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
         className={classnames(
           classes.fieldBar,
           showName && classes.fieldSimpleBar,
-          (!editable && calculatedFieldValues.filter(value => joinSegmentFieldValues(name, value.values.concat(value.appendValues || []))).length === 0) && classes.hidden,
+          !editable &&
+            calculatedFieldValues.filter((value) =>
+              joinSegmentFieldValues(
+                name,
+                value.values.concat(value.appendValues ?? []),
+              ),
+            ).length === 0 &&
+            classes.hidden,
         )}
         ref={containerRef}
       >
-        {!showName && Icon && <LabelWithIcon Icon={Icon} fieldName={fieldName} />}
-        <div className={classnames(
-          classes.fieldTextWrapper,
-          sortingId.hasValue && classes.isSorting,
-        )}>
+        {!showName && Icon && (
+          <LabelWithIcon Icon={Icon} fieldName={fieldName} />
+        )}
+        <div
+          className={classnames(
+            classes.fieldTextWrapper,
+            sortingId.hasValue && classes.isSorting,
+          )}
+        >
           {showName && <LabelWithText Icon={Icon} fieldName={fieldName} />}
           <SortableList
             onSortStart={onSortStart}
@@ -683,13 +899,25 @@ export const ContactFieldInput: React.FC<Props> = React.memo(
         </div>
       </div>
     )
-  })
+  },
+)
 // ------------------------ Text Input End ------------------------
 
 // ------------------------ Select Input Begin ------------------------
-type MergeFields<T1, T2> = {
-  [P in keyof (T1 & T2)]: (P extends keyof T1 ? T1[P] : never) | (P extends keyof T2 ? T2[P] : never)
-}
+type UndefinedProperties<T> = {
+  [P in keyof T]-?: undefined extends T[P] ? P : never
+}[keyof T]
+
+type ToOptional<T> = Partial<Pick<T, UndefinedProperties<T>>> &
+  Pick<T, Exclude<keyof T, UndefinedProperties<T>>>
+
+type MergeFields<T1, T2> = ToOptional<
+  {
+    [P in keyof T1 | keyof T2]:
+      | (P extends keyof T1 ? T1[P] : never)
+      | (P extends keyof T2 ? T2[P] : never)
+  }
+>
 
 export type SelectedInputProps = MergeFields<InputProps, { name: 'gender' }> & {
   value: string
@@ -697,56 +925,78 @@ export type SelectedInputProps = MergeFields<InputProps, { name: 'gender' }> & {
   updateField: (value: 'Male' | 'Female' | 'Other') => void
 }
 
-export const ContactSelectedFieldInput: React.FC<SelectedInputProps> = React.memo(({
-  fieldName = '', showName = false, Icon, editable, hasTitle, name, value, options, updateField,
-}) => {
-  const classes = useStyles({})
+export const ContactSelectedFieldInput: React.FC<SelectedInputProps> =
+  React.memo(
+    ({
+      fieldName = '',
+      showName = false,
+      Icon,
+      editable,
+      hasTitle,
+      name,
+      value,
+      options,
+      updateField,
+    }) => {
+      const classes = useStyles({})
 
-  const handleEntryUpdate = useCallback((input: any) => updateField(input.value), [updateField])
+      const handleEntryUpdate = useCallback(
+        (input: any) => updateField(input.value),
+        [updateField],
+      )
 
-  const selectOptions = useMemo(() => options.map(mapOption2SelectOption), [options])
+      const selectOptions = useMemo(
+        () => options.map(mapOption2SelectOption),
+        [options],
+      )
 
-  return (
-    <div
-      className={classnames(
-        classes.fieldBar,
-        showName && classes.fieldSimpleBar,
-        (!editable && value === '') && classes.hidden,
-      )}>
-      {!showName && Icon && <LabelWithIcon Icon={Icon} fieldName={fieldName} />}
-      <div className={classes.fieldTextWrapper}>
-        {showName && <LabelWithText Icon={Icon} fieldName={fieldName} />}
-        <div className={classnames(classes.fieldTextBarWrapper)}>
-          <div className={classes.fieldTextBar}>
-            {(hasTitle && !editable) && (
-              <Typography variant="h6" className={classes.fieldTypeText}>{name}</Typography>
-            )}
-            {editable ? (
-              <Select
-                className={classes.fieldInput}
-                classes={classes}
-                components={components}
-                props={{ placeholder: fieldName }}
-                isSearchable={false}
-                isClearable={false}
-                options={selectOptions}
-                onChange={handleEntryUpdate}
-                value={mapOption2SelectOption(value)}
-              />
-            ) : (
-              <Input
-                autoComplete="no"
-                disabled={true}
-                disableUnderline={true}
-                className={classes.fieldInput}
-                classes={{ input: classes.fieldDisplayText }}
-                value={value}
-              />
-            )}
+      return (
+        <div
+          className={classnames(
+            classes.fieldBar,
+            showName && classes.fieldSimpleBar,
+            !editable && value === '' && classes.hidden,
+          )}
+        >
+          {!showName && Icon && (
+            <LabelWithIcon Icon={Icon} fieldName={fieldName} />
+          )}
+          <div className={classes.fieldTextWrapper}>
+            {showName && <LabelWithText Icon={Icon} fieldName={fieldName} />}
+            <div className={classnames(classes.fieldTextBarWrapper)}>
+              <div className={classes.fieldTextBar}>
+                {hasTitle && !editable && (
+                  <Typography variant="h6" className={classes.fieldTypeText}>
+                    {name}
+                  </Typography>
+                )}
+                {editable ? (
+                  <Select
+                    className={classes.fieldInput}
+                    classes={classes}
+                    components={components}
+                    props={{ placeholder: fieldName }}
+                    isSearchable={false}
+                    isClearable={false}
+                    options={selectOptions}
+                    onChange={handleEntryUpdate}
+                    value={mapOption2SelectOption(value)}
+                  />
+                ) : (
+                  <Input
+                    autoComplete="no"
+                    disabled={true}
+                    disableUnderline={true}
+                    className={classes.fieldInput}
+                    classes={{ input: classes.fieldDisplayText }}
+                    value={value}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )
+    },
   )
-})
 // ------------------------ Select Input End ------------------------

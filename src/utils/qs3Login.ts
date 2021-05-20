@@ -1,4 +1,5 @@
 import cookie from 'js-cookie'
+import { createCommonUtils } from 'waiverforever-common'
 
 const authKeyKey = 'authKey'
 const rememberNameKey = 'rememberMe'
@@ -13,15 +14,24 @@ const crmUsernameKey = '@username@'
 const isDev = process.env.NODE_ENV === 'development'
 
 const devLoginInfo = {
-  // eslint-disable-next-line @typescript-eslint/camelcase
   api_key: '',
   email: 'a',
   password: '0cc175b9c0f1b6a831c399e269772661',
 }
-const API_KEY_URL = 'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
+const API_KEY_URL =
+  'https://api.waiverforever.com/api/v3/accountSettings/getAPIKey'
 const GET_USER_URL = 'https://api.waiverforever.com/api/v3/auth/getUser'
 
-export function cleanStorage () {
+export const { apiClient } = createCommonUtils({
+  backendPrefix: 'https://api.waiverforever.com',
+})
+
+const authKey = cookie.get(authKeyKey)
+if (authKey) {
+  apiClient.setAuthKey(authKey)
+}
+
+export function cleanStorage() {
   window.localStorage.removeItem(crmAccountKey)
   window.localStorage.removeItem(crmIdKey)
   window.localStorage.removeItem(crmTokenKey)
@@ -30,34 +40,38 @@ export function cleanStorage () {
   window.localStorage.removeItem(accountNameKey)
 }
 
-export function getCRMToken () {
-  return window.localStorage.getItem(crmTokenKey) || ''
+export function getCRMToken() {
+  return window.localStorage.getItem(crmTokenKey) ?? ''
 }
 
-export function getLoginParams () {
+export function getLoginParams() {
   if (isDev) return devLoginInfo
 
   return {
     email: window.localStorage.getItem(accountNameKey),
-    // eslint-disable-next-line @typescript-eslint/camelcase
     api_key: window.localStorage.getItem(apiKeyKey),
     password: '',
   }
 }
 
-export function getFallbackUsername () {
-  return window.localStorage.getItem(crmUsernameKey)
-    || window.localStorage.getItem(accountNameKey)
-    || cookie.get(rememberNameKey) || ''
+export function getFallbackUsername() {
+  return (
+    window.localStorage.getItem(crmUsernameKey) ??
+    window.localStorage.getItem(accountNameKey) ??
+    cookie.get(rememberNameKey) ??
+    ''
+  )
 }
 
-export async function exchangeAPIKey () {
+export async function exchangeAPIKey() {
   const authKey = cookie.get(authKeyKey)
 
   if (!authKey) {
     cleanStorage()
     throw Error('Request login')
   }
+
+  apiClient.setAuthKey(authKey)
 
   const requestOption = {
     headers: {
@@ -119,7 +133,12 @@ export async function exchangeAPIKey () {
   }
 }
 
-export function persistLoginInfo (account: string, id: string, token: string, username: string) {
+export function persistLoginInfo(
+  account: string,
+  id: string,
+  token: string,
+  username: string,
+) {
   if (account) window.localStorage.setItem(crmAccountKey, account)
   if (id) window.localStorage.setItem(crmIdKey, id)
   if (token) window.localStorage.setItem(crmTokenKey, token)

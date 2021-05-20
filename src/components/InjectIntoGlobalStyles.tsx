@@ -9,11 +9,18 @@ const useGlobalStyles = makeStyles((theme: Theme) => ({
       ...cssTips(theme).casFlex(),
       height: '100%',
     },
+    '#header': {
+      // position: 'fixed',
+    },
+    '#content, #content [tabindex=-1]': {
+      height: '100%',
+    },
+    html: {
+      height: '100%',
+    },
     body: {
-      fontFamily: [
-        '"Open sans"',
-        'sans-serif',
-      ].join(','),
+      height: '100%',
+      fontFamily: ['"Open sans"', 'sans-serif'].join(','),
     },
   },
 }))

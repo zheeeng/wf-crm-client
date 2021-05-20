@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { useInput } from 'react-hanger';
+import { useInput } from 'react-hanger'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
@@ -11,7 +11,7 @@ import Collapse from '@material-ui/core/Collapse'
 import Searcher from '~src/units/Searcher'
 import cssTips from '~src/utils/cssTips'
 
-import useGroups from '~src/containers/useGroups'
+import { useGroups } from '~src/containers/useGroups'
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchCollapse: {
@@ -70,7 +70,13 @@ export interface Props {
   theme?: 'simple'
 }
 
-const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onClickGroup, theme }) => {
+const GroupMenu: React.FC<Props> = ({
+  className,
+  selectedId,
+  groupsOpened,
+  onClickGroup,
+  theme,
+}) => {
   const classes = useStyles({})
 
   const { groupIdState, groups } = useGroups()
@@ -93,13 +99,14 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
   )
 
   const filteredGroups = useMemo(
-    () => !searchTermState.hasValue
-      ? groups
-      : groups
-        .filter(
-          group => group.info.name.toLowerCase()
-            .includes(searchTermState.value.toLowerCase())
-        ),
+    () =>
+      !searchTermState.hasValue
+        ? groups
+        : groups.filter((group) =>
+            group.info.name
+              .toLowerCase()
+              .includes(searchTermState.value.toLowerCase()),
+          ),
     [groups, searchTermState],
   )
 
@@ -107,10 +114,7 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
     <Collapse
       className={className}
       classes={{
-        container: classnames(
-          classes.flexContainer,
-          classes.searchCollapse,
-        ),
+        container: classnames(classes.flexContainer, classes.searchCollapse),
         wrapper: classes.flexContainer,
         wrapperInner: classnames(
           classes.flexContainer,
@@ -143,25 +147,25 @@ const GroupMenu: React.FC<Props> = ({ className, selectedId, groupsOpened, onCli
         )}
         disablePadding
       >
-        {filteredGroups.map(group => (
+        {filteredGroups.map((group) => (
           <ListItem
             key={group.id}
             button
             component="li"
-            className={
-              classnames(
-                classes.nestedItem, theme === 'simple' && classes.text,
-                group.id === groupIdState.value && classes.activeItem,
-                group.id === selectedId && classes.selectedItem,
-              )
-            }
+            className={classnames(
+              classes.nestedItem,
+              theme === 'simple' && classes.text,
+              group.id === groupIdState.value && classes.activeItem,
+              group.id === selectedId && classes.selectedItem,
+            )}
             onClick={handleOnClick(group.id)}
           >
             <ListItemText
               classes={{
-                primary: (group.id === groupIdState.value || group.id === selectedId)
-                  ? classes.activeItemText
-                  : undefined,
+                primary:
+                  group.id === groupIdState.value || group.id === selectedId
+                    ? classes.activeItemText
+                    : undefined,
                 root: classes.itemText,
               }}
             >

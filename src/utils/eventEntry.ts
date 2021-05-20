@@ -1,8 +1,8 @@
-export default function createEventEntry () {
-  let events: Array<() => void> = []
+export default function createEventEntry() {
+  let events: (() => void)[] = []
 
   const trigger = () => {
-    events.forEach(event => event())
+    events.forEach((event) => event())
   }
 
   const clean = () => {
@@ -10,15 +10,15 @@ export default function createEventEntry () {
   }
 
   return {
-    subscribe (evt: () => void) {
+    subscribe(evt: () => void) {
       events.push(evt)
 
       return () => {
-        events = events.filter(e => e !== evt)
+        events = events.filter((e) => e !== evt)
       }
     },
     trigger,
-    release () {
+    release() {
       trigger()
       clean()
     },

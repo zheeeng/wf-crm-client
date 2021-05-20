@@ -40,16 +40,16 @@ export const useStyles = makeStyles((theme: Theme) => ({
     "&[type='number']": {
       '-moz-appearance': 'textfield',
     },
-    "&::-webkit-outer-spin-button": {
+    '&::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',
     },
-    "&::-webkit-inner-spin-button": {
+    '&::-webkit-inner-spin-button': {
       '-webkit-appearance': 'none',
     },
   },
   shrink: {
     fontSize: 8,
-    transform: `translate(0, 0) scale(1)`,
+    transform: 'translate(0, 0) scale(1)',
   },
 }))
 
@@ -69,60 +69,74 @@ export interface Props {
   TextFieldClasses?: Partial<ClassNameMap<TextFieldClassKey>>
 }
 
-const BasicFormInput: React.FC<Props> = React.memo(({
-  autoFocus = false, placeholder = '', noLabel, className, style, value, type, error, onChange, onEnterPress, fullWidth = true, InputClasses, TextFieldClasses,
-}) => {
-  const classes = useStyles({})
+const BasicFormInput: React.FC<Props> = React.memo(
+  ({
+    autoFocus = false,
+    placeholder = '',
+    noLabel,
+    className,
+    style,
+    value,
+    type,
+    error,
+    onChange,
+    onEnterPress,
+    fullWidth = true,
+    InputClasses,
+    TextFieldClasses,
+  }) => {
+    const classes = useStyles({})
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!onEnterPress) return
+    const handleKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!onEnterPress) return
 
-      event.keyCode === 13 && onEnterPress(event)
-    },
-    [onEnterPress],
-  )
+        event.keyCode === 13 && onEnterPress(event)
+      },
+      [onEnterPress],
+    )
 
-  return (
-    <TextField
-      autoComplete="no"
-      autoFocus={autoFocus}
-      type={type}
-      error={error}
-      style={style}
-      classes={TextFieldClasses}
-      className={classnames(classes.inputWrapper, className)}
-      label={noLabel ? undefined : placeholder}
-      placeholder={noLabel ? placeholder : undefined}
-      defaultValue={value}
-      key={value}
-      onChange={onChange}
-      margin="normal"
-      fullWidth={fullWidth}
-      InputProps={{
-        onKeyDown: handleKeyDown,
-        disableUnderline: true,
-        classes: {
-          ...InputClasses,
-          root: classnames(
-            classes.text,
-            classes.root,
-            InputClasses && InputClasses.root,
-          ),
-          input: classnames(
-            classes.input,
-            InputClasses && InputClasses.input,
-          ),
-        },
-      }}
-      InputLabelProps={{
-        classes: {
-          formControl: classes.formLabel,
-          shrink: classes.shrink,
-        },
-      }}
-    />
-  )
-})
+    return (
+      <TextField
+        autoComplete="no"
+        autoFocus={autoFocus}
+        type={type}
+        error={error}
+        style={style}
+        classes={TextFieldClasses}
+        className={classnames(classes.inputWrapper, className)}
+        label={noLabel ? undefined : placeholder}
+        placeholder={noLabel ? placeholder : undefined}
+        defaultValue={value}
+        key={value}
+        onChange={onChange}
+        margin="normal"
+        fullWidth={fullWidth}
+        InputProps={{
+          onKeyDown: handleKeyDown,
+          disableUnderline: true,
+          classes: {
+            ...InputClasses,
+            root: classnames(
+              classes.text,
+              classes.root,
+              InputClasses && InputClasses.root,
+            ),
+            input: classnames(
+              classes.input,
+              InputClasses && InputClasses.input,
+            ),
+          },
+        }}
+        InputLabelProps={{
+          classes: {
+            formControl: classes.formLabel,
+            shrink: classes.shrink,
+          },
+        }}
+      />
+    )
+  },
+)
 
 export default BasicFormInput

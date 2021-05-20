@@ -22,33 +22,33 @@ const getPickerOverrides = (): MuiPickersOverrides => ({
   },
 })
 
-export const datePickerTheme = createMuiTheme(mergeOptions(themeOptions, {
-  overrides: {
-    MuiIconButton: {
-      root: {
-        '&&': {
-          backgroundColor: 'restore-unset',
+export const datePickerTheme = createMuiTheme(
+  mergeOptions(themeOptions, {
+    overrides: {
+      MuiIconButton: {
+        root: {
+          '&&': {
+            backgroundColor: 'restore-unset',
+          },
         },
       },
-    },
-    MuiButton: {
-      root: {
-        '&&:hover': {
-          // backgroundColor: 'unset',
-        },
-        '&&:active': {
-          backgroundColor: 'unset',
+      MuiButton: {
+        root: {
+          '&&:hover': {
+            // backgroundColor: 'unset',
+          },
+          '&&:active': {
+            backgroundColor: 'unset',
+          },
         },
       },
+      ...(getPickerOverrides() as any),
     },
-    ...getPickerOverrides() as any,
-  },
-}))
+  }),
+)
 
 const DatePickerThemeProvider: React.FC = (props) => (
-  <ThemeProvider theme={datePickerTheme}>
-    {props.children}
-  </ThemeProvider>
+  <ThemeProvider theme={datePickerTheme}>{props.children}</ThemeProvider>
 )
 
 export default DatePickerThemeProvider

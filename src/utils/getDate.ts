@@ -27,7 +27,7 @@ const abbrMonthTable = [
   'Dec',
 ]
 
-function getDate (time: number): string {
+function getDate(time: number): string {
   const t = new Date(time)
   const month = monthTable[t.getMonth()]
   const date = t.getDate()
@@ -36,31 +36,37 @@ function getDate (time: number): string {
   return `${month} ${date}, ${year}`
 }
 
-export function getTime (time: number): string {
+export function getTime(time: number): string {
   const t = new Date(time)
 
-  return t.toLocaleString(
-    'en-US',
-    { hour: 'numeric', minute: 'numeric', hour12: true },
-  ).toLowerCase()
+  return t
+    .toLocaleString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    })
+    .toLowerCase()
 }
 
 export default getDate
 
-export function getDateAndTime (time: number): string {
+export function getDateAndTime(time: number): string {
   const t = new Date(time)
   const month = abbrMonthTable[t.getMonth()]
   const date = t.getDate()
   const year = t.getFullYear()
-  const formattedTime = t.toLocaleString(
-    'en-US',
-    { hour: 'numeric', minute: 'numeric', hour12: true },
-  ).toLowerCase()
+  const formattedTime = t
+    .toLocaleString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    })
+    .toLowerCase()
 
   return `${month} ${date}, ${year}, ${formattedTime}`
 }
 
-export function getPlaceholderDate (time: Date = new Date()): string {
+export function getPlaceholderDate(time: Date = new Date()): string {
   const month = (time.getMonth() + 1).toString()
   const date = time.getDate().toString()
   const year = time.getFullYear().toString()

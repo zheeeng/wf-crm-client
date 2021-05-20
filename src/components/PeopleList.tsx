@@ -19,8 +19,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import cssTips from '~src/utils/cssTips'
 import { Contact, ContactFields } from '~src/types/Contact'
 
-import useAlert from '~src/containers/useAlert'
-import useContacts from '~src/containers/useContacts'
+import { useAlert } from '~src/containers/useAlert'
+import { useContacts } from '~src/containers/useContacts'
 import ContactTableThemeProvider from '~src/theme/ContactTableThemeProvider'
 import ProgressLoading from '~src/units/ProgressLoading'
 import CreateForm, { CreateFormOption } from '~src/components/CreateForm'
@@ -36,8 +36,7 @@ import StarThemeProvider from '~src/theme/StarThemeProvider'
 import CheckCircle from '@material-ui/icons/CheckCircleOutline'
 import Icon, { ICONS } from '~src/units/Icons'
 import { isEmail } from '~src/utils/validation'
-
-import debounce from 'debounce'
+import useDebounce from 'react-use/lib/useDebounce'
 
 const useStyles = makeStyles((theme: Theme) => ({
   head: {
@@ -171,7 +170,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-
 const useStyles2 = makeStyles((theme: Theme) => ({
   infoBar: {
     width: '100%',
@@ -205,7 +203,9 @@ const ContinueEditing: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <div className={classes.infoBar}>
       <div className={classes.infoForePlaceholder} />
-      <div className={classes.infoText}><CheckCircle /> Contact created!</div>
+      <div className={classes.infoText}>
+        <CheckCircle /> Contact created!
+      </div>
       <Button
         className={classes.creatingBtn}
         variant="outlined"
@@ -223,7 +223,7 @@ export interface Props {
   page: number
   size: number
   total: number
-  onSearch: (search: { page: number, size: number, searchTerm: string}) => void
+  onSearch: (search: { page: number; size: number; searchTerm: string }) => void
   navigateToProfile: (id: string) => void
   isGroupPage?: boolean
 }
@@ -232,245 +232,309 @@ const newContactFormOption: CreateFormOption = {
   title: 'New contact',
   fields: [
     {
-      type: 'combinedText', keyName: 'name', nameAndLabels: [
+      type: 'combinedText',
+      keyName: 'name',
+      nameAndLabels: [
         { name: 'first_name', label: 'First Name', span: 1, required: true },
         { name: 'last_name', label: 'Last Name', span: 1, required: true },
       ],
     },
-    { type: 'text', name: 'email', label: 'Email', required: false, validator: isEmail },
-    { type: 'enumText', name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'], required: false },
-    { type: 'text', name: 'first_line', label: 'Address Line1', required: false },
-    { type: 'text', name: 'second_line', label: 'Address Line2', required: false },
+    {
+      type: 'text',
+      name: 'email',
+      label: 'Email',
+      required: false,
+      validator: isEmail,
+    },
+    {
+      type: 'enumText',
+      name: 'gender',
+      label: 'Gender',
+      options: ['Male', 'Female', 'Other'],
+      required: false,
+    },
+    {
+      type: 'text',
+      name: 'first_line',
+      label: 'Address Line1',
+      required: false,
+    },
+    {
+      type: 'text',
+      name: 'second_line',
+      label: 'Address Line2',
+      required: false,
+    },
     { type: 'text', name: 'city', label: 'City', required: false },
     { type: 'text', name: 'state', label: 'State', required: false },
     { type: 'text', name: 'country', label: 'Country', required: false },
     {
-      type: 'combinedText', keyName: 'communication', nameAndLabels: [
-        { isNumber: false, name: 'zipcode', label: 'Zipcode', span: 1, required: false },
-        { isNumber: true, name: 'phone', label: 'Phone', span: 2, required: false },
+      type: 'combinedText',
+      keyName: 'communication',
+      nameAndLabels: [
+        {
+          isNumber: false,
+          name: 'zipcode',
+          label: 'Zipcode',
+          span: 1,
+          required: false,
+        },
+        {
+          isNumber: true,
+          name: 'phone',
+          label: 'Phone',
+          span: 2,
+          required: false,
+        },
       ],
     },
   ],
   okText: 'Create',
 }
 
-const PeopleList: React.FC<Props> = React.memo(({
-  total, page, size, searchTerm, onSearch, navigateToProfile, isGroupPage = false,
-}) => {
-  const classes = useStyles({})
+const PeopleList: React.FC<Props> = React.memo(
+  ({
+    total,
+    page,
+    size,
+    searchTerm,
+    onSearch,
+    navigateToProfile,
+    isGroupPage = false,
+  }) => {
+    const classes = useStyles({})
 
-  const { success } = useAlert()
-  const {
-    contacts, fetchContacts, isFetchingContacts,
-    addContactData, showAddContactMessage, addContact,
-    starContact, addContactToGroup, mergeContacts, removeContactsFromGroup,
-    fromContactIdState,
-  } = useContacts()
+    const { success } = useAlert()
+    const {
+      contacts,
+      fetchContacts,
+      isFetchingContacts,
+      addContactData,
+      showAddContactMessage,
+      addContact,
+      starContact,
+      addContactToGroup,
+      mergeContacts,
+      removeContactsFromGroup,
+      fromContactIdState,
+    } = useContacts()
 
-  useEffect(
-    () => { fetchContacts(size) },
-    [fetchContacts, size]
-  )
+    useEffect(() => {
+      fetchContacts(size)
+    }, [fetchContacts, size])
 
-  const handleShowProfile = useCallback((id: string) => () => navigateToProfile(id), [navigateToProfile])
+    const handleShowProfile = useCallback(
+      (id: string) => () => navigateToProfile(id),
+      [navigateToProfile],
+    )
 
-  useEffect(
-    () => {
-      showAddContactMessage && addContactData && success(
-        <ContinueEditing onClick={handleShowProfile(addContactData.id)} />
+    useEffect(() => {
+      showAddContactMessage &&
+        addContactData &&
+        success(
+          <ContinueEditing onClick={handleShowProfile(addContactData.id)} />,
+        )
+    }, [addContactData, handleShowProfile, showAddContactMessage, success])
+
+    const [checked, setChecked] = useState<string[]>([])
+    const searchTermState = useInput(searchTerm)
+    const [createForm, setCreateForm] = useState<{
+      opened: boolean
+      option?: CreateFormOption
+    }>({
+      opened: false,
+    })
+
+    const {
+      value: addContactToGroupFormOpened,
+      setTrue: toggleOnAddContactToGroupFormOpened,
+      setFalse: toggleOffAddContactToGroupFormOpened,
+    } = useBoolean(false)
+
+    const {
+      value: mergeContactsOpened,
+      setTrue: toggleOnMergeContactsOpened,
+      setFalse: toggleOffMergeContactsOpened,
+    } = useBoolean(false)
+
+    const {
+      value: removeContactFormGroupOpened,
+      setTrue: toggleOnRemoveContactFormGroupOpened,
+      setFalse: toggleOffRemoveContactFormGroupOpened,
+    } = useBoolean(false)
+
+    const {
+      value: exportContactsOpened,
+      setTrue: toggleOnExportContactsOpened,
+      setFalse: toggleOffExportContactsOpened,
+    } = useBoolean(false)
+
+    // const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
+
+    const handleSearchSubmit = useCallback(
+      (term: string) => {
+        checked.length !== 0 && setChecked([])
+
+        onSearch({ page: 1, size, searchTerm: term })
+      },
+      [checked.length, onSearch, size],
+    )
+
+    useDebounce(
+      () => {
+        handleSearchSubmit(searchTermState.value)
+      },
+      600,
+      [handleSearchSubmit, searchTermState.value],
+    )
+
+    const handleSearchChange = useCallback(
+      (term: string) => {
+        searchTermState.value !== term && searchTermState.setValue(term)
+      },
+      [searchTermState],
+    )
+
+    const handleChangePage = useCallback(
+      (_: any, newPage: number) => {
+        checked.length !== 0 && setChecked([])
+
+        onSearch({ page: newPage + 1, size, searchTerm: searchTermState.value })
+      },
+      [checked.length, onSearch, size, searchTermState.value],
+    )
+
+    const handleItemCheckedToggle = useCallback(
+      (id: string) => (e: React.SyntheticEvent) => {
+        e.stopPropagation()
+        e.preventDefault()
+        const currentIndex = checked.indexOf(id)
+        const newChecked = [...checked]
+
+        currentIndex === -1
+          ? newChecked.push(id)
+          : newChecked.splice(currentIndex, 1)
+
+        setChecked(newChecked)
+      },
+      [checked],
+    )
+
+    const handleToggleAllChecked = useCallback(
+      () =>
+        checked.length
+          ? setChecked([])
+          : setChecked(contacts.map((contact) => contact.id)),
+      [checked, contacts],
+    )
+
+    const allChecked = useMemo(
+      () =>
+        contacts.length !== 0 &&
+        contacts.length === checked.length &&
+        contacts.every((contact) => checked.includes(contact.id)),
+      [contacts, checked],
+    )
+
+    const handleStarClick = useCallback(
+      (id: string, star: boolean) => (e: React.SyntheticEvent) => {
+        e.stopPropagation()
+        starContact(id, star)
+      },
+      [starContact],
+    )
+
+    interface ChangeCreateContactFormOpened {
+      (opened: true, option: CreateFormOption): () => void
+      (opened: false): () => void
+    }
+
+    const changeCreateContactFormOpened =
+      useCallback<ChangeCreateContactFormOpened>(
+        (opened: boolean, option?: CreateFormOption) => () => {
+          setCreateForm({ opened, option: opened ? option : undefined })
+        },
+        [setCreateForm],
       )
-    },
-    [addContactData, handleShowProfile, showAddContactMessage, success],
-  )
 
-  const [checked, setChecked] = useState<string[]>([])
-  const searchTermState = useInput(searchTerm)
-  const [createForm, setCreateForm] = useState<{
-    opened: boolean
-    option?: CreateFormOption
-  }>({
-    opened: false,
-  })
+    const lastContactIdsRef = useRef<string[] | null>(null)
 
-  const {
-    value: addContactToGroupFormOpened,
-    setTrue: toggleOnAddContactToGroupFormOpened,
-    setFalse: toggleOffAddContactToGroupFormOpened,
-  } = useBoolean(false)
-
-  const {
-    value: mergeContactsOpened,
-    setTrue: toggleOnMergeContactsOpened,
-    setFalse: toggleOffMergeContactsOpened,
-  } = useBoolean(false)
-
-  const {
-    value: removeContactFormGroupOpened,
-    setTrue: toggleOnRemoveContactFormGroupOpened,
-    setFalse: toggleOffRemoveContactFormGroupOpened,
-  } = useBoolean(false)
-
-  const {
-    value: exportContactsOpened,
-    setTrue: toggleOnExportContactsOpened,
-    setFalse: toggleOffExportContactsOpened,
-  } = useBoolean(false)
-
-  // const pageNumber = useMemo(() => Math.ceil(total / size) - 1, [total, size])
-
-  const handleSearchSubmit = useCallback(
-    (term: string) => {
-      checked.length !== 0 && setChecked([])
-
-      onSearch({ page: 1, size, searchTerm: term })
-    },
-    [checked.length, onSearch, size],
-  )
-
-  const debouncedSearch = useCallback(
-    debounce((term: string) => {
-      handleSearchSubmit(term)
-    }, 600),
-    [handleSearchSubmit],
-  )
-
-  const handleSearchChange = useCallback(
-    (term: string) => {
-      searchTermState.value !== term && searchTermState.setValue(term)
-
-      debouncedSearch(term)
-    },
-    [searchTermState, debouncedSearch],
-  )
-
-  const handleChangePage = useCallback(
-    (_: any, newPage: number) => {
-      checked.length !== 0 && setChecked([])
-
-      onSearch({ page: newPage + 1, size, searchTerm: searchTermState.value })
-    },
-    [checked.length, onSearch, size, searchTermState.value],
-  )
-
-  const handleItemCheckedToggle = useCallback(
-    (id: string) => (e: React.SyntheticEvent) => {
-      e.stopPropagation()
-      e.preventDefault()
-      const currentIndex = checked.indexOf(id)
-      const newChecked = [...checked]
-
-      currentIndex === -1 ? newChecked.push(id) : newChecked.splice(currentIndex, 1)
-
-      setChecked(newChecked)
-    },
-    [checked],
-  )
-
-  const handleToggleAllChecked = useCallback(
-    () => checked.length ? setChecked([]) : setChecked(contacts.map(contact => contact.id)),
-    [checked, contacts],
-  )
-
-  const allChecked = useMemo(
-    () => contacts.length !== 0
-      && contacts.length === checked.length
-      && contacts.every(contact => checked.includes(contact.id)),
-    [contacts, checked],
-  )
-
-  const handleStarClick = useCallback(
-    (id: string, star: boolean) => (e: React.SyntheticEvent) => {
-      e.stopPropagation()
-      starContact(id, star)
-    },
-    [starContact],
-  )
-
-  interface ChangeCreateContactFormOpened {
-    (opened: true, option: CreateFormOption): () => void
-    (opened: false): () => void
-  }
-
-  const changeCreateContactFormOpened = useCallback<ChangeCreateContactFormOpened>(
-    (opened: boolean, option?: CreateFormOption) => () => {
-      setCreateForm({ opened, option: opened ? option : undefined })
-    },
-    [setCreateForm],
-  )
-
-  const lastContactIdsRef = useRef<string[] | null>(null)
-
-  useEffect(
-    () => {
+    useEffect(() => {
       if (lastContactIdsRef.current !== null) {
         const lastIds = lastContactIdsRef.current
-        const newerContactIds = contacts.map(contact => contact.id).filter(cid => !lastIds.includes(cid))
+        const newerContactIds = contacts
+          .map((contact) => contact.id)
+          .filter((cid) => !lastIds.includes(cid))
 
         lastContactIdsRef.current = null
 
-        newerContactIds.length && fromContactIdState.setValue(newerContactIds[0])
+        newerContactIds.length &&
+          fromContactIdState.setValue(newerContactIds[0])
       }
-    },
-    [contacts, setChecked, fromContactIdState],
-  )
+    }, [contacts, setChecked, fromContactIdState])
 
-  const handleAddNewContact = useCallback(
-    async (contact: object) => {
-      if (addContact) {
-        lastContactIdsRef.current = contacts.map(contact => contact.id)
-        changeCreateContactFormOpened(false)()
-        await addContact(contact as ContactFields)
-        handleSearchSubmit(searchTermState.value)
-      }
-    },
-    [contacts, addContact, handleSearchSubmit, changeCreateContactFormOpened, searchTermState],
-  )
+    const handleAddNewContact = useCallback(
+      async (contact: Record<string, unknown>) => {
+        if (addContact) {
+          lastContactIdsRef.current = contacts.map((contact) => contact.id)
+          changeCreateContactFormOpened(false)()
+          await addContact(contact as ContactFields)
+          handleSearchSubmit(searchTermState.value)
+        }
+      },
+      [
+        contacts,
+        addContact,
+        handleSearchSubmit,
+        changeCreateContactFormOpened,
+        searchTermState,
+      ],
+    )
 
-  const handleAddContactToGroup = useCallback(
-    async (groupId: string) => {
-      if (checked.length) {
-        await addContactToGroup(groupId, checked)
-      }
-      toggleOffAddContactToGroupFormOpened()
-    },
-    [checked, addContactToGroup, toggleOffAddContactToGroupFormOpened],
-  )
+    const handleAddContactToGroup = useCallback(
+      async (groupId: string) => {
+        if (checked.length) {
+          await addContactToGroup(groupId, checked)
+        }
+        toggleOffAddContactToGroupFormOpened()
+      },
+      [checked, addContactToGroup, toggleOffAddContactToGroupFormOpened],
+    )
 
-  const handleRemoveContactsFromGroup = useCallback(
-    async (groupId: string) => {
-      if (checked.length < 1) return
+    const handleRemoveContactsFromGroup = useCallback(
+      async (groupId: string) => {
+        if (checked.length < 1) return
 
-      await removeContactsFromGroup(groupId, checked)
-    },
-    [checked, removeContactsFromGroup],
-  )
+        await removeContactsFromGroup(groupId, checked)
+      },
+      [checked, removeContactsFromGroup],
+    )
 
-  // const handleContactsRemove = useCallback(
-  //   async () => {
-  //     if (checked.length) {
-  //       await removeContacts(checked)
-  //     }
-  //     setChecked([])
-  //   },
-  //   [checked],
-  // )
+    // const handleContactsRemove = useCallback(
+    //   async () => {
+    //     if (checked.length) {
+    //       await removeContacts(checked)
+    //     }
+    //     setChecked([])
+    //   },
+    //   [checked],
+    // )
 
-  const [hoverCheck, setHoverCheck] = useState('')
+    const [hoverCheck, setHoverCheck] = useState('')
 
-  const handleHoverCheck = useCallback(
-    (id: string) => () => setHoverCheck(id),
-    [setHoverCheck],
-  )
+    const handleHoverCheck = useCallback(
+      (id: string) => () => setHoverCheck(id),
+      [setHoverCheck],
+    )
 
-  const [hoverStar, setHoverStar] = useState('')
+    const [hoverStar, setHoverStar] = useState('')
 
-  const handleHoverStar = useCallback(
-    (id: string) => () => setHoverStar(id),
-    [setHoverStar],
-  )
+    const handleHoverStar = useCallback(
+      (id: string) => () => setHoverStar(id),
+      [setHoverStar],
+    )
 
-  const handleMergeContacts = useCallback(
-    async () => {
+    const handleMergeContacts = useCallback(async () => {
       if (checked.length < 2) return
       const target = checked[0]
 
@@ -478,72 +542,76 @@ const PeopleList: React.FC<Props> = React.memo(({
 
       setChecked([])
       fromContactIdState.setValue(target)
-    },
-    [checked, fromContactIdState, mergeContacts],
-  )
+    }, [checked, fromContactIdState, mergeContacts])
 
-  const renderPCLayoutTableRows = (contact: Contact) => (
-    <>
-      <TableCell className={classnames(classes.contactName, classes.w15Cell, classes.pointer)}>
-        {contact.info.name}
-      </TableCell>
-      <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
-      <TableCell className={classes.w25Cell}>{contact.info.address}</TableCell>
-      <TableCell align="left">{contact.info.phone}</TableCell>
-    </>
-  )
+    const renderPCLayoutTableRows = (contact: Contact) => (
+      <>
+        <TableCell
+          className={classnames(
+            classes.contactName,
+            classes.w15Cell,
+            classes.pointer,
+          )}
+        >
+          {contact.info.name}
+        </TableCell>
+        <TableCell className={classes.w20Cell}>{contact.info.email}</TableCell>
+        <TableCell className={classes.w25Cell}>
+          {contact.info.address}
+        </TableCell>
+        <TableCell align="left">{contact.info.phone}</TableCell>
+      </>
+    )
 
-  const renderTabletLayoutTableRows = (contact: Contact) => (
-    <>
-      <TableCell className={classnames(classes.contactName, classes.w25Cell, classes.pointer)}>
-        {contact.info.name}
-      </TableCell>
+    const renderTabletLayoutTableRows = (contact: Contact) => (
+      <>
+        <TableCell
+          className={classnames(
+            classes.contactName,
+            classes.w25Cell,
+            classes.pointer,
+          )}
+        >
+          {contact.info.name}
+        </TableCell>
+        <TableCell>
+          <Typography>{contact.info.email}</Typography>
+          <Typography>{contact.info.address}</Typography>
+          <Typography>{contact.info.phone}</Typography>
+        </TableCell>
+      </>
+    )
+
+    const renderMobileLayoutTableRows = (contact: Contact) => (
       <TableCell>
+        <Typography component="b" variant="body1" className={classes.pointer}>
+          {contact.info.name}
+        </Typography>
         <Typography>{contact.info.email}</Typography>
         <Typography>{contact.info.address}</Typography>
         <Typography>{contact.info.phone}</Typography>
       </TableCell>
-    </>
-  )
+    )
 
-  const renderMobileLayoutTableRows = (contact: Contact) => (
-    <TableCell>
-      <Typography component="b" variant="body1" className={classes.pointer}>{contact.info.name}</Typography>
-      <Typography>{contact.info.email}</Typography>
-      <Typography>{contact.info.address}</Typography>
-      <Typography>{contact.info.phone}</Typography>
-    </TableCell>
-  )
+    const renderTableRows = (contact: Contact) => {
+      const { id, isDeleting } = contact
+      const isChecked = checked.includes(id)
+      const isHighLighted = fromContactIdState.value === id
 
-  const renderTableRows = (contact: Contact) => {
-    const { id, isDeleting } = contact
-    const isChecked = checked.includes(id)
-    const isHighLighted = fromContactIdState.value === id
-
-    return isDeleting
-      ? (
-        <TableRow key={id} className={classnames(classes.tableRow, classes.isDeleting)}>
+      return isDeleting ? (
+        <TableRow
+          key={id}
+          className={classnames(classes.tableRow, classes.isDeleting)}
+        >
           <TableCell padding="none" className={classes.minCell}>
             <Checkbox
-              checkedIcon={
-                <Icon
-                  name={ICONS.CheckChecked}
-                  size="sm"
-                />
-              }
+              checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
               icon={
-                hoverCheck === id
-                  ? (
-                    <Icon
-                      name={ICONS.CheckChecked}
-                      size="sm"
-                    />
-                  ): (
-                    <Icon
-                      name={ICONS.Check}
-                      size="sm"
-                    />
-                  )
+                hoverCheck === id ? (
+                  <Icon name={ICONS.CheckChecked} size="sm" />
+                ) : (
+                  <Icon name={ICONS.Check} size="sm" />
+                )
               }
               checked={isChecked}
               tabIndex={-1}
@@ -554,10 +622,9 @@ const PeopleList: React.FC<Props> = React.memo(({
             <Typography align="center">
               This contact {contact.info.name} is in deleting process.
             </Typography>
-          </TableCell>          
+          </TableCell>
         </TableRow>
-      )
-      : (
+      ) : (
         <TableRow
           key={id}
           onClick={handleShowProfile(id)}
@@ -570,25 +637,13 @@ const PeopleList: React.FC<Props> = React.memo(({
         >
           <TableCell padding="none" className={classes.minCell}>
             <Checkbox
-              checkedIcon={
-                <Icon
-                  name={ICONS.CheckChecked}
-                  size="sm"
-                />
-              }
+              checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
               icon={
-                hoverCheck === id
-                  ? (
-                    <Icon
-                      name={ICONS.CheckChecked}
-                      size="sm"
-                    />
-                  ): (
-                    <Icon
-                      name={ICONS.Check}
-                      size="sm"
-                    />
-                  )
+                hoverCheck === id ? (
+                  <Icon name={ICONS.CheckChecked} size="sm" />
+                ) : (
+                  <Icon name={ICONS.Check} size="sm" />
+                )
               }
               onMouseEnter={handleHoverCheck(id)}
               onMouseLeave={handleHoverCheck('')}
@@ -604,13 +659,11 @@ const PeopleList: React.FC<Props> = React.memo(({
               onMouseEnter={handleHoverStar(id)}
               onMouseLeave={handleHoverStar('')}
             >
-              {(contact.info.starred || id === hoverStar)
-                ? (
-                  <Icon name={ICONS.Star} size="sm" />
-                ) : (
-                  <Icon name={ICONS.StarStroke} size="sm" />
-                )
-              }
+              {contact.info.starred || id === hoverStar ? (
+                <Icon name={ICONS.Star} size="sm" />
+              ) : (
+                <Icon name={ICONS.StarStroke} size="sm" />
+              )}
             </IconButton>
           </TableCell>
           <TableCell padding="none" className={classes.minCell}>
@@ -620,209 +673,218 @@ const PeopleList: React.FC<Props> = React.memo(({
               className={classes.pointer}
             />
           </TableCell>
-          <Hidden mdDown>
-            {renderPCLayoutTableRows(contact)}
-          </Hidden>
+          <Hidden mdDown>{renderPCLayoutTableRows(contact)}</Hidden>
           <Hidden lgUp xsDown>
             {renderTabletLayoutTableRows(contact)}
           </Hidden>
-          <Hidden smUp>
-            {renderMobileLayoutTableRows(contact)}
-          </Hidden>
+          <Hidden smUp>{renderMobileLayoutTableRows(contact)}</Hidden>
         </TableRow>
       )
-  }
+    }
 
-  const renderSearcher = () => (
-    <Searcher
-      className={classes.search}
-      value={searchTermState.value}
-      onKeyDown={handleSearchSubmit}
-      onChange={handleSearchChange}
-      placeholder="Type a name or email"
-    />
-  )
+    const renderSearcher = () => (
+      <Searcher
+        className={classes.search}
+        value={searchTermState.value}
+        onKeyDown={handleSearchSubmit}
+        onChange={handleSearchChange}
+        placeholder="Type a name or email"
+      />
+    )
 
-  const renderLabelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) =>
-    `${from.toLocaleString('en-IN')} - ${to.toLocaleString('en-IN')} of ${count.toLocaleString('en-IN')}`
+    const renderLabelDisplayedRows = ({
+      from,
+      to,
+      count,
+    }: {
+      from: number
+      to: number
+      count: number
+    }) =>
+      `${from.toLocaleString('en-IN')} - ${to.toLocaleString(
+        'en-IN',
+      )} of ${count.toLocaleString('en-IN')}`
 
-  const renderPagination = (inTable: boolean = false) => inTable ? (
-    <TablePagination
-      count={total}
-      rowsPerPage={size}
-      page={page - 1}
-      ActionsComponent={TablePaginationActions}
-      onChangePage={handleChangePage}
-      labelDisplayedRows={renderLabelDisplayedRows}
-      rowsPerPageOptions={[]}
-    />
-  ) : (
-    <TablePagination
-      component="div"
-      count={total}
-      rowsPerPage={size}
-      page={page - 1}
-      ActionsComponent={TablePaginationActions}
-      onChangePage={handleChangePage}
-      labelDisplayedRows={renderLabelDisplayedRows}
-      rowsPerPageOptions={[]}
-    />
-  )
+    const renderPagination = (inTable = false) =>
+      inTable ? (
+        <TablePagination
+          count={total}
+          rowsPerPage={size}
+          page={page - 1}
+          ActionsComponent={TablePaginationActions}
+          onChangePage={handleChangePage}
+          labelDisplayedRows={renderLabelDisplayedRows}
+          rowsPerPageOptions={[]}
+        />
+      ) : (
+        <TablePagination
+          component="div"
+          count={total}
+          rowsPerPage={size}
+          page={page - 1}
+          ActionsComponent={TablePaginationActions}
+          onChangePage={handleChangePage}
+          labelDisplayedRows={renderLabelDisplayedRows}
+          rowsPerPageOptions={[]}
+        />
+      )
 
-  const renderControls = () => (
-    <>
-      <Tooltip title="merge">
-        <IconButton onClick={toggleOnMergeContactsOpened}>
-          <Icon name={ICONS.Merge} color="hoverLighten" />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="export">
-        <IconButton onClick={toggleOnExportContactsOpened}>
-          <Icon name={ICONS.Export} color="hoverLighten" />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="add to group">
-        <IconButton onClick={toggleOnAddContactToGroupFormOpened}>
-          <Icon name={ICONS.PersonAdd} color="hoverLighten" />
-        </IconButton>
-      </Tooltip>
-      {isGroupPage && (
-        <Tooltip title="remove from group">
-          <IconButton onClick={toggleOnRemoveContactFormGroupOpened}>
-            <Icon name={ICONS.Delete} color="hoverLighten" />
+    const renderControls = () => (
+      <>
+        <Tooltip title="merge">
+          <IconButton onClick={toggleOnMergeContactsOpened}>
+            <Icon name={ICONS.Merge} color="hoverLighten" />
           </IconButton>
         </Tooltip>
-      )}
-    </>
-  )
-
-  return (
-    <DisplayPaper>
-      <ContactTableThemeProvider>
-        {createForm.opened && (
-          <CreateForm
-            option={createForm.option}
-            open={createForm.opened}
-            onClose={changeCreateContactFormOpened(false)}
-            onOk={handleAddNewContact}
-            discardText="Your contact information won't be created unless you submit it."
-          />
+        <Tooltip title="export">
+          <IconButton onClick={toggleOnExportContactsOpened}>
+            <Icon name={ICONS.Export} color="hoverLighten" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="add to group">
+          <IconButton onClick={toggleOnAddContactToGroupFormOpened}>
+            <Icon name={ICONS.PersonAdd} color="hoverLighten" />
+          </IconButton>
+        </Tooltip>
+        {isGroupPage && (
+          <Tooltip title="remove from group">
+            <IconButton onClick={toggleOnRemoveContactFormGroupOpened}>
+              <Icon name={ICONS.Delete} color="hoverLighten" />
+            </IconButton>
+          </Tooltip>
         )}
-        {<MergeContactsForm
-          open={mergeContactsOpened}
-          onClose={toggleOffMergeContactsOpened}
-          onOk={handleMergeContacts}
-        />}
-        {<ExportContactsForm
-          open={exportContactsOpened}
-          onClose={toggleOffExportContactsOpened}
-          contactIds={checked}
-        />}
-        {<AddContactToGroupForm
-          open={addContactToGroupFormOpened}
-          onClose={toggleOffAddContactToGroupFormOpened}
-          onOk={handleAddContactToGroup}
-        />}
-        {<RemoveContactsFromGroupForm
-          open={removeContactFormGroupOpened}
-          onClose={toggleOffRemoveContactFormGroupOpened}
-          onOk={handleRemoveContactsFromGroup}
-        />}
-        <div className={classes.head}>
-          <Button
-            variant="outlined"
-            color="primary"
-            classes={{
-              outlined: classes.outlinedButton,
-            }}
-            onClick={changeCreateContactFormOpened(true, newContactFormOption)}
-          >
-            New contact
-          </Button>
-          <Hidden smDown>
-            {renderSearcher()}
-          </Hidden>
-          <Button
-            color="primary"
-            href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
-            className={classes.download}
-            target="_blank"
-          >
-            <Icon
-              name={ICONS.DownloadPlugin}
-              className={classes.downloadIcon}
-              color="hoverLighten"
-            />
-            Download Plugin
-          </Button>
-        </div>
-        <Hidden mdUp>
-          <div className={classes.head}>
-            {renderSearcher()}
-          </div>
-        </Hidden>
-        <Hidden mdUp>
-          <div className={classnames(classes.head, classes.paginationHead, classes.alignRight)}>
-            {renderPagination()}
-          </div>
-        </Hidden>
-        <div className={classes.tableContainer}>
-          <Table className={classes.table}>
-            <TableHead className={classes.tableHead}>
-              <TableRow className={classes.tableControlRow}>
-                <TableCell padding="none" className={classes.minCell}>
-                  <Checkbox
-                    checkedIcon={
-                      <Icon
-                        name={ICONS.CheckChecked}
-                        size="sm"
-                      />
-                    }
-                    icon={
-                      <Icon
-                        name={ICONS.Check}
-                        size="sm"
-                      />
-                    }
-                    checked={allChecked}
-                    onClick={handleToggleAllChecked}
-                    className={classes.checkbox}
-                  />
-                </TableCell>
+      </>
+    )
 
-                <Hidden lgDown>
-                  <TableCell colSpan={4} padding="none">
-                    {checked.length > 0 && renderControls()}
+    return (
+      <DisplayPaper>
+        <ContactTableThemeProvider>
+          {createForm.opened && (
+            <CreateForm
+              option={createForm.option}
+              open={createForm.opened}
+              onClose={changeCreateContactFormOpened(false)}
+              onOk={handleAddNewContact}
+              discardText="Your contact information won't be created unless you submit it."
+            />
+          )}
+          {
+            <MergeContactsForm
+              open={mergeContactsOpened}
+              onClose={toggleOffMergeContactsOpened}
+              onOk={handleMergeContacts}
+            />
+          }
+          {
+            <ExportContactsForm
+              open={exportContactsOpened}
+              onClose={toggleOffExportContactsOpened}
+              contactIds={checked}
+            />
+          }
+          {
+            <AddContactToGroupForm
+              open={addContactToGroupFormOpened}
+              onClose={toggleOffAddContactToGroupFormOpened}
+              onOk={handleAddContactToGroup}
+            />
+          }
+          {
+            <RemoveContactsFromGroupForm
+              open={removeContactFormGroupOpened}
+              onClose={toggleOffRemoveContactFormGroupOpened}
+              onOk={handleRemoveContactsFromGroup}
+            />
+          }
+          <div className={classes.head}>
+            <Button
+              variant="outlined"
+              color="primary"
+              classes={{
+                outlined: classes.outlinedButton,
+              }}
+              onClick={changeCreateContactFormOpened(
+                true,
+                newContactFormOption,
+              )}
+            >
+              New contact
+            </Button>
+            <Hidden smDown>{renderSearcher()}</Hidden>
+            <Button
+              color="primary"
+              href="https://chrome.google.com/webstore/detail/waiverforever-connect/hojbfdlckjamkeacedcejbahgkgagedk"
+              className={classes.download}
+              target="_blank"
+            >
+              <Icon
+                name={ICONS.DownloadPlugin}
+                className={classes.downloadIcon}
+                color="hoverLighten"
+              />
+              Download Plugin
+            </Button>
+          </div>
+          <Hidden mdUp>
+            <div className={classes.head}>{renderSearcher()}</div>
+          </Hidden>
+          <Hidden mdUp>
+            <div
+              className={classnames(
+                classes.head,
+                classes.paginationHead,
+                classes.alignRight,
+              )}
+            >
+              {renderPagination()}
+            </div>
+          </Hidden>
+          <div className={classes.tableContainer}>
+            <Table className={classes.table}>
+              <TableHead className={classes.tableHead}>
+                <TableRow className={classes.tableControlRow}>
+                  <TableCell padding="none" className={classes.minCell}>
+                    <Checkbox
+                      checkedIcon={<Icon name={ICONS.CheckChecked} size="sm" />}
+                      icon={<Icon name={ICONS.Check} size="sm" />}
+                      checked={allChecked}
+                      onClick={handleToggleAllChecked}
+                      className={classes.checkbox}
+                    />
                   </TableCell>
-                </Hidden>
-                <Hidden xlUp smDown>
-                  <TableCell colSpan={3} padding="none">
-                    {checked.length > 0 && renderControls()}
-                  </TableCell>
-                </Hidden>
-                <Hidden mdUp>
-                  <TableCell colSpan={4} padding="none">
-                    {checked.length > 0 && renderControls()}
-                  </TableCell>
-                </Hidden>
-                <Hidden smDown>
-                  {renderPagination(true)}
-                </Hidden>
-              </TableRow>
-            </TableHead>
-            <TableBody className={classes.tableBody}>
-              {isFetchingContacts
-                ? (
+
+                  <Hidden lgDown>
+                    <TableCell colSpan={4} padding="none">
+                      {checked.length > 0 && renderControls()}
+                    </TableCell>
+                  </Hidden>
+                  <Hidden xlUp smDown>
+                    <TableCell colSpan={3} padding="none">
+                      {checked.length > 0 && renderControls()}
+                    </TableCell>
+                  </Hidden>
+                  <Hidden mdUp>
+                    <TableCell colSpan={4} padding="none">
+                      {checked.length > 0 && renderControls()}
+                    </TableCell>
+                  </Hidden>
+                  <Hidden smDown>{renderPagination(true)}</Hidden>
+                </TableRow>
+              </TableHead>
+              <TableBody className={classes.tableBody}>
+                {isFetchingContacts ? (
                   <TableRow className={classes.emptyTextWrapper}>
                     <TableCell padding="none" className={classes.clearBorder}>
                       <ProgressLoading className={classes.progress} />
                     </TableCell>
                   </TableRow>
-                )
-                : (
+                ) : (
                   contacts.length === 0 && (
                     <TableRow className={classes.emptyTextWrapper}>
-                      <TableCell padding="none" className={classes.emptyTextCell}>
+                      <TableCell
+                        padding="none"
+                        className={classes.emptyTextCell}
+                      >
                         <Typography
                           align="center"
                           color="secondary"
@@ -831,23 +893,22 @@ const PeopleList: React.FC<Props> = React.memo(({
                         >
                           {searchTermState.hasValue
                             ? 'There are no results that match your search'
-                            : 'There are no contacts'
-                          }
+                            : 'There are no contacts'}
                         </Typography>
                       </TableCell>
                     </TableRow>
                   )
-                )
-              }
-              <StarThemeProvider>
-                {!isFetchingContacts && contacts.map(renderTableRows)}
-              </StarThemeProvider>
-            </TableBody>
-          </Table>
-        </div>
-      </ContactTableThemeProvider>
-    </DisplayPaper>
-  )
-})
+                )}
+                <StarThemeProvider>
+                  {!isFetchingContacts && contacts.map(renderTableRows)}
+                </StarThemeProvider>
+              </TableBody>
+            </Table>
+          </div>
+        </ContactTableThemeProvider>
+      </DisplayPaper>
+    )
+  },
+)
 
 export default PeopleList

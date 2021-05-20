@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
-import createUseContext from 'constate'
+import constate from 'constate'
 
-const useWaiverSplitter = createUseContext(() => {
+export const [UseWaiverSplitterProvider, useWaiverSplitter] = constate(() => {
   const [toSplitWaiver, setToSplitWaiver] = useState({
     id: '',
     title: '',
@@ -9,10 +9,7 @@ const useWaiverSplitter = createUseContext(() => {
 
   const [splitMutation, setSplitMutation] = useState(0)
 
-  const splitDone = useCallback(
-    () => setSplitMutation(m => m + 1),
-    [],
-  )
+  const splitDone = useCallback(() => setSplitMutation((m) => m + 1), [])
 
   const readyToSplitWaiver = useCallback(
     (id: string, title: string) => setToSplitWaiver({ id, title }),
@@ -32,5 +29,3 @@ const useWaiverSplitter = createUseContext(() => {
     splitDone,
   }
 })
-
-export default useWaiverSplitter

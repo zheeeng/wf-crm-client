@@ -55,7 +55,13 @@ export interface ContactField {
   waiver?: any
 }
 
-export type FieldType = 'name' | 'email' | 'address' | 'phone' | 'date' | 'other'
+export type FieldType =
+  | 'name'
+  | 'email'
+  | 'address'
+  | 'phone'
+  | 'date'
+  | 'other'
 
 export interface NameField extends ContactField {
   firstName?: string
@@ -89,9 +95,27 @@ export interface OtherField extends ContactField {
   title?: string
 }
 
-export type ContactFields = Pick<PeopleAPI, 'first_name' | 'last_name' | 'country' | 'state' | 'city' | 'zipcode' | 'email' | 'phone' | 'favourite'>
+export type ContactFields = Pick<
+  PeopleAPI,
+  | 'first_name'
+  | 'last_name'
+  | 'country'
+  | 'state'
+  | 'city'
+  | 'zipcode'
+  | 'email'
+  | 'phone'
+  | 'favourite'
+>
 
-export type CommonField = (NameField | EmailField | PhoneField | AddressField | DateField | OtherField) & {
+export type CommonField = (
+  | NameField
+  | EmailField
+  | PhoneField
+  | AddressField
+  | DateField
+  | OtherField
+) & {
   fieldType: string
 }
 
@@ -180,10 +204,9 @@ export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
     email: output.info.email,
     phone: output.info.phone,
     favourite: output.info.starred,
-    // eslint-disable-next-line @typescript-eslint/camelcase
     picture_url: output.info.avatar,
     name: output.info.name,
-    gender: output.info.gender || null,
+    gender: output.info.gender ?? null,
     address: output.info.address,
   }
 
@@ -192,17 +215,26 @@ export const contactOutputAdapter = (output: Contact): Partial<PeopleAPI> => {
   return params
 }
 
-export const contactFieldAdapter =
-  (fields: ContactFields): Partial<PeopleAPI> => fields
+export const contactFieldAdapter = (
+  fields: ContactFields,
+): Partial<PeopleAPI> => fields
 
-export const groupFieldAdapter =
-  (fields: GroupFields): Partial<GroupAPI> => fields
+export const groupFieldAdapter = (fields: GroupFields): Partial<GroupAPI> =>
+  fields
 
 const monthTable = [
-  'January', 'February', 'March',
-  'April', 'May', 'June',
-  'July', 'August', 'September',
-  'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ]
 
 export const activityInputAdapter = (input: ActivityAPI): Activity => {
@@ -211,20 +243,23 @@ export const activityInputAdapter = (input: ActivityAPI): Activity => {
   const activity = {
     id: input.id,
     timeStamp: input.timestamp * 1000,
-    time: `${d.getHours() % 12}:${d.getMinutes()} ${(d.getHours() >= 12) ? 'AM' : 'PM'}`,
+    time: `${d.getHours() % 12}:${d.getMinutes()} ${
+      d.getHours() >= 12 ? 'AM' : 'PM'
+    }`,
     date: `${monthTable[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`,
     content: input.content,
-    activityType: input.activity_type || 'activity',
+    activityType: input.activity_type ?? 'activity',
   }
 
   return activity
 }
 
-export const activityOutputAdapter = (output: Partial<Activity>): Partial<ActivityAPI> => {
+export const activityOutputAdapter = (
+  output: Partial<Activity>,
+): Partial<ActivityAPI> => {
   const activity = {
     content: output.content,
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    activity_type: output.activityType || 'activity',
+    activity_type: output.activityType ?? 'activity',
   }
 
   return activity
@@ -259,46 +294,71 @@ export const waiverInputAdapter = (input: WaiverAPI): Waiver => {
   return waiver
 }
 
-export const groupInputAdapter = (input: GroupAPI): Group =>
-  ({
-    id: input.id,
-    info: {
-      account: input.account,
-      name: input.name,
-      updateTimestamp: input.last_update_timestamp,
-      contacts: [],
-
-    },
-  })
+export const groupInputAdapter = (input: GroupAPI): Group => ({
+  id: input.id,
+  info: {
+    account: input.account,
+    name: input.name,
+    updateTimestamp: input.last_update_timestamp,
+    contacts: [],
+  },
+})
 
 export const contactInputAdapter = (input: PeopleAPI): Contact => {
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    id, account, favourite,
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    picture_url, name, names, gender, dob_day, dob_month, dob_year,
-    email, emails, address, addresses, phone, phones, others, tags, dates,
-    pictures, waivers, activities, notes,
+    id,
+    // account,
+    favourite,
+    picture_url,
+    name,
+    names,
+    gender,
+    dob_day,
+    dob_month,
+    dob_year,
+    email,
+    emails,
+    address,
+    addresses,
+    phone,
+    phones,
+    others,
+    tags,
+    dates,
+    pictures,
+    waivers,
+    activities,
+    notes,
   } = input
 
   const info: Contact['info'] = {
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    avatar: picture_url || crateGravatar(email || ''),
-    starred: favourite || false,
-    name: name || '',
-    names: (names || []).map(o => mapKeys(snake2pascal, o)),
-    gender: gender || null as 'Male' | 'Female' | 'Other' | null,
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    birthDay: `${dob_year || ''}/${dob_month || ''}/${dob_day || ''}`,
-    email: email || '',
-    emails: (emails || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
-    address: address || '',
-    addresses: (addresses || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
-    phone: phone || '',
-    phones: (phones || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
-    dates: (dates || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
-    others: (others || []).map(o => mapKeys<NameField[keyof NameField]>(snake2pascal, o)),
-    tags, pictures, waivers,
+    avatar: picture_url ?? crateGravatar(email ?? ''),
+    starred: favourite ?? false,
+    name: name ?? '',
+    names: (names ?? []).map((o) => mapKeys(snake2pascal, o)),
+    gender: gender ?? (null as 'Male' | 'Female' | 'Other' | null),
+    birthDay: `${dob_year ?? ''}/${dob_month ?? ''}/${dob_day ?? ''}`,
+    email: email ?? '',
+    emails: (emails ?? []).map((o) =>
+      mapKeys<NameField[keyof NameField]>(snake2pascal, o),
+    ),
+    address: address ?? '',
+    addresses: (addresses ?? []).map((o) =>
+      mapKeys<NameField[keyof NameField]>(snake2pascal, o),
+    ),
+    phone: phone ?? '',
+    phones: (phones ?? []).map((o) =>
+      mapKeys<NameField[keyof NameField]>(snake2pascal, o),
+    ),
+    dates: (dates ?? []).map((o) =>
+      mapKeys<NameField[keyof NameField]>(snake2pascal, o),
+    ),
+    others: (others ?? []).map((o) =>
+      mapKeys<NameField[keyof NameField]>(snake2pascal, o),
+    ),
+    tags,
+    pictures,
+    waivers,
     activities: activities ? activities.map(activityInputAdapter) : [],
     notes: notes ? notes.map(noteInputAdapter) : [],
   }

@@ -1,14 +1,17 @@
 import { useCallback, useEffect } from 'react'
-import { cleanStorage, writeStorage, readStorage, deleteStorage, readStorageByPattern } from '~src/utils/storage'
+import {
+  cleanStorage,
+  writeStorage,
+  readStorage,
+  deleteStorage,
+  readStorageByPattern,
+} from '~src/utils/storage'
 
-export default function useLocalCache (namespace: string, maxAge: number) {
-  useEffect(
-    () => {
-      cleanStorage(namespace)
-      return () => cleanStorage(namespace)
-    },
-    [namespace],
-  )
+export default function useLocalCache(namespace: string, maxAge: number) {
+  useEffect(() => {
+    cleanStorage(namespace)
+    return () => cleanStorage(namespace)
+  }, [namespace])
 
   const write = useCallback(
     (key: string, value: string) => {

@@ -47,7 +47,7 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
   appAlert: {
     position: 'absolute',
     zIndex: theme.zIndex.drawer + 1,
-    marginTop: vars.HeaderHeight,
+    marginTop: `${vars.HeaderHeight}px !important`,
     width: '100%',
     height: theme.spacing(6),
     lineHeight: `${theme.spacing(6)}px`,
@@ -68,6 +68,7 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   dropdownButton: {
     display: 'flex',
+    alignItems: 'center',
     margin: '13px 40px',
     cursor: 'pointer',
     '&:hover $menuList': {
@@ -77,7 +78,7 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
   avatarRoot: {
     height: 30,
     width: 30,
-    margin: `1px 14px 0`,
+    margin: '1px 14px 0',
   },
   arrowDown: {
     display: 'inline-block',
@@ -87,7 +88,7 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     borderLeft: '6px solid transparent',
     borderRight: '6px solid transparent',
     borderTop: '8px solid #fff',
-    opacity: .6,
+    opacity: 0.6,
     verticalAlign: 'middle',
   },
   navList: {
@@ -235,22 +236,28 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
       backgroundColor: 'unset',
     },
     '&:hover $menuIconArchive': {
-      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-archives-icon-hover.svg\')',
+      backgroundImage:
+        "url('/app/static/images/navDropdown/nav-archives-icon-hover.svg')",
     },
     '&:hover $menuIconSettings': {
-      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-settings-icon-hover.svg\')',
+      backgroundImage:
+        "url('/app/static/images/navDropdown/nav-settings-icon-hover.svg')",
     },
     '&:hover $menuIconPairedDevices': {
-      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-paired-devices-icon-hover.svg\')',
+      backgroundImage:
+        "url('/app/static/images/navDropdown/nav-paired-devices-icon-hover.svg')",
     },
     '&:hover $menuIconPlanAndBilling': {
-      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-plan-and-billing-icon-hover.svg\')',
+      backgroundImage:
+        "url('/app/static/images/navDropdown/nav-plan-and-billing-icon-hover.svg')",
     },
     '&:hover $menuIconReferAndReward': {
-      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-refer-and-reward-icon-hover.svg\')',
+      backgroundImage:
+        "url('/app/static/images/navDropdown/nav-refer-and-reward-icon-hover.svg')",
     },
     '&:hover $menuIconSignout': {
-      backgroundImage: 'url(\'/app/static/images/navDropdown/nav-signout-icon-hover.svg\')',
+      backgroundImage:
+        "url('/app/static/images/navDropdown/nav-signout-icon-hover.svg')",
     },
   },
   menuIcon: {
@@ -263,22 +270,28 @@ export const useHeaderStyles = makeStyles((theme: Theme) => ({
     verticalAlign: 'middle',
   },
   menuIconArchive: {
-    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-archives-icon.svg\')',
+    backgroundImage:
+      "url('/app/static/images/navDropdown/nav-archives-icon.svg')",
   },
   menuIconSettings: {
-    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-settings-icon.svg\')',
+    backgroundImage:
+      "url('/app/static/images/navDropdown/nav-settings-icon.svg')",
   },
   menuIconPairedDevices: {
-    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-paired-devices-icon.svg\')',
+    backgroundImage:
+      "url('/app/static/images/navDropdown/nav-paired-devices-icon.svg')",
   },
   menuIconPlanAndBilling: {
-    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-plan-and-billing-icon.svg\')',
+    backgroundImage:
+      "url('/app/static/images/navDropdown/nav-plan-and-billing-icon.svg')",
   },
   menuIconReferAndReward: {
-    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-refer-and-reward-icon.svg\')',
+    backgroundImage:
+      "url('/app/static/images/navDropdown/nav-refer-and-reward-icon.svg')",
   },
   menuIconSignout: {
-    backgroundImage: 'url(\'/app/static/images/navDropdown/nav-signout-icon.svg\')',
+    backgroundImage:
+      "url('/app/static/images/navDropdown/nav-signout-icon.svg')",
   },
 }))
 
