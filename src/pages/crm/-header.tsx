@@ -67,33 +67,36 @@ const Header: React.FC<Props> = React.memo(() => {
                 <a href="/welcome" className={classes.link}>
                   Dashboard
                 </a>
-                <div className={classes.linkIcon}>
+                <a href="/welcome" className={classes.linkIcon}>
                   <DashboardIcon className={classes.linkIcon} />
-                </div>
+                </a>
               </div>
               <div className={classes.navItem}>
                 <a href="/templates" className={classes.link}>
                   Waiver Templates
                 </a>
-                <div className={classes.linkIcon}>
+                <a href="/templates" className={classes.linkIcon}>
                   <TemplateIcon className={classes.linkIcon} />
-                </div>
+                </a>
               </div>
               <div className={classes.navItem}>
                 <Link to="/crm" className={classnames(classes.link, 'active')}>
                   My Customers
                 </Link>
-                <div className={classnames(classes.linkIcon, 'active')}>
+                <Link
+                  to="/crm"
+                  className={classnames(classes.linkIcon, 'active')}
+                >
                   <CustomersIcon />
-                </div>
+                </Link>
               </div>
               <div className={classes.navItem}>
                 <a href="/waiver-list" className={classes.link}>
                   My Waiver List
                 </a>
-                <div className={classes.linkIcon}>
+                <a href="/waiver-list" className={classes.linkIcon}>
                   <WaiverlistIcon className={classes.linkIcon} />
-                </div>
+                </a>
               </div>
             </nav>
             <div className={classes.dropdownButton}>

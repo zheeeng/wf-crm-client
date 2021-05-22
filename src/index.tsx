@@ -1,7 +1,8 @@
 import './bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import registerServiceWorker from '~src/registerServiceWorker'
+import * as serviceWorkerRegistration from '~src/serviceWorkerRegistration'
+import reportWebVitals from './reportWebVitals'
 import App from '~src/App'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -26,4 +27,6 @@ window.snapSaveState = () => {
   )
 }
 
-registerServiceWorker()
+serviceWorkerRegistration.unregister()
+
+reportWebVitals()

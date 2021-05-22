@@ -14,7 +14,7 @@ module.exports = {
     jest: true,
   },
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error'],
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/array-type': ['error'],
     '@typescript-eslint/explicit-module-boundary-types': ['off'],
