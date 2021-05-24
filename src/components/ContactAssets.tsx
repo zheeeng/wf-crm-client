@@ -195,6 +195,11 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     [],
   )
 
+  const initialGroupName = useMemo(
+    () => (contact ? `request for ${contact.info.name}` : ''),
+    [contact],
+  )
+
   const initialContactEmail = useMemo(
     () => (contact ? `${contact.info.name}<${contact.info.email}>` : ''),
     [contact],
@@ -203,9 +208,9 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
   const requestWaiverRequesting = useCallback(
     (waiverId: string) => (e: React.SyntheticEvent) => {
       e.stopPropagation()
-      setVisible(initialContactEmail, waiverId)
+      setVisible(initialContactEmail, waiverId, initialGroupName)
     },
-    [setVisible, initialContactEmail],
+    [setVisible, initialContactEmail, initialGroupName],
   )
 
   const requestMoreWaiverRequesting = useCallback(
@@ -220,6 +225,7 @@ const ContactAssets: React.FC<Props> = React.memo(({ contactId }) => {
     <ContactTableThemeProvider>
       <RequestWaiverPopup
         initialRecipient={requestWaiverPopupProps.initialRecipient}
+        initialGroupName={initialGroupName}
         visible={requestWaiverPopupProps.sendFromWaiverVisible}
         onVisibleChange={requestWaiverPopupProps.handleVisibleChange}
         submitData={requestWaiverPopupProps.submitRequest}

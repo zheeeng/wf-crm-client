@@ -26,11 +26,13 @@ export const useRequestWaiver = (onSuccess: () => void) => {
     }
   }, [waiverContent?.id, waiverId])
 
+  const [groupName, setGroupName] = useState('')
   const [initialRecipient, setInitialRecipient] = useState('')
   const [isCreateModalShow, setIsCreateModalShow] = useState(false)
   const [isMakNewRequest, setIsMakNewRequest] = useState(false)
 
   const setInvisible = useCallback(() => {
+    setGroupName('')
     setWaiverId('')
     setInitialRecipient('')
     setIsCreateModalShow(false)
@@ -38,13 +40,14 @@ export const useRequestWaiver = (onSuccess: () => void) => {
   }, [])
 
   const setVisible = useCallback(
-    (recipient: string, waiverId: string) => {
+    (recipient: string, waiverId: string, groupName: string) => {
       if (!isEmail2(recipient)) {
         fail('No valid email address found.')
         return
       }
 
       setWaiverId(waiverId)
+      setGroupName(groupName)
       setInitialRecipient(recipient)
       setIsCreateModalShow(true)
       setIsMakNewRequest(false)
@@ -94,7 +97,7 @@ export const useRequestWaiver = (onSuccess: () => void) => {
 
         const requestFormData = {
           ...data,
-          groupName: 'crmAuto',
+          groupName,
           groupSize: data.recipientList.split(';').length,
         }
 
@@ -148,6 +151,7 @@ export const useRequestWaiver = (onSuccess: () => void) => {
       setInvisible,
       waiverContent,
       waiverId,
+      groupName,
       onSuccess,
     ],
   )
