@@ -373,11 +373,11 @@ const PeopleList: React.FC<Props> = React.memo(
 
     const handleSearchSubmit = useCallback(
       (term: string) => {
-        checked.length !== 0 && setChecked([])
+        setChecked((checked) => (checked.length ? [] : checked))
 
         onSearch({ page: 1, size, searchTerm: term })
       },
-      [checked.length, onSearch, size],
+      [onSearch, size],
     )
 
     useDebounce(
@@ -471,7 +471,7 @@ const PeopleList: React.FC<Props> = React.memo(
         newerContactIds.length &&
           fromContactIdState.setValue(newerContactIds[0])
       }
-    }, [contacts, setChecked, fromContactIdState])
+    }, [contacts, fromContactIdState])
 
     const handleAddNewContact = useCallback(
       async (contact: Record<string, unknown>) => {
